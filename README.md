@@ -239,6 +239,7 @@ git clone https://github.com/userlevelup/recur
 cd recur
 cargo test
 cargo run -- tree "src"
+cargo install --path .   <-- installs globally
 ```
 
 ## License
