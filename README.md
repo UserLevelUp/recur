@@ -186,14 +186,14 @@ recur id "config.*" --ext .json              # JSON files only
 
 | Feature | grep (1973) | rg (ripgrep) | recur (2026) |
 |---------|-------------|--------------|-------------|
-| Fast text search | ✅ | ✅✅ | ✅ |
+| Fast text search | ✅ | ✅ | ✅ |
 | Regex support | ✅ | ✅ | ✅ |
 | Context lines (`-C`) | ✅ | ✅ | ✅ |
-| **Hierarchy-aware** | ❌ | ❌ | ✅✅ |
-| **Recursive tree view** | ❌ | ❌ | ✅✅ |
-| **Scoped search** | ❌ | ❌ | ✅✅ |
-| **Related file discovery** | ❌ | ❌ | ✅✅ |
-| **Pattern matching** | ❌ | ❌ | ✅✅ |
+| **Hierarchy-aware** | ❌ | ❌ | ✅ |
+| **Recursive tree view** | ❌ | ❌ | ✅ |
+| **Scoped search** | ❌ | ❌ | ✅ |
+| **Related file discovery** | ❌ | ❌ | ✅ |
+| **Pattern matching** | ❌ | ❌ | ✅ |
 
 ## Why "recur"?
 
