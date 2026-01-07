@@ -41,20 +41,63 @@ impl TerminalFormatter {
     }
 
     pub fn print_search_result(&mut self, result: &SearchResult) {
+        // Print context before (with line numbers)
+        if !result.context_before.is_empty() {
+            let start_line = result.line_number - result.context_before.len();
+            for (i, line) in result.context_before.iter().enumerate() {
+                if self.color {
+                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
+                }
+                let _ = write!(self.stdout, "{}:", result.path.display());
+
+                if self.color {
+                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+                }
+                let _ = write!(self.stdout, "{}-", start_line + i);
+
+                if self.color {
+                    let _ = self.stdout.reset();
+                }
+                let _ = writeln!(self.stdout, "{}", line);
+            }
+        }
+
+        // Print the matching line
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
         }
         let _ = write!(self.stdout, "{}:", result.path.display());
-        
+
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Green)));
         }
         let _ = write!(self.stdout, "{}:", result.line_number);
-        
+
         if self.color {
             let _ = self.stdout.reset();
         }
         let _ = writeln!(self.stdout, "{}", result.line);
+
+        // Print context after (with line numbers)
+        if !result.context_after.is_empty() {
+            let start_line = result.line_number + 1;
+            for (i, line) in result.context_after.iter().enumerate() {
+                if self.color {
+                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
+                }
+                let _ = write!(self.stdout, "{}:", result.path.display());
+
+                if self.color {
+                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+                }
+                let _ = write!(self.stdout, "{}-", start_line + i);
+
+                if self.color {
+                    let _ = self.stdout.reset();
+                }
+                let _ = writeln!(self.stdout, "{}", line);
+            }
+        }
     }
 
     pub fn print_search_results(&mut self, results: &[SearchResult]) {
@@ -79,6 +122,8 @@ impl JsonFormatter {
                 "path": r.path.display().to_string(),
                 "line_number": r.line_number,
                 "line": r.line,
+                "context_before": r.context_before,
+                "context_after": r.context_after,
             }))
             .collect();
         serde_json::to_string_pretty(&items).unwrap_or_else(|_| "[]".to_string())

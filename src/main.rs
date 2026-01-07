@@ -170,7 +170,11 @@ enum Commands {
         /// File extensions to include
         #[arg(short, long)]
         ext: Option<String>,
-        
+
+        /// Lines of context to show around matches
+        #[arg(short = 'C', long, default_value = "0")]
+        context: usize,
+
         /// Case-insensitive search
         #[arg(short, long)]
         ignore_case: bool,
@@ -196,8 +200,8 @@ fn main() {
         Commands::Children { parent, dir, count } => {
             cmd_children(parent, dir, count, cli.json, cli.color)
         }
-        Commands::Id { pattern, dir, ext, ignore_case } => {
-            cmd_id(pattern, dir, ext, ignore_case, cli.json, cli.color)
+        Commands::Id { pattern, dir, ext, context, ignore_case } => {
+            cmd_id(pattern, dir, ext, context, ignore_case, cli.json, cli.color)
         }
     };
     
@@ -408,6 +412,7 @@ fn cmd_id(
     pattern: String,
     dir: PathBuf,
     ext: Option<String>,
+    context: usize,
     ignore_case: bool,
     json: bool,
     color: bool,
@@ -415,13 +420,14 @@ fn cmd_id(
     let mut options = SearchOptions {
         root: dir,
         case_insensitive: ignore_case,
+        context_lines: context,
         ..Default::default()
     };
-    
+
     if let Some(ext_str) = ext {
         options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
     }
-    
+
     let searcher = IdentifierSearcher::new(options);
     let pattern_parsed = HierarchyPattern::parse(&pattern)?;
     let results = searcher.search(&pattern_parsed);

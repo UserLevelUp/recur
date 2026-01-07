@@ -25,6 +25,8 @@ pub struct SearchResult {
     pub line: String,
     pub match_start: usize,
     pub match_end: usize,
+    pub context_before: Vec<String>,
+    pub context_after: Vec<String>,
 }
 
 /// Searches for files matching a hierarchy pattern.
@@ -140,29 +142,48 @@ impl ContentSearcher {
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
 
-                for (line_num, line_result) in reader.lines().enumerate() {
-                    if let Ok(line) = line_result {
-                        let search_line = if self.options.case_insensitive {
-                            line.to_lowercase()
-                        } else {
-                            line.clone()
-                        };
+                // Read all lines into a vector for context extraction
+                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
 
-                        let search_query = if self.options.case_insensitive {
-                            query.to_lowercase()
-                        } else {
-                            query.to_string()
-                        };
+                for (line_num, line) in all_lines.iter().enumerate() {
+                    let search_line = if self.options.case_insensitive {
+                        line.to_lowercase()
+                    } else {
+                        line.clone()
+                    };
 
-                        if let Some(pos) = search_line.find(&search_query) {
-                            results.push(SearchResult {
-                                path: file_path.clone(),
-                                line_number: line_num + 1,
-                                line: line.clone(),
-                                match_start: pos,
-                                match_end: pos + query.len(),
-                            });
-                        }
+                    let search_query = if self.options.case_insensitive {
+                        query.to_lowercase()
+                    } else {
+                        query.to_string()
+                    };
+
+                    if let Some(pos) = search_line.find(&search_query) {
+                        let context_lines = self.options.context_lines;
+
+                        // Extract context before
+                        let start_before = line_num.saturating_sub(context_lines);
+                        let context_before: Vec<String> = all_lines[start_before..line_num]
+                            .iter()
+                            .cloned()
+                            .collect();
+
+                        // Extract context after
+                        let end_after = (line_num + 1 + context_lines).min(all_lines.len());
+                        let context_after: Vec<String> = all_lines[line_num + 1..end_after]
+                            .iter()
+                            .cloned()
+                            .collect();
+
+                        results.push(SearchResult {
+                            path: file_path.clone(),
+                            line_number: line_num + 1,
+                            line: line.clone(),
+                            match_start: pos,
+                            match_end: pos + query.len(),
+                            context_before,
+                            context_after,
+                        });
                     }
                 }
             }
@@ -183,17 +204,36 @@ impl ContentSearcher {
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
 
-                for (line_num, line_result) in reader.lines().enumerate() {
-                    if let Ok(line) = line_result {
-                        if let Some(mat) = regex.find(&line) {
-                            results.push(SearchResult {
-                                path: file_path.clone(),
-                                line_number: line_num + 1,
-                                line: line.clone(),
-                                match_start: mat.start(),
-                                match_end: mat.end(),
-                            });
-                        }
+                // Read all lines into a vector for context extraction
+                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+
+                for (line_num, line) in all_lines.iter().enumerate() {
+                    if let Some(mat) = regex.find(line) {
+                        let context_lines = self.options.context_lines;
+
+                        // Extract context before
+                        let start_before = line_num.saturating_sub(context_lines);
+                        let context_before: Vec<String> = all_lines[start_before..line_num]
+                            .iter()
+                            .cloned()
+                            .collect();
+
+                        // Extract context after
+                        let end_after = (line_num + 1 + context_lines).min(all_lines.len());
+                        let context_after: Vec<String> = all_lines[line_num + 1..end_after]
+                            .iter()
+                            .cloned()
+                            .collect();
+
+                        results.push(SearchResult {
+                            path: file_path.clone(),
+                            line_number: line_num + 1,
+                            line: line.clone(),
+                            match_start: mat.start(),
+                            match_end: mat.end(),
+                            context_before,
+                            context_after,
+                        });
                     }
                 }
             }
@@ -226,19 +266,38 @@ impl IdentifierSearcher {
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
 
-                for (line_num, line_result) in reader.lines().enumerate() {
-                    if let Ok(line) = line_result {
-                        // Look for dot-notation identifiers in the line
-                        if let Some(matches) = self.find_identifiers_in_line(&line, pattern) {
-                            for (start, end) in matches {
-                                results.push(SearchResult {
-                                    path: file_path.clone(),
-                                    line_number: line_num + 1,
-                                    line: line.clone(),
-                                    match_start: start,
-                                    match_end: end,
-                                });
-                            }
+                // Read all lines into a vector for context extraction
+                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+
+                for (line_num, line) in all_lines.iter().enumerate() {
+                    // Look for dot-notation identifiers in the line
+                    if let Some(matches) = self.find_identifiers_in_line(line, pattern) {
+                        for (start, end) in matches {
+                            let context_lines = self.options.context_lines;
+
+                            // Extract context before
+                            let start_before = line_num.saturating_sub(context_lines);
+                            let context_before: Vec<String> = all_lines[start_before..line_num]
+                                .iter()
+                                .cloned()
+                                .collect();
+
+                            // Extract context after
+                            let end_after = (line_num + 1 + context_lines).min(all_lines.len());
+                            let context_after: Vec<String> = all_lines[line_num + 1..end_after]
+                                .iter()
+                                .cloned()
+                                .collect();
+
+                            results.push(SearchResult {
+                                path: file_path.clone(),
+                                line_number: line_num + 1,
+                                line: line.clone(),
+                                match_start: start,
+                                match_end: end,
+                                context_before,
+                                context_after,
+                            });
                         }
                     }
                 }
