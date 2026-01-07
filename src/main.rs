@@ -128,13 +128,18 @@ enum Commands {
     ///
     /// Examples:
     ///   recur related "Service.Module.Feature.cs"
+    ///   recur related "Service.Module.Feature.cs" --exclude-self
     Related {
         /// Filename to find relatives of
         filename: String,
-        
+
         /// Root directory to search
         #[arg(short = 'd', long, default_value = ".")]
         dir: PathBuf,
+
+        /// Exclude the input file from results
+        #[arg(long)]
+        exclude_self: bool,
     },
     
     /// Find files that are children of a hierarchy (recursive)
@@ -194,8 +199,8 @@ fn main() {
         Commands::Tree { base, dir, depth, count, ascii } => {
             cmd_tree(base, dir, depth, count, !ascii, cli.json)
         }
-        Commands::Related { filename, dir } => {
-            cmd_related(filename, dir, cli.json, cli.color)
+        Commands::Related { filename, dir, exclude_self } => {
+            cmd_related(filename, dir, exclude_self, cli.json, cli.color)
         }
         Commands::Children { parent, dir, count } => {
             cmd_children(parent, dir, count, cli.json, cli.color)
@@ -350,17 +355,29 @@ fn cmd_tree(
 fn cmd_related(
     filename: String,
     dir: PathBuf,
+    exclude_self: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
     let options = SearchOptions {
-        root: dir,
+        root: dir.clone(),
         ..Default::default()
     };
-    
+
     let searcher = FileSearcher::new(options);
-    let files = searcher.find_related(&filename);
-    
+    let mut files = searcher.find_related(&filename);
+
+    // Filter out the input file if exclude_self is true
+    if exclude_self {
+        files.retain(|path| {
+            if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
+                file_name != filename
+            } else {
+                true
+            }
+        });
+    }
+
     if json {
         let output = recur::output::JsonFormatter::format_file_list(&files);
         println!("{}", serde_json::to_string_pretty(&output)?);
