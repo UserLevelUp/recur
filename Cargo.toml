@@ -1,0 +1,99 @@
+[package]
+name = "recur"
+version = "0.1.0"
+edition = "2021"
+authors = ["User Level Up Contributors"]
+description = "Recursive hierarchical search tool for modern codebases - Honoring Dennis Ritchie's 1968 thesis (58 years of recursive hierarchies)"
+license = "MIT"
+repository = "https://github.com/userlevelup/recur"
+homepage = "https://github.com/userlevelup/recur"
+documentation = "https://docs.rs/recur"
+readme = "README.md"
+keywords = ["search", "grep", "recursive", "hierarchy", "ritchie"]
+categories = ["command-line-utilities", "development-tools", "filesystem"]
+rust-version = "1.70"
+
+[lib]
+name = "recur"
+path = "src/lib.rs"
+
+[[bin]]
+name = "recur"
+path = "src/main.rs"
+
+[dependencies]
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# CLI
+clap = { version = "4.4", features = ["derive", "env"] }
+
+# Parallelism
+rayon = "1.8"
+
+# File walking
+walkdir = "2.4"
+ignore = "0.4"  # .gitignore support
+
+# Terminal output
+termcolor = "1.4"
+atty = "0.2"
+
+# Regex support
+regex = "1.10"
+
+# JSON output
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+tempfile = "3.8"
+assert_cmd = "2.0"
+predicates = "3.0"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.release-with-debug]
+inherits = "release"
+debug = true
+strip = false
+
+[[bench]]
+name = "parser_bench"
+harness = false
+
+[[bench]]
+name = "search_bench"
+harness = false
+
+[features]
+default = []
+# Enable additional output formats
+json = []
+# Enable shell completion generation
+completions = ["clap/string"]
+
+[package.metadata.deb]
+section = "utils"
+priority = "optional"
+assets = [
+    ["target/release/recur", "usr/bin/", "755"],
+    ["README.md", "usr/share/doc/recur/", "644"],
+    ["LICENSE", "usr/share/doc/recur/", "644"],
+    ["RECUR-TRIBUTE.md", "usr/share/doc/recur/", "644"],
+]
+
+[package.metadata.rpm]
+package = "recur"
+
+[package.metadata.rpm.cargo]
+buildflags = ["--release"]
+
+[package.metadata.rpm.targets]
+recur = { path = "/usr/bin/recur" }
