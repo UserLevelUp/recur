@@ -1,0 +1,481 @@
+(base) PS C:\src\recur> Get-ChildItem -Path C:\src\recur\src -Recurse | Select-Object FullName
+
+FullName                
+--------                
+C:\src\recur\src\lib.rs 
+C:\src\recur\src\main.rs
+
+
+(base) PS C:\src\recur> cargo build -j 1
+   Compiling recur v0.1.0 (C:\src\recur)
+warning: unused import: `HierarchicalName`                                                                                       
+  --> src\main.rs:12:39
+   |
+12 | use recur::parser::{HierarchyPattern, HierarchicalName};
+   |                                       ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0599]: no method named `case_insensitive` found for struct `HierarchyPattern` in the current scope                        
+   --> src\main.rs:212:44
+    |
+212 |     let pattern = if ignore_case { pattern.case_insensitive() } else { pattern };
+    |                                            ^^^^^^^^^^^^^^^^ method not found in `HierarchyPattern`
+
+error[E0560]: struct `SearchOptions` has no field named `root`
+   --> src\main.rs:215:9
+    |
+215 |         root: dir,
+    |         ^^^^ `SearchOptions` does not have this field
+    |
+    = note: available fields are: `case_sensitive`, `include_hidden`
+
+error[E0560]: struct `SearchOptions` has no field named `case_insensitive`
+   --> src\main.rs:216:9
+    |
+216 |         case_insensitive: ignore_case,
+    |         ^^^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+216 -         case_insensitive: ignore_case,
+216 +         case_sensitive: ignore_case,
+    |
+
+error[E0609]: no field `extensions` on type `SearchOptions`
+   --> src\main.rs:222:17
+    |
+222 |         options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0277]: the trait bound `SearchOptions: AsRef<Path>` is not satisfied                                                      
+   --> src\main.rs:225:38
+    |
+225 |     let searcher = FileSearcher::new(options);
+    |                    ----------------- ^^^^^^^ the trait `AsRef<Path>` is not implemented for `SearchOptions`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required by a bound in `FileSearcher::new`
+   --> src\search.rs:31:27
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |                           ^^^^^^^^^^^ required by this bound in `FileSearcher::new`
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src\main.rs:225:20
+    |
+225 |     let searcher = FileSearcher::new(options);
+    |                    ^^^^^^^^^^^^^^^^^--------- argument #2 of type `SearchOptions` is missing
+    |
+note: associated function defined here
+   --> src\search.rs:31:12
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |            ^^^
+help: provide the argument
+    |
+225 |     let searcher = FileSearcher::new(options, /* SearchOptions */);
+    |                                             +++++++++++++++++++++
+
+error[E0599]: no method named `find` found for struct `FileSearcher` in the current scope                                        
+   --> src\main.rs:226:26
+    |
+226 |     let files = searcher.find(&pattern);
+    |                          ^^^^ method not found in `FileSearcher`
+
+error[E0599]: no function or associated item named `new` found for struct `TerminalFormatter` in the current scope               
+   --> src\main.rs:232:48
+    |
+232 |         let mut formatter = TerminalFormatter::new(color);
+    |                                                ^^^ function or associated item not found in `TerminalFormatter`
+
+error[E0599]: no method named `case_insensitive` found for struct `HierarchyPattern` in the current scope                        
+   --> src\main.rs:256:56
+    |
+256 |     let scope_pattern = if ignore_case { scope_pattern.case_insensitive() } else { scope_pattern };
+    |                                                        ^^^^^^^^^^^^^^^^ method not found in `HierarchyPattern`
+
+error[E0560]: struct `SearchOptions` has no field named `root`
+   --> src\main.rs:259:9
+    |
+259 |         root: dir,
+    |         ^^^^ `SearchOptions` does not have this field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0560]: struct `SearchOptions` has no field named `case_insensitive`
+   --> src\main.rs:260:9
+    |
+260 |         case_insensitive: ignore_case,
+    |         ^^^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+260 -         case_insensitive: ignore_case,
+260 +         case_sensitive: ignore_case,
+    |
+
+error[E0560]: struct `SearchOptions` has no field named `context_lines`
+   --> src\main.rs:261:9
+    |
+261 |         context_lines: context,
+    |         ^^^^^^^^^^^^^ `SearchOptions` does not have this field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0609]: no field `extensions` on type `SearchOptions`
+   --> src\main.rs:266:17
+    |
+266 |         options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0277]: the trait bound `SearchOptions: AsRef<Path>` is not satisfied
+   --> src\main.rs:269:41
+    |
+269 |     let searcher = ContentSearcher::new(options);
+    |                    -------------------- ^^^^^^^ the trait `AsRef<Path>` is not implemented for `SearchOptions`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required by a bound in `ContentSearcher::new`
+   --> src\search.rs:51:27
+    |
+ 51 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |                           ^^^^^^^^^^^ required by this bound in `ContentSearcher::new`
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src\main.rs:269:20
+    |
+269 |     let searcher = ContentSearcher::new(options);
+    |                    ^^^^^^^^^^^^^^^^^^^^--------- argument #2 of type `SearchOptions` is missing
+    |
+note: associated function defined here
+   --> src\search.rs:51:12
+    |
+ 51 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |            ^^^
+help: provide the argument
+    |
+269 |     let searcher = ContentSearcher::new(options, /* SearchOptions */);
+    |                                                +++++++++++++++++++++
+
+error[E0599]: no method named `search_regex` found for struct `ContentSearcher` in the current scope                             
+   --> src\main.rs:273:18
+    |
+273 |         searcher.search_regex(&regex, &scope_pattern)
+    |                  ^^^^^^^^^^^^
+    |
+help: there is a method `search` with a similar name, but with different arguments
+   --> src\search.rs:58:5
+    |
+ 58 |     pub fn search(&self, _pattern: &str) -> Vec<SearchResult> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied                                                         
+   --> src\main.rs:275:18
+    |
+275 |         searcher.search(&query, &scope_pattern)
+    |                  ^^^^^^         -------------- unexpected argument #2
+    |
+note: method defined here
+   --> src\search.rs:58:12
+    |
+ 58 |     pub fn search(&self, _pattern: &str) -> Vec<SearchResult> {
+    |            ^^^^^^
+help: remove the extra argument
+    |
+275 -         searcher.search(&query, &scope_pattern)
+275 +         searcher.search(&query)
+    |
+
+error[E0599]: no function or associated item named `new` found for struct `TerminalFormatter` in the current scope               
+   --> src\main.rs:282:48
+    |
+282 |         let mut formatter = TerminalFormatter::new(color);
+    |                                                ^^^ function or associated item not found in `TerminalFormatter`
+
+error[E0560]: struct `SearchOptions` has no field named `root`                                                                   
+   --> src\main.rs:305:9
+    |
+305 |         root: dir,
+    |         ^^^^ `SearchOptions` does not have this field
+    |
+    = note: available fields are: `case_sensitive`, `include_hidden`
+
+error[E0277]: the trait bound `SearchOptions: AsRef<Path>` is not satisfied
+   --> src\main.rs:310:38
+    |
+310 |     let searcher = FileSearcher::new(options);
+    |                    ----------------- ^^^^^^^ the trait `AsRef<Path>` is not implemented for `SearchOptions`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required by a bound in `FileSearcher::new`
+   --> src\search.rs:31:27
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |                           ^^^^^^^^^^^ required by this bound in `FileSearcher::new`
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src\main.rs:310:20
+    |
+310 |     let searcher = FileSearcher::new(options);
+    |                    ^^^^^^^^^^^^^^^^^--------- argument #2 of type `SearchOptions` is missing
+    |
+note: associated function defined here
+   --> src\search.rs:31:12
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |            ^^^
+help: provide the argument
+    |
+310 |     let searcher = FileSearcher::new(options, /* SearchOptions */);
+    |                                             +++++++++++++++++++++
+
+error[E0599]: no method named `find` found for struct `FileSearcher` in the current scope                                        
+   --> src\main.rs:311:26
+    |
+311 |     let files = searcher.find(&pattern);
+    |                          ^^^^ method not found in `FileSearcher`
+
+error[E0061]: this function takes 1 argument but 2 arguments were supplied                                                       
+   --> src\main.rs:318:16
+    |
+318 |     let tree = HierarchyTree::from_paths(base, &files);
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^       ------ unexpected argument #2
+    |
+note: expected `&[PathBuf]`, found `String`
+   --> src\main.rs:318:42
+    |
+318 |     let tree = HierarchyTree::from_paths(base, &files);
+    |                                          ^^^^
+    = note: expected reference `&[PathBuf]`
+                  found struct `std::string::String`
+note: associated function defined here
+   --> src\tree.rs:26:12
+    |
+ 26 |     pub fn from_paths(_paths: &[PathBuf]) -> Self {
+    |            ^^^^^^^^^^
+help: remove the extra argument
+    |
+318 -     let tree = HierarchyTree::from_paths(base, &files);
+318 +     let tree = HierarchyTree::from_paths(/* &[PathBuf] */);
+    |
+
+error[E0599]: no method named `to_json` found for struct `HierarchyTree` in the current scope                                    
+   --> src\main.rs:321:27
+    |
+321 |         let output = tree.to_json();
+    |                           ^^^^^^^ method not found in `HierarchyTree`
+
+error[E0599]: `HierarchyTree` doesn't implement `std::fmt::Display`                                                              
+   --> src\main.rs:324:27
+    |
+324 |         print!("{}", tree.to_string(unicode));
+    |                           ^^^^^^^^^ method cannot be called on `HierarchyTree` due to unsatisfied trait bounds
+    |
+   ::: src\tree.rs:7:1
+    |
+  7 | pub struct HierarchyTree {
+    | ------------------------ doesn't satisfy `HierarchyTree: ToString` or `HierarchyTree: std::fmt::Display`
+    |
+    = note: the following trait bounds were not satisfied:
+            `HierarchyTree: std::fmt::Display`
+            which is required by `HierarchyTree: ToString`
+
+error[E0599]: no method named `stats` found for struct `HierarchyTree` in the current scope                                      
+   --> src\main.rs:327:30
+    |
+327 |             let stats = tree.stats();
+    |                              ^^^^^ method not found in `HierarchyTree`
+
+error[E0560]: struct `SearchOptions` has no field named `root`                                                                   
+   --> src\main.rs:342:9
+    |
+342 |         root: dir,
+    |         ^^^^ `SearchOptions` does not have this field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0277]: the trait bound `SearchOptions: AsRef<Path>` is not satisfied
+   --> src\main.rs:346:38
+    |
+346 |     let searcher = FileSearcher::new(options);
+    |                    ----------------- ^^^^^^^ the trait `AsRef<Path>` is not implemented for `SearchOptions`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required by a bound in `FileSearcher::new`
+   --> src\search.rs:31:27
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |                           ^^^^^^^^^^^ required by this bound in `FileSearcher::new`
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src\main.rs:346:20
+    |
+346 |     let searcher = FileSearcher::new(options);
+    |                    ^^^^^^^^^^^^^^^^^--------- argument #2 of type `SearchOptions` is missing
+    |
+note: associated function defined here
+   --> src\search.rs:31:12
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |            ^^^
+help: provide the argument
+    |
+346 |     let searcher = FileSearcher::new(options, /* SearchOptions */);
+    |                                             +++++++++++++++++++++
+
+error[E0599]: no method named `find_related` found for struct `FileSearcher` in the current scope                                
+   --> src\main.rs:347:26
+    |
+347 |     let files = searcher.find_related(&filename);
+    |                          ^^^^^^^^^^^^ method not found in `FileSearcher`
+
+error[E0599]: no function or associated item named `new` found for struct `TerminalFormatter` in the current scope               
+   --> src\main.rs:353:48
+    |
+353 |         let mut formatter = TerminalFormatter::new(color);
+    |                                                ^^^ function or associated item not found in `TerminalFormatter`
+
+error[E0560]: struct `SearchOptions` has no field named `root`
+   --> src\main.rs:371:9
+    |
+371 |         root: dir,
+    |         ^^^^ `SearchOptions` does not have this field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0277]: the trait bound `SearchOptions: AsRef<Path>` is not satisfied                                                      
+   --> src\main.rs:375:38
+    |
+375 |     let searcher = FileSearcher::new(options);
+    |                    ----------------- ^^^^^^^ the trait `AsRef<Path>` is not implemented for `SearchOptions`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required by a bound in `FileSearcher::new`
+   --> src\search.rs:31:27
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |                           ^^^^^^^^^^^ required by this bound in `FileSearcher::new`
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src\main.rs:375:20
+    |
+375 |     let searcher = FileSearcher::new(options);
+    |                    ^^^^^^^^^^^^^^^^^--------- argument #2 of type `SearchOptions` is missing
+    |
+note: associated function defined here
+   --> src\search.rs:31:12
+    |
+ 31 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |            ^^^
+help: provide the argument
+    |
+375 |     let searcher = FileSearcher::new(options, /* SearchOptions */);
+    |                                             +++++++++++++++++++++
+
+error[E0599]: no method named `find_children` found for struct `FileSearcher` in the current scope                               
+   --> src\main.rs:376:26
+    |
+376 |     let files = searcher.find_children(&parent);
+    |                          ^^^^^^^^^^^^^ method not found in `FileSearcher`
+
+error[E0599]: no function or associated item named `new` found for struct `TerminalFormatter` in the current scope               
+   --> src\main.rs:382:48
+    |
+382 |         let mut formatter = TerminalFormatter::new(color);
+    |                                                ^^^ function or associated item not found in `TerminalFormatter`
+
+error[E0560]: struct `SearchOptions` has no field named `root`
+   --> src\main.rs:402:9
+    |
+402 |         root: dir,
+    |         ^^^^ `SearchOptions` does not have this field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0560]: struct `SearchOptions` has no field named `case_insensitive`
+   --> src\main.rs:403:9
+    |
+403 |         case_insensitive: ignore_case,
+    |         ^^^^^^^^^^^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+403 -         case_insensitive: ignore_case,
+403 +         case_sensitive: ignore_case,
+    |
+
+error[E0609]: no field `extensions` on type `SearchOptions`
+   --> src\main.rs:408:17
+    |
+408 |         options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+    |                 ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `case_sensitive`, `max_depth`, `include_hidden`
+
+error[E0277]: the trait bound `SearchOptions: AsRef<Path>` is not satisfied                                                      
+   --> src\main.rs:411:44
+    |
+411 |     let searcher = IdentifierSearcher::new(options);
+    |                    ----------------------- ^^^^^^^ the trait `AsRef<Path>` is not implemented for `SearchOptions`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required by a bound in `IdentifierSearcher::new`
+   --> src\search.rs:71:27
+    |
+ 71 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |                           ^^^^^^^^^^^ required by this bound in `IdentifierSearcher::new`
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+   --> src\main.rs:411:20
+    |
+411 |     let searcher = IdentifierSearcher::new(options);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^--------- argument #2 of type `SearchOptions` is missing
+    |
+note: associated function defined here
+   --> src\search.rs:71:12
+    |
+ 71 |     pub fn new(root: impl AsRef<Path>, options: SearchOptions) -> Self {
+    |            ^^^
+help: provide the argument
+    |
+411 |     let searcher = IdentifierSearcher::new(options, /* SearchOptions */);
+    |                                                   +++++++++++++++++++++
+
+error[E0308]: mismatched types                                                                                                   
+   --> src\main.rs:412:35
+    |
+412 |     let results = searcher.search(&pattern);
+    |                            ------ ^^^^^^^^ expected `&HierarchyPattern`, found `&String`
+    |                            |
+    |                            arguments to this method are incorrect
+    |
+    = note: expected reference `&HierarchyPattern`
+               found reference `&std::string::String`
+note: method defined here
+   --> src\search.rs:78:12
+    |
+ 78 |     pub fn search(&self, _pattern: &HierarchyPattern) -> Vec<SearchResult> {
+    |            ^^^^^^
+
+error[E0599]: no function or associated item named `new` found for struct `TerminalFormatter` in the current scope               
+   --> src\main.rs:418:48
+    |
+418 |         let mut formatter = TerminalFormatter::new(color);
+    |                                                ^^^ function or associated item not found in `TerminalFormatter`
+
+Some errors have detailed explanations: E0061, E0277, E0308, E0560, E0599, E0609.                                                
+For more information about an error, try `rustc --explain E0061`.
+warning: `recur` (bin "recur") generated 1 warning                                                                               
+error: could not compile `recur` (bin "recur") due to 43 previous errors; 1 warning emitted
+(base) PS C:\src\recur> 

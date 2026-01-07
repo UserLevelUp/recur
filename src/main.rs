@@ -9,7 +9,7 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 use std::process;
 
-use recur::parser::{HierarchyPattern, HierarchicalName};
+use recur::parser::HierarchyPattern;
 use recur::search::{FileSearcher, ContentSearcher, IdentifierSearcher, SearchOptions};
 use recur::tree::HierarchyTree;
 use recur::output::TerminalFormatter;
@@ -230,14 +230,14 @@ fn cmd_files(
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
         let mut formatter = TerminalFormatter::new(color);
-        formatter.format_file_list(&files)?;
+        formatter.print_file_list(&files);
     }
-    
+
     // Exit code: 0 if found, 1 if not found
     if files.is_empty() {
         process::exit(1);
     }
-    
+
     Ok(())
 }
 
@@ -280,13 +280,13 @@ fn cmd_find(
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
         let mut formatter = TerminalFormatter::new(color);
-        formatter.format_search_results(&results)?;
+        formatter.print_search_results(&results);
     }
-    
+
     if results.is_empty() {
         process::exit(1);
     }
-    
+
     Ok(())
 }
 
@@ -325,7 +325,7 @@ fn cmd_tree(
         
         if show_count {
             let stats = tree.stats();
-            println!("\n{} files, {} directories (recursive)", stats.file_count, stats.dir_count);
+            println!("\n{} files, {} directories (recursive)", stats.total_files, stats.total_dirs);
         }
     }
     
@@ -351,13 +351,13 @@ fn cmd_related(
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
         let mut formatter = TerminalFormatter::new(color);
-        formatter.format_file_list(&files)?;
+        formatter.print_file_list(&files);
     }
-    
+
     if files.is_empty() {
         process::exit(1);
     }
-    
+
     Ok(())
 }
 
@@ -380,13 +380,13 @@ fn cmd_children(
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
         let mut formatter = TerminalFormatter::new(color);
-        formatter.format_file_list(&files)?;
+        formatter.print_file_list(&files);
     }
-    
+
     if files.is_empty() {
         process::exit(1);
     }
-    
+
     Ok(())
 }
 
@@ -409,14 +409,15 @@ fn cmd_id(
     }
     
     let searcher = IdentifierSearcher::new(options);
-    let results = searcher.search(&pattern);
+    let pattern_parsed = HierarchyPattern::parse(&pattern)?;
+    let results = searcher.search(&pattern_parsed);
     
     if json {
         let output = recur::output::JsonFormatter::format_search_results(&results);
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
         let mut formatter = TerminalFormatter::new(color);
-        formatter.format_search_results(&results)?;
+        formatter.print_search_results(&results);
     }
     
     if results.is_empty() {

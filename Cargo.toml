@@ -64,14 +64,6 @@ inherits = "release"
 debug = true
 strip = false
 
-[[bench]]
-name = "parser_bench"
-harness = false
-
-[[bench]]
-name = "search_bench"
-harness = false
-
 [features]
 default = []
 # Enable additional output formats
