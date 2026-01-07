@@ -42,9 +42,65 @@ impl HierarchyTree {
         self.children.push(child);
     }
 
-    pub fn from_paths(base: impl Into<String>, _paths: &[PathBuf]) -> Self {
-        // TODO: build tree from file paths
-        Self::new(base)
+    pub fn from_paths(base: impl Into<String>, paths: &[PathBuf]) -> Self {
+        let base_str = base.into();
+        let mut root = Self::new(&base_str);
+
+        for path in paths {
+            if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
+                // Remove file extension to get hierarchical name
+                let hier_name = filename.rsplit_once('.')
+                    .map(|(name, _)| name)
+                    .unwrap_or(filename);
+
+                // Skip if it doesn't start with base
+                if !hier_name.starts_with(&base_str) {
+                    continue;
+                }
+
+                // Get the part after the base
+                let suffix = &hier_name[base_str.len()..];
+
+                // Split into parts and add to tree
+                if suffix.is_empty() {
+                    // This is the base file itself
+                    root.file_path = Some(path.clone());
+                } else if suffix.starts_with('.') {
+                    let parts: Vec<&str> = suffix[1..].split('.').collect();
+                    root.add_path_parts(&parts, path.clone());
+                }
+            }
+        }
+
+        root
+    }
+
+    fn add_path_parts(&mut self, parts: &[&str], full_path: PathBuf) {
+        if parts.is_empty() {
+            return;
+        }
+
+        let first = parts[0];
+
+        // Find or create child node
+        let child = self.children.iter_mut()
+            .find(|c| c.root_name == first);
+
+        if let Some(child_node) = child {
+            if parts.len() == 1 {
+                child_node.file_path = Some(full_path);
+            } else {
+                child_node.add_path_parts(&parts[1..], full_path);
+            }
+        } else {
+            let mut new_child = HierarchyTree::new(first);
+            if parts.len() == 1 {
+                new_child.file_path = Some(full_path);
+            } else {
+                new_child.add_path_parts(&parts[1..], full_path);
+            }
+            self.children.push(new_child);
+        }
     }
 
     pub fn print(&self) {
@@ -63,14 +119,80 @@ impl HierarchyTree {
         serde_json::to_string_pretty(self).unwrap_or_else(|_| "{}".to_string())
     }
 
-    pub fn to_string(&self, _unicode: bool) -> String {
-        // TODO: implement tree string formatting with unicode option
-        format!("{}", self.root_name)
+    pub fn to_string(&self, unicode: bool) -> String {
+        let mut output = String::new();
+        output.push_str(&self.root_name);
+        if self.file_path.is_some() {
+            output.push_str(" (base)\n");
+        } else {
+            output.push('\n');
+        }
+
+        let child_count = self.children.len();
+        for (i, child) in self.children.iter().enumerate() {
+            let is_last = i == child_count - 1;
+            self.format_child(&mut output, child, "", is_last, unicode);
+        }
+
+        output
+    }
+
+    fn format_child(&self, output: &mut String, node: &HierarchyTree, prefix: &str, is_last: bool, unicode: bool) {
+        let (branch, cont) = if unicode {
+            if is_last {
+                ("└── ", "    ")
+            } else {
+                ("├── ", "│   ")
+            }
+        } else {
+            if is_last {
+                ("+-- ", "    ")
+            } else {
+                ("|-- ", "|   ")
+            }
+        };
+
+        output.push_str(prefix);
+        output.push_str(branch);
+        output.push_str(&node.root_name);
+        if node.file_path.is_some() {
+            output.push_str(".cs");
+        }
+        output.push('\n');
+
+        let child_count = node.children.len();
+        let new_prefix = format!("{}{}", prefix, cont);
+        for (i, child) in node.children.iter().enumerate() {
+            let is_last_child = i == child_count - 1;
+            self.format_child(output, child, &new_prefix, is_last_child, unicode);
+        }
     }
 
     pub fn stats(&self) -> TreeStats {
-        // TODO: compute real stats
-        TreeStats::default()
+        let mut stats = TreeStats {
+            total_files: if self.file_path.is_some() { 1 } else { 0 },
+            total_dirs: 0,
+            max_depth: 0,
+        };
+
+        self.compute_stats(&mut stats, 1);
+        stats
+    }
+
+    fn compute_stats(&self, stats: &mut TreeStats, depth: usize) {
+        if depth > stats.max_depth {
+            stats.max_depth = depth;
+        }
+
+        for child in &self.children {
+            if child.file_path.is_some() {
+                stats.total_files += 1;
+            }
+            if !child.children.is_empty() {
+                stats.total_dirs += 1;
+            }
+            child.compute_stats(stats, depth + 1);
+        }
     }
 }
 

@@ -58,6 +58,10 @@ enum Commands {
         /// Maximum depth to search recursively
         #[arg(long)]
         max_depth: Option<usize>,
+
+        /// Show only the count of matching files
+        #[arg(long)]
+        count: bool,
     },
     
     /// Search for text within hierarchically-scoped files (recursive)
@@ -140,10 +144,14 @@ enum Commands {
     Children {
         /// Parent hierarchy
         parent: String,
-        
+
         /// Root directory to search
         #[arg(short = 'd', long, default_value = ".")]
         dir: PathBuf,
+
+        /// Show only the count of matching files
+        #[arg(long)]
+        count: bool,
     },
     
     /// Search for hierarchical identifiers in file content (recursive)
@@ -173,8 +181,8 @@ fn main() {
     let cli = Cli::parse();
     
     let result = match cli.command {
-        Commands::Files { pattern, dir, ext, ignore_case, max_depth } => {
-            cmd_files(pattern, dir, ext, ignore_case, max_depth, cli.json, cli.color)
+        Commands::Files { pattern, dir, ext, ignore_case, max_depth, count } => {
+            cmd_files(pattern, dir, ext, ignore_case, max_depth, count, cli.json, cli.color)
         }
         Commands::Find { query, scope, dir, context, ignore_case, regex, ext } => {
             cmd_find(query, scope, dir, context, ignore_case, regex, ext, cli.json, cli.color)
@@ -185,8 +193,8 @@ fn main() {
         Commands::Related { filename, dir } => {
             cmd_related(filename, dir, cli.json, cli.color)
         }
-        Commands::Children { parent, dir } => {
-            cmd_children(parent, dir, cli.json, cli.color)
+        Commands::Children { parent, dir, count } => {
+            cmd_children(parent, dir, count, cli.json, cli.color)
         }
         Commands::Id { pattern, dir, ext, ignore_case } => {
             cmd_id(pattern, dir, ext, ignore_case, cli.json, cli.color)
@@ -205,6 +213,7 @@ fn cmd_files(
     ext: Option<String>,
     ignore_case: bool,
     max_depth: Option<usize>,
+    count_only: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -224,8 +233,10 @@ fn cmd_files(
     
     let searcher = FileSearcher::new(options);
     let files = searcher.find(&pattern);
-    
-    if json {
+
+    if count_only {
+        println!("{} files", files.len());
+    } else if json {
         let output = recur::output::JsonFormatter::format_file_list(&files);
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
@@ -364,6 +375,7 @@ fn cmd_related(
 fn cmd_children(
     parent: String,
     dir: PathBuf,
+    count_only: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -374,8 +386,10 @@ fn cmd_children(
     
     let searcher = FileSearcher::new(options);
     let files = searcher.find_children(&parent);
-    
-    if json {
+
+    if count_only {
+        println!("{} files", files.len());
+    } else if json {
         let output = recur::output::JsonFormatter::format_file_list(&files);
         println!("{}", serde_json::to_string_pretty(&output)?);
     } else {
