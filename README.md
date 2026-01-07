@@ -3,6 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Rust](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org/)
 
+I'm new to Rust so this is a good project to learn Rust and also perform a useful task grep wasn't designed for which is search hierarchical file in c#, go, javascript, and even Rust codebases.  I'm totally vibing it so enjoy.
+
 **Recursive hierarchical search tool for modern codebases.**
 
 *In honor of Dennis M. Ritchie's 1968 PhD thesis on recursive hierarchies.*
@@ -21,9 +23,9 @@ recur related "Service.Module.Feature.cs"
 ## The Tribute
 
 > *"Program Structure and Computational Complexity"*  
-> — Dennis Ritchie, PhD Thesis, Harvard, 1968
+> â€” Dennis Ritchie, PhD Thesis, Harvard, 1968
 
-Dennis Ritchie's thesis explored **recursive functions and hierarchical program structures**. He later co-created Unix and C—tools built on hierarchical concepts. 
+Dennis Ritchie's thesis explored **recursive functions and hierarchical program structures**. He later co-created Unix and Câ€”tools built on hierarchical concepts. 
 
 **recur honors this 58-year legacy** by bringing recursive hierarchical understanding to code search.
 
@@ -181,5 +183,5 @@ MIT - Like Unix, open and free.
 
 **recur**: *Recursive hierarchical search for the 21st century, honoring 58 years of innovation since Dennis Ritchie's 1968 thesis.*
 
-*"UNIX is very simple, it just needs a genius to understand its simplicity."* — Dennis Ritchie
+*"UNIX is very simple, it just needs a genius to understand its simplicity."* â€” Dennis Ritchie
 "# recur" 
