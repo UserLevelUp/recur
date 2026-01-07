@@ -89,6 +89,9 @@ yay -S recur
 # Search within hierarchy scope (recursive)
 recur find "async" --scope "Controller.Api"
 
+# Search with context lines (like grep -C)
+recur find "CreateSection" --scope "LevelController.**" -C 2
+
 # View hierarchy as tree (recursive structure)
 recur tree "ServiceName"
 
@@ -98,8 +101,75 @@ recur files "Controller.*.Tests"
 # Find related files (siblings in hierarchy)
 recur related "UserService.Handlers.Create.cs"
 
+# Find related files excluding self
+recur related "UserService.Handlers.Create.cs" --exclude-self
+
 # Search for hierarchical identifiers (recursive)
-recur id "config.database.*"
+recur id "config.database.*" -C 1
+```
+
+## Features
+
+### Core Capabilities
+- **Hierarchical pattern matching** with `*` and `**` wildcards
+- **Scoped text search** within hierarchy (like grep but hierarchy-aware)
+- **Context lines** with `-C` flag (shows surrounding lines like grep)
+- **Tree visualization** with Unicode box-drawing characters
+- **Related file discovery** (find siblings in hierarchy)
+- **Identifier search** (find dot-notation identifiers in code)
+- **Multiple output formats** (terminal with colors, JSON for tooling)
+- **Proper exit codes** (0=success, 1=no results, 2=error)
+
+### Grep-like Options
+- `-C N` - Show N lines of context around matches
+- `-i` - Case-insensitive search
+- `-E` - Use regular expressions
+- `--json` - Output results as JSON
+- `--color` - Colorized output (auto-detected)
+
+## Commands
+
+### `recur files` - Find files by hierarchical pattern
+```bash
+recur files "Controller.*"                    # All direct children
+recur files "Controller.**"                   # All descendants (recursive)
+recur files "*.Tests" --ext .cs              # Test files only
+recur files "Module.*" --count               # Show count only
+```
+
+### `recur find` - Search text within hierarchy scope
+```bash
+recur find "async" --scope "Controller.Api"          # Search in scope
+recur find "TODO" --scope "Service.**" -C 2          # With context
+recur find "pattern" --scope "Module" -i             # Case-insensitive
+recur find "async.*Task" --scope "**" -E             # Regex search
+```
+
+### `recur tree` - Visualize hierarchy as tree
+```bash
+recur tree "ServiceName"                     # Unicode tree view
+recur tree "ServiceName" --count             # With file counts
+recur tree "ServiceName" --ascii             # ASCII-only (no Unicode)
+recur tree "ServiceName" --json              # JSON output
+```
+
+### `recur related` - Find sibling files
+```bash
+recur related "Service.Module.Feature.cs"           # Include self
+recur related "Service.Module.Feature.cs" --exclude-self  # Exclude self
+```
+
+### `recur children` - Find child files
+```bash
+recur children "Service.Module"              # All children
+recur children "Service.Module" --count      # Show count only
+```
+
+### `recur id` - Search for identifiers
+```bash
+recur id "config.database.*"                 # Find identifiers
+recur id "ulu.role.**" -C 2                  # With context lines
+recur id "config.*" --ext .json              # JSON files only
 ```
 
 ## Pattern Syntax (Recursive)
@@ -114,13 +184,16 @@ recur id "config.database.*"
 
 ## Comparison
 
-| Feature | grep (1973) | rg | recur (2026) |
-|---------|-------------|----|---------| 
-| Fast | ? | ?? | ?? |
-| Regex | ? | ? | ? |
-| **Hierarchy-aware** | ? | ? | ?? |
-| **Recursive tree** | ? | ? | ?? |
-| **Scoped search** | ? | ? | ?? |
+| Feature | grep (1973) | rg (ripgrep) | recur (2026) |
+|---------|-------------|--------------|-------------|
+| Fast text search | ✅ | ✅✅ | ✅ |
+| Regex support | ✅ | ✅ | ✅ |
+| Context lines (`-C`) | ✅ | ✅ | ✅ |
+| **Hierarchy-aware** | ❌ | ❌ | ✅✅ |
+| **Recursive tree view** | ❌ | ❌ | ✅✅ |
+| **Scoped search** | ❌ | ❌ | ✅✅ |
+| **Related file discovery** | ❌ | ❌ | ✅✅ |
+| **Pattern matching** | ❌ | ❌ | ✅✅ |
 
 ## Why "recur"?
 
