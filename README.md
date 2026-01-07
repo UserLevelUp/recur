@@ -195,6 +195,8 @@ recur id "config.*" --ext .json              # JSON files only
 | **Related file discovery** | ❌ | ❌ | ✅ |
 | **Pattern matching** | ❌ | ❌ | ✅ |
 
+**Note:** `recur` doesn't replace `rg` or `grep` - it complements them. For pure text search speed, `ripgrep` is unmatched. `recur` fills a different niche: understanding hierarchical file naming conventions. See [README.rg.md](README.rg.md) for a detailed comparison of when to use each tool.
+
 ## Why "recur"?
 
 1. **Recursive** - Searches hierarchies recursively
@@ -223,12 +225,25 @@ recur id "config.*" --ext .json              # JSON files only
 - [Contributing](CONTRIBUTING.md) - How to contribute
 - [Implementation](IMPLEMENTATION-COMPLETE.md) - Complete code walkthrough
 
+## Standing on the Shoulders of Giants
+
+`recur` exists because of the incredible work that came before:
+
+- **grep (1973)** - Ken Thompson's revolutionary pattern matching tool set the standard for text search
+- **ripgrep (2016)** - Andrew Gallant's blazingly fast rewrite proved Rust could improve on C's performance
+- **Unix philosophy** - Do one thing well, compose tools together
+
+`recur` doesn't aim to replace these tools. Instead, it addresses a specific need they weren't designed for: **understanding hierarchical file naming patterns** common in modern codebases.
+
+Use `rg` for fast text search. Use `recur` when your files are named `Service.Module.Feature.cs`.
+
 ## Why Rust?
 
-- Memory safety without garbage collection (successor to C)
-- `ripgrep` proved Rust tools get adopted on Linux
+- Memory safety without garbage collection (like C, but safer)
+- `ripgrep` proved Rust tools can match or exceed C performance
 - Excellent cross-platform support
 - Cargo makes contributing easy
+- Standing on ripgrep's shoulders for lessons learned
 
 ## Contributing
 
@@ -248,10 +263,15 @@ MIT - Like Unix, open and free.
 
 ## Acknowledgments
 
-- **Dennis M. Ritchie (1941-2011)** - For recursive hierarchies (1968)
-- **Ken Thompson** - For grep and Unix (1973)
-- **The Unix Philosophy** - Do one thing well
-- **Rust Community** - For the tools and ecosystem
+This tool exists because of those who came before:
+
+- **Dennis M. Ritchie (1941-2011)** - For his 1968 PhD thesis on recursive hierarchies, and for co-creating Unix and C
+- **Ken Thompson** - For grep (1973), which defined what a search tool should be
+- **Andrew Gallant (BurntSushi)** - For ripgrep, which showed how Rust could honor and improve Unix tools
+- **The Unix Philosophy** - "Do one thing well" - a principle we humbly attempt to follow
+- **The Rust Community** - For creating an ecosystem that makes tools like this possible
+
+We stand on the shoulders of 58 years of innovation. `recur` is just the next small step.
 
 ---
 
