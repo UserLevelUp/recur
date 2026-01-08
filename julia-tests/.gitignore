@@ -1,0 +1,8 @@
+# Test environment (created/destroyed by tests)
+test_environment/
+
+# Julia
+Manifest.toml
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
