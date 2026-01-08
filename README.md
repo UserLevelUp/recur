@@ -106,6 +106,9 @@ recur related "UserService.Handlers.Create.cs" --exclude-self
 
 # Search for hierarchical identifiers (recursive)
 recur id "config.database.*" -C 1
+
+# Analyze hierarchy statistics by depth
+recur stats "ServiceName" -l 1
 ```
 
 ## Features
@@ -117,6 +120,7 @@ recur id "config.database.*" -C 1
 - **Tree visualization** with Unicode box-drawing characters
 - **Related file discovery** (find siblings in hierarchy)
 - **Identifier search** (find dot-notation identifiers in code)
+- **Hierarchy statistics** with depth-level analysis and pagination
 - **Multiple output formats** (terminal with colors, JSON for tooling)
 - **Proper exit codes** (0=success, 1=no results, 2=error)
 
@@ -170,6 +174,15 @@ recur children "Service.Module" --count      # Show count only
 recur id "config.database.*"                 # Find identifiers
 recur id "ulu.role.**" -C 2                  # With context lines
 recur id "config.*" --ext .json              # JSON files only
+```
+
+### `recur stats` - Analyze hierarchy statistics
+```bash
+recur stats "ServiceName"                    # Summary with depth breakdown
+recur stats "ServiceName" -l 0               # List files at depth 0 (base)
+recur stats "ServiceName" -l 1               # List files at depth 1 (children)
+recur stats "Controller.**" --ext .cs        # Stats for .cs files only
+recur stats "**" --json                      # JSON output
 ```
 
 ## Pattern Syntax (Recursive)

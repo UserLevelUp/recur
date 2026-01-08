@@ -1,0 +1,156 @@
+{
+    "name": "LevelController",
+    "children": [
+      {
+        "name": "UpdateComponent",
+        "children": [],
+        "path": ".\\User Level Up\\Controllers\\LevelController.UpdateComponent.cs"
+      },
+      {
+        "name": "Base",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.Base.cs"
+      },
+      {
+        "name": "CreateWizard",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard.cs"
+      },
+      {
+        "name": "CreateWizard2",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard2.cs"
+      },
+      {
+        "name": "CreateWizard3",
+        "children": [
+          {
+            "name": "AutoSave",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.AutoSave.cs"
+          },
+          {
+            "name": "Creation",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.Creation.cs"
+          },
+          {
+            "name": "DeletedItems",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.DeletedItems.cs"
+          },
+          {
+            "name": "HierarchyOperations",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.HierarchyOperations.cs"
+          },
+          {
+            "name": "JsonBulkUpdate",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.JsonBulkUpdate.cs"
+          },
+          {
+            "name": "LoadHierarchy",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.LoadHierarchy.cs"
+          },
+          {
+            "name": "LoadSection",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.LoadSection.cs"
+          },
+          {
+            "name": "Main",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.Main.cs"
+          },
+          {
+            "name": "Models",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.Models.cs"
+          },
+          {
+            "name": "StateManagement",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.StateManagement.cs"
+          },
+          {
+            "name": "Templates",
+            "children": [
+              {
+                "name": "PublisherQnA",
+                "children": [],
+                "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.Templates.PublisherQnA.cs"
+              },
+              {
+                "name": "PublishSetup",
+                "children": [
+                  {
+                    "name": "Fix",
+                    "children": [],
+                    "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.Templates.PublishSetup.Fix.md"
+                  }
+                ],
+                "path": null
+              }
+            ],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.Templates.cs"
+          },
+          {
+            "name": "TrackProgress",
+            "children": [],
+            "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.TrackProgress.cs"
+          }
+        ],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.CreateWizard3.cs"
+      },
+      {
+        "name": "Csv",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.Csv.cs"
+      },
+      {
+        "name": "DetailsEditor",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.DetailsEditor.cs"
+      },
+      {
+        "name": "Diagnostics",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.Diagnostics.cs"
+      },
+      {
+        "name": "JsonPreview",
+        "children": [
+          {
+            "name": "VersionIncrement",
+            "children": [
+              {
+                "name": "Fix",
+                "children": [],
+                "path": ".\\User Level Up\\Controlllers\\LevelController.JsonPreview.VersionIncrement.Fix.md"
+              }
+            ],
+            "path": null
+          }
+        ],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.JsonPreview.cs"
+      },
+      {
+        "name": "OptimizedState",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.OptimizedState.cs"
+      },
+      {
+        "name": "Private",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.Private.cs"
+      },
+      {
+        "name": "Publish",
+        "children": [],
+        "path": ".\\User Level Up\\Controlllers\\LevelController.Publish.cs"
+      }
+    ],
+    "path": ".\\User Level Up\\Controlllers\\LevelController.cs"
+  }
