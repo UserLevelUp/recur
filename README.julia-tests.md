@@ -36,6 +36,7 @@ Tests are organized into functions by command:
 - `run_children_tests()` - Tests for `recur children` command
 - `run_id_tests()` - Tests for `recur id` command
 - `run_stats_tests()` - Tests for `recur stats` command
+- `run_gaps_tests()` - Tests for `recur gaps` command (detect missing intermediate files)
 - `run_exit_code_tests()` - Exit code validation tests
 - `run_pattern_tests()` - Pattern matching tests
 
@@ -117,7 +118,9 @@ test_environment/
 ├── config.database.connection.json
 ├── config.server.json
 ├── UserService.Tests.cs
-└── ApiController.Tests.cs
+├── ApiController.Tests.cs
+├── README.md
+└── README.CORE.SECTION.md  (gap: missing README.CORE.md)
 ```
 
 This hierarchy is designed to test:
@@ -126,6 +129,7 @@ This hierarchy is designed to test:
 - Depth-based filtering
 - Extension filtering
 - Sibling/child relationships
+- Gap detection (missing intermediate levels)
 
 ## Writing Tests
 
@@ -216,7 +220,7 @@ The test suite uses Julia's built-in test framework which reports:
 
 As of now:
 - ✅ 1 implemented test (files with exact pattern)
-- 📝 52 placeholder tests waiting for implementation
+- 📝 56 placeholder tests waiting for implementation
 
 ### Example Summary
 

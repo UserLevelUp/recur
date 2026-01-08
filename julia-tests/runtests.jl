@@ -69,6 +69,12 @@ function setup_test_environment()
     create_test_file("UserService.Tests.cs", "public class UserServiceTests { }")
     create_test_file("ApiController.Tests.cs", "public class ApiControllerTests { }")
 
+    # Files with gaps (missing intermediate levels)
+    # This creates: README.md, README.CORE.SECTION.md
+    # Missing: README.CORE.md (gap at level 1)
+    create_test_file("README.md", "# Main README")
+    create_test_file("README.CORE.SECTION.md", "# Core Section (missing README.CORE.md)")
+
     log_test("Created $(length(readdir(TEST_DIR))) test files")
 end
 
@@ -360,6 +366,33 @@ function run_stats_tests()
 end
 end
 
+function run_gaps_tests()
+@testset "Command: gaps" begin
+    log_section("Testing: recur gaps")
+
+    @testset "Gap detection" begin
+        # Command: recur gaps "**"
+        # Should detect: Missing intermediate levels in hierarchy
+        # Example: If Module.Feature.Detail.cs exists but Module.Feature.cs doesn't
+        @test_skip "gaps basic detection"
+
+        # Command: recur gaps "UserService.**"
+        # Should detect gaps within UserService hierarchy only
+        @test_skip "gaps with pattern scope"
+
+        # Command: recur gaps "**" --show-missing
+        # Should list the specific missing intermediate files
+        @test_skip "gaps show missing files"
+    end
+
+    @testset "Output formats" begin
+        # Command: recur gaps "**" --json
+        # Should output gap information as JSON
+        @test_skip "gaps with --json"
+    end
+end
+end
+
 function run_exit_code_tests()
 @testset "Exit Codes" begin
     log_section("Testing: Exit codes")
@@ -436,6 +469,7 @@ function main()
             run_children_tests()
             run_id_tests()
             run_stats_tests()
+            run_gaps_tests()
             run_exit_code_tests()
             run_pattern_tests()
         end
