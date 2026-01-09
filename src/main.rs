@@ -214,6 +214,40 @@ enum Commands {
         #[arg(short, long)]
         ext: Option<String>,
     },
+
+    /// Find all places where a function/method is called
+    ///
+    /// Examples:
+    ///   recur callers "CreateUser" --scope "UserService.**"
+    ///   recur callers "ValidateEmail" --scope "**" --ext .cs
+    Callers {
+        /// Function or method name to find callers of
+        function: String,
+
+        /// Hierarchical scope to search within (recursive)
+        #[arg(short, long)]
+        scope: String,
+
+        /// Root directory to search
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// Number of context lines to show
+        #[arg(short = 'C', long, default_value = "2")]
+        context: usize,
+
+        /// Case-insensitive search
+        #[arg(short, long)]
+        ignore_case: bool,
+
+        /// File extensions to include
+        #[arg(short, long)]
+        ext: Option<String>,
+
+        /// Show only count of callers
+        #[arg(long)]
+        count: bool,
+    },
 }
 
 fn main() {
@@ -240,6 +274,9 @@ fn main() {
         }
         Commands::Stats { pattern, dir, level, ext } => {
             cmd_stats(pattern, dir, level, ext, cli.json, cli.color)
+        }
+        Commands::Callers { function, scope, dir, context, ignore_case, ext, count } => {
+            cmd_callers(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
         }
     };
     
@@ -699,6 +736,73 @@ fn cmd_stats(
         }
 
         let _ = writeln!(stdout, "");
+    }
+
+    Ok(())
+}
+
+fn cmd_callers(
+    function: String,
+    scope: String,
+    dir: PathBuf,
+    context: usize,
+    ignore_case: bool,
+    ext: Option<String>,
+    count_only: bool,
+    json: bool,
+    color: bool,
+) -> anyhow::Result<()> {
+    use recur::search::CallerSearcher;
+    use recur::output::{TerminalFormatter, JsonFormatter};
+
+    // Parse scope pattern
+    let scope_pattern = HierarchyPattern::parse(&scope)?;
+    let scope_pattern = if ignore_case {
+        scope_pattern.case_insensitive()
+    } else {
+        scope_pattern
+    };
+
+    // Set up search options
+    let mut options = SearchOptions {
+        root: dir,
+        case_insensitive: ignore_case,
+        context_lines: context,
+        ..Default::default()
+    };
+
+    // Parse extension filter
+    if let Some(ext_str) = ext {
+        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+    }
+
+    // Create caller searcher
+    let searcher = CallerSearcher::new(options);
+
+    // Perform search
+    let results = searcher.find_callers(&function, &scope_pattern)?;
+
+    // Handle count-only mode
+    if count_only {
+        println!("{}", results.len());
+        if results.is_empty() {
+            process::exit(1);
+        }
+        return Ok(());
+    }
+
+    // Format and output results
+    if json {
+        let output = JsonFormatter::format_caller_results(&results);
+        println!("{}", serde_json::to_string_pretty(&output)?);
+    } else {
+        let mut formatter = TerminalFormatter::new(color);
+        formatter.print_caller_results(&results);
+    }
+
+    // Exit with appropriate code
+    if results.is_empty() {
+        process::exit(1);
     }
 
     Ok(())

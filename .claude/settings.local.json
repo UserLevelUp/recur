@@ -9,7 +9,10 @@
       "Bash(../target/release/recur:*)",
       "Bash(../../target/release/recur:*)",
       "Bash(julia -e:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(for file in runtests.*.jl)",
+      "Bash(done)",
+      "Bash(./target/release/recur:*)"
     ]
   }
 }

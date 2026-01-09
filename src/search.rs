@@ -29,6 +29,20 @@ pub struct SearchResult {
     pub context_after: Vec<String>,
 }
 
+/// Result of a caller search (function call detection).
+#[derive(Debug, Clone)]
+pub struct CallerResult {
+    pub path: PathBuf,
+    pub line_number: usize,
+    pub line: String,
+    pub match_start: usize,
+    pub match_end: usize,
+    pub context_before: Vec<String>,
+    pub context_after: Vec<String>,
+    pub is_hierarchical: bool,  // Marks if file is hierarchical
+    pub depth: usize,           // Depth in hierarchy (0 = flat)
+}
+
 /// Searches for files matching a hierarchy pattern.
 pub struct FileSearcher {
     pub options: SearchOptions,
@@ -342,5 +356,110 @@ impl IdentifierSearcher {
         } else {
             Some(matches)
         }
+    }
+}
+
+/// Searches for function/method callers in hierarchically scoped files.
+pub struct CallerSearcher {
+    pub options: SearchOptions,
+}
+
+impl CallerSearcher {
+    pub fn new(options: SearchOptions) -> Self {
+        Self { options }
+    }
+
+    pub fn find_callers(
+        &self,
+        function: &str,
+        scope: &HierarchyPattern,
+    ) -> anyhow::Result<Vec<CallerResult>> {
+        let mut results = Vec::new();
+
+        // Step 1: Find all files matching the scope
+        let file_searcher = FileSearcher::new(self.options.clone());
+        let mut files = file_searcher.find(scope);
+
+        // Step 2: Sort files - hierarchical first, then by depth (deeper first)
+        files.sort_by_key(|path| {
+            let filename = path.file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or("");
+
+            let hier_name = filename.rsplit_once('.')
+                .map(|(name, _)| name)
+                .unwrap_or(filename);
+
+            let depth = hier_name.matches('.').count();
+            let is_hierarchical = depth > 0;
+
+            // Sort key: (hierarchical last=false, depth reversed)
+            // This gives: hierarchical files first, deeper files first
+            (!is_hierarchical, std::cmp::Reverse(depth))
+        });
+
+        // Step 3: Build regex pattern for function calls
+        // Matches: functionName( or functionName ( with optional whitespace
+        let pattern_str = if self.options.case_insensitive {
+            format!(r"(?i)\b{}\s*\(", regex::escape(function))
+        } else {
+            format!(r"\b{}\s*\(", regex::escape(function))
+        };
+        let call_regex = regex::Regex::new(&pattern_str)?;
+
+        // Step 4: Search within each file
+        for file_path in files {
+            if let Ok(file) = fs::File::open(&file_path) {
+                let reader = BufReader::new(file);
+
+                // Read all lines
+                let all_lines: Vec<String> = reader.lines()
+                    .filter_map(|l| l.ok())
+                    .collect();
+
+                // Determine if this file is hierarchical
+                let filename = file_path.file_name()
+                    .and_then(|n| n.to_str())
+                    .unwrap_or("");
+                let hier_name = filename.rsplit_once('.')
+                    .map(|(name, _)| name)
+                    .unwrap_or(filename);
+                let depth = hier_name.matches('.').count();
+                let is_hierarchical = depth > 0;
+
+                // Step 5: Search each line for function calls
+                for (line_num, line) in all_lines.iter().enumerate() {
+                    if let Some(mat) = call_regex.find(line) {
+                        // Extract context
+                        let context_lines = self.options.context_lines;
+                        let start_before = line_num.saturating_sub(context_lines);
+                        let context_before: Vec<String> = all_lines[start_before..line_num]
+                            .iter()
+                            .cloned()
+                            .collect();
+
+                        let end_after = (line_num + 1 + context_lines).min(all_lines.len());
+                        let context_after: Vec<String> = all_lines[line_num + 1..end_after]
+                            .iter()
+                            .cloned()
+                            .collect();
+
+                        results.push(CallerResult {
+                            path: file_path.clone(),
+                            line_number: line_num + 1,
+                            line: line.clone(),
+                            match_start: mat.start(),
+                            match_end: mat.end(),
+                            context_before,
+                            context_after,
+                            is_hierarchical,
+                            depth,
+                        });
+                    }
+                }
+            }
+        }
+
+        Ok(results)
     }
 }
