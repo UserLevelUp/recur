@@ -12,7 +12,10 @@
       "Bash(dir:*)",
       "Bash(for file in runtests.*.jl)",
       "Bash(done)",
-      "Bash(./target/release/recur:*)"
+      "Bash(./target/release/recur:*)",
+      "Bash(julia runtests.callees.jl:*)",
+      "Bash(../../../target/release/recur.exe callees \"CreateUser\" --scope \"**\")",
+      "Bash(c:/src/recur/target/release/recur.exe callees:*)"
     ]
   }
 }

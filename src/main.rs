@@ -248,6 +248,40 @@ enum Commands {
         #[arg(long)]
         count: bool,
     },
+
+    /// Find all functions/methods that a given function calls (callees/dependencies)
+    ///
+    /// Examples:
+    ///   recur callees "CreateUser" --scope "UserService.**"
+    ///   recur callees "ProcessRequest" --scope "**" --ext .cs
+    Callees {
+        /// Function or method name to find callees of
+        function: String,
+
+        /// Hierarchical scope to search within (recursive)
+        #[arg(short, long)]
+        scope: String,
+
+        /// Root directory to search
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// Number of context lines to show
+        #[arg(short = 'C', long, default_value = "2")]
+        context: usize,
+
+        /// Case-insensitive search
+        #[arg(short, long)]
+        ignore_case: bool,
+
+        /// File extensions to include
+        #[arg(short, long)]
+        ext: Option<String>,
+
+        /// Show only count of callees
+        #[arg(long)]
+        count: bool,
+    },
 }
 
 fn main() {
@@ -277,6 +311,9 @@ fn main() {
         }
         Commands::Callers { function, scope, dir, context, ignore_case, ext, count } => {
             cmd_callers(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
+        }
+        Commands::Callees { function, scope, dir, context, ignore_case, ext, count } => {
+            cmd_callees(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
         }
     };
     
@@ -798,6 +835,73 @@ fn cmd_callers(
     } else {
         let mut formatter = TerminalFormatter::new(color);
         formatter.print_caller_results(&results);
+    }
+
+    // Exit with appropriate code
+    if results.is_empty() {
+        process::exit(1);
+    }
+
+    Ok(())
+}
+
+fn cmd_callees(
+    function: String,
+    scope: String,
+    dir: PathBuf,
+    context: usize,
+    ignore_case: bool,
+    ext: Option<String>,
+    count_only: bool,
+    json: bool,
+    color: bool,
+) -> anyhow::Result<()> {
+    use recur::search::CalleeSearcher;
+    use recur::output::{TerminalFormatter, JsonFormatter};
+
+    // Parse scope pattern
+    let scope_pattern = HierarchyPattern::parse(&scope)?;
+    let scope_pattern = if ignore_case {
+        scope_pattern.case_insensitive()
+    } else {
+        scope_pattern
+    };
+
+    // Set up search options
+    let mut options = SearchOptions {
+        root: dir,
+        case_insensitive: ignore_case,
+        context_lines: context,
+        ..Default::default()
+    };
+
+    // Parse extension filter
+    if let Some(ext_str) = ext {
+        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+    }
+
+    // Create callee searcher
+    let searcher = CalleeSearcher::new(options);
+
+    // Perform search
+    let results = searcher.find_callees(&function, &scope_pattern)?;
+
+    // Handle count-only mode
+    if count_only {
+        println!("{}", results.len());
+        if results.is_empty() {
+            process::exit(1);
+        }
+        return Ok(());
+    }
+
+    // Format and output results
+    if json {
+        let output = JsonFormatter::format_callee_results(&results);
+        println!("{}", output);
+    } else {
+        let mut formatter = TerminalFormatter::new(color);
+        formatter.print_callee_results(&results);
     }
 
     // Exit with appropriate code

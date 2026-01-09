@@ -463,3 +463,155 @@ impl CallerSearcher {
         Ok(results)
     }
 }
+
+/// Result of a callee search (functions called by a function).
+/// Reuses CallerResult since the structure is the same.
+pub type CalleeResult = CallerResult;
+
+/// Searches for function/method callees (functions that a given function calls).
+pub struct CalleeSearcher {
+    pub options: SearchOptions,
+}
+
+impl CalleeSearcher {
+    pub fn new(options: SearchOptions) -> Self {
+        Self { options }
+    }
+
+    pub fn find_callees(
+        &self,
+        function: &str,
+        scope: &HierarchyPattern,
+    ) -> anyhow::Result<Vec<CalleeResult>> {
+        let mut results = Vec::new();
+
+        // Step 1: Find all files matching the scope
+        let file_searcher = FileSearcher::new(self.options.clone());
+        let mut files = file_searcher.find(scope);
+
+        // Step 2: Sort files - hierarchical first, then by depth (deeper first)
+        files.sort_by_key(|path| {
+            let filename = path.file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or("");
+
+            let hier_name = filename.rsplit_once('.')
+                .map(|(name, _)| name)
+                .unwrap_or(filename);
+
+            let depth = hier_name.matches('.').count();
+            let is_hierarchical = depth > 0;
+
+            (!is_hierarchical, std::cmp::Reverse(depth))
+        });
+
+        // Step 3: Build regex pattern for function definition
+        // Match function declarations (must have access modifier or return type before function name)
+        // This matches patterns like: "public void FuncName(" or "async Task FuncName(" or "static int FuncName("
+        let func_pattern_str = if self.options.case_insensitive {
+            format!(r"(?i)(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(", regex::escape(function))
+        } else {
+            format!(r"(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(", regex::escape(function))
+        };
+        let func_regex = regex::Regex::new(&func_pattern_str)?;
+
+        // Step 4: Build regex for finding function calls (callees)
+        let callee_pattern = regex::Regex::new(r"\b(\w+)\s*\(")?;
+
+        // Step 5: Search within each file
+        for file_path in files {
+            if let Ok(file) = fs::File::open(&file_path) {
+                let reader = BufReader::new(file);
+                let all_lines: Vec<String> = reader.lines()
+                    .filter_map(|l| l.ok())
+                    .collect();
+
+                // Determine if this file is hierarchical
+                let filename = file_path.file_name()
+                    .and_then(|n| n.to_str())
+                    .unwrap_or("");
+                let hier_name = filename.rsplit_once('.')
+                    .map(|(name, _)| name)
+                    .unwrap_or(filename);
+                let depth = hier_name.matches('.').count();
+                let is_hierarchical = depth > 0;
+
+                // Step 6: Find the function definition and extract callees
+                let mut in_function = false;
+                let mut brace_count = 0;
+
+                for (line_num, line) in all_lines.iter().enumerate() {
+                    // Check if we're entering the target function
+                    let just_entered = !in_function && func_regex.is_match(line);
+                    if just_entered {
+                        in_function = true;
+                        brace_count = line.matches('{').count() as i32 - line.matches('}').count() as i32;
+                    }
+
+                    // If we're inside the function, track braces and find callees
+                    if in_function {
+                        // Update brace count (but not on the line we just entered, we already counted it)
+                        if !just_entered {
+                            brace_count += line.matches('{').count() as i32 - line.matches('}').count() as i32;
+                        }
+
+                        // Find all function calls in this line
+                        for cap in callee_pattern.captures_iter(line) {
+                            let callee_name = &cap[1];
+
+                            // Skip common keywords and the function itself
+                            if callee_name == function ||
+                               callee_name == "if" || callee_name == "for" || callee_name == "while" ||
+                               callee_name == "switch" || callee_name == "catch" || callee_name == "return" ||
+                               callee_name == "async" || callee_name == "await" || callee_name == "new" {
+                                continue;
+                            }
+
+                            // Skip if this is the function definition itself (on the line we just entered)
+                            if just_entered && cap.get(0).map_or(false, |m| m.start() < line.find('{').unwrap_or(line.len())) {
+                                // This match is before the opening brace, likely the function definition
+                                continue;
+                            }
+
+                            let match_pos = line.find(&format!("{}(", callee_name)).unwrap_or(0);
+
+                            // Extract context
+                            let context_lines = self.options.context_lines;
+                            let start_before = line_num.saturating_sub(context_lines);
+                            let context_before: Vec<String> = all_lines[start_before..line_num]
+                                .iter()
+                                .cloned()
+                                .collect();
+
+                            let end_after = (line_num + 1 + context_lines).min(all_lines.len());
+                            let context_after: Vec<String> = all_lines[line_num + 1..end_after]
+                                .iter()
+                                .cloned()
+                                .collect();
+
+                            results.push(CalleeResult {
+                                path: file_path.clone(),
+                                line_number: line_num + 1,
+                                line: line.clone(),
+                                match_start: match_pos,
+                                match_end: match_pos + callee_name.len(),
+                                context_before,
+                                context_after,
+                                is_hierarchical,
+                                depth,
+                            });
+                        }
+
+                        // Check if we've exited the function
+                        if brace_count <= 0 {
+                            in_function = false;
+                            brace_count = 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(results)
+    }
+}

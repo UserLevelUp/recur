@@ -3,7 +3,7 @@
 use std::io::Write;
 use std::path::PathBuf;
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-use crate::search::{SearchResult, CallerResult};
+use crate::search::{SearchResult, CallerResult, CalleeResult};
 
 /// Formats output for terminal display with colors.
 pub struct TerminalFormatter {
@@ -180,6 +180,18 @@ impl TerminalFormatter {
             let _ = writeln!(self.stdout); // Blank line between results
         }
     }
+
+    pub fn print_callee_result(&mut self, result: &CalleeResult) {
+        // Reuse caller formatting since CalleeResult is a type alias
+        self.print_caller_result(result);
+    }
+
+    pub fn print_callee_results(&mut self, results: &[CalleeResult]) {
+        for result in results {
+            self.print_callee_result(result);
+            let _ = writeln!(self.stdout); // Blank line between results
+        }
+    }
 }
 
 /// Formats output as JSON.
@@ -205,6 +217,23 @@ impl JsonFormatter {
     }
 
     pub fn format_caller_results(results: &[CallerResult]) -> String {
+        let items: Vec<_> = results
+            .iter()
+            .map(|r| serde_json::json!({
+                "path": r.path.display().to_string(),
+                "line_number": r.line_number,
+                "line": r.line,
+                "is_hierarchical": r.is_hierarchical,
+                "depth": r.depth,
+                "context_before": r.context_before,
+                "context_after": r.context_after,
+            }))
+            .collect();
+        serde_json::to_string_pretty(&items).unwrap_or_else(|_| "[]".to_string())
+    }
+
+    pub fn format_callee_results(results: &[CalleeResult]) -> String {
+        // Reuse caller formatting since CalleeResult is a type alias
         let items: Vec<_> = results
             .iter()
             .map(|r| serde_json::json!({
