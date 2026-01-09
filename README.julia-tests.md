@@ -37,6 +37,13 @@ Tests are organized into functions by command:
 - `run_id_tests()` - Tests for `recur id` command
 - `run_stats_tests()` - Tests for `recur stats` command
 - `run_gaps_tests()` - Tests for `recur gaps` command (detect missing intermediate files)
+- `run_callers_tests()` - Tests for `recur callers` command (find call sites) [Future]
+- `run_callees_tests()` - Tests for `recur callees` command (find what a function calls) [Future]
+- `run_def_tests()` - Tests for `recur def` command (find definitions) [Future]
+- `run_refs_tests()` - Tests for `recur refs` command (find all references) [Future]
+- `run_scope_tests()` - Tests for `recur scope` command (scope aliases) [Future]
+- `run_id_tree_tests()` - Tests for `recur id-tree` command (identifier tree visualization) [Future]
+- `run_id_stats_tests()` - Tests for `recur id-stats` command (identifier statistics) [Future]
 - `run_exit_code_tests()` - Exit code validation tests
 - `run_pattern_tests()` - Pattern matching tests
 
@@ -220,15 +227,24 @@ The test suite uses Julia's built-in test framework which reports:
 
 As of now:
 - ✅ 1 implemented test (files with exact pattern)
-- 📝 56 placeholder tests waiting for implementation
+- 📝 88 placeholder tests waiting for implementation
+  - 56 tests for current/planned features
+  - 32 tests for future code intelligence features (callers, callees, def, refs, scope, id-tree, id-stats)
 
 ### Example Summary
 
 ```
 Test Summary:           | Pass  Broken  Total
-Recur Integration Tests |    4      52     56
+Recur Integration Tests |    4      88     92
   Command: files        |    4      10     14
   Command: find         |           10     10
+  Command: callers      |            4      4
+  Command: callees      |            3      3
+  Command: def          |            5      5
+  Command: refs         |            4      4
+  Command: scope        |            9      9
+  Command: id-tree      |            5      5
+  Command: id-stats     |            3      3
   Command: tree         |            5      5
   ...
 ```
