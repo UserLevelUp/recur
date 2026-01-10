@@ -1273,6 +1273,155 @@ The `--stdin` approach uses only:
 
 ---
 
+## Future Enhancement: `trace-stats` Command
+
+### What is `trace-stats`?
+
+A statistical analysis command that ranks functions by call graph complexity. Helps developers identify:
+- **High-impact functions** (many transitive dependencies)
+- **Refactoring hotspots** (deep call chains)
+- **Circular reference patterns** (potential design issues)
+
+### Example Usage
+
+```bash
+# Find the 5 most complex functions in the codebase
+recur trace-stats --scope "**" --ext .rs --sort-by transitive --top 5
+
+# Output:
+Function              | Direct | Transitive | Circular | Depth | Risk
+print_trace_result    | 2      | 41         | 0        | 3     | Medium
+cmd_trace             | 15     | 38         | 2        | 3     | High
+format_output         | 8      | 29         | 1        | 3     | Medium
+parse_args            | 5      | 15         | 0        | 2     | Low
+validate_input        | 2      | 8          | 0        | 2     | Low
+
+Summary: 5 functions analyzed
+  - 2 with circular references (cmd_trace, format_output)
+  - Average transitive count: 26.2
+  - Deepest call chain: 3 levels
+```
+
+### Column Definitions
+
+| Column | Meaning | Interpretation |
+|--------|---------|----------------|
+| **Direct** | Number of unique functions called directly (depth 1) | Shows immediate dependencies |
+| **Transitive** | Total unique functions reachable in call graph | Shows full impact - more = harder to refactor |
+| **Circular** | Number of distinct circular reference patterns detected | 0 = no cycles, >0 = potential design smell (but may be intentional) |
+| **Depth** | Maximum depth of call chain from this function | Shows call stack depth risk |
+| **Risk** | Refactoring risk assessment | Low (<10 transitive), Medium (10-30), High (>30) |
+
+### Sort Options
+
+```bash
+--sort-by transitive    # Default: functions with most dependencies
+--sort-by direct        # Functions calling many others directly
+--sort-by circular      # Functions with most circular patterns
+--sort-by depth         # Functions with deepest call chains
+--sort-by risk          # Combined complexity score
+```
+
+### Use Cases
+
+**1. Pre-Refactoring Analysis**
+```bash
+# Before refactoring UserService, understand its impact
+recur trace-stats --scope "UserService.**" --ext .cs --sort-by transitive
+
+# Shows which methods have the most dependencies
+# High transitive count = test carefully when changing
+```
+
+**2. Identify Circular Reference Patterns**
+```bash
+# Find all functions with circular references
+recur trace-stats --scope "**" --ext .rs --sort-by circular --filter circular-only
+
+Function                  | Direct | Transitive | Circular | Depth
+EventDispatcher.dispatch  | 8      | 24         | 3        | 4
+ObserverManager.notify    | 5      | 18         | 2        | 3
+StateManager.transition   | 6      | 15         | 1        | 3
+
+# Now you can investigate if these are intentional patterns or bugs
+```
+
+**3. Git Impact Analysis**
+```bash
+# Which changed functions have the highest complexity?
+git diff --name-only | recur trace-stats --scope "**" --stdin --sort-by transitive --top 10
+
+# Prioritize testing for high-complexity changes
+```
+
+**4. Code Review Prioritization**
+```bash
+# In a PR review, focus on changes to complex functions first
+git diff main..feature --name-only | \
+  recur trace-stats --scope "**" --stdin --sort-by risk --format json | \
+  jq '.functions[] | select(.risk == "High")'
+```
+
+### Why This Is Useful
+
+**Saves Time & Energy**:
+1. **No manual call graph exploration** - instantly see complexity metrics
+2. **Objective refactoring priority** - sort by transitive count to find highest-impact functions
+3. **Circular reference detection** - stop logic patterns identified automatically
+4. **Risk assessment** - know which functions are dangerous to modify
+5. **Git integration** - focus testing on complex changed functions
+
+### Design Philosophy: Circular Stop Logic Probability
+
+The `Circular` column counts **distinct circular reference patterns**, not frequency:
+
+```
+CreateWizard3() → ApplyTemplate() → RenderTemplate() → CreateWizard3()  [circular pattern 1]
+CreateWizard3() → SaveWizard() → ValidateWizard() → CreateWizard3()    [circular pattern 2]
+```
+
+This would show `Circular: 2` for `CreateWizard3()`.
+
+**Key principle**: Whether circular references are acceptable is **the developer's decision**, not recur's judgment.
+
+- ✅ Recur reports: "2 circular patterns detected"
+- ❌ Recur does NOT say: "WARNING: Fix these circular references!"
+
+**Examples of acceptable circular patterns**:
+- Event loops (dispatcher ↔ handler)
+- Observer patterns (subject ↔ observer)
+- State machines (state ↔ transition manager)
+- Recursive data structures with proper termination
+
+**Examples of problematic circular patterns**:
+- Constructor chains causing initialization deadlocks
+- Memory leaks from strong reference cycles
+- Unintended coupling from poor architecture
+
+Recur shines a light. Developer decides if it's a feature or a bug.
+
+### Implementation Status
+
+**Phase**: Future enhancement (IMPROVEMENT7 or later)
+
+**Current Status**:
+- ✅ `trace` command exists (IMPROVEMENT5) - provides foundation
+- ✅ Circular detection implemented in TraceSearcher
+- ✅ Direct/transitive counting works
+- ❌ `trace-stats` command not yet implemented
+- ❌ Risk scoring logic not implemented
+- ❌ Sorting/filtering options not implemented
+
+**Estimated effort**: 4-6 hours
+- 2 hours: Implement `trace-stats` command structure
+- 2 hours: Add sorting, filtering, risk scoring
+- 1 hour: Output formatting (table, JSON)
+- 1 hour: Julia tests
+
+**Depends on**: IMPROVEMENT6 (--stdin) for Git integration workflows
+
+---
+
 ## Quick Reference: What Needs to be Done
 
 ### Current State

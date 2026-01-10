@@ -53,7 +53,9 @@ try
         include("runtests.trace.jl")
 
         # TODO: Add more test modules as they are implemented
-        # include("runtests.gaps.jl")  # Needs feature implementation
+        # include("runtests.stdin.jl")       # IMPROVEMENT6 - Git integration with --stdin flag
+        # include("runtests.trace-stats.jl") # IMPROVEMENT7 - Statistical analysis of call graphs
+        # include("runtests.gaps.jl")        # Needs feature implementation
 
     end
 finally
