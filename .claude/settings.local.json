@@ -20,7 +20,11 @@
       "Bash(git pull:*)",
       "Bash(powershell -c \"\\(Get-Content ''c:\\\\src\\\\recur\\\\src\\\\search.rs''\\).Count\")",
       "Bash(julia runtests.trace.jl:*)",
-      "Bash(recur trace:*)"
+      "Bash(recur trace:*)",
+      "Bash(target/release/recur.exe stats:*)",
+      "Bash(target/release/recur.exe:*)",
+      "Bash(rustc:*)",
+      "Bash(cargo clean:*)"
     ]
   }
 }
