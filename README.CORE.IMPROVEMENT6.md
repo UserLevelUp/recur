@@ -1,5 +1,91 @@
 # Core Improvement 6: Git Integration & Impact Analysis
 
+## Current Status
+
+**🟡 IN PROGRESS** - The `--stdin` flag has been added to all command definitions but is not yet wired up to the command handlers.
+
+### What's Done ✅
+- ✅ All command structs (10 total) have `stdin: bool` field defined
+- ✅ Help text and examples show `--stdin` usage
+- ✅ CLI parsing recognizes the flag
+- ✅ IMPROVEMENT5 (trace command) is complete and tested
+
+### What's Needed 🔧
+- ❌ Wire stdin parameter to command handlers (10 match arms in main.rs)
+- ❌ Implement `read_paths_from_stdin()` helper function (search.rs)
+- ❌ Update each handler signature to accept stdin parameter (10 functions)
+- ❌ Implement stdin logic in each handler body (10 if-else branches)
+- ❌ Add comprehensive Julia tests for stdin functionality
+
+**Estimated time to complete**: ~2.5 hours
+
+### TL;DR for Implementation
+1. Add `read_paths_from_stdin()` function to `src/search.rs` (15 lines)
+2. Extract `stdin` from command structs in match arms (10 edits)
+3. Add `stdin: bool` to handler signatures (10 edits)
+4. Implement `if stdin { read_paths_from_stdin()... } else { existing code }` in handlers (10 edits)
+5. Test with Git commands
+
+See [Quick Reference](#quick-reference-what-needs-to-be-done) section at bottom for detailed checklist.
+
+### Implementation Flow Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  CURRENT STATE (Partially Implemented)                          │
+├─────────────────────────────────────────────────────────────────┤
+│  CLI Struct (lines 38-384)                                      │
+│    Commands::Files { ..., stdin: bool }        ✅ DONE          │
+│    Commands::Find { ..., stdin: bool }         ✅ DONE          │
+│    Commands::Stats { ..., stdin: bool }        ✅ DONE          │
+│    ... (7 more commands)                       ✅ DONE          │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 2: Match Arms (lines 389-419)            ❌ TODO          │
+├─────────────────────────────────────────────────────────────────┤
+│    Commands::Files { ..., stdin } =>                            │
+│        cmd_files(..., stdin, ...)   ← Extract stdin from struct │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 3: Handler Signatures                    ❌ TODO          │
+├─────────────────────────────────────────────────────────────────┤
+│    fn cmd_files(..., stdin: bool, ...) ->      ← Add parameter  │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 1: Helper Function (search.rs)           ❌ TODO          │
+├─────────────────────────────────────────────────────────────────┤
+│    pub fn read_paths_from_stdin() -> Result<Vec<PathBuf>> {    │
+│        // Read lines from stdin, return paths                   │
+│    }                                                             │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  STEP 4: Handler Body Logic                    ❌ TODO          │
+├─────────────────────────────────────────────────────────────────┤
+│    let files = if stdin {                                       │
+│        read_paths_from_stdin()?  ← Use helper function          │
+│            .into_iter()                                         │
+│            .filter(|p| pattern.matches(p))                      │
+│            .collect()                                           │
+│    } else {                                                     │
+│        /* existing filesystem search code */                    │
+│    };                                                           │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  RESULT: Git Integration Works!                                 │
+├─────────────────────────────────────────────────────────────────┤
+│    $ git diff --name-only | recur files "**" --stdin            │
+│    $ git ls-files | recur stats "**" --stdin                    │
+│    $ echo "path/to/file.cs" | recur find "TODO" --stdin         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Overview
 
 Make `recur` **Git-aware** and **pipeline-friendly** to provide impact analysis for code changes. Embrace Unix philosophy: do one thing well, compose with other tools.
@@ -354,24 +440,31 @@ git diff main..HEAD --name-only | recur stats "**" --stdin
 
 ## Implementation Plan
 
-### Phase 1: Add `--stdin` Flag (Core Feature)
+### Phase 1: Wire Up `--stdin` Flag (Core Feature)
+
+**Status**: Command structs already have `stdin: bool` field. Need to wire it to handlers.
 
 **Estimated time**: 2-3 hours
 
 **Files to modify**:
-- `src/main.rs` - Add `--stdin` flag to all command definitions
-- `src/search.rs` - Add helper function to read files from stdin
+- `src/search.rs` - Add helper function to read files from stdin (NEW)
+- `src/main.rs` - Wire stdin parameter through to handlers (MODIFY)
 
-**Step 1.1**: Create stdin helper utility
+---
+
+### Step 1: Create stdin helper utility in search.rs
+
+**Location**: Add to `src/search.rs` at the end of the file (after existing code)
 
 ```rust
 // src/search.rs
 
 use std::io::{BufRead, stdin};
 use std::path::PathBuf;
-use antml::{Result, Context};
+use anyhow::{Result, Context};
 
 /// Read file paths from stdin (one per line)
+/// Used for Git integration workflows like: git diff --name-only | recur files --stdin
 pub fn read_paths_from_stdin() -> Result<Vec<PathBuf>> {
     let stdin = stdin();
     let mut paths = Vec::new();
@@ -388,90 +481,281 @@ pub fn read_paths_from_stdin() -> Result<Vec<PathBuf>> {
 }
 ```
 
-**Step 1.2**: Add `--stdin` flag to command structs
+**Note**: Use `anyhow::{Result, Context}` (already imported at top of search.rs), NOT `antml`.
 
+---
+
+### Step 2: Wire stdin to command match arms
+
+**Location**: `src/main.rs` lines 389-419
+
+**Current state** (line 390):
 ```rust
-// src/main.rs - Update all Commands variants
-
-Commands::Files {
-    pattern: String,
-    // ... existing fields ...
-
-    /// Read file paths from stdin instead of searching filesystem
-    #[arg(long)]
-    stdin: bool,
+Commands::Files { pattern, dir, ext, ignore_case, min_depth, max_depth, count, .. } => {
+    cmd_files(pattern, dir, ext, ignore_case, min_depth, max_depth, count, cli.json, cli.color)
 }
-
-Commands::Stats {
-    pattern: String,
-    // ... existing fields ...
-
-    #[arg(long)]
-    stdin: bool,
-}
-
-Commands::Callers {
-    function: String,
-    // ... existing fields ...
-
-    #[arg(long)]
-    stdin: bool,
-}
-
-// Repeat for: Callees, Trace, Find, Tree, etc.
 ```
 
-**Step 1.3**: Update command handlers to use stdin
-
+**Update to**:
 ```rust
-// src/main.rs - Example for cmd_files
+Commands::Files { pattern, dir, ext, ignore_case, min_depth, max_depth, count, stdin } => {
+    cmd_files(pattern, dir, ext, ignore_case, min_depth, max_depth, count, stdin, cli.json, cli.color)
+}
+```
 
+**Repeat for all 7 commands**:
+1. `Commands::Files` - add `stdin` parameter
+2. `Commands::Find` - add `stdin` parameter
+3. `Commands::Tree` - add `stdin` parameter
+4. `Commands::Related` - add `stdin` parameter
+5. `Commands::Children` - add `stdin` parameter
+6. `Commands::Id` - add `stdin` parameter
+7. `Commands::Stats` - add `stdin` parameter
+8. `Commands::Callers` - add `stdin` parameter
+9. `Commands::Callees` - add `stdin` parameter
+10. `Commands::Trace` - add `stdin` parameter
+
+---
+
+### Step 3: Update command handler signatures
+
+**Add `stdin: bool` parameter to each function**:
+
+**Example for cmd_files** (current signature at line ~425):
+```rust
+// BEFORE
 fn cmd_files(
     pattern: String,
     dir: PathBuf,
-    stdin: bool,  // NEW parameter
+    ext: Option<String>,
+    ignore_case: bool,
+    min_depth: usize,
+    max_depth: Option<usize>,
+    count: bool,
     json: bool,
     color: bool,
-) -> Result<()> {
-    let scope_pattern = HierarchyPattern::parse(&pattern)?;
+) -> anyhow::Result<()>
 
-    // Get files from stdin or filesystem
+// AFTER
+fn cmd_files(
+    pattern: String,
+    dir: PathBuf,
+    ext: Option<String>,
+    ignore_case: bool,
+    min_depth: usize,
+    max_depth: Option<usize>,
+    count: bool,
+    stdin: bool,        // NEW
+    json: bool,
+    color: bool,
+) -> anyhow::Result<()>
+```
+
+**Apply to all command handlers**:
+- `cmd_files` (line ~425)
+- `cmd_find` (line ~475)
+- `cmd_tree` (line ~545)
+- `cmd_related` (line ~575)
+- `cmd_children` (line ~605)
+- `cmd_id` (line ~635)
+- `cmd_stats` (line ~680)
+- `cmd_callers` (line ~775)
+- `cmd_callees` (line ~890)
+- `cmd_trace` (line ~1017)
+
+---
+
+### Step 4: Implement stdin logic in each handler
+
+**Pattern to use**:
+
+```rust
+// Import at top of main.rs
+use recur::search::read_paths_from_stdin;
+
+// In each command handler function body:
+let files = if stdin {
+    // Read from stdin, filter by pattern/scope
+    let all_paths = read_paths_from_stdin()?;
+    all_paths.into_iter()
+        .filter(|p| {
+            // Apply command-specific filtering
+            // For files: scope_pattern.matches(p)
+            // For find/callers/callees/trace: scope_pattern.matches(p) && ext_filter
+            // etc.
+        })
+        .collect()
+} else {
+    // Existing filesystem search code (unchanged)
+    let searcher = FileSearcher::new(SearchOptions {
+        root: dir,
+        extensions: parse_extensions(ext),
+        ignore_case,
+        ..Default::default()
+    });
+    searcher.find_files(&pattern)?
+};
+```
+
+**Command-specific implementations**:
+
+#### 4.1. `cmd_files` (line ~425)
+```rust
+fn cmd_files(..., stdin: bool, ...) -> anyhow::Result<()> {
+    let pattern = HierarchyPattern::parse(&pattern_str)?;
+
     let files = if stdin {
         let all_paths = read_paths_from_stdin()?;
-        // Filter by pattern
+        all_paths.into_iter()
+            .filter(|p| pattern.matches(p))
+            .filter(|p| {
+                if let Some(ref exts) = ext {
+                    let ext_list: Vec<&str> = exts.split(',').collect();
+                    p.extension()
+                        .and_then(|e| e.to_str())
+                        .map(|e| ext_list.iter().any(|&ex| ex.trim_start_matches('.') == e))
+                        .unwrap_or(false)
+                } else {
+                    true
+                }
+            })
+            .collect()
+    } else {
+        // Existing code (FileSearcher::new(...).find_files(...))
+    };
+
+    // Rest unchanged
+}
+```
+
+#### 4.2. `cmd_find` (line ~475)
+```rust
+fn cmd_find(..., stdin: bool, ...) -> anyhow::Result<()> {
+    let scope_pattern = HierarchyPattern::parse(&scope)?;
+
+    let files = if stdin {
+        let all_paths = read_paths_from_stdin()?;
+        all_paths.into_iter()
+            .filter(|p| scope_pattern.matches(p))
+            // Apply ext filter if present
+            .collect()
+    } else {
+        // Existing FileSearcher code
+    };
+
+    // Use files for content search (rest unchanged)
+}
+```
+
+#### 4.3. `cmd_tree` (line ~545)
+```rust
+fn cmd_tree(..., stdin: bool, ...) -> anyhow::Result<()> {
+    let files = if stdin {
+        let all_paths = read_paths_from_stdin()?;
+        all_paths.into_iter()
+            .filter(|p| {
+                // Filter by base pattern
+                p.file_stem()
+                    .and_then(|s| s.to_str())
+                    .map(|s| s.starts_with(&base))
+                    .unwrap_or(false)
+            })
+            .collect()
+    } else {
+        // Existing FileSearcher code
+    };
+
+    // Build tree from files (rest unchanged)
+}
+```
+
+#### 4.4. `cmd_stats` (line ~680)
+```rust
+fn cmd_stats(..., stdin: bool, ...) -> anyhow::Result<()> {
+    let pattern = HierarchyPattern::parse(&pattern_str)?;
+
+    let files = if stdin {
+        let all_paths = read_paths_from_stdin()?;
+        all_paths.into_iter()
+            .filter(|p| pattern.matches(p))
+            .collect()
+    } else {
+        // Existing FileSearcher code
+    };
+
+    // Compute stats from files (rest unchanged)
+}
+```
+
+#### 4.5. `cmd_callers` (line ~775)
+```rust
+fn cmd_callers(..., stdin: bool, ...) -> anyhow::Result<()> {
+    let scope_pattern = HierarchyPattern::parse(&scope)?;
+
+    let files = if stdin {
+        let all_paths = read_paths_from_stdin()?;
         all_paths.into_iter()
             .filter(|p| scope_pattern.matches(p))
             .collect()
     } else {
-        // Normal filesystem search
-        let searcher = FileSearcher::new(SearchOptions {
-            root: dir,
-            ..Default::default()
-        });
-        searcher.find(&scope_pattern)
+        // Existing FileSearcher code
     };
 
-    // Rest of function unchanged...
-    if json {
-        println!("{}", JsonFormatter::format_file_list(&files));
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_file_list(&files);
-    }
-
-    Ok(())
+    // Use files for caller search (rest unchanged)
 }
 ```
 
-**Step 1.4**: Apply same pattern to other commands
+#### 4.6. `cmd_callees` (line ~890)
+```rust
+fn cmd_callees(..., stdin: bool, ...) -> anyhow::Result<()> {
+    let scope_pattern = HierarchyPattern::parse(&scope)?;
 
-Repeat Step 1.3 for:
-- `cmd_stats` - stats on stdin files
-- `cmd_callers` - find callers only in stdin files
-- `cmd_callees` - find callees only in stdin files
-- `cmd_trace` - trace within stdin files
-- `cmd_find` - search content in stdin files
-- `cmd_tree` - show tree of stdin files
+    let files = if stdin {
+        let all_paths = read_paths_from_stdin()?;
+        all_paths.into_iter()
+            .filter(|p| scope_pattern.matches(p))
+            .collect()
+    } else {
+        // Existing FileSearcher code
+    };
+
+    // Use files for callee search (rest unchanged)
+}
+```
+
+#### 4.7. `cmd_trace` (line ~1017)
+```rust
+fn cmd_trace(..., stdin: bool, ...) -> anyhow::Result<()> {
+    let scope_pattern = HierarchyPattern::parse(&scope)?;
+
+    // Trace doesn't use file list directly, but could limit scope
+    // For now, stdin could pre-filter the search space
+    // Implementation depends on TraceSearcher design
+
+    // If stdin provided, pass filtered files to TraceSearcher
+    // Otherwise use existing scope-based search
+}
+```
+
+---
+
+### Step 5: Test each command with stdin
+
+**Manual tests** (run in bash/powershell):
+
+```bash
+# Test files command
+echo -e "UserService.cs\nUserService.Auth.cs" | recur files "**" --stdin
+
+# Test stats command
+git diff --name-only | recur stats "**" --stdin
+
+# Test callers command
+git ls-files "*.cs" | recur callers "CreateUser" --scope "**" --stdin
+
+# Test find command
+echo "README.md" | recur find "TODO" --scope "**" --stdin
+```
 
 ### Phase 2: Optional Convenience Wrappers (If Requested)
 
@@ -672,6 +956,91 @@ The `--stdin` approach uses only:
 
 ---
 
-**Status**: Design finalized - ready to implement after IMPROVEMENT5 (trace command) is complete.
+**Status**: IMPROVEMENT5 (trace) is complete ✅. IMPROVEMENT6 is partially implemented - `--stdin` flags exist in command structs but need wiring.
 
 **Philosophy**: Embrace Unix. Let `git` do Git, let `recur` do hierarchical analysis. Pipes connect them.
+
+---
+
+## Quick Reference: What Needs to be Done
+
+### Current State
+- ✅ All command structs have `stdin: bool` field
+- ✅ Help text shows `--stdin` in examples
+- ❌ stdin parameter not passed to command handlers
+- ❌ stdin helper function doesn't exist
+- ❌ Command handlers don't use stdin
+
+### Checklist for Implementation
+
+**Step 1**: Create `read_paths_from_stdin()` in `src/search.rs`
+- [ ] Add function at end of file
+- [ ] Import `std::io::{BufRead, stdin}` (may already be there)
+- [ ] Make function public: `pub fn read_paths_from_stdin() -> Result<Vec<PathBuf>>`
+
+**Step 2**: Wire stdin to match arms in `src/main.rs` (lines 389-419)
+- [ ] `Commands::Files { ..., stdin }` (line ~390)
+- [ ] `Commands::Find { ..., stdin }` (line ~393)
+- [ ] `Commands::Tree { ..., stdin }` (line ~396)
+- [ ] `Commands::Related { ..., stdin }` (line ~399)
+- [ ] `Commands::Children { ..., stdin }` (line ~402)
+- [ ] `Commands::Id { ..., stdin }` (line ~405)
+- [ ] `Commands::Stats { ..., stdin }` (line ~408)
+- [ ] `Commands::Callers { ..., stdin }` (line ~411)
+- [ ] `Commands::Callees { ..., stdin }` (line ~414)
+- [ ] `Commands::Trace { ..., stdin }` (line ~417)
+
+**Step 3**: Update handler function signatures (add `stdin: bool` parameter)
+- [ ] `fn cmd_files(..., stdin: bool, ...) ->` (line ~425)
+- [ ] `fn cmd_find(..., stdin: bool, ...) ->` (line ~475)
+- [ ] `fn cmd_tree(..., stdin: bool, ...) ->` (line ~545)
+- [ ] `fn cmd_related(..., stdin: bool, ...) ->` (line ~575)
+- [ ] `fn cmd_children(..., stdin: bool, ...) ->` (line ~605)
+- [ ] `fn cmd_id(..., stdin: bool, ...) ->` (line ~635)
+- [ ] `fn cmd_stats(..., stdin: bool, ...) ->` (line ~680)
+- [ ] `fn cmd_callers(..., stdin: bool, ...) ->` (line ~775)
+- [ ] `fn cmd_callees(..., stdin: bool, ...) ->` (line ~890)
+- [ ] `fn cmd_trace(..., stdin: bool, ...) ->` (line ~1017)
+
+**Step 4**: Implement stdin logic in each handler body
+- [ ] Add `use recur::search::read_paths_from_stdin;` at top of main.rs
+- [ ] `cmd_files`: if stdin branch with pattern filtering
+- [ ] `cmd_find`: if stdin branch with scope filtering
+- [ ] `cmd_tree`: if stdin branch with base filtering
+- [ ] `cmd_related`: if stdin branch (filter by parent)
+- [ ] `cmd_children`: if stdin branch (filter by parent prefix)
+- [ ] `cmd_id`: if stdin branch with scope filtering
+- [ ] `cmd_stats`: if stdin branch with pattern filtering
+- [ ] `cmd_callers`: if stdin branch with scope filtering
+- [ ] `cmd_callees`: if stdin branch with scope filtering
+- [ ] `cmd_trace`: if stdin branch (limit search space)
+
+**Step 5**: Test with real Git commands
+- [ ] `git diff --name-only | recur files "**" --stdin`
+- [ ] `git ls-files "*.cs" | recur stats "**" --stdin`
+- [ ] `git diff --staged --name-only | recur callers "CreateUser" --scope "**" --stdin`
+
+**Step 6**: Add Julia tests for stdin
+- [ ] Create `runtests.stdin.jl` with tests for each command
+- [ ] Update existing test files to include stdin test cases
+
+### Estimated Time Breakdown
+- Step 1: 15 minutes (one function)
+- Step 2: 20 minutes (10 match arms)
+- Step 3: 20 minutes (10 signatures)
+- Step 4: 60 minutes (10 handler bodies)
+- Step 5: 20 minutes (manual testing)
+- Step 6: 30 minutes (Julia tests)
+- **Total: ~2.5 hours**
+
+### Files to Modify
+1. `src/search.rs` - Add 1 new function (~15 lines)
+2. `src/main.rs` - Modify 10 match arms, 10 signatures, 10 handler bodies (~200 lines modified)
+3. `julia-tests/runtests.stdin.jl` - New test file (~150 lines)
+
+### Key Design Decisions Already Made
+✅ Use `--stdin` flag (not Git library)
+✅ One path per line (Unix convention)
+✅ Filter after reading (composable)
+✅ Apply to ALL commands (not just some)
+✅ Phase 1 only (no convenience wrappers yet)
