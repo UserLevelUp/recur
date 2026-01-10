@@ -16,7 +16,8 @@
       "Bash(julia runtests.callees.jl:*)",
       "Bash(../../../target/release/recur.exe callees \"CreateUser\" --scope \"**\")",
       "Bash(c:/src/recur/target/release/recur.exe callees:*)",
-      "Bash(./target/release/recur.exe:*)"
+      "Bash(./target/release/recur.exe:*)",
+      "Bash(git pull:*)"
     ]
   }
 }
