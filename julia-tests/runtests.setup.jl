@@ -12,13 +12,13 @@ using Test
 using JSON3
 
 # Configuration
-const RECUR_BIN = "../target/release/recur"
+const RECUR_BIN = joinpath(@__DIR__, "..", "target", "release", "recur" * (Sys.iswindows() ? ".exe" : ""))
 const TEST_DIR = "test_environment"
 const VERBOSE = "--verbose" in ARGS
 
 # Logging utilities
 function log_test(msg::String)
-    VERBOSE && println("  ✓ $msg")
+    VERBOSE && println("  ok  $msg")
 end
 
 function log_section(msg::String)
@@ -28,7 +28,7 @@ function log_section(msg::String)
 end
 
 function log_error(msg::String)
-    println("  ✗ ERROR: $msg")
+    println("  ERROR: $msg")
 end
 
 # Setup test environment
@@ -54,6 +54,17 @@ function setup_test_environment()
     create_test_file("ApiController.cs", "public class ApiController { public void Initialize() { } }")
     create_test_file("ApiController.Auth.cs", "public async Task Authenticate() { Initialize(); ValidateEmail(email); }")
     create_test_file("ApiController.Users.cs", "public async Task GetUsers() { Initialize(); }")
+
+    # Trace-specific hierarchy
+    create_test_file("LevelController.CreateWizard3.cs", "public class LevelController { public void CreateWizard3() { ApplyTemplate(\"base\"); SaveWizard(); } public void SaveWizard() { } }")
+    create_test_file("LevelController.CreateWizard3.Template.cs", "public partial class LevelController { public void ApplyTemplate(string name) { RenderTemplate(); } }")
+    create_test_file("LevelController.CreateWizard3.TemplateAlt.cs", "public partial class LevelController { public void ApplyTemplate(int id) { RenderTemplate(); } }")
+    create_test_file("LevelController.CreateWizard3.Rendering.cs", "public partial class LevelController { public void RenderTemplate() { } }")
+    create_test_file("DynamicGameComponentService.Delete.cs", "public class DynamicGameComponentService { public void DeleteGameComponentAsync() { ValidatePermissions(); CleanupComponents(); } }")
+    create_test_file("DynamicGameComponentService.Validation.cs", "public partial class DynamicGameComponentService { public void ValidatePermissions() { LogAccess(); } }")
+    create_test_file("DynamicGameComponentService.cs", "public partial class DynamicGameComponentService { public void GetDeletedComponentsAsync() { } public void LogAccess() { } }")
+    create_test_file("MaintenanceService.cs", "public class MaintenanceService { public void CleanupComponents() { GetDeletedComponentsAsync(); } }")
+    create_test_file("AddComponent.cshtml", "<div data-tab=\"CreateWizard3.Tab\"></div>")
 
     # Config hierarchy
     create_test_file("config.json", "{\"database\": {\"connection\": \"test\"}}")
@@ -130,25 +141,25 @@ function run_recur(args::String)
 
     # Build command string for display
     display_cmd = join(map(arg -> contains(arg, ' ') ? "\"$arg\"" : arg, args_vec), " ")
-    println("  → recur $display_cmd")
+    println("  -> recur $display_cmd")
 
     # Run the command
+    cmd = `$RECUR_BIN $args_vec`
+    out = IOBuffer()
+    err = IOBuffer()
+    success = true
+
     try
-        result = read(`$RECUR_BIN $args_vec`, String)
-        return (true, result, "")
+        run(pipeline(cmd, stdout=out, stderr=err))
     catch e
         if isa(e, ProcessFailedException)
-            # Try to get stderr
-            try
-                err_result = read(pipeline(`$RECUR_BIN $args_vec`, stderr=devnull), String)
-                return (false, "", err_result)
-            catch
-                return (false, "", "Command failed: $e")
-            end
+            success = false
         else
             return (false, "", "Error running command: $e")
         end
     end
+
+    return (success, String(take!(out)), String(take!(err)))
 end
 
 # Export all public functions

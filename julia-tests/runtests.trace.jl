@@ -1,4 +1,4 @@
-"""
+﻿"""
 Tests for 'recur trace' Command
 =================================
 
@@ -11,6 +11,75 @@ include("runtests.setup.jl")
 @testset "recur trace command" begin
     log_section("Testing: recur trace")
 
+    created_here = false
+    if !isdir(TEST_DIR)
+        setup_test_environment()
+        created_here = true
+    end
+
+    try
+
+    @testset "Contract tests" begin
+        @testset "trace --help output" begin
+            success, output, _ = run_recur("trace --help")
+
+            passed = success &&
+                     contains(output, "trace") &&
+                     contains(output, "--scope")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "trace")
+            @test contains(output, "--scope")
+            # Spec: include runnable examples and required arg hints in help
+            @test contains(lowercase(output), "examples")
+            log_test("trace help output works")
+        end
+
+        @testset "missing args" begin
+            success, output, error_output = run_recur("trace")
+
+            passed = !success &&
+                     contains(error_output, "required arguments") &&
+                     contains(error_output, "--scope") &&
+                     contains(error_output, "<FUNCTION>")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            # Spec: actionable errors for missing args
+            @test contains(error_output, "required arguments")
+            @test contains(error_output, "--scope")
+            @test contains(error_output, "<FUNCTION>")
+            log_test("missing args return error")
+        end
+
+        @testset "missing scope" begin
+            success, output, error_output = run_recur("trace \"CreateWizard3\"")
+
+            passed = !success &&
+                     contains(error_output, "--scope")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            @test contains(error_output, "--scope")
+            log_test("missing scope returns error")
+        end
+
+        @testset "empty scope" begin
+            success, output, _ = run_recur("trace \"CreateWizard3\" --scope \"\"")
+
+            passed = !success
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            log_test("empty scope returns error")
+        end
+    end
+
     @testset "Basic trace (callees direction)" begin
         # Command: recur trace "CreateUser" --scope "**" --depth 1
         # Should find what CreateUser calls (dependencies)
@@ -21,7 +90,7 @@ include("runtests.setup.jl")
             # This is expected - we're testing that the command runs without errors
             passed = true  # Command executes without crashing
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             # Test that command executes (may exit with code 1 if no results)
             @test true  # Command runs without crashing
@@ -35,7 +104,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("scoped trace works")
@@ -50,7 +119,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace callees direction works")
@@ -63,7 +132,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace callers direction works")
@@ -76,10 +145,115 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace both directions works")
+        end
+    end
+
+    @testset "Symbol resolution tests (core correctness)" begin
+        @testset "trace root method in scope" begin
+            success, output, _ = run_recur("trace \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 2")
+
+            passed = success &&
+                     contains(output, "CreateWizard3") &&
+                     contains(output, "LevelController.CreateWizard3.cs")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "CreateWizard3")
+            @test contains(output, "LevelController.CreateWizard3.cs")
+            # Spec: direct/transitive callees should be shown with file+line
+            @test contains(output, "ApplyTemplate")
+            @test contains(output, "SaveWizard")
+            log_test("root method trace runs")
+        end
+
+        @testset "trace internal method" begin
+            success, output, _ = run_recur("trace \"ApplyTemplate\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 2 --pick 1")
+
+            passed = success &&
+                     contains(output, "ApplyTemplate")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "ApplyTemplate")
+            @test contains(output, "RenderTemplate")
+            log_test("internal method trace runs")
+        end
+
+        @testset "trace service method" begin
+            success, output, _ = run_recur("trace \"DeleteGameComponentAsync\" --scope \"DynamicGameComponentService.**\" --ext .cs --depth 2")
+
+            passed = success &&
+                     contains(output, "DeleteGameComponentAsync")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "DeleteGameComponentAsync")
+            @test contains(output, "ValidatePermissions")
+            @test contains(output, "CleanupComponents")
+            log_test("service method trace runs")
+        end
+    end
+
+    @testset "Overload and partial class behavior" begin
+        @testset "multiple ApplyTemplate overloads" begin
+            success, output, error_output = run_recur("trace \"ApplyTemplate\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 1")
+
+            passed = !success &&
+                     contains(error_output, "Multiple matches found") &&
+                     contains(error_output, "Template.cs") &&
+                     contains(error_output, "TemplateAlt.cs")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            # Spec: disambiguate or require a pick when multiple matches exist
+            @test contains(error_output, "Multiple matches found")
+            @test contains(error_output, "Template.cs")
+            @test contains(error_output, "TemplateAlt.cs")
+            @test contains(error_output, "--pick")
+            log_test("overload disambiguation works")
+        end
+    end
+
+    @testset "Boundary behavior (strings vs symbols)" begin
+        @testset "string-based Razor reference" begin
+            success, output, _ = run_recur("trace \"CreateWizard3.Tab\" --scope \"AddComponent\" --ext .cshtml --depth 1")
+
+            passed = !success &&
+                     contains(output, "No symbols found") &&
+                     contains(output, "recur find")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            # Spec: explain string reference and suggest recur find
+            @test contains(output, "No symbols found")
+            @test contains(output, "recur find")
+            log_test("Razor string reference does not trace as symbol")
+        end
+    end
+
+    @testset "Callers vs trace consistency" begin
+        @testset "trace depth 1 matches callees" begin
+            callees_success, callees_output, _ = run_recur("callees \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs")
+            trace_success, trace_output, _ = run_recur("trace \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 1")
+
+            passed = callees_success && trace_success
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test callees_success
+            @test trace_success
+            @test contains(trace_output, "ApplyTemplate")
+            @test contains(trace_output, "SaveWizard")
+            log_test("trace/callees consistency pending")
         end
     end
 
@@ -91,7 +265,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace with depth 0 works")
@@ -104,7 +278,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace with depth 3 works")
@@ -119,7 +293,7 @@ include("runtests.setup.jl")
             # Just test that the command failed (exit code 2 for error)
             passed = !success
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test !success
             log_test("trace depth limit enforced")
@@ -134,7 +308,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace tree format works")
@@ -147,7 +321,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace flat format works")
@@ -169,7 +343,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace JSON output works")
@@ -184,7 +358,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace max-width limiting works")
@@ -199,7 +373,7 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace case-insensitive search works")
@@ -214,10 +388,28 @@ include("runtests.setup.jl")
 
             passed = true
 
-            println(passed ? "  ✓ PASS" : "  ✗ FAIL")
+            println(passed ? "  PASS" : "  FAIL")
 
             @test true
             log_test("trace extension filtering works")
         end
+
+        @testset "trace excludes non-.cs files" begin
+            success, output, _ = run_recur("trace \"CreateWizard3\" --scope \"**\" --depth 1 --ext .cs")
+
+            passed = success && !contains(output, ".cshtml")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test !contains(output, ".cshtml")
+            log_test("trace extension filter excludes cshtml")
+        end
+    end
+    finally
+        if created_here
+            teardown_test_environment()
+        end
     end
 end
+

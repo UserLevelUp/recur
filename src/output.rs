@@ -1,9 +1,9 @@
 //! Output formatting (terminal, JSON, etc.).
 
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-use crate::search::{SearchResult, CallerResult, CalleeResult, TraceResult, TraceNode, TraceDirection};
+use crate::search::{SearchResult, CallerResult, CalleeResult, TraceResult, TraceNode, TraceDirection, TraceCallKind, TraceStopReason};
 
 /// Formats output for terminal display with colors.
 pub struct TerminalFormatter {
@@ -251,6 +251,15 @@ impl JsonFormatter {
 
     pub fn format_trace_result(result: &TraceResult) -> String {
         fn node_to_json(node: &TraceNode) -> serde_json::Value {
+            let call_site = node.call_site.as_ref().map(|site| {
+                serde_json::json!({
+                    "path": site.path.display().to_string(),
+                    "line_number": site.line_number,
+                    "line": site.line,
+                    "call_kind": format!("{:?}", site.call_kind),
+                })
+            });
+
             serde_json::json!({
                 "function": node.function,
                 "path": node.path.display().to_string(),
@@ -258,6 +267,8 @@ impl JsonFormatter {
                 "is_hierarchical": node.is_hierarchical,
                 "depth": node.depth,
                 "is_cycle": node.is_cycle,
+                "stop_reason": node.stop_reason.map(|r| format!("{:?}", r)),
+                "call_site": call_site,
                 "children": node.children.iter().map(node_to_json).collect::<Vec<_>>(),
             })
         }
@@ -271,6 +282,59 @@ impl JsonFormatter {
                 "transitive_callees": result.stats.transitive_callees,
                 "max_depth_reached": result.stats.max_depth_reached,
                 "cycles_detected": result.stats.cycles_detected,
+                "depth_limited": result.stats.depth_limited,
+                "unresolved_symbols": result.stats.unresolved_symbols,
+            }
+        }).to_string()
+    }
+
+    pub fn format_trace_result_both(callers: &TraceResult, callees: &TraceResult) -> String {
+        fn node_to_json(node: &TraceNode) -> serde_json::Value {
+            let call_site = node.call_site.as_ref().map(|site| {
+                serde_json::json!({
+                    "path": site.path.display().to_string(),
+                    "line_number": site.line_number,
+                    "line": site.line,
+                    "call_kind": format!("{:?}", site.call_kind),
+                })
+            });
+
+            serde_json::json!({
+                "function": node.function,
+                "path": node.path.display().to_string(),
+                "line_number": node.line_number,
+                "is_hierarchical": node.is_hierarchical,
+                "depth": node.depth,
+                "is_cycle": node.is_cycle,
+                "stop_reason": node.stop_reason.map(|r| format!("{:?}", r)),
+                "call_site": call_site,
+                "children": node.children.iter().map(node_to_json).collect::<Vec<_>>(),
+            })
+        }
+
+        serde_json::json!({
+            "root": node_to_json(&callees.root),
+            "callers": callers.root.children.iter().map(node_to_json).collect::<Vec<_>>(),
+            "callees": callees.root.children.iter().map(node_to_json).collect::<Vec<_>>(),
+            "stats": {
+                "callers": {
+                    "total_nodes": callers.stats.total_nodes,
+                    "direct_callees": callers.stats.direct_callees,
+                    "transitive_callees": callers.stats.transitive_callees,
+                    "max_depth_reached": callers.stats.max_depth_reached,
+                    "cycles_detected": callers.stats.cycles_detected,
+                    "depth_limited": callers.stats.depth_limited,
+                    "unresolved_symbols": callers.stats.unresolved_symbols,
+                },
+                "callees": {
+                    "total_nodes": callees.stats.total_nodes,
+                    "direct_callees": callees.stats.direct_callees,
+                    "transitive_callees": callees.stats.transitive_callees,
+                    "max_depth_reached": callees.stats.max_depth_reached,
+                    "cycles_detected": callees.stats.cycles_detected,
+                    "depth_limited": callees.stats.depth_limited,
+                    "unresolved_symbols": callees.stats.unresolved_symbols,
+                }
             }
         }).to_string()
     }
@@ -286,75 +350,61 @@ pub enum TraceFormat {
 
 impl TerminalFormatter {
     /// Print trace result in specified format
-    pub fn print_trace_result(&mut self, result: &TraceResult, format: TraceFormat) -> anyhow::Result<()> {
+    pub fn print_trace_result(&mut self, result: &TraceResult, format: TraceFormat, verbose: bool) -> anyhow::Result<()> {
         match format {
-            TraceFormat::Tree => self.print_trace_tree(result),
-            TraceFormat::Flat => self.print_trace_flat(result),
+            TraceFormat::Tree => self.print_trace_tree(result, verbose),
+            TraceFormat::Flat => self.print_trace_flat(result, verbose),
             TraceFormat::Graph => {
                 // For now, graph format is same as tree
-                self.print_trace_tree(result)
+                self.print_trace_tree(result, verbose)
             }
         }
     }
 
-    fn print_trace_tree(&mut self, result: &TraceResult) -> anyhow::Result<()> {
-        // Print root node
+    pub fn print_trace_both(&mut self, callers: &TraceResult, callees: &TraceResult, verbose: bool) -> anyhow::Result<()> {
+        // Callers section
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_bold(true));
         }
-        let _ = write!(self.stdout, "{}", result.root.function);
+        let _ = writeln!(self.stdout, "Callers (who calls {}):", callees.root.function);
         if self.color {
             let _ = self.stdout.reset();
         }
 
-        let _ = write!(self.stdout, " (");
-        if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
-        }
-        let _ = write!(self.stdout, "{}:{}", result.root.path.display(), result.root.line_number);
-        if self.color {
-            let _ = self.stdout.reset();
-        }
-        let _ = write!(self.stdout, ")");
-
-        // Print hierarchical marker
-        let marker = if result.root.is_hierarchical {
-            format!(" [h:{}]", result.root.depth)
-        } else {
-            " [flat]".to_string()
-        };
-        if self.color {
-            let color = if result.root.is_hierarchical {
-                Color::Green
-            } else {
-                Color::Red
-            };
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(color)));
-        }
-        let _ = writeln!(self.stdout, "{}", marker);
-        if self.color {
-            let _ = self.stdout.reset();
+        for (i, child) in callers.root.children.iter().enumerate() {
+            let is_last = i == callers.root.children.len() - 1;
+            self.print_trace_node(child, "", is_last, verbose)?;
         }
 
         let _ = writeln!(self.stdout);
 
-        // Print children
-        for (i, child) in result.root.children.iter().enumerate() {
-            let is_last = i == result.root.children.len() - 1;
-            self.print_trace_node(child, "", is_last, 0)?;
+        // Root line
+        self.print_trace_root_line(&callees.root, verbose)?;
+        let _ = writeln!(self.stdout);
+
+        // Callees section
+        if self.color {
+            let _ = self.stdout.set_color(ColorSpec::new().set_bold(true));
+        }
+        let _ = writeln!(self.stdout, "Callees (what {} calls):", callees.root.function);
+        if self.color {
+            let _ = self.stdout.reset();
         }
 
-        // Print stats
+        for (i, child) in callees.root.children.iter().enumerate() {
+            let is_last = i == callees.root.children.len() - 1;
+            self.print_trace_node(child, "", is_last, verbose)?;
+        }
+
         let _ = writeln!(self.stdout);
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
         }
         let _ = writeln!(
             self.stdout,
-            "Summary: {} direct callees, {} transitive callees (depth {})",
-            result.stats.direct_callees,
-            result.stats.transitive_callees,
-            result.stats.max_depth_reached
+            "Summary: {} callers, {} callees",
+            callers.stats.direct_callees,
+            callees.stats.direct_callees
         );
         if self.color {
             let _ = self.stdout.reset();
@@ -363,7 +413,97 @@ impl TerminalFormatter {
         Ok(())
     }
 
-    fn print_trace_node(&mut self, node: &TraceNode, prefix: &str, is_last: bool, _subsection_index: usize) -> anyhow::Result<()> {
+    fn print_trace_tree(&mut self, result: &TraceResult, verbose: bool) -> anyhow::Result<()> {
+        self.print_trace_root_line(&result.root, verbose)?;
+
+        let _ = writeln!(self.stdout);
+
+        // Print children
+        for (i, child) in result.root.children.iter().enumerate() {
+            let is_last = i == result.root.children.len() - 1;
+            self.print_trace_node(child, "", is_last, verbose)?;
+        }
+
+        // Print stats
+        let _ = writeln!(self.stdout);
+        if self.color {
+            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
+        }
+        let (direct_label, transitive_label) = match result.direction {
+            TraceDirection::Callers => ("callers", "callers"),
+            _ => ("callees", "callees"),
+        };
+        let _ = writeln!(
+            self.stdout,
+            "Summary: {} direct {}, {} transitive {} (depth {})",
+            result.stats.direct_callees,
+            direct_label,
+            result.stats.transitive_callees,
+            transitive_label,
+            result.stats.max_depth_reached
+        );
+        if result.stats.depth_limited > 0 || result.stats.unresolved_symbols > 0 || result.stats.cycles_detected > 0 {
+            let _ = writeln!(
+                self.stdout,
+                "Stops: depth limit={}, unresolved={}, cycles={}",
+                result.stats.depth_limited,
+                result.stats.unresolved_symbols,
+                result.stats.cycles_detected
+            );
+        }
+        if self.color {
+            let _ = self.stdout.reset();
+        }
+
+        Ok(())
+    }
+
+    fn print_trace_root_line(&mut self, node: &TraceNode, verbose: bool) -> anyhow::Result<()> {
+        if self.color {
+            let _ = self.stdout.set_color(ColorSpec::new().set_bold(true));
+        }
+        let _ = write!(self.stdout, "{}", node.function);
+        if self.color {
+            let _ = self.stdout.reset();
+        }
+
+        let _ = write!(self.stdout, " (");
+        if self.color {
+            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+        }
+        let path_label = trace_display_path(node, verbose);
+        let _ = write!(self.stdout, "{}:{}", path_label, node.line_number);
+        if self.color {
+            let _ = self.stdout.reset();
+        }
+        let _ = write!(self.stdout, ")");
+
+        let marker = if node.is_hierarchical {
+            format!(" [h:{}]", node.depth)
+        } else {
+            " [flat]".to_string()
+        };
+        if self.color {
+            let color = if node.is_hierarchical {
+                Color::Green
+            } else {
+                Color::Red
+            };
+            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(color)));
+        }
+        let _ = write!(self.stdout, "{}", marker);
+        if let Some(stop_reason) = node.stop_reason {
+            let _ = write!(self.stdout, " [{}]", stop_reason_label(stop_reason));
+        }
+        let _ = writeln!(self.stdout);
+        if self.color {
+            let _ = self.stdout.reset();
+        }
+
+        Ok(())
+    }
+
+    fn print_trace_node(&mut self, node: &TraceNode, prefix: &str, is_last: bool, verbose: bool) -> anyhow::Result<()> {
         // Print tree lines
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Rgb(128, 128, 128))));
@@ -396,11 +536,8 @@ impl TerminalFormatter {
             let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(color)));
         }
 
-        // Show abbreviated path if parent exists
-        let path_str = node.path.file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or("");
-        let _ = write!(self.stdout, "{}:{}", path_str, node.line_number);
+        let path_label = trace_display_path(node, verbose);
+        let _ = write!(self.stdout, "{}:{}", path_label, node.line_number);
 
         if self.color {
             let _ = self.stdout.reset();
@@ -431,48 +568,40 @@ impl TerminalFormatter {
                 };
                 let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(color)));
             }
-            let _ = writeln!(self.stdout, "{}", marker);
+            let _ = write!(self.stdout, "{}", marker);
             if self.color {
                 let _ = self.stdout.reset();
             }
+            if let Some(stop_reason) = node.stop_reason {
+                let _ = write!(self.stdout, " [{}]", stop_reason_label(stop_reason));
+            }
+            if let Some(call_site) = &node.call_site {
+                let snippet = truncate_snippet(call_site.line.trim(), 120);
+                let _ = write!(
+                    self.stdout,
+                    " [call:{}] {}",
+                    call_kind_label(call_site.call_kind),
+                    snippet
+                );
+            }
+            let _ = writeln!(self.stdout);
         }
 
         // Print children recursively
         for (i, child) in node.children.iter().enumerate() {
             let is_last_child = i == node.children.len() - 1;
             let child_prefix = if is_last { "   " } else { "│  " };
-            self.print_trace_node(child, &format!("{}{}", prefix, child_prefix), is_last_child, 0)?;
+            self.print_trace_node(child, &format!("{}{}", prefix, child_prefix), is_last_child, verbose)?;
         }
 
         Ok(())
     }
 
-    fn print_trace_flat(&mut self, result: &TraceResult) -> anyhow::Result<()> {
-        // Print root
-        if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_bold(true));
-        }
-        let _ = writeln!(
-            self.stdout,
-            "{} ({}:{}) [h:{}]",
-            result.root.function,
-            result.root.path.display(),
-            result.root.line_number,
-            result.root.depth
-        );
-        if self.color {
-            let _ = self.stdout.reset();
-        }
-
-        // Print children with indentation
-        for child in &result.root.children {
-            self.print_trace_node_flat(child, 1)?;
-        }
-
-        Ok(())
+    fn print_trace_flat(&mut self, result: &TraceResult, verbose: bool) -> anyhow::Result<()> {
+        self.print_trace_node_flat(&result.root, 0, verbose)
     }
 
-    fn print_trace_node_flat(&mut self, node: &TraceNode, indent_level: usize) -> anyhow::Result<()> {
+    fn print_trace_node_flat(&mut self, node: &TraceNode, indent_level: usize, verbose: bool) -> anyhow::Result<()> {
         let indent = "  ".repeat(indent_level);
 
         if self.color {
@@ -487,7 +616,8 @@ impl TerminalFormatter {
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
         }
-        let _ = write!(self.stdout, "{}:{}", node.path.display(), node.line_number);
+        let path_label = trace_display_path(node, verbose);
+        let _ = write!(self.stdout, "{}:{}", path_label, node.line_number);
         if self.color {
             let _ = self.stdout.reset();
         }
@@ -509,13 +639,62 @@ impl TerminalFormatter {
         } else {
             " [flat]".to_string()
         };
-        let _ = writeln!(self.stdout, "{}", marker);
+        let _ = write!(self.stdout, "{}", marker);
+        if let Some(stop_reason) = node.stop_reason {
+            let _ = write!(self.stdout, " [{}]", stop_reason_label(stop_reason));
+        }
+        if let Some(call_site) = &node.call_site {
+            let snippet = truncate_snippet(call_site.line.trim(), 120);
+            let _ = write!(
+                self.stdout,
+                " [call:{}] {}",
+                call_kind_label(call_site.call_kind),
+                snippet
+            );
+        }
+        let _ = writeln!(self.stdout);
 
         // Print children
         for child in &node.children {
-            self.print_trace_node_flat(child, indent_level + 1)?;
+            self.print_trace_node_flat(child, indent_level + 1, verbose)?;
         }
 
         Ok(())
     }
+}
+
+fn trace_display_path(node: &TraceNode, verbose: bool) -> String {
+    if verbose {
+        node.path.display().to_string()
+    } else {
+        node.path
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("")
+            .to_string()
+    }
+}
+
+fn call_kind_label(kind: TraceCallKind) -> &'static str {
+    match kind {
+        TraceCallKind::Ctor => "ctor",
+        TraceCallKind::Method => "method",
+        TraceCallKind::Function => "function",
+        TraceCallKind::Unknown => "unknown",
+    }
+}
+
+fn stop_reason_label(reason: TraceStopReason) -> &'static str {
+    match reason {
+        TraceStopReason::DepthLimit => "depth limit",
+        TraceStopReason::Unresolved => "unresolved",
+    }
+}
+
+fn truncate_snippet(line: &str, max_len: usize) -> String {
+    if line.len() <= max_len {
+        return line.to_string();
+    }
+    let cut = max_len.saturating_sub(3);
+    format!("{}...", &line[..cut])
 }

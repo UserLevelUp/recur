@@ -3,6 +3,7 @@
 use std::path::PathBuf;
 use std::fs;
 use std::io::{BufRead, BufReader};
+use anyhow::Context;
 use crate::parser::{HierarchyPattern, HierarchicalName};
 
 /// Options controlling search behavior.
@@ -539,13 +540,26 @@ impl CalleeSearcher {
                 // Step 6: Find the function definition and extract callees
                 let mut in_function = false;
                 let mut brace_count = 0;
+                let mut body_start_pos: Option<usize> = None;
 
                 for (line_num, line) in all_lines.iter().enumerate() {
                     // Check if we're entering the target function
-                    let just_entered = !in_function && func_regex.is_match(line);
-                    if just_entered {
-                        in_function = true;
-                        brace_count = line.matches('{').count() as i32 - line.matches('}').count() as i32;
+                    let mut just_entered = false;
+                    if !in_function {
+                        if let Some(mat) = func_regex.find(line) {
+                            just_entered = true;
+                            in_function = true;
+
+                            let match_end = mat.end();
+                            let tail = &line[match_end..];
+                            body_start_pos = tail.find('{').map(|offset| match_end + offset);
+
+                            let brace_slice = body_start_pos
+                                .and_then(|start| line.get(start..))
+                                .unwrap_or("");
+                            brace_count = brace_slice.matches('{').count() as i32
+                                - brace_slice.matches('}').count() as i32;
+                        }
                     }
 
                     // If we're inside the function, track braces and find callees
@@ -554,6 +568,12 @@ impl CalleeSearcher {
                         if !just_entered {
                             brace_count += line.matches('{').count() as i32 - line.matches('}').count() as i32;
                         }
+
+                        let skip_before = if just_entered {
+                            body_start_pos.unwrap_or(line.len())
+                        } else {
+                            0
+                        };
 
                         // Find all function calls in this line
                         for cap in callee_pattern.captures_iter(line) {
@@ -567,9 +587,8 @@ impl CalleeSearcher {
                                 continue;
                             }
 
-                            // Skip if this is the function definition itself (on the line we just entered)
-                            if just_entered && cap.get(0).map_or(false, |m| m.start() < line.find('{').unwrap_or(line.len())) {
-                                // This match is before the opening brace, likely the function definition
+                            // Skip call sites before the function body starts on the definition line
+                            if just_entered && cap.get(0).map_or(false, |m| m.start() < skip_before) {
                                 continue;
                             }
 
@@ -624,11 +643,34 @@ pub enum TraceDirection {
     Both,     // Both directions
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TraceCallKind {
+    Function,
+    Method,
+    Ctor,
+    Unknown,
+}
+
+#[derive(Debug, Clone)]
+pub struct TraceCallSite {
+    pub path: PathBuf,
+    pub line_number: usize,
+    pub line: String,
+    pub call_kind: TraceCallKind,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TraceStopReason {
+    DepthLimit,
+    Unresolved,
+}
+
 /// Options for trace searching
 #[derive(Debug, Clone)]
 pub struct TraceOptions {
     pub max_width: usize,  // Max branches per level
     pub verbose: bool,     // Show full paths vs abbreviated
+    pub pick: Option<usize>,
 }
 
 /// A node in the call trace tree
@@ -642,6 +684,8 @@ pub struct TraceNode {
     pub children: Vec<TraceNode>,  // callees or callers depending on direction
     pub is_cycle: bool,
     pub parent_path: Option<PathBuf>,  // For path abbreviation
+    pub call_site: Option<TraceCallSite>,
+    pub stop_reason: Option<TraceStopReason>,
 }
 
 impl TraceNode {
@@ -672,6 +716,16 @@ pub struct TraceStats {
     pub transitive_callees: usize,
     pub max_depth_reached: usize,
     pub cycles_detected: usize,
+    pub depth_limited: usize,
+    pub unresolved_symbols: usize,
+}
+
+#[derive(Debug, Clone)]
+struct FunctionLocation {
+    path: PathBuf,
+    line_number: usize,
+    is_hierarchical: bool,
+    depth: usize,
 }
 
 /// Trace searcher - builds call graphs using CallerSearcher and CalleeSearcher
@@ -701,7 +755,7 @@ impl TraceSearcher {
     ) -> anyhow::Result<TraceResult> {
         self.visited.clear();
 
-        let root = self.trace_recursive(function, scope, direction, 0, max_depth, None)?;
+        let root = self.trace_recursive(function, scope, direction, 0, max_depth, None, None, None)?;
 
         let stats = self.calculate_stats(&root, max_depth);
 
@@ -720,41 +774,105 @@ impl TraceSearcher {
         current_depth: usize,
         max_depth: usize,
         parent_path: Option<PathBuf>,
+        fallback_location: Option<FunctionLocation>,
+        call_site: Option<TraceCallSite>,
     ) -> anyhow::Result<TraceNode> {
+        let definitions = self.find_function_definitions(function, scope)?;
+        let definition_missing = definitions.is_empty();
+        let mut selected_definition = None;
+
+        if !definitions.is_empty() {
+            if current_depth == 0 && definitions.len() > 1 {
+                if let Some(pick) = self.trace_options.pick {
+                    if pick == 0 || pick > definitions.len() {
+                        anyhow::bail!("Invalid --pick {}. Choose a number between 1 and {}", pick, definitions.len());
+                    }
+                    selected_definition = Some(definitions[pick - 1].clone());
+                } else {
+                    let mut message = format!(
+                        "Multiple matches found for '{}':\n",
+                        function
+                    );
+                    for (idx, item) in definitions.iter().enumerate() {
+                        message.push_str(&format!(
+                            "  {}) {} in {}:{}\n",
+                            idx + 1,
+                            function,
+                            item.path.display(),
+                            item.line_number
+                        ));
+                    }
+                    message.push_str("Use --pick <N> to select a match.");
+                    anyhow::bail!(message);
+                }
+            } else {
+                selected_definition = Some(definitions[0].clone());
+            }
+        }
+
+        let definition_path = selected_definition.as_ref().map(|loc| loc.path.clone());
+        let location = selected_definition.clone().or(fallback_location);
+
+        let (node_path, node_line, node_is_hierarchical, node_depth) = match location {
+            Some(loc) => (loc.path, loc.line_number, loc.is_hierarchical, loc.depth),
+            None => (PathBuf::new(), 0, false, 0),
+        };
+
+        if definition_missing {
+            return Ok(TraceNode {
+                function: function.to_string(),
+                path: node_path,
+                line_number: node_line,
+                is_hierarchical: node_is_hierarchical,
+                depth: node_depth,
+                children: Vec::new(),
+                is_cycle: false,
+                parent_path,
+                call_site,
+                stop_reason: Some(TraceStopReason::Unresolved),
+            });
+        }
+
         // Check depth limit
         if current_depth >= max_depth {
             // Return leaf node (no children)
             return Ok(TraceNode {
                 function: function.to_string(),
-                path: PathBuf::new(),
-                line_number: 0,
-                is_hierarchical: false,
-                depth: 0,
+                path: node_path,
+                line_number: node_line,
+                is_hierarchical: node_is_hierarchical,
+                depth: node_depth,
                 children: Vec::new(),
                 is_cycle: false,
                 parent_path,
+                call_site,
+                stop_reason: Some(TraceStopReason::DepthLimit),
             });
         }
 
+        let node_key = visit_key(function, &node_path, node_line);
+
         // Check for cycles
-        let is_cycle = self.visited.contains(function);
+        let is_cycle = self.visited.contains(&node_key);
         if is_cycle {
             return Ok(TraceNode {
                 function: function.to_string(),
-                path: PathBuf::new(),
-                line_number: 0,
-                is_hierarchical: false,
-                depth: 0,
+                path: node_path,
+                line_number: node_line,
+                is_hierarchical: node_is_hierarchical,
+                depth: node_depth,
                 children: Vec::new(),
                 is_cycle: true,
                 parent_path,
+                call_site,
+                stop_reason: None,
             });
         }
 
-        self.visited.insert(function.to_string());
+        self.visited.insert(node_key.clone());
 
         // Find children based on direction
-        let children_results = match direction {
+        let mut children_results = match direction {
             TraceDirection::Callees => {
                 self.callee_searcher.find_callees(function, scope)?
             }
@@ -768,39 +886,78 @@ impl TraceSearcher {
             }
         };
 
+        if matches!(direction, TraceDirection::Callees | TraceDirection::Both) {
+            if let Some(ref path) = definition_path {
+                children_results.retain(|result| result.path == *path);
+            }
+        }
+
         // Limit width
         let limited_results: Vec<_> = children_results
             .into_iter()
             .take(self.trace_options.max_width)
             .collect();
 
-        // Get current node info from first result (if any)
-        let (node_path, node_line, node_is_hierarchical, node_depth) = if let Some(first) = limited_results.first() {
-            (first.path.clone(), first.line_number, first.is_hierarchical, first.depth)
-        } else {
-            (PathBuf::new(), 0, false, 0)
-        };
-
         // Recursively trace children
         let mut child_nodes = Vec::new();
+        let mut seen_child_names = std::collections::HashSet::new();
+
         for child_result in &limited_results {
-            // Extract function name from the line
-            // This is a simple extraction - in reality we'd parse the function name from the match
-            let child_function = function; // Placeholder - we'd extract actual function name
+            let (child_function, child_fallback, child_call_site) = match direction {
+                TraceDirection::Callees | TraceDirection::Both => {
+                    let name = self.extract_match_name(child_result);
+                    let fallback = Some(FunctionLocation {
+                        path: child_result.path.clone(),
+                        line_number: child_result.line_number,
+                        is_hierarchical: child_result.is_hierarchical,
+                        depth: child_result.depth,
+                    });
+                    let call_site = name.as_ref().map(|callee| TraceCallSite {
+                        path: child_result.path.clone(),
+                        line_number: child_result.line_number,
+                        line: child_result.line.clone(),
+                        call_kind: detect_call_kind(&child_result.line, callee),
+                    });
+                    (name, fallback, call_site)
+                }
+                TraceDirection::Callers => {
+                    let caller = self.find_enclosing_caller(&child_result.path, child_result.line_number);
+                    let call_site = Some(TraceCallSite {
+                        path: child_result.path.clone(),
+                        line_number: child_result.line_number,
+                        line: child_result.line.clone(),
+                        call_kind: detect_call_kind(&child_result.line, function),
+                    });
+                    match caller {
+                        Some((name, location)) => (Some(name), Some(location), call_site),
+                        None => (None, None, call_site),
+                    }
+                }
+            };
+
+            let Some(child_name) = child_function else {
+                continue;
+            };
+
+            if !seen_child_names.insert(child_name.clone()) {
+                continue;
+            }
 
             let child_node = self.trace_recursive(
-                child_function,
+                &child_name,
                 scope,
                 direction,
                 current_depth + 1,
                 max_depth,
                 Some(node_path.clone()),
+                child_fallback,
+                child_call_site,
             )?;
 
             child_nodes.push(child_node);
         }
 
-        self.visited.remove(function);
+        self.visited.remove(&node_key);
 
         Ok(TraceNode {
             function: function.to_string(),
@@ -811,31 +968,37 @@ impl TraceSearcher {
             children: child_nodes,
             is_cycle: false,
             parent_path,
+            call_site,
+            stop_reason: None,
         })
     }
 
     fn calculate_stats(&self, root: &TraceNode, _max_depth: usize) -> TraceStats {
-        let mut total_nodes = 0;
-        let mut cycles_detected = 0;
-        let mut max_depth_reached = 0;
-
-        fn count_nodes(node: &TraceNode, current_depth: usize, stats: &mut (usize, usize, usize)) {
+        fn count_nodes(
+            node: &TraceNode,
+            current_depth: usize,
+            stats: &mut (usize, usize, usize, usize, usize),
+        ) {
             stats.0 += 1; // total_nodes
             if node.is_cycle {
                 stats.1 += 1; // cycles_detected
             }
             stats.2 = stats.2.max(current_depth); // max_depth_reached
+            if let Some(reason) = node.stop_reason {
+                match reason {
+                    TraceStopReason::DepthLimit => stats.3 += 1,
+                    TraceStopReason::Unresolved => stats.4 += 1,
+                }
+            }
 
             for child in &node.children {
                 count_nodes(child, current_depth + 1, stats);
             }
         }
 
-        let mut stats_tuple = (0, 0, 0);
+        let mut stats_tuple = (0, 0, 0, 0, 0);
         count_nodes(root, 0, &mut stats_tuple);
-        total_nodes = stats_tuple.0;
-        cycles_detected = stats_tuple.1;
-        max_depth_reached = stats_tuple.2;
+        let (total_nodes, cycles_detected, max_depth_reached, depth_limited, unresolved_symbols) = stats_tuple;
 
         let direct_callees = root.children.len();
         let transitive_callees = total_nodes.saturating_sub(1); // Exclude root
@@ -846,7 +1009,152 @@ impl TraceSearcher {
             transitive_callees,
             max_depth_reached,
             cycles_detected,
+            depth_limited,
+            unresolved_symbols,
         }
+    }
+}
+
+impl TraceSearcher {
+    fn find_function_definitions(
+        &self,
+        function: &str,
+        scope: &crate::parser::HierarchyPattern,
+    ) -> anyhow::Result<Vec<FunctionLocation>> {
+        let file_searcher = FileSearcher::new(self.callee_searcher.options.clone());
+        let mut files = file_searcher.find(scope);
+
+        // Sort files - hierarchical first, then by depth (deeper first)
+        files.sort_by_key(|path| {
+            let (is_hierarchical, depth) = file_hierarchy_info(path);
+            (!is_hierarchical, std::cmp::Reverse(depth))
+        });
+
+        let def_regex = build_definition_regex(function, self.callee_searcher.options.case_insensitive)?;
+        let mut matches = Vec::new();
+
+        for file_path in &files {
+            if let Ok(file) = fs::File::open(file_path) {
+                let reader = BufReader::new(file);
+                for (line_num, line) in reader.lines().enumerate() {
+                    if let Ok(line) = line {
+                        if def_regex.is_match(&line) {
+                            let (is_hierarchical, depth) = file_hierarchy_info(&file_path);
+                            matches.push(FunctionLocation {
+                                path: file_path.clone(),
+                                line_number: line_num + 1,
+                                is_hierarchical,
+                                depth,
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(matches)
+    }
+
+    fn extract_match_name(&self, result: &CallerResult) -> Option<String> {
+        result
+            .line
+            .get(result.match_start..result.match_end)
+            .map(|s| s.to_string())
+            .filter(|s| !s.is_empty())
+    }
+
+    fn find_enclosing_caller(
+        &self,
+        path: &PathBuf,
+        line_number: usize,
+    ) -> Option<(String, FunctionLocation)> {
+        let file = fs::File::open(path).ok()?;
+        let reader = BufReader::new(file);
+        let lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+        let def_regex = build_any_definition_regex(self.callee_searcher.options.case_insensitive).ok()?;
+
+        let mut last_match: Option<(String, usize)> = None;
+        let max_line = line_number.saturating_sub(1);
+        for (idx, line) in lines.iter().enumerate().take(max_line) {
+            if let Some(caps) = def_regex.captures(line) {
+                if let Some(name) = caps.name("name") {
+                    last_match = Some((name.as_str().to_string(), idx + 1));
+                }
+            }
+        }
+
+        if let Some((name, def_line)) = last_match {
+            let (is_hierarchical, depth) = file_hierarchy_info(path);
+            return Some((
+                name,
+                FunctionLocation {
+                    path: path.clone(),
+                    line_number: def_line,
+                    is_hierarchical,
+                    depth,
+                },
+            ));
+        }
+
+        None
+    }
+}
+
+fn file_hierarchy_info(path: &PathBuf) -> (bool, usize) {
+    let filename = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+    let hier_name = filename
+        .rsplit_once('.')
+        .map(|(name, _)| name)
+        .unwrap_or(filename);
+    let depth = hier_name.matches('.').count();
+    let is_hierarchical = depth > 0;
+    (is_hierarchical, depth)
+}
+
+fn build_definition_regex(function: &str, case_insensitive: bool) -> anyhow::Result<regex::Regex> {
+    let pattern = if case_insensitive {
+        format!(
+            r"(?i)(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(",
+            regex::escape(function)
+        )
+    } else {
+        format!(
+            r"(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(",
+            regex::escape(function)
+        )
+    };
+    Ok(regex::Regex::new(&pattern)?)
+}
+
+fn build_any_definition_regex(case_insensitive: bool) -> anyhow::Result<regex::Regex> {
+    let pattern = if case_insensitive {
+        r"(?i)(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*(?P<name>\w+)\s*\("
+    } else {
+        r"(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*(?P<name>\w+)\s*\("
+    };
+    Ok(regex::Regex::new(pattern)?)
+}
+
+fn detect_call_kind(line: &str, function: &str) -> TraceCallKind {
+    let call_token = format!("{}(", function);
+    if let Some(pos) = line.find(&call_token) {
+        let prefix = &line[..pos];
+        if prefix.contains("new ") {
+            return TraceCallKind::Ctor;
+        }
+        if prefix.contains('.') {
+            return TraceCallKind::Method;
+        }
+        return TraceCallKind::Function;
+    }
+    TraceCallKind::Unknown
+}
+
+fn visit_key(function: &str, path: &PathBuf, line_number: usize) -> String {
+    if path.as_os_str().is_empty() {
+        function.to_string()
+    } else {
+        format!("{}:{}:{}", function, path.display(), line_number)
     }
 }
 
@@ -854,7 +1162,7 @@ impl TraceSearcher {
 // STDIN Helper Utility
 // ===========================
 
-use std::io::{BufRead, stdin};
+use std::io::stdin;
 
 /// Read file paths from stdin (one per line)
 ///

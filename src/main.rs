@@ -372,6 +372,14 @@ enum Commands {
         /// Output format: tree, flat, or graph
         #[arg(long, default_value = "tree")]
         format: String,
+
+        /// Pick a specific definition when multiple matches exist (1-based)
+        #[arg(long)]
+        pick: Option<usize>,
+
+        /// Scope alias mapping (e.g., --scope-alias cw3=LevelController.CreateWizard3.**)
+        #[arg(long, value_name = "ALIAS=PATTERN")]
+        scope_alias: Vec<String>,
     },
 }
 
@@ -379,35 +387,35 @@ fn main() {
     let cli = Cli::parse();
     
     let result = match cli.command {
-        Commands::Files { pattern, dir, ext, ignore_case, min_depth, max_depth, count } => {
+        Commands::Files { pattern, dir, ext, ignore_case, min_depth, max_depth, count, .. } => {
             cmd_files(pattern, dir, ext, ignore_case, min_depth, max_depth, count, cli.json, cli.color)
         }
-        Commands::Find { query, scope, dir, context, ignore_case, regex, ext } => {
+        Commands::Find { query, scope, dir, context, ignore_case, regex, ext, .. } => {
             cmd_find(query, scope, dir, context, ignore_case, regex, ext, cli.json, cli.color)
         }
-        Commands::Tree { base, dir, depth, count, ascii } => {
+        Commands::Tree { base, dir, depth, count, ascii, .. } => {
             cmd_tree(base, dir, depth, count, !ascii, cli.json)
         }
-        Commands::Related { filename, dir, exclude_self } => {
+        Commands::Related { filename, dir, exclude_self, .. } => {
             cmd_related(filename, dir, exclude_self, cli.json, cli.color)
         }
-        Commands::Children { parent, dir, count } => {
+        Commands::Children { parent, dir, count, .. } => {
             cmd_children(parent, dir, count, cli.json, cli.color)
         }
-        Commands::Id { pattern, dir, ext, context, ignore_case } => {
+        Commands::Id { pattern, dir, ext, context, ignore_case, .. } => {
             cmd_id(pattern, dir, ext, context, ignore_case, cli.json, cli.color)
         }
-        Commands::Stats { pattern, dir, level, ext } => {
+        Commands::Stats { pattern, dir, level, ext, .. } => {
             cmd_stats(pattern, dir, level, ext, cli.json, cli.color)
         }
-        Commands::Callers { function, scope, dir, context, ignore_case, ext, count } => {
+        Commands::Callers { function, scope, dir, context, ignore_case, ext, count, .. } => {
             cmd_callers(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
         }
-        Commands::Callees { function, scope, dir, context, ignore_case, ext, count } => {
+        Commands::Callees { function, scope, dir, context, ignore_case, ext, count, .. } => {
             cmd_callees(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
         }
-        Commands::Trace { function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format } => {
-            cmd_trace(function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, cli.json, cli.color)
+        Commands::Trace { function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, pick, scope_alias } => {
+            cmd_trace(function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, pick, scope_alias, cli.json, cli.color)
         }
     };
 
@@ -1017,6 +1025,8 @@ fn cmd_trace(
     max_width: usize,
     verbose: bool,
     format_str: String,
+    pick: Option<usize>,
+    scope_alias: Vec<String>,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -1044,8 +1054,10 @@ fn cmd_trace(
         _ => anyhow::bail!("Invalid format '{}'. Must be 'tree', 'flat', or 'graph'", format_str),
     };
 
+    let resolved_scope = apply_scope_alias(&scope, &scope_alias)?;
+
     // Parse scope pattern
-    let scope_pattern = HierarchyPattern::parse(&scope)?;
+    let scope_pattern = HierarchyPattern::parse(&resolved_scope)?;
     let scope_pattern = if ignore_case {
         scope_pattern.case_insensitive()
     } else {
@@ -1060,7 +1072,7 @@ fn cmd_trace(
     };
 
     // Parse extension filter
-    if let Some(ext_str) = ext {
+    if let Some(ext_str) = ext.as_deref() {
         search_options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
     }
 
@@ -1068,7 +1080,32 @@ fn cmd_trace(
     let trace_options = TraceOptions {
         max_width,
         verbose,
+        pick,
     };
+
+    // Handle both directions by running callers + callees separately
+    if direction == TraceDirection::Both {
+        let mut caller_searcher = TraceSearcher::new(search_options.clone(), trace_options.clone());
+        let callers_result = caller_searcher.trace(&function, &scope_pattern, TraceDirection::Callers, depth)?;
+
+        let mut callee_searcher = TraceSearcher::new(search_options, trace_options);
+        let callees_result = callee_searcher.trace(&function, &scope_pattern, TraceDirection::Callees, depth)?;
+
+        if json {
+            let output = JsonFormatter::format_trace_result_both(&callers_result, &callees_result);
+            println!("{}", output);
+        } else {
+            let mut formatter = TerminalFormatter::new(color);
+            formatter.print_trace_both(&callers_result, &callees_result, verbose)?;
+        }
+
+        if callees_result.root.path.as_os_str().is_empty() {
+            print_trace_not_found(&function, &resolved_scope, ext.as_deref());
+            process::exit(1);
+        }
+
+        return Ok(());
+    }
 
     // Create trace searcher
     let mut searcher = TraceSearcher::new(search_options, trace_options);
@@ -1082,13 +1119,51 @@ fn cmd_trace(
         println!("{}", output);
     } else {
         let mut formatter = TerminalFormatter::new(color);
-        formatter.print_trace_result(&trace_result, output_format)?;
+        formatter.print_trace_result(&trace_result, output_format, verbose)?;
     }
 
-    // Exit with appropriate code (0 if found, 1 if nothing found)
-    if trace_result.is_empty() {
+    if trace_result.root.path.as_os_str().is_empty() {
+        print_trace_not_found(&function, &resolved_scope, ext.as_deref());
         process::exit(1);
     }
 
     Ok(())
+}
+
+fn apply_scope_alias(scope: &str, aliases: &[String]) -> anyhow::Result<String> {
+    if aliases.is_empty() {
+        return Ok(scope.to_string());
+    }
+
+    let mut map = std::collections::HashMap::new();
+    for alias in aliases {
+        let Some((key, value)) = alias.split_once('=') else {
+            anyhow::bail!("Invalid --scope-alias '{}'. Expected format name=pattern", alias);
+        };
+        map.insert(key.trim(), value.trim());
+    }
+
+    if let Some(replacement) = map.get(scope) {
+        Ok((*replacement).to_string())
+    } else {
+        Ok(scope.to_string())
+    }
+}
+
+fn print_trace_not_found(function: &str, scope: &str, ext: Option<&str>) {
+    println!("No symbols found for '{}'.", function);
+    if let Some(ext) = ext {
+        println!(
+            "Hint: if this is a string reference, try: recur find \"{}\" --scope \"{}\" --ext {}",
+            function,
+            scope,
+            ext
+        );
+    } else {
+        println!(
+            "Hint: if this is a string reference, try: recur find \"{}\" --scope \"{}\"",
+            function,
+            scope
+        );
+    }
 }
