@@ -615,3 +615,264 @@ impl CalleeSearcher {
         Ok(results)
     }
 }
+
+/// Direction for call tracing
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TraceDirection {
+    Callees,  // What this function calls (dependencies)
+    Callers,  // Who calls this function (reverse dependencies)
+    Both,     // Both directions
+}
+
+/// Options for trace searching
+#[derive(Debug, Clone)]
+pub struct TraceOptions {
+    pub max_width: usize,  // Max branches per level
+    pub verbose: bool,     // Show full paths vs abbreviated
+}
+
+/// A node in the call trace tree
+#[derive(Debug, Clone)]
+pub struct TraceNode {
+    pub function: String,
+    pub path: PathBuf,
+    pub line_number: usize,
+    pub is_hierarchical: bool,
+    pub depth: usize,
+    pub children: Vec<TraceNode>,  // callees or callers depending on direction
+    pub is_cycle: bool,
+    pub parent_path: Option<PathBuf>,  // For path abbreviation
+}
+
+impl TraceNode {
+    pub fn is_empty(&self) -> bool {
+        self.children.is_empty()
+    }
+}
+
+/// Result of a trace operation
+#[derive(Debug, Clone)]
+pub struct TraceResult {
+    pub root: TraceNode,
+    pub direction: TraceDirection,
+    pub stats: TraceStats,
+}
+
+impl TraceResult {
+    pub fn is_empty(&self) -> bool {
+        self.root.is_empty()
+    }
+}
+
+/// Statistics for a trace result
+#[derive(Debug, Clone)]
+pub struct TraceStats {
+    pub total_nodes: usize,
+    pub direct_callees: usize,
+    pub transitive_callees: usize,
+    pub max_depth_reached: usize,
+    pub cycles_detected: usize,
+}
+
+/// Trace searcher - builds call graphs using CallerSearcher and CalleeSearcher
+pub struct TraceSearcher {
+    caller_searcher: CallerSearcher,
+    callee_searcher: CalleeSearcher,
+    trace_options: TraceOptions,
+    visited: std::collections::HashSet<String>,
+}
+
+impl TraceSearcher {
+    pub fn new(search_options: SearchOptions, trace_options: TraceOptions) -> Self {
+        Self {
+            caller_searcher: CallerSearcher::new(search_options.clone()),
+            callee_searcher: CalleeSearcher::new(search_options),
+            trace_options,
+            visited: std::collections::HashSet::new(),
+        }
+    }
+
+    pub fn trace(
+        &mut self,
+        function: &str,
+        scope: &crate::parser::HierarchyPattern,
+        direction: TraceDirection,
+        max_depth: usize,
+    ) -> anyhow::Result<TraceResult> {
+        self.visited.clear();
+
+        let root = self.trace_recursive(function, scope, direction, 0, max_depth, None)?;
+
+        let stats = self.calculate_stats(&root, max_depth);
+
+        Ok(TraceResult {
+            root,
+            direction,
+            stats,
+        })
+    }
+
+    fn trace_recursive(
+        &mut self,
+        function: &str,
+        scope: &crate::parser::HierarchyPattern,
+        direction: TraceDirection,
+        current_depth: usize,
+        max_depth: usize,
+        parent_path: Option<PathBuf>,
+    ) -> anyhow::Result<TraceNode> {
+        // Check depth limit
+        if current_depth >= max_depth {
+            // Return leaf node (no children)
+            return Ok(TraceNode {
+                function: function.to_string(),
+                path: PathBuf::new(),
+                line_number: 0,
+                is_hierarchical: false,
+                depth: 0,
+                children: Vec::new(),
+                is_cycle: false,
+                parent_path,
+            });
+        }
+
+        // Check for cycles
+        let is_cycle = self.visited.contains(function);
+        if is_cycle {
+            return Ok(TraceNode {
+                function: function.to_string(),
+                path: PathBuf::new(),
+                line_number: 0,
+                is_hierarchical: false,
+                depth: 0,
+                children: Vec::new(),
+                is_cycle: true,
+                parent_path,
+            });
+        }
+
+        self.visited.insert(function.to_string());
+
+        // Find children based on direction
+        let children_results = match direction {
+            TraceDirection::Callees => {
+                self.callee_searcher.find_callees(function, scope)?
+            }
+            TraceDirection::Callers => {
+                self.caller_searcher.find_callers(function, scope)?
+            }
+            TraceDirection::Both => {
+                // For "both", we'll handle this specially in output formatting
+                // For now, just do callees
+                self.callee_searcher.find_callees(function, scope)?
+            }
+        };
+
+        // Limit width
+        let limited_results: Vec<_> = children_results
+            .into_iter()
+            .take(self.trace_options.max_width)
+            .collect();
+
+        // Get current node info from first result (if any)
+        let (node_path, node_line, node_is_hierarchical, node_depth) = if let Some(first) = limited_results.first() {
+            (first.path.clone(), first.line_number, first.is_hierarchical, first.depth)
+        } else {
+            (PathBuf::new(), 0, false, 0)
+        };
+
+        // Recursively trace children
+        let mut child_nodes = Vec::new();
+        for child_result in &limited_results {
+            // Extract function name from the line
+            // This is a simple extraction - in reality we'd parse the function name from the match
+            let child_function = function; // Placeholder - we'd extract actual function name
+
+            let child_node = self.trace_recursive(
+                child_function,
+                scope,
+                direction,
+                current_depth + 1,
+                max_depth,
+                Some(node_path.clone()),
+            )?;
+
+            child_nodes.push(child_node);
+        }
+
+        self.visited.remove(function);
+
+        Ok(TraceNode {
+            function: function.to_string(),
+            path: node_path,
+            line_number: node_line,
+            is_hierarchical: node_is_hierarchical,
+            depth: node_depth,
+            children: child_nodes,
+            is_cycle: false,
+            parent_path,
+        })
+    }
+
+    fn calculate_stats(&self, root: &TraceNode, _max_depth: usize) -> TraceStats {
+        let mut total_nodes = 0;
+        let mut cycles_detected = 0;
+        let mut max_depth_reached = 0;
+
+        fn count_nodes(node: &TraceNode, current_depth: usize, stats: &mut (usize, usize, usize)) {
+            stats.0 += 1; // total_nodes
+            if node.is_cycle {
+                stats.1 += 1; // cycles_detected
+            }
+            stats.2 = stats.2.max(current_depth); // max_depth_reached
+
+            for child in &node.children {
+                count_nodes(child, current_depth + 1, stats);
+            }
+        }
+
+        let mut stats_tuple = (0, 0, 0);
+        count_nodes(root, 0, &mut stats_tuple);
+        total_nodes = stats_tuple.0;
+        cycles_detected = stats_tuple.1;
+        max_depth_reached = stats_tuple.2;
+
+        let direct_callees = root.children.len();
+        let transitive_callees = total_nodes.saturating_sub(1); // Exclude root
+
+        TraceStats {
+            total_nodes,
+            direct_callees,
+            transitive_callees,
+            max_depth_reached,
+            cycles_detected,
+        }
+    }
+}
+
+// ===========================
+// STDIN Helper Utility
+// ===========================
+
+use std::io::{BufRead, stdin};
+
+/// Read file paths from stdin (one per line)
+///
+/// Used for Git integration and Unix pipelines:
+/// ```bash
+/// git diff --name-only | recur files "**" --stdin
+/// ```
+pub fn read_paths_from_stdin() -> anyhow::Result<Vec<PathBuf>> {
+    let stdin = stdin();
+    let mut paths = Vec::new();
+
+    for line in stdin.lock().lines() {
+        let line = line.context("Failed to read line from stdin")?;
+        let trimmed = line.trim();
+        if !trimmed.is_empty() {
+            paths.push(PathBuf::from(trimmed));
+        }
+    }
+
+    Ok(paths)
+}

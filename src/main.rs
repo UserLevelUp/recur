@@ -41,18 +41,19 @@ enum Commands {
     /// Examples:
     ///   recur files "Module.SubModule.*"
     ///   recur files "LevelController.CreateWizard3.Templates"
+    ///   git diff --name-only | recur files "**" --stdin
     Files {
         /// Hierarchical pattern to match (e.g., "Module.SubModule.*")
         pattern: String,
-        
+
         /// Root directory to search
         #[arg(short = 'd', long, default_value = ".")]
         dir: PathBuf,
-        
+
         /// File extensions to include (comma-separated)
         #[arg(short, long)]
         ext: Option<String>,
-        
+
         /// Case-insensitive matching
         #[arg(short, long)]
         ignore_case: bool,
@@ -68,6 +69,10 @@ enum Commands {
         /// Show only the count of matching files
         #[arg(long)]
         count: bool,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
     
     /// Search for text within hierarchically-scoped files (recursive)
@@ -75,33 +80,38 @@ enum Commands {
     /// Examples:
     ///   recur find "async" --scope "Controller.Api"
     ///   recur find "pattern" --scope "Module" -C 3
+    ///   git diff --name-only | recur find "TODO" --scope "**" --stdin
     Find {
         /// Text to search for
         query: String,
-        
+
         /// Hierarchical scope to search within (recursive)
         #[arg(short, long)]
         scope: String,
-        
+
         /// Root directory to search
         #[arg(short = 'd', long, default_value = ".")]
         dir: PathBuf,
-        
+
         /// Number of context lines
         #[arg(short = 'C', long, default_value = "0")]
         context: usize,
-        
+
         /// Case-insensitive search
         #[arg(short, long)]
         ignore_case: bool,
-        
+
         /// Use regex pattern
         #[arg(short = 'E', long)]
         regex: bool,
-        
+
         /// File extensions to include
         #[arg(short, long)]
         ext: Option<String>,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
     
     /// Show recursive hierarchy tree for files
@@ -109,25 +119,30 @@ enum Commands {
     /// Examples:
     ///   recur tree "LevelController"
     ///   recur tree "ServiceName" --depth 2
+    ///   git diff --name-only | recur tree "**" --stdin
     Tree {
         /// Base name to build tree from
         base: String,
-        
+
         /// Root directory to search
         #[arg(short = 'd', long, default_value = ".")]
         dir: PathBuf,
-        
+
         /// Maximum depth to display
         #[arg(long)]
         depth: Option<usize>,
-        
+
         /// Show file counts
         #[arg(long)]
         count: bool,
-        
+
         /// Use ASCII instead of Unicode
         #[arg(long)]
         ascii: bool,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
     
     /// Find files related to (siblings of) a given file in the hierarchy
@@ -146,12 +161,17 @@ enum Commands {
         /// Exclude the input file from results
         #[arg(long)]
         exclude_self: bool,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
     
     /// Find files that are children of a hierarchy (recursive)
     ///
     /// Examples:
     ///   recur children "Module.SubModule"
+    ///   git ls-files | recur children "Module" --stdin
     Children {
         /// Parent hierarchy
         parent: String,
@@ -163,6 +183,10 @@ enum Commands {
         /// Show only the count of matching files
         #[arg(long)]
         count: bool,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
     
     /// Search for hierarchical identifiers in file content (recursive)
@@ -170,14 +194,15 @@ enum Commands {
     /// Examples:
     ///   recur id "config.database.*"
     ///   recur id "ulu.role.**" --ext ".cs,.json"
+    ///   git diff --name-only | recur id "config.**" --stdin
     Id {
         /// Hierarchical identifier pattern (recursive)
         pattern: String,
-        
+
         /// Root directory to search
         #[arg(short = 'd', long, default_value = ".")]
         dir: PathBuf,
-        
+
         /// File extensions to include
         #[arg(short, long)]
         ext: Option<String>,
@@ -189,6 +214,10 @@ enum Commands {
         /// Case-insensitive search
         #[arg(short, long)]
         ignore_case: bool,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
 
     /// Show statistics for a hierarchy (files, lines, depth)
@@ -197,6 +226,7 @@ enum Commands {
     ///   recur stats "ServiceName"              # Show summary with depth breakdown
     ///   recur stats "ServiceName" -l 1         # List files at depth level 1
     ///   recur stats "ServiceName" -l 2         # List files at depth level 2
+    ///   git diff --name-only | recur stats "**" --stdin
     Stats {
         /// Hierarchical pattern to analyze
         pattern: String,
@@ -213,6 +243,10 @@ enum Commands {
         /// File extensions to include
         #[arg(short, long)]
         ext: Option<String>,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
 
     /// Find all places where a function/method is called
@@ -220,6 +254,7 @@ enum Commands {
     /// Examples:
     ///   recur callers "CreateUser" --scope "UserService.**"
     ///   recur callers "ValidateEmail" --scope "**" --ext .cs
+    ///   git diff --name-only | recur callers "ProcessData" --scope "**" --stdin
     Callers {
         /// Function or method name to find callers of
         function: String,
@@ -247,6 +282,10 @@ enum Commands {
         /// Show only count of callers
         #[arg(long)]
         count: bool,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
 
     /// Find all functions/methods that a given function calls (callees/dependencies)
@@ -254,6 +293,7 @@ enum Commands {
     /// Examples:
     ///   recur callees "CreateUser" --scope "UserService.**"
     ///   recur callees "ProcessRequest" --scope "**" --ext .cs
+    ///   git diff --name-only | recur callees "Initialize" --scope "**" --stdin
     Callees {
         /// Function or method name to find callees of
         function: String,
@@ -281,6 +321,57 @@ enum Commands {
         /// Show only count of callees
         #[arg(long)]
         count: bool,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
+    },
+
+    /// Multi-level call graph visualization (trace execution/usage paths)
+    ///
+    /// Examples:
+    ///   recur trace "ApplyAiContent" --depth 2 --scope "LevelController.**"
+    ///   recur trace "GetDeletedComponents" --direction callers --depth 2
+    ///   recur trace "ValidateInput" --direction both --depth 1
+    Trace {
+        /// Function or method name to trace
+        function: String,
+
+        /// Hierarchical scope to search within
+        #[arg(short, long)]
+        scope: String,
+
+        /// Root directory to search
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// Trace depth (how many levels deep)
+        #[arg(long, default_value = "2")]
+        depth: usize,
+
+        /// Trace direction: callees (what it calls), callers (who calls it), or both
+        #[arg(long, default_value = "callees")]
+        direction: String,
+
+        /// Case-insensitive search
+        #[arg(short, long)]
+        ignore_case: bool,
+
+        /// File extensions to include
+        #[arg(short, long)]
+        ext: Option<String>,
+
+        /// Max branches per level (default 10)
+        #[arg(long, default_value = "10")]
+        max_width: usize,
+
+        /// Show full paths instead of abbreviated paths
+        #[arg(long)]
+        verbose: bool,
+
+        /// Output format: tree, flat, or graph
+        #[arg(long, default_value = "tree")]
+        format: String,
     },
 }
 
@@ -315,8 +406,11 @@ fn main() {
         Commands::Callees { function, scope, dir, context, ignore_case, ext, count } => {
             cmd_callees(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
         }
+        Commands::Trace { function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format } => {
+            cmd_trace(function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, cli.json, cli.color)
+        }
     };
-    
+
     if let Err(e) = result {
         eprintln!("Error: {}", e);
         process::exit(2);
@@ -906,6 +1000,93 @@ fn cmd_callees(
 
     // Exit with appropriate code
     if results.is_empty() {
+        process::exit(1);
+    }
+
+    Ok(())
+}
+
+fn cmd_trace(
+    function: String,
+    scope: String,
+    dir: PathBuf,
+    depth: usize,
+    direction_str: String,
+    ignore_case: bool,
+    ext: Option<String>,
+    max_width: usize,
+    verbose: bool,
+    format_str: String,
+    json: bool,
+    color: bool,
+) -> anyhow::Result<()> {
+    use recur::search::{TraceSearcher, TraceDirection, TraceOptions};
+    use recur::output::{TerminalFormatter, JsonFormatter};
+
+    // Validate depth
+    if depth > 5 {
+        anyhow::bail!("Maximum depth is 5 (to prevent exponential explosion)");
+    }
+
+    // Parse direction
+    let direction = match direction_str.to_lowercase().as_str() {
+        "callees" => TraceDirection::Callees,
+        "callers" => TraceDirection::Callers,
+        "both" => TraceDirection::Both,
+        _ => anyhow::bail!("Invalid direction '{}'. Must be 'callees', 'callers', or 'both'", direction_str),
+    };
+
+    // Parse format
+    let output_format = match format_str.to_lowercase().as_str() {
+        "tree" => recur::output::TraceFormat::Tree,
+        "flat" => recur::output::TraceFormat::Flat,
+        "graph" => recur::output::TraceFormat::Graph,
+        _ => anyhow::bail!("Invalid format '{}'. Must be 'tree', 'flat', or 'graph'", format_str),
+    };
+
+    // Parse scope pattern
+    let scope_pattern = HierarchyPattern::parse(&scope)?;
+    let scope_pattern = if ignore_case {
+        scope_pattern.case_insensitive()
+    } else {
+        scope_pattern
+    };
+
+    // Set up search options
+    let mut search_options = SearchOptions {
+        root: dir,
+        case_insensitive: ignore_case,
+        ..Default::default()
+    };
+
+    // Parse extension filter
+    if let Some(ext_str) = ext {
+        search_options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+    }
+
+    // Create trace options
+    let trace_options = TraceOptions {
+        max_width,
+        verbose,
+    };
+
+    // Create trace searcher
+    let mut searcher = TraceSearcher::new(search_options, trace_options);
+
+    // Perform trace
+    let trace_result = searcher.trace(&function, &scope_pattern, direction, depth)?;
+
+    // Output results
+    if json {
+        let output = JsonFormatter::format_trace_result(&trace_result);
+        println!("{}", output);
+    } else {
+        let mut formatter = TerminalFormatter::new(color);
+        formatter.print_trace_result(&trace_result, output_format)?;
+    }
+
+    // Exit with appropriate code (0 if found, 1 if nothing found)
+    if trace_result.is_empty() {
         process::exit(1);
     }
 

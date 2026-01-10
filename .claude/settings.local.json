@@ -17,7 +17,10 @@
       "Bash(../../../target/release/recur.exe callees \"CreateUser\" --scope \"**\")",
       "Bash(c:/src/recur/target/release/recur.exe callees:*)",
       "Bash(./target/release/recur.exe:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(powershell -c \"\\(Get-Content ''c:\\\\src\\\\recur\\\\src\\\\search.rs''\\).Count\")",
+      "Bash(julia runtests.trace.jl:*)",
+      "Bash(recur trace:*)"
     ]
   }
 }

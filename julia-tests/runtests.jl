@@ -50,6 +50,7 @@ try
         include("runtests.stats.jl")
         include("runtests.callers.jl")
         include("runtests.callees.jl")
+        include("runtests.trace.jl")
 
         # TODO: Add more test modules as they are implemented
         # include("runtests.gaps.jl")  # Needs feature implementation
