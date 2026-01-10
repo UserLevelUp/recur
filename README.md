@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Rust](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org/)
 
-I'm new to Rust so this is a good project to learn Rust and also perform a useful task grep wasn't designed for which is search hierarchical file in c#, go, javascript, and even Rust codebases.  I'm totally vibing it so enjoy.
+I'm new to Rust so this is a good project to learn Rust and also perform a useful task that grep wasn't designed to perform.  That task is searching hierarchical files in c style languages like c#, go, javascript, and even Rust codebases.  I'm totally vibing it so enjoy.
 
 **Recursive hierarchical search tool for modern codebases.**
 
