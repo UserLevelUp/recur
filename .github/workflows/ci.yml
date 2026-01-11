@@ -55,6 +55,25 @@ jobs:
           name: recur-windows-release-safe
           path: target/release-safe/recur.exe
 
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@1.85.0
+        with:
+          profile: minimal
+
+      - name: Build (release-safe)
+        run: cargo build --profile release-safe --locked
+
+      - name: Upload Linux binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: recur-linux-release-safe
+          path: target/release-safe/recur
+
   docker:
     runs-on: ubuntu-latest
     needs: test-julia
