@@ -39,10 +39,20 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
 
 ## Installation
 
-### From source (Cargo)
+### From Cargo (crates.io)
 ```bash
 cargo install recur
 ```
+
+### From source (local checkout)
+```bash
+cargo build --profile release-safe --locked
+cargo install --path . --profile release-safe --locked --force --offline
+```
+
+If `recur` is not found, add Cargo's bin folder to PATH:
+- Windows: `%USERPROFILE%\.cargo\bin`
+- macOS/Linux: `~/.cargo/bin`
 
 ### Debian/Ubuntu
 ```bash
@@ -212,8 +222,9 @@ Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 git clone https://github.com/userlevelup/recur
 cd recur
 cargo test
-cargo run -- tree "src"
-cargo install --path .   # installs globally
+cargo build --profile release-safe --locked
+cargo run --profile release-safe -- tree "main" -d src
+cargo install --path . --profile release-safe --locked --force --offline
 ```
 
 ## License
