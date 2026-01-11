@@ -218,6 +218,10 @@ Ritchie’s thesis explored **recursive functions and hierarchical program struc
 
 Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+### Local git hook note
+
+This repo uses a **local-only** pre-commit hook on the maintainer's machine to bump `VERSION`, update `Cargo.toml`, and refresh `Cargo.lock` when committing on `main`. Git hooks live in `.git/hooks` and are not shared with other clones. If you need to update or remove it later, check `.git/hooks/pre-commit`.
+
 ```bash
 git clone https://github.com/userlevelup/recur
 cd recur
