@@ -56,6 +56,11 @@ Tests are organized into functions by command:
    ```bash
    cargo build --release
    ```
+   If your toolchain crashes on `--release`, use the safe profile instead:
+   ```bash
+   cargo build --profile release-safe
+   ```
+   Then run tests with `RECUR_PROFILE=release-safe` (or set `RECUR_BIN` directly).
 
 ### Run All Tests
 

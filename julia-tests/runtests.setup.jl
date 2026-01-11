@@ -12,7 +12,12 @@ using Test
 using JSON3
 
 # Configuration
-const RECUR_BIN = joinpath(@__DIR__, "..", "target", "release", "recur" * (Sys.iswindows() ? ".exe" : ""))
+const RECUR_PROFILE = get(ENV, "RECUR_PROFILE", "release")
+const RECUR_BIN = get(
+    ENV,
+    "RECUR_BIN",
+    joinpath(@__DIR__, "..", "target", RECUR_PROFILE, "recur" * (Sys.iswindows() ? ".exe" : ""))
+)
 const TEST_DIR = "test_environment"
 const VERBOSE = "--verbose" in ARGS
 
@@ -65,6 +70,24 @@ function setup_test_environment()
     create_test_file("DynamicGameComponentService.cs", "public partial class DynamicGameComponentService { public void GetDeletedComponentsAsync() { } public void LogAccess() { } }")
     create_test_file("MaintenanceService.cs", "public class MaintenanceService { public void CleanupComponents() { GetDeletedComponentsAsync(); } }")
     create_test_file("AddComponent.cshtml", "<div data-tab=\"CreateWizard3.Tab\"></div>")
+    create_test_file("CycleService.cs", """
+    public class CycleService {
+        public void FunctionA() { FunctionB(); }
+        public void FunctionB() { FunctionA(); }
+    }
+    """)
+    create_test_file("WideService.cs", """
+    public class WideService {
+        public void WideRoot() {
+            CallA();
+            CallB();
+            CallC();
+        }
+        public void CallA() { }
+        public void CallB() { }
+        public void CallC() { }
+    }
+    """)
 
     # Config hierarchy
     create_test_file("config.json", "{\"database\": {\"connection\": \"test\"}}")

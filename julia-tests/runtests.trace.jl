@@ -222,6 +222,24 @@ include("runtests.setup.jl")
         end
     end
 
+    @testset "Ambiguous callee handling" begin
+        @testset "ambiguous child stops with hint" begin
+            success, output, _ = run_recur("trace \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 2")
+
+            passed = success &&
+                     contains(output, "ApplyTemplate") &&
+                     contains(lowercase(output), "ambiguous")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "ApplyTemplate")
+            @test contains(lowercase(output), "ambiguous")
+            @test !contains(output, "RenderTemplate")
+            log_test("ambiguous child stops without picking a definition")
+        end
+    end
+
     @testset "Boundary behavior (strings vs symbols)" begin
         @testset "string-based Razor reference" begin
             success, output, _ = run_recur("trace \"CreateWizard3.Tab\" --scope \"AddComponent\" --ext .cshtml --depth 1")
@@ -254,6 +272,20 @@ include("runtests.setup.jl")
             @test contains(trace_output, "ApplyTemplate")
             @test contains(trace_output, "SaveWizard")
             log_test("trace/callees consistency pending")
+        end
+    end
+
+    @testset "Cycle detection" begin
+        @testset "trace marks cycles" begin
+            success, output, _ = run_recur("trace \"FunctionA\" --scope \"CycleService\" --ext .cs --depth 3")
+
+            passed = success && contains(lowercase(output), "cycle detected")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(lowercase(output), "cycle detected")
+            log_test("cycle detection marks repeated symbols")
         end
     end
 
@@ -348,20 +380,51 @@ include("runtests.setup.jl")
             @test true
             log_test("trace JSON output works")
         end
-    end
 
-    @testset "Width limiting" begin
-        # Command: recur trace "CreateUser" --scope "**" --depth 2 --max-width 5
-        # Should limit to 5 branches per level
-        @testset "trace with max-width" begin
-            success, output, _ = run_recur("trace \"CreateUser\" --scope \"**\" --depth 2 --max-width 5")
+        @testset "trace JSON output with no symbols" begin
+            success, output, _ = run_recur("trace \"NoSuchSymbol\" --scope \"**\" --depth 1 --json")
 
-            passed = true
+            json_valid = false
+            data = nothing
+            try
+                data = JSON3.read(output)
+                json_valid = true
+            catch
+                json_valid = false
+            end
+
+            passed = !success && json_valid
 
             println(passed ? "  PASS" : "  FAIL")
 
-            @test true
-            log_test("trace max-width limiting works")
+            @test !success
+            @test json_valid
+            @test data["root"]["path"] == ""
+            @test data["root"]["stop_reason"] == "Unresolved"
+            log_test("trace JSON stays valid when no symbols are found")
+        end
+    end
+
+    @testset "Width limiting" begin
+        # Command: recur trace "WideRoot" --scope "WideService" --depth 1 --max-width 1
+        # Should limit to 1 branch and note truncation
+        @testset "trace with max-width" begin
+            success, output, _ = run_recur("trace \"WideRoot\" --scope \"WideService\" --ext .cs --depth 1 --max-width 1")
+
+            passed = success &&
+                     contains(output, "WideRoot") &&
+                     contains(output, "CallA") &&
+                     contains(lowercase(output), "max width")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "WideRoot")
+            @test contains(output, "CallA")
+            @test !contains(output, "CallB")
+            @test !contains(output, "CallC")
+            @test contains(lowercase(output), "max width")
+            log_test("trace max-width limiting marks truncation")
         end
     end
 
@@ -404,6 +467,33 @@ include("runtests.setup.jl")
             @test success
             @test !contains(output, ".cshtml")
             log_test("trace extension filter excludes cshtml")
+        end
+    end
+
+    @testset "Force trace (placeholder)" begin
+        @testset "trace --force resolves ambiguity" begin
+            # PLACEHOLDER: force-trace flag should pick a best match when multiple definitions exist.
+            # Intended command (when implemented):
+            #   recur trace "ApplyTemplate" --scope "LevelController.CreateWizard3.**" --ext .cs --depth 2 --force
+            #
+            # Expected behavior:
+            # - succeeds without --pick
+            # - includes ApplyTemplate node with a note like "[ambiguous: 2 matches, forced pick]"
+            # - continues into RenderTemplate
+            @test_skip true
+            log_test("trace --force resolves ambiguity (PENDING IMPLEMENTATION)")
+        end
+
+        @testset "trace --force budget limit" begin
+            # PLACEHOLDER: optional safety budget for force-trace to avoid runaway graphs.
+            # Intended command (when implemented):
+            #   recur trace "WideRoot" --scope "WideService" --ext .cs --depth 5 --force --max-nodes 10
+            #
+            # Expected behavior:
+            # - succeeds
+            # - stops traversal with a reason like "[budget limit]"
+            @test_skip true
+            log_test("trace --force budget limit (PENDING IMPLEMENTATION)")
         end
     end
     finally

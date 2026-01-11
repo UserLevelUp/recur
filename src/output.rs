@@ -268,6 +268,8 @@ impl JsonFormatter {
                 "depth": node.depth,
                 "is_cycle": node.is_cycle,
                 "stop_reason": node.stop_reason.map(|r| format!("{:?}", r)),
+                "ambiguous_matches": node.ambiguous_matches,
+                "truncated_children": node.truncated_children,
                 "call_site": call_site,
                 "children": node.children.iter().map(node_to_json).collect::<Vec<_>>(),
             })
@@ -284,6 +286,8 @@ impl JsonFormatter {
                 "cycles_detected": result.stats.cycles_detected,
                 "depth_limited": result.stats.depth_limited,
                 "unresolved_symbols": result.stats.unresolved_symbols,
+                "ambiguous_symbols": result.stats.ambiguous_symbols,
+                "width_limited": result.stats.width_limited,
             }
         }).to_string()
     }
@@ -307,6 +311,8 @@ impl JsonFormatter {
                 "depth": node.depth,
                 "is_cycle": node.is_cycle,
                 "stop_reason": node.stop_reason.map(|r| format!("{:?}", r)),
+                "ambiguous_matches": node.ambiguous_matches,
+                "truncated_children": node.truncated_children,
                 "call_site": call_site,
                 "children": node.children.iter().map(node_to_json).collect::<Vec<_>>(),
             })
@@ -325,6 +331,8 @@ impl JsonFormatter {
                     "cycles_detected": callers.stats.cycles_detected,
                     "depth_limited": callers.stats.depth_limited,
                     "unresolved_symbols": callers.stats.unresolved_symbols,
+                    "ambiguous_symbols": callers.stats.ambiguous_symbols,
+                    "width_limited": callers.stats.width_limited,
                 },
                 "callees": {
                     "total_nodes": callees.stats.total_nodes,
@@ -334,6 +342,8 @@ impl JsonFormatter {
                     "cycles_detected": callees.stats.cycles_detected,
                     "depth_limited": callees.stats.depth_limited,
                     "unresolved_symbols": callees.stats.unresolved_symbols,
+                    "ambiguous_symbols": callees.stats.ambiguous_symbols,
+                    "width_limited": callees.stats.width_limited,
                 }
             }
         }).to_string()
@@ -442,13 +452,19 @@ impl TerminalFormatter {
             transitive_label,
             result.stats.max_depth_reached
         );
-        if result.stats.depth_limited > 0 || result.stats.unresolved_symbols > 0 || result.stats.cycles_detected > 0 {
+        if result.stats.depth_limited > 0
+            || result.stats.unresolved_symbols > 0
+            || result.stats.cycles_detected > 0
+            || result.stats.ambiguous_symbols > 0
+            || result.stats.width_limited > 0 {
             let _ = writeln!(
                 self.stdout,
-                "Stops: depth limit={}, unresolved={}, cycles={}",
+                "Stops: depth limit={}, unresolved={}, cycles={}, ambiguous={}, max width={}",
                 result.stats.depth_limited,
                 result.stats.unresolved_symbols,
-                result.stats.cycles_detected
+                result.stats.cycles_detected,
+                result.stats.ambiguous_symbols,
+                result.stats.width_limited
             );
         }
         if self.color {
@@ -493,7 +509,8 @@ impl TerminalFormatter {
         }
         let _ = write!(self.stdout, "{}", marker);
         if let Some(stop_reason) = node.stop_reason {
-            let _ = write!(self.stdout, " [{}]", stop_reason_label(stop_reason));
+            let label = format_stop_reason(node, stop_reason);
+            let _ = write!(self.stdout, " [{}]", label);
         }
         let _ = writeln!(self.stdout);
         if self.color {
@@ -573,7 +590,8 @@ impl TerminalFormatter {
                 let _ = self.stdout.reset();
             }
             if let Some(stop_reason) = node.stop_reason {
-                let _ = write!(self.stdout, " [{}]", stop_reason_label(stop_reason));
+                let label = format_stop_reason(node, stop_reason);
+                let _ = write!(self.stdout, " [{}]", label);
             }
             if let Some(call_site) = &node.call_site {
                 let snippet = truncate_snippet(call_site.line.trim(), 120);
@@ -641,7 +659,8 @@ impl TerminalFormatter {
         };
         let _ = write!(self.stdout, "{}", marker);
         if let Some(stop_reason) = node.stop_reason {
-            let _ = write!(self.stdout, " [{}]", stop_reason_label(stop_reason));
+            let label = format_stop_reason(node, stop_reason);
+            let _ = write!(self.stdout, " [{}]", label);
         }
         if let Some(call_site) = &node.call_site {
             let snippet = truncate_snippet(call_site.line.trim(), 120);
@@ -688,6 +707,21 @@ fn stop_reason_label(reason: TraceStopReason) -> &'static str {
     match reason {
         TraceStopReason::DepthLimit => "depth limit",
         TraceStopReason::Unresolved => "unresolved",
+        TraceStopReason::Ambiguous => "ambiguous",
+        TraceStopReason::WidthLimit => "max width",
+    }
+}
+
+fn format_stop_reason(node: &TraceNode, reason: TraceStopReason) -> String {
+    let label = stop_reason_label(reason);
+    match reason {
+        TraceStopReason::Ambiguous if node.ambiguous_matches > 0 => {
+            format!("{}: {} matches", label, node.ambiguous_matches)
+        }
+        TraceStopReason::WidthLimit if node.truncated_children > 0 => {
+            format!("{}: {} omitted", label, node.truncated_children)
+        }
+        _ => label.to_string(),
     }
 }
 

@@ -663,6 +663,8 @@ pub struct TraceCallSite {
 pub enum TraceStopReason {
     DepthLimit,
     Unresolved,
+    Ambiguous,
+    WidthLimit,
 }
 
 /// Options for trace searching
@@ -686,6 +688,8 @@ pub struct TraceNode {
     pub parent_path: Option<PathBuf>,  // For path abbreviation
     pub call_site: Option<TraceCallSite>,
     pub stop_reason: Option<TraceStopReason>,
+    pub ambiguous_matches: usize,
+    pub truncated_children: usize,
 }
 
 impl TraceNode {
@@ -718,6 +722,8 @@ pub struct TraceStats {
     pub cycles_detected: usize,
     pub depth_limited: usize,
     pub unresolved_symbols: usize,
+    pub ambiguous_symbols: usize,
+    pub width_limited: usize,
 }
 
 #[derive(Debug, Clone)]
@@ -778,14 +784,38 @@ impl TraceSearcher {
         call_site: Option<TraceCallSite>,
     ) -> anyhow::Result<TraceNode> {
         let definitions = self.find_function_definitions(function, scope)?;
-        let definition_missing = definitions.is_empty();
+        let definition_count = definitions.len();
+        let definition_missing = definition_count == 0;
         let mut selected_definition = None;
 
-        if !definitions.is_empty() {
-            if current_depth == 0 && definitions.len() > 1 {
+        if definition_count > 1 && current_depth > 0 {
+            let location = fallback_location.clone().or_else(|| definitions.first().cloned());
+            let (node_path, node_line, node_is_hierarchical, node_depth) = match location {
+                Some(loc) => (loc.path, loc.line_number, loc.is_hierarchical, loc.depth),
+                None => (PathBuf::new(), 0, false, 0),
+            };
+
+            return Ok(TraceNode {
+                function: function.to_string(),
+                path: node_path,
+                line_number: node_line,
+                is_hierarchical: node_is_hierarchical,
+                depth: node_depth,
+                children: Vec::new(),
+                is_cycle: false,
+                parent_path,
+                call_site,
+                stop_reason: Some(TraceStopReason::Ambiguous),
+                ambiguous_matches: definition_count,
+                truncated_children: 0,
+            });
+        }
+
+        if definition_count > 0 {
+            if current_depth == 0 && definition_count > 1 {
                 if let Some(pick) = self.trace_options.pick {
-                    if pick == 0 || pick > definitions.len() {
-                        anyhow::bail!("Invalid --pick {}. Choose a number between 1 and {}", pick, definitions.len());
+                    if pick == 0 || pick > definition_count {
+                        anyhow::bail!("Invalid --pick {}. Choose a number between 1 and {}", pick, definition_count);
                     }
                     selected_definition = Some(definitions[pick - 1].clone());
                 } else {
@@ -830,6 +860,8 @@ impl TraceSearcher {
                 parent_path,
                 call_site,
                 stop_reason: Some(TraceStopReason::Unresolved),
+                ambiguous_matches: 0,
+                truncated_children: 0,
             });
         }
 
@@ -847,6 +879,8 @@ impl TraceSearcher {
                 parent_path,
                 call_site,
                 stop_reason: Some(TraceStopReason::DepthLimit),
+                ambiguous_matches: 0,
+                truncated_children: 0,
             });
         }
 
@@ -866,6 +900,8 @@ impl TraceSearcher {
                 parent_path,
                 call_site,
                 stop_reason: None,
+                ambiguous_matches: 0,
+                truncated_children: 0,
             });
         }
 
@@ -893,10 +929,17 @@ impl TraceSearcher {
         }
 
         // Limit width
+        let total_children = children_results.len();
         let limited_results: Vec<_> = children_results
             .into_iter()
             .take(self.trace_options.max_width)
             .collect();
+        let truncated_children = total_children.saturating_sub(limited_results.len());
+        let node_stop_reason = if truncated_children > 0 {
+            Some(TraceStopReason::WidthLimit)
+        } else {
+            None
+        };
 
         // Recursively trace children
         let mut child_nodes = Vec::new();
@@ -969,7 +1012,9 @@ impl TraceSearcher {
             is_cycle: false,
             parent_path,
             call_site,
-            stop_reason: None,
+            stop_reason: node_stop_reason,
+            ambiguous_matches: 0,
+            truncated_children,
         })
     }
 
@@ -977,7 +1022,7 @@ impl TraceSearcher {
         fn count_nodes(
             node: &TraceNode,
             current_depth: usize,
-            stats: &mut (usize, usize, usize, usize, usize),
+            stats: &mut (usize, usize, usize, usize, usize, usize, usize),
         ) {
             stats.0 += 1; // total_nodes
             if node.is_cycle {
@@ -988,6 +1033,8 @@ impl TraceSearcher {
                 match reason {
                     TraceStopReason::DepthLimit => stats.3 += 1,
                     TraceStopReason::Unresolved => stats.4 += 1,
+                    TraceStopReason::Ambiguous => stats.5 += 1,
+                    TraceStopReason::WidthLimit => stats.6 += 1,
                 }
             }
 
@@ -996,9 +1043,17 @@ impl TraceSearcher {
             }
         }
 
-        let mut stats_tuple = (0, 0, 0, 0, 0);
+        let mut stats_tuple = (0, 0, 0, 0, 0, 0, 0);
         count_nodes(root, 0, &mut stats_tuple);
-        let (total_nodes, cycles_detected, max_depth_reached, depth_limited, unresolved_symbols) = stats_tuple;
+        let (
+            total_nodes,
+            cycles_detected,
+            max_depth_reached,
+            depth_limited,
+            unresolved_symbols,
+            ambiguous_symbols,
+            width_limited,
+        ) = stats_tuple;
 
         let direct_callees = root.children.len();
         let transitive_callees = total_nodes.saturating_sub(1); // Exclude root
@@ -1011,6 +1066,8 @@ impl TraceSearcher {
             cycles_detected,
             depth_limited,
             unresolved_symbols,
+            ambiguous_symbols,
+            width_limited,
         }
     }
 }

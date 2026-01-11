@@ -1,0 +1,5 @@
+target
+.git
+.github
+julia-tests/test_environment
+*.md

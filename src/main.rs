@@ -1094,14 +1094,18 @@ fn cmd_trace(
         if json {
             let output = JsonFormatter::format_trace_result_both(&callers_result, &callees_result);
             println!("{}", output);
+            if callees_result.root.path.as_os_str().is_empty() {
+                process::exit(1);
+            }
+            return Ok(());
         } else {
+            if callees_result.root.path.as_os_str().is_empty() {
+                print_trace_not_found(&function, &resolved_scope, ext.as_deref());
+                process::exit(1);
+            }
+
             let mut formatter = TerminalFormatter::new(color);
             formatter.print_trace_both(&callers_result, &callees_result, verbose)?;
-        }
-
-        if callees_result.root.path.as_os_str().is_empty() {
-            print_trace_not_found(&function, &resolved_scope, ext.as_deref());
-            process::exit(1);
         }
 
         return Ok(());
@@ -1117,15 +1121,19 @@ fn cmd_trace(
     if json {
         let output = JsonFormatter::format_trace_result(&trace_result);
         println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_trace_result(&trace_result, output_format, verbose)?;
+        if trace_result.root.path.as_os_str().is_empty() {
+            process::exit(1);
+        }
+        return Ok(());
     }
 
     if trace_result.root.path.as_os_str().is_empty() {
         print_trace_not_found(&function, &resolved_scope, ext.as_deref());
         process::exit(1);
     }
+
+    let mut formatter = TerminalFormatter::new(color);
+    formatter.print_trace_result(&trace_result, output_format, verbose)?;
 
     Ok(())
 }
