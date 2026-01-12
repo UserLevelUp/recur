@@ -2,6 +2,7 @@
 
 const VERSION_FILE = joinpath(@__DIR__, "..", "VERSION")
 const CARGO_TOML = joinpath(@__DIR__, "..", "Cargo.toml")
+const README_MD = joinpath(@__DIR__, "..", "README.md")
 
 function read_version(path::AbstractString)
     text = strip(read(path, String))
@@ -70,6 +71,25 @@ function update_cargo_toml!(path::AbstractString, numeric_version::AbstractStrin
     write(path, join(lines, "\n"))
 end
 
+function update_readme_version!(path::AbstractString, numeric_version::AbstractString)
+    content = read(path, String)
+    lines = split(content, '\n'; keepempty=true)
+    updated = false
+
+    for i in eachindex(lines)
+        line = lines[i]
+        if occursin(r"^\s*<div class=\"version\">", line)
+            indent = match(r"^(\s*)", line).captures[1]
+            lines[i] = string(indent, "<div class=\"version\">v", numeric_version, "</div>")
+            updated = true
+            break
+        end
+    end
+
+    updated || error("Could not find version line in README.md.")
+    write(path, join(lines, "\n"))
+end
+
 letter, nums = read_version(VERSION_FILE)
 old_version = string(letter, ".", nums[1], ".", nums[2], ".", nums[3])
 
@@ -80,4 +100,5 @@ new_version = string(letter, ".", nums[1], ".", nums[2], ".", nums[3])
 numeric_version = string(nums[1], ".", nums[2], ".", nums[3])
 write(VERSION_FILE, new_version * "\n")
 update_cargo_toml!(CARGO_TOML, numeric_version)
+update_readme_version!(README_MD, numeric_version)
 println("Bumped VERSION: ", old_version, " -> ", new_version)
