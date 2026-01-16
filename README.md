@@ -128,6 +128,7 @@ recur files "Controller.*"                    # All direct children
 recur files "Controller.**"                   # All descendants (recursive)
 recur files "*.Tests" --ext .cs              # Test files only
 recur files "Module.*" --count               # Show count only
+recur files **.AutoSave.** -i -e cs          # No quotes needed with stdin stdout
 ```
 
 ### `recur find` — search text within a hierarchy scope
