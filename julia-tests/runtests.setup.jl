@@ -134,6 +134,37 @@ function teardown_test_environment()
 end
 
 # Run recur command and capture output
+function run_recur(args::Vector{String})
+    # Add test directory flag if not already present
+    if !("-d" in args)
+        push!(args, "-d")
+        push!(args, TEST_DIR)
+    end
+
+    # Build command string for display
+    display_cmd = join(map(arg -> contains(arg, ' ') ? "\"$arg\"" : arg, args), " ")
+    println("  -> recur $display_cmd")
+
+    # Run the command
+    cmd = `$RECUR_BIN $args`
+    out = IOBuffer()
+    err = IOBuffer()
+    success = true
+
+    try
+        run(pipeline(cmd, stdout=out, stderr=err))
+    catch e
+        if isa(e, ProcessFailedException)
+            success = false
+        else
+            return (false, "", "Error running command: $e")
+        end
+    end
+
+    return (success, String(take!(out)), String(take!(err)))
+end
+
+# Overload for string input (backward compatibility)
 function run_recur(args::String)
     # Split args properly for command execution, preserving quoted strings
     args_vec = String[]
@@ -158,16 +189,17 @@ function run_recur(args::String)
         push!(args_vec, current)
     end
 
-    # Add test directory flag
-    push!(args_vec, "-d")
-    push!(args_vec, TEST_DIR)
+    return run_recur(args_vec)
+end
 
+# Run recur command with piped input
+function run_recur_piped(input_cmd::Cmd, recur_args::Vector{String})
     # Build command string for display
-    display_cmd = join(map(arg -> contains(arg, ' ') ? "\"$arg\"" : arg, args_vec), " ")
-    println("  -> recur $display_cmd")
+    display_cmd = join(map(arg -> contains(arg, ' ') ? "\"$arg\"" : arg, recur_args), " ")
+    println("  -> <piped> | recur $display_cmd")
 
-    # Run the command
-    cmd = `$RECUR_BIN $args_vec`
+    # Run the command with piped input
+    cmd = pipeline(input_cmd, `$RECUR_BIN $recur_args`)
     out = IOBuffer()
     err = IOBuffer()
     success = true
@@ -185,7 +217,42 @@ function run_recur(args::String)
     return (success, String(take!(out)), String(take!(err)))
 end
 
+# Run recur command with stdin from string (Julia-compatible)
+function run_recur_stdin(input_string::String, recur_args::Vector{String})
+    # Build command string for display
+    display_cmd = join(map(arg -> contains(arg, ' ') ? "\"$arg\"" : arg, recur_args), " ")
+    println("  -> <stdin> | recur $display_cmd")
+
+    # Run the command with stdin from string
+    cmd = `$RECUR_BIN $recur_args`
+    out = IOBuffer()
+    err = IOBuffer()
+    success = true
+
+    try
+        # Use Julia's open() with write mode to pipe stdin
+        process = open(cmd, "r+", stdout=out, stderr=err)
+        write(process, input_string)
+        close(process.in)  # Close stdin to signal end of input
+        wait(process)
+    catch e
+        if isa(e, ProcessFailedException)
+            success = false
+        else
+            return (false, "", "Error running command: $e")
+        end
+    end
+
+    return (success, String(take!(out)), String(take!(err)))
+end
+
+# Helper to log command execution
+function log_command(description::String, success::Bool)
+    status = success ? "PASS" : "FAIL"
+    println("  $status")
+end
+
 # Export all public functions
 export setup_test_environment, teardown_test_environment, create_test_file
-export run_recur, log_test, log_section, log_error
+export run_recur, run_recur_piped, run_recur_stdin, log_command, log_test, log_section, log_error
 export RECUR_BIN, TEST_DIR, VERBOSE
