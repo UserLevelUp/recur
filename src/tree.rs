@@ -27,6 +27,7 @@ pub struct HierarchyTree {
     pub root_name: String,
     pub children: Vec<HierarchyTree>,
     pub file_path: Option<PathBuf>,
+    pub extension: Option<String>,
 }
 
 impl HierarchyTree {
@@ -35,6 +36,7 @@ impl HierarchyTree {
             root_name: name.into(),
             children: vec![],
             file_path: None,
+            extension: None,
         }
     }
 
@@ -49,9 +51,9 @@ impl HierarchyTree {
         for path in paths {
             if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
                 // Remove file extension to get hierarchical name
-                let hier_name = filename.rsplit_once('.')
-                    .map(|(name, _)| name)
-                    .unwrap_or(filename);
+                let (hier_name, ext) = filename.rsplit_once('.')
+                    .map(|(name, ext)| (name, Some(ext.to_string())))
+                    .unwrap_or((filename, None));
 
                 // Skip if it doesn't start with base
                 if !hier_name.starts_with(&base_str) {
@@ -65,9 +67,10 @@ impl HierarchyTree {
                 if suffix.is_empty() {
                     // This is the base file itself
                     root.file_path = Some(path.clone());
+                    root.extension = ext;
                 } else if suffix.starts_with('.') {
                     let parts: Vec<&str> = suffix[1..].split('.').collect();
-                    root.add_path_parts(&parts, path.clone());
+                    root.add_path_parts(&parts, path.clone(), ext);
                 }
             }
         }
@@ -75,7 +78,7 @@ impl HierarchyTree {
         root
     }
 
-    fn add_path_parts(&mut self, parts: &[&str], full_path: PathBuf) {
+    fn add_path_parts(&mut self, parts: &[&str], full_path: PathBuf, extension: Option<String>) {
         if parts.is_empty() {
             return;
         }
@@ -89,15 +92,17 @@ impl HierarchyTree {
         if let Some(child_node) = child {
             if parts.len() == 1 {
                 child_node.file_path = Some(full_path);
+                child_node.extension = extension;
             } else {
-                child_node.add_path_parts(&parts[1..], full_path);
+                child_node.add_path_parts(&parts[1..], full_path, extension);
             }
         } else {
             let mut new_child = HierarchyTree::new(first);
             if parts.len() == 1 {
                 new_child.file_path = Some(full_path);
+                new_child.extension = extension;
             } else {
-                new_child.add_path_parts(&parts[1..], full_path);
+                new_child.add_path_parts(&parts[1..], full_path, extension);
             }
             self.children.push(new_child);
         }
@@ -156,7 +161,10 @@ impl HierarchyTree {
         output.push_str(branch);
         output.push_str(&node.root_name);
         if node.file_path.is_some() {
-            output.push_str(".cs");
+            if let Some(ref ext) = node.extension {
+                output.push('.');
+                output.push_str(ext);
+            }
         }
         output.push('\n');
 
