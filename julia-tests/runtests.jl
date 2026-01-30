@@ -51,9 +51,9 @@ try
         include("runtests.callers.jl")
         include("runtests.callees.jl")
         include("runtests.trace.jl")
+        include("runtests.stdin.jl")       # IMPROVEMENT6 - Git integration with --stdin flag
 
         # TODO: Add more test modules as they are implemented
-        # include("runtests.stdin.jl")       # IMPROVEMENT6 - Git integration with --stdin flag
         # include("runtests.trace-stats.jl") # IMPROVEMENT7 - Statistical analysis of call graphs
         # include("runtests.gaps.jl")        # Needs feature implementation
 
