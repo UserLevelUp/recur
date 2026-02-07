@@ -4,6 +4,50 @@
 
 **Core Idea**: Use recur's hierarchical naming conventions on recur's own source code to make the codebase self-documenting and queryable.
 
+## ⚡ BREAKTHROUGH: Multi-Separator Support
+
+**The Challenge**: Rust doesn't allow dots in filenames (e.g., `main.command.files.stdin.rs` won't compile).
+
+**The Solution**: Recur now supports **multiple hierarchy separators** with the `--sep` flag!
+
+```bash
+# Use underscores for Rust modules
+recur files "main_command_*_stdin" -d src/ --sep _
+
+# Use dots for documentation
+recur files "command.*.doc" -d docs/ --sep .
+
+# Use dashes for kebab-case
+recur files "ui-component-*" -d src/ --sep -
+```
+
+**Key Features:**
+- ✅ **No mixing**: Each query uses ONE separator (no ambiguity)
+- ✅ **Language-agnostic**: Works with any naming convention
+- ✅ **Rust-friendly**: Use `_` for modules, dots preserved in other chars
+- ✅ **Gap detection**: Missing files = missing capabilities (visible!)
+
+### Real Example:
+
+```bash
+# Files: main_command_files_impl.rs, main_command_files_stdin.rs, main_command_stats_impl.rs
+
+# Find all command implementations
+$ recur files "main_command_*_impl" -d src/ --sep _
+✓ main_command_files_impl.rs
+✓ main_command_stats_impl.rs
+
+# Find commands WITH stdin support
+$ recur files "main_command_*_stdin" -d src/ --sep _
+✓ main_command_files_stdin.rs
+✓ main_command_stats_stdin.rs
+
+# Gap analysis: which commands DON'T have stdin?
+# (commands with _impl but no matching _stdin file)
+```
+
+---
+
 ## Why Dogfooding?
 
 Instead of maintaining separate documentation about which commands support which features, we encode this directly in the file names. Then we can use **recur itself** to discover:
@@ -14,25 +58,25 @@ Instead of maintaining separate documentation about which commands support which
 - Which features have trait implementations?
 - What's the overall architecture?
 
-**Example Queries:**
+**Example Queries** (with `--sep _` for Rust):
 ```bash
 # See all commands and their types
-recur tree "command" -d src/
+recur files "main_command_**" -d src/ --sep _
 
 # Find all standard file-list commands
-recur files "command.**.std" -d src/
+recur files "main_command_*_impl" -d src/ --sep _
 
-# Find all content-search commands
-recur files "command.**.search" -d src/
+# Find all stdin-capable commands
+recur files "main_command_*_stdin" -d src/ --sep _
 
 # See what traits exist
-recur files "trait.**" -d src/
+recur files "trait_**" -d src/trait/ --sep _
 
-# Find all stdin-capable implementations
-recur files "**.stdin.**" -d src/
+# Count stdin support coverage
+recur files "main_command_*_stdin" -d src/ --sep _ --count
 
 # Check test coverage (later, with Julia tests named similarly)
-recur files "test.command.**" -d julia-tests/
+recur files "main.command.**.test" -d julia-tests/
 ```
 
 ---
@@ -49,26 +93,27 @@ src/
 └── output.rs
 ```
 
-### Proposed Hierarchical Structure
+### Proposed Hierarchical Structure (Using Underscores for Rust)
 
 ```
 src/
 ├── main.rs                       // CLI entry point only
 │
-├── trait.stdin.rs                // Stdin capability trait
-├── trait.content_search.rs       // Content search trait
+├── trait/                        // Traits (directory structure)
+│   ├── mod.rs
+│   ├── stdin.rs                  // StdinCapable trait
+│   └── content_search.rs         // ContentSearchCapable trait
 │
-├── command.files.std.rs          // Standard file-list command
-├── command.stats.std.rs          // Standard file-list command
-├── command.tree.std.rs           // Standard file-list command
-├── command.related.std.rs        // Standard file-list command
-├── command.children.std.rs       // Standard file-list command
+├── main_command_files_impl.rs         // Implementation: main.command.files.impl
+├── main_command_files_stdin.rs        // Stdin capability: main.command.files.stdin
+├── main_command_files_doc.md     // Documentation: main.command.files.doc
 │
-├── command.find.search.rs        // Content-search command
-├── command.id.search.rs          // Content-search command
-├── command.callers.search.rs     // Content-search command
-├── command.callees.search.rs     // Content-search command
-├── command.trace.search.rs       // Content-search command
+├── main_command_stats_impl.rs         // Implementation: main.command.stats.impl
+├── main_command_stats_stdin.rs        // Stdin capability: main.command.stats.stdin
+│
+├── main_command_find_impl.rs     // Implementation: main.command.find.impl
+├── command_find_search.rs        // Search capability: main.command.find.search
+├── command_find_stdin.rs         // Stdin capability: main.command.find.stdin
 │
 ├── parser.rs                     // HierarchyPattern, HierarchicalName
 ├── tree.rs                       // HierarchyTree
@@ -77,21 +122,196 @@ src/
 
 ### File Naming Convention
 
-**Pattern**: `<category>.<name>.<type>.rs`
+**Pattern**: `<category>_<name>_<capability>.rs`
+
+Query with: `recur files "<category>_<name>_<capability>" --sep _`
 
 **Categories:**
-- `trait.*` - Trait definitions and shared implementations
-- `command.*` - Command implementations
-- `test.*` (future) - Test modules
+- `trait_*` - Trait definitions (or use trait/ directory)
+- `command_*` - Command implementations and capabilities
+- `test_*` (future) - Test modules
 
-**Types for Commands:**
-- `.std` - Standard file-list operations (uses FileSearcher)
-- `.search` - Content-search operations (uses ContentSearcher, CallerSearcher, etc.)
+**Capabilities:**
+- `_impl` - Core implementation
+- `_stdin` - Stdin support (trait impl or marker)
+- `_search` - Content search support
+- `_doc` - Documentation (in docs/ directory)
 
 **Examples:**
-- `command.files.std.rs` - Files command (standard)
-- `command.find.search.rs` - Find command (content search)
-- `trait.stdin.rs` - Stdin capability trait
+- `main_command_files_impl.rs` → query: `main.command.files.impl` (with --sep _)
+- `command_find_search.rs` → query: `main.command.find.search` (with --sep _)
+- `trait/stdin.rs` → dir hierarchy, query: `trait/*` in trait/
+
+**Visibility of Gaps:**
+```bash
+# All commands
+recur files "main_command_*_impl" -d src/ --sep _
+
+# Commands with stdin
+recur files "main_command_*_stdin" -d src/ --sep _
+
+# Missing stdin? Compare the two lists!
+```
+
+---
+
+## 🧪 Dogfooding in Action: Real Examples
+
+### Current Test Files
+
+We've created demo files showing the multi-separator approach:
+
+```
+src/
+├── main_command_files_impl.rs      # main.command.files.impl
+├── main_command_files_stdin.rs     # main.command.files.stdin
+├── main_command_stats_impl.rs      # main.command.stats.impl
+└── main_command_stats_stdin.rs     # main.command.stats.stdin
+```
+
+### Query Examples
+
+```bash
+# 1. Find ALL commands (implementations)
+$ recur files "main_command_*_impl" -d src/ --sep _
+src/main_command_files_impl.rs
+src/main_command_stats_impl.rs
+
+# 2. Find commands WITH stdin support
+$ recur files "main_command_*_stdin" -d src/ --sep _
+src/main_command_files_stdin.rs
+src/main_command_stats_stdin.rs
+
+# 3. Find everything under 'command' hierarchy
+$ recur files "main_command_**" -d src/ --sep _
+src/main_command_files_impl.rs
+src/main_command_files_stdin.rs
+src/main_command_stats_impl.rs
+src/main_command_stats_stdin.rs
+
+# 4. COUNT stdin-capable commands
+$ recur files "main_command_*_stdin" -d src/ --sep _ --count
+2 files
+
+# 5. Find specific command's files
+$ recur files "main_command_files_*" -d src/ --sep _
+src/main_command_files_impl.rs
+src/main_command_files_stdin.rs
+```
+
+### Gap Analysis (Future)
+
+Once all commands are refactored:
+
+```bash
+# Step 1: Get all command names
+ALL_COMMANDS=$(recur files "main_command_*_impl" -d src/ --sep _ | sed 's/_impl.rs//')
+
+# Step 2: Check which ones have stdin
+for cmd in $ALL_COMMANDS; do
+  if ! recur files "${cmd}_stdin" -d src/ --sep _ > /dev/null 2>&1; then
+    echo "❌ Missing stdin: $cmd"
+  fi
+done
+
+# Step 3: Check which ones have tests
+for cmd in $ALL_COMMANDS; do
+  test_name="test_${cmd#command_}"
+  if ! recur files "${test_name}" -d julia-tests/ --sep _ > /dev/null 2>&1; then
+    echo "❌ Missing test: $cmd"
+  fi
+done
+```
+
+### Benefits Demonstrated
+
+✅ **Self-Documenting**: File structure shows capabilities
+✅ **Queryable**: Use recur to analyze codebase
+✅ **Gap Detection**: Missing files = missing capabilities
+✅ **No External Docs**: The code IS the documentation
+✅ **Language-Agnostic**: Works with Rust, Python, Julia, etc.
+
+---
+
+## 📝 Extended Dogfooding: TODO and Task Management
+
+### Hierarchical TODO Files
+
+Use the hierarchy to track TODOs, priorities, and blockers alongside your code:
+
+```
+src/
+├── main_command_files_impl.rs
+├── main_command_files_todo.md           # General TODOs for files command
+├── main_command_files_todo_priority.md  # High-priority tasks
+├── main_command_files_todo_blocker.md   # Blocking issues
+│
+├── main_command_find_impl.rs
+├── main_command_find_todo.md
+├── main_command_find_todo_priority.md
+```
+
+### TODO Query Examples
+
+```bash
+# Find ALL TODOs in the codebase
+recur files "main_command_*_todo" -d src/ --sep _
+
+# Find HIGH-PRIORITY TODOs only
+recur files "main_command_*_todo_priority" -d src/ --sep _
+
+# Find blockers
+recur files "main_command_*_todo_blocker" -d src/ --sep _
+
+# Which commands have NO TODOs? (gap analysis)
+# Compare: main_command_*_impl.rs vs main_command_*_todo.md
+
+# TODOs for a specific subsystem
+recur files "main_command_files_todo*" -d src/ --sep _
+```
+
+### Benefits
+
+✅ **Co-located**: TODOs live with the code they describe
+✅ **Queryable**: Use recur to filter by priority/type
+✅ **Visible**: Missing TODO files = no known issues (or undocumented)
+✅ **Hierarchical**: Organize TODOs by component
+✅ **Trackable**: Changes in TODO files = visible in git
+
+### Example TODO File
+
+**src/main_command_files_todo_priority.md**:
+```markdown
+# High-Priority TODOs: Files Command
+
+## 🔥 P0: Implement stdin filtering for extension
+- [ ] Support multiple extensions in stdin mode
+- [ ] Add tests for stdin + extension combo
+
+## 🔥 P0: Performance optimization
+- [ ] Profile large directory scans
+- [ ] Consider parallel file reading
+
+## Related
+- See: main_command_files_todo.md for lower-priority tasks
+- Blocked by: main_parser_todo_blocker.md (pattern parsing issue)
+```
+
+### Future: Automated TODO Reports
+
+```bash
+# Generate priority matrix
+recur stats "main_command_*_todo" -d src/ --sep _
+recur stats "main_command_*_todo_priority" -d src/ --sep _
+
+# Find stale TODOs (no git changes in 90 days)
+find_stale_todos() {
+  for todo in $(recur files "main_command_*_todo*" -d src/ --sep _); do
+    last_change=$(git log -1 --format=%cr "$todo")
+    echo "$todo: $last_change"
+  done
+}
+```
 
 ---
 
@@ -186,7 +406,7 @@ pub trait ContentSearchCapable {
 
 ### Standard Command (File-List Based)
 
-**File**: `command.files.std.rs`
+**File**: `main.command.files.std.rs`
 
 ```rust
 use crate::trait_stdin::{read_paths_from_stdin, StdinCapable};
@@ -241,7 +461,7 @@ impl FilesCommand {
 
 ### Content-Search Command
 
-**File**: `command.find.search.rs`
+**File**: `main.command.find.search.rs`
 
 ```rust
 use crate::trait_stdin::{read_paths_from_stdin, StdinCapable};
@@ -296,9 +516,9 @@ impl FindCommand {
 recur tree "command" -d src/
 # Output:
 # command
-# ├── command.files.std.rs
-# ├── command.stats.std.rs
-# ├── command.find.search.rs
+# ├── main.command.files.std.rs
+# ├── main.command.stats.std.rs
+# ├── main.command.find.search.rs
 # └── command.callers.search.rs
 ```
 
@@ -325,7 +545,7 @@ recur files "trait.**" -d src/
 recur files "**.stdin.**" -d src/
 
 # See command-trait relationships
-recur related "command.find.search.rs" -d src/
+recur related "main.command.find.search.rs" -d src/
 # Shows: trait.stdin.rs, trait.content_search.rs
 ```
 
@@ -374,8 +594,8 @@ recur callers "StdinCapable" --scope "command.**"
 
 ### Phase 2: Refactor Standard Commands
 3. Extract each standard command to its own file:
-   - `command.files.std.rs` ✅ Already has stdin
-   - `command.stats.std.rs` ✅ Already has stdin
+   - `main.command.files.std.rs` ✅ Already has stdin
+   - `main.command.stats.std.rs` ✅ Already has stdin
    - `command.tree.std.rs` ✅ Already has stdin
    - `command.related.std.rs` ✅ Already has stdin
    - `command.children.std.rs` ✅ Already has stdin
@@ -387,7 +607,7 @@ Each file:
 
 ### Phase 3: Refactor Content-Search Commands
 4. Extract each content-search command:
-   - `command.find.search.rs` ⏳ Needs stdin implementation
+   - `main.command.find.search.rs` ⏳ Needs stdin implementation
    - `command.id.search.rs` ⏳ Needs stdin implementation
    - `command.callers.search.rs` ⏳ Needs stdin implementation
    - `command.callees.search.rs` ⏳ Needs stdin implementation
@@ -411,8 +631,8 @@ Each file:
 
 ### Phase 5: Test Alignment (Future)
 7. Rename Julia tests to match:
-   - `julia-tests/test.command.files.std.jl`
-   - `julia-tests/test.command.find.search.jl`
+   - `julia-tests/test.main.command.files.std.jl`
+   - `julia-tests/test.main.command.find.search.jl`
    - `julia-tests/test.trait.stdin.jl`
 
 8. Create test discovery script:
@@ -435,8 +655,8 @@ recur stats "command.**" -d src/ -l 1
 # Output:
 # Depth 0: 0 files
 # Depth 1: 10 files (all commands)
-#   - command.files.std.rs
-#   - command.stats.std.rs
+#   - main.command.files.std.rs
+#   - main.command.stats.std.rs
 #   - ...
 
 # Find all traits
@@ -464,7 +684,7 @@ recur callers "StdinCapable" --scope "**" -d src/
 recur callers "ContentSearchCapable" --scope "**" -d src/
 
 # Related files to find command
-recur related "command.find.search.rs" -d src/
+recur related "main.command.find.search.rs" -d src/
 ```
 
 ### Gap Analysis
@@ -487,7 +707,7 @@ recur related "command.find.search.rs" -d src/
 - Run tests to verify nothing breaks
 
 ### Step 2: Migrate One Command (Validate Pattern)
-- Pick `command.files.std.rs`
+- Pick `main.command.files.std.rs`
 - Extract to new file, implement traits
 - Update main.rs to use new module
 - Run tests to verify
@@ -541,8 +761,8 @@ recur related "command.find.search.rs" -d src/
 ### 1. **Test Naming Alignment**
 ```
 julia-tests/
-├── test.command.files.std.jl
-├── test.command.find.search.jl
+├── test.main.command.files.std.jl
+├── test.main.command.find.search.jl
 ├── test.trait.stdin.jl
 └── test.integration.git_workflows.jl
 ```
@@ -559,8 +779,8 @@ recur files "test.trait.**" -d julia-tests/
 ### 2. **Documentation Hierarchy**
 ```
 docs/
-├── guide.command.files.md
-├── guide.command.find.md
+├── guide.main.command.files.md
+├── guide.main.command.find.md
 ├── guide.trait.stdin.md
 └── guide.architecture.overview.md
 ```
@@ -614,7 +834,7 @@ done
 
 **Alternative**: Use directories like `src/command/files/std.rs`
 
-**Chosen approach**: Use dots like `src/command.files.std.rs`
+**Chosen approach**: Use dots like `src/main.command.files.std.rs`
 
 **Reasoning**:
 1. **Flat is better than nested** (for this use case)
@@ -629,36 +849,109 @@ done
 - ❌ Hyphens harder to parse hierarchically
 - ❌ Doesn't match recur's dot-notation philosophy
 
-**Option 2**: `files_std_command.rs` (underscores)
-- ❌ Rust convention but not hierarchical
-- ❌ Can't use recur patterns on it
+**Option 2**: Dot-only everywhere (`main.command.files.std.rs`)  ❌ **REJECTED**
+- ❌ Invalid for Rust source/module file naming
+- ❌ Conflicts with practical compiler/module constraints
+- ❌ Creates friction where implementation work actually happens (`src/`)
 
-**Option 3**: `command.files.std.rs` (dots) ✅ **CHOSEN**
-- ✅ Matches recur's hierarchy pattern
-- ✅ Works with `**` and `*` patterns
-- ✅ Self-documenting structure
-- ✅ Queryable with recur itself
+**Option 3**: Underscore-only everywhere (`main_command_files_std`)  ❌ **REJECTED**
+- ❌ Works for Rust, but weakens natural semantic readability in docs/tests
+- ❌ Makes cross-folder intent less obvious for humans and LLMs
+- ❌ Reduces expressiveness for chain-like metadata (`todo.priority`, etc.)
+
+**Option 4**: Split-by-domain separators  ✅ **CHOSEN**
+- ✅ `src/` uses underscore with Rust-safe names (`main_command_*`) + `--sep _`
+- ✅ `julia-tests/` and `docs/` use dot-based semantic names (`main.command.*`)
+- ✅ Shared `main` root enables consistent cross-folder queries
+- ✅ Missing branches (test/readme/todo/priority) pop by visible absence
+
+---
+
+## Root-Level Dogfooding Workflows
+
+Run these from repository root (`c:/src/recur`) to inspect multiple folders with one command set.
+
+```bash
+# 1) Source command modules in src/
+recur files "main_command_*_impl" -d src/ --sep _
+recur files "main_command_*_stdin" -d src/ --sep _
+
+# 2) Julia command tests (main-prefixed dot hierarchy)
+recur tree "main" -d julia-tests/
+recur files "main.command.**.test" -d julia-tests/
+
+# 3) Docs hierarchy (main-prefixed dot hierarchy)
+recur tree "main" -d docs/
+recur files "main.command.**.readme" -d docs/
+recur files "main.command.**.todo" -d docs/
+recur files "main.command.**.todo.priority" -d docs/
+
+# 4) Cross-folder matrix from root with stdin (mixed paths)
+printf "src/main_command_files_impl.rs\nsrc/main_command_stats_impl.rs\njulia-tests/main.command.files.test.jl\ndocs/main.command.files.readme.md\n" \
+  | recur stats "**" --stdin
+
+# 5) Content search only in piped src files
+printf "src/main_command_files_impl.rs\nsrc/main_command_stats_impl.rs\n" \
+  | recur find "Stdin" --scope "main_command_**" --stdin --sep _
+```
+
+What this validates:
+- Root execution works.
+- Folder-to-folder querying works (`src/`, `julia-tests/`, and `docs/`).
+- `--stdin` now scopes to the piped file list for file, stats, find, callers, callees, and trace flows.
+- `--sep _` works consistently for Rust-friendly source naming.
+- Dot-separated `main.*` trees expose missing tests/docs/todo priority by visible absence.
+
+---
+
+## Anti-Thesis vs Thesis
+
+### Anti-Thesis (Wrong)
+
+"Dogfooding means one universal naming style across all folders."
+
+Why this is wrong:
+1. `src/` has language constraints (Rust does not allow dot-separated module filenames).
+2. Docs/tests have different optimization goals than compiled source (semantic clarity over compiler compatibility).
+3. Forcing one separator globally causes either invalid source names or less expressive docs/tests.
+
+### New Thesis (Adopted)
+
+"Dogfooding means one shared hierarchy model with domain-appropriate separators."
+
+Model:
+1. Shared root: `main`
+2. Rust source (`src/`): `main_command_*` queried with `--sep _`
+3. Tests/docs (`julia-tests/`, `docs/`): `main.command.*` queried with dot separator
+4. Suffix chains encode status/intent (`readme`, `test`, `todo`, `todo.priority`)
+
+Why this is better:
+1. Valid and practical for Rust implementation.
+2. Highly readable and expressive for docs/tests.
+3. Queryable across folders with one conceptual root.
+4. Works for both humans and LLMs as a deterministic coordination contract.
 
 ---
 
 ## Conclusion
 
-By using recur's own naming conventions on itself, we create a **self-documenting, queryable codebase** where the structure is discoverable through the tool itself.
+By using recur's naming conventions on itself with a shared `main` root and domain-appropriate separators, we get a **self-documenting, queryable codebase** that is practical and consistent.
 
 This is the ultimate dogfooding: **recur understanding recur**.
 
-The hierarchical file names aren't just organizational—they're functional metadata that makes the codebase navigable and analyzable using the very tool we're building.
+The hierarchical names are functional metadata, not just organization. They make structure, coverage, and planning state discoverable using the same toolchain we are building.
 
-**Next Steps:**
-1. ✅ Document approach (this file)
-2. ⏳ Create `trait.stdin.rs`
-3. ⏳ Create `trait.content_search.rs`
-4. ⏳ Extract standard commands
-5. ⏳ Extract content-search commands
-6. ⏳ Verify with tests
-7. ⏳ Update documentation
+**Concept Status:** ✅ Complete
+
+What remains is implementation and incremental refinement, not thesis definition:
+1. Expand source/test/doc coverage under the naming contract.
+2. Add automated gap checks in Julia tests/CI.
+3. Continue evolving command capabilities (IMPROVEMENT7+ / IMPROVEMENT9 planning).
 
 ---
 
 *"The best way to validate a design is to use it yourself."*
 — Dennis Ritchie (probably)
+
+
+

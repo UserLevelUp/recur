@@ -3,10 +3,10 @@
 //! This trait provides the core functionality for commands that can read file paths
 //! from stdin (e.g., from git commands) and filter them by hierarchical patterns.
 
-use std::path::PathBuf;
-use std::io::{stdin, BufRead};
+use crate::parser::{HierarchicalName, HierarchyPattern};
 use anyhow::Context;
-use crate::parser::{HierarchyPattern, HierarchicalName};
+use std::io::{stdin, BufRead};
+use std::path::PathBuf;
 
 /// Read file paths from stdin (one per line)
 ///
@@ -87,7 +87,8 @@ pub trait StdinCapable {
             .filter(|p| {
                 // Extract hierarchical name from filename (remove extension)
                 if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
-                    let name_without_ext = filename.rsplit_once('.')
+                    let name_without_ext = filename
+                        .rsplit_once('.')
                         .map(|(name, _)| name)
                         .unwrap_or(filename);
                     let hier_name = HierarchicalName::new(name_without_ext);
@@ -150,9 +151,15 @@ mod tests {
         let filtered = TestCommand::filter_stdin_paths(paths, &pattern, Some(&extensions));
 
         assert_eq!(filtered.len(), 2);
-        assert!(filtered.iter().any(|p| p.to_str().unwrap().ends_with(".cs")));
-        assert!(filtered.iter().any(|p| p.to_str().unwrap().ends_with(".json")));
-        assert!(!filtered.iter().any(|p| p.to_str().unwrap().ends_with(".txt")));
+        assert!(filtered
+            .iter()
+            .any(|p| p.to_str().unwrap().ends_with(".cs")));
+        assert!(filtered
+            .iter()
+            .any(|p| p.to_str().unwrap().ends_with(".json")));
+        assert!(!filtered
+            .iter()
+            .any(|p| p.to_str().unwrap().ends_with(".txt")));
     }
 
     #[test]

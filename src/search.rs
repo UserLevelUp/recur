@@ -1,10 +1,10 @@
 //! Search implementations for files, content, and identifiers.
 
-use std::path::PathBuf;
+use crate::parser::{HierarchicalName, HierarchyPattern};
+use anyhow::Context;
 use std::fs;
 use std::io::{BufRead, BufReader};
-use anyhow::Context;
-use crate::parser::{HierarchyPattern, HierarchicalName};
+use std::path::PathBuf;
 
 /// Options controlling search behavior.
 #[derive(Debug, Clone, Default)]
@@ -16,6 +16,7 @@ pub struct SearchOptions {
     pub include_hidden: bool,
     pub extensions: Vec<String>,
     pub context_lines: usize,
+    pub input_files: Option<Vec<PathBuf>>,
 }
 
 /// Result of a content or identifier search.
@@ -40,8 +41,8 @@ pub struct CallerResult {
     pub match_end: usize,
     pub context_before: Vec<String>,
     pub context_after: Vec<String>,
-    pub is_hierarchical: bool,  // Marks if file is hierarchical
-    pub depth: usize,           // Depth in hierarchy (0 = flat)
+    pub is_hierarchical: bool, // Marks if file is hierarchical
+    pub depth: usize,          // Depth in hierarchy (0 = flat)
 }
 
 /// Searches for files matching a hierarchy pattern.
@@ -56,6 +57,16 @@ impl FileSearcher {
 
     pub fn find(&self, pattern: &HierarchyPattern) -> Vec<PathBuf> {
         let mut results = Vec::new();
+
+        if let Some(input_files) = self.options.input_files.as_ref() {
+            for path in input_files {
+                if let Some(path) = self.match_path(path, pattern) {
+                    results.push(path);
+                }
+            }
+            return results;
+        }
+
         let mut walker = walkdir::WalkDir::new(&self.options.root);
 
         if let Some(max_depth) = self.options.max_depth {
@@ -74,27 +85,8 @@ impl FileSearcher {
                 }
 
                 if entry.file_type().is_file() {
-                    if let Some(filename) = entry.file_name().to_str() {
-                        // Filter by extension if specified
-                        if !self.options.extensions.is_empty() {
-                            let has_valid_ext = self.options.extensions.iter().any(|ext| {
-                                filename.ends_with(ext)
-                            });
-                            if !has_valid_ext {
-                                continue;
-                            }
-                        }
-
-                        // Extract hierarchical name from filename (remove extension)
-                        let name_without_ext = filename.rsplit_once('.')
-                            .map(|(name, _)| name)
-                            .unwrap_or(filename);
-
-                        let hier_name = HierarchicalName::new(name_without_ext);
-
-                        if pattern.matches(&hier_name) {
-                            results.push(entry.path().to_path_buf());
-                        }
+                    if let Some(path) = self.match_path(&entry.path().to_path_buf(), pattern) {
+                        results.push(path);
                     }
                 }
             }
@@ -103,13 +95,45 @@ impl FileSearcher {
         results
     }
 
+    fn match_path(&self, path: &PathBuf, pattern: &HierarchyPattern) -> Option<PathBuf> {
+        let filename = path.file_name()?.to_str()?;
+
+        if !self.options.include_hidden && filename.starts_with('.') {
+            return None;
+        }
+
+        if !self.options.extensions.is_empty() {
+            let has_valid_ext = self
+                .options
+                .extensions
+                .iter()
+                .any(|ext| filename.ends_with(ext));
+            if !has_valid_ext {
+                return None;
+            }
+        }
+
+        let name_without_ext = filename
+            .rsplit_once('.')
+            .map(|(name, _)| name)
+            .unwrap_or(filename);
+        let hier_name = HierarchicalName::with_separator(name_without_ext, pattern.separator);
+
+        if pattern.matches(&hier_name) {
+            Some(path.clone())
+        } else {
+            None
+        }
+    }
+
     pub fn search(&self, pattern: &HierarchyPattern) -> Vec<PathBuf> {
         self.find(pattern)
     }
 
     pub fn find_related(&self, filename: &str) -> Vec<PathBuf> {
         // Extract the base hierarchy from the filename
-        let base = filename.rsplit_once('.')
+        let base = filename
+            .rsplit_once('.')
             .and_then(|(name, _)| name.rsplit_once('.'))
             .map(|(parent, _)| parent)
             .unwrap_or(filename);
@@ -132,7 +156,6 @@ impl FileSearcher {
             vec![]
         }
     }
-
 }
 
 /// Searches file contents for a pattern.
@@ -178,17 +201,13 @@ impl ContentSearcher {
 
                         // Extract context before
                         let start_before = line_num.saturating_sub(context_lines);
-                        let context_before: Vec<String> = all_lines[start_before..line_num]
-                            .iter()
-                            .cloned()
-                            .collect();
+                        let context_before: Vec<String> =
+                            all_lines[start_before..line_num].iter().cloned().collect();
 
                         // Extract context after
                         let end_after = (line_num + 1 + context_lines).min(all_lines.len());
-                        let context_after: Vec<String> = all_lines[line_num + 1..end_after]
-                            .iter()
-                            .cloned()
-                            .collect();
+                        let context_after: Vec<String> =
+                            all_lines[line_num + 1..end_after].iter().cloned().collect();
 
                         results.push(SearchResult {
                             path: file_path.clone(),
@@ -207,7 +226,11 @@ impl ContentSearcher {
         results
     }
 
-    pub fn search_regex(&self, regex: &regex::Regex, scope: &HierarchyPattern) -> Vec<SearchResult> {
+    pub fn search_regex(
+        &self,
+        regex: &regex::Regex,
+        scope: &HierarchyPattern,
+    ) -> Vec<SearchResult> {
         let mut results = Vec::new();
 
         // First find files matching the scope
@@ -228,17 +251,13 @@ impl ContentSearcher {
 
                         // Extract context before
                         let start_before = line_num.saturating_sub(context_lines);
-                        let context_before: Vec<String> = all_lines[start_before..line_num]
-                            .iter()
-                            .cloned()
-                            .collect();
+                        let context_before: Vec<String> =
+                            all_lines[start_before..line_num].iter().cloned().collect();
 
                         // Extract context after
                         let end_after = (line_num + 1 + context_lines).min(all_lines.len());
-                        let context_after: Vec<String> = all_lines[line_num + 1..end_after]
-                            .iter()
-                            .cloned()
-                            .collect();
+                        let context_after: Vec<String> =
+                            all_lines[line_num + 1..end_after].iter().cloned().collect();
 
                         results.push(SearchResult {
                             path: file_path.clone(),
@@ -292,17 +311,13 @@ impl IdentifierSearcher {
 
                             // Extract context before
                             let start_before = line_num.saturating_sub(context_lines);
-                            let context_before: Vec<String> = all_lines[start_before..line_num]
-                                .iter()
-                                .cloned()
-                                .collect();
+                            let context_before: Vec<String> =
+                                all_lines[start_before..line_num].iter().cloned().collect();
 
                             // Extract context after
                             let end_after = (line_num + 1 + context_lines).min(all_lines.len());
-                            let context_after: Vec<String> = all_lines[line_num + 1..end_after]
-                                .iter()
-                                .cloned()
-                                .collect();
+                            let context_after: Vec<String> =
+                                all_lines[line_num + 1..end_after].iter().cloned().collect();
 
                             results.push(SearchResult {
                                 path: file_path.clone(),
@@ -322,7 +337,11 @@ impl IdentifierSearcher {
         results
     }
 
-    fn find_identifiers_in_line(&self, line: &str, pattern: &HierarchyPattern) -> Option<Vec<(usize, usize)>> {
+    fn find_identifiers_in_line(
+        &self,
+        line: &str,
+        pattern: &HierarchyPattern,
+    ) -> Option<Vec<(usize, usize)>> {
         let mut matches = Vec::new();
 
         // Simple identifier extraction: look for sequences of word chars separated by dots
@@ -335,7 +354,9 @@ impl IdentifierSearcher {
                 let mut identifier = String::new();
 
                 // Extract identifier (alphanumeric, underscore, dots)
-                while i < chars.len() && (chars[i].is_alphanumeric() || chars[i] == '_' || chars[i] == '.') {
+                while i < chars.len()
+                    && (chars[i].is_alphanumeric() || chars[i] == '_' || chars[i] == '.')
+                {
                     identifier.push(chars[i]);
                     i += 1;
                 }
@@ -383,11 +404,10 @@ impl CallerSearcher {
 
         // Step 2: Sort files - hierarchical first, then by depth (deeper first)
         files.sort_by_key(|path| {
-            let filename = path.file_name()
-                .and_then(|n| n.to_str())
-                .unwrap_or("");
+            let filename = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
-            let hier_name = filename.rsplit_once('.')
+            let hier_name = filename
+                .rsplit_once('.')
                 .map(|(name, _)| name)
                 .unwrap_or(filename);
 
@@ -414,15 +434,12 @@ impl CallerSearcher {
                 let reader = BufReader::new(file);
 
                 // Read all lines
-                let all_lines: Vec<String> = reader.lines()
-                    .filter_map(|l| l.ok())
-                    .collect();
+                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
 
                 // Determine if this file is hierarchical
-                let filename = file_path.file_name()
-                    .and_then(|n| n.to_str())
-                    .unwrap_or("");
-                let hier_name = filename.rsplit_once('.')
+                let filename = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+                let hier_name = filename
+                    .rsplit_once('.')
                     .map(|(name, _)| name)
                     .unwrap_or(filename);
                 let depth = hier_name.matches('.').count();
@@ -434,16 +451,12 @@ impl CallerSearcher {
                         // Extract context
                         let context_lines = self.options.context_lines;
                         let start_before = line_num.saturating_sub(context_lines);
-                        let context_before: Vec<String> = all_lines[start_before..line_num]
-                            .iter()
-                            .cloned()
-                            .collect();
+                        let context_before: Vec<String> =
+                            all_lines[start_before..line_num].iter().cloned().collect();
 
                         let end_after = (line_num + 1 + context_lines).min(all_lines.len());
-                        let context_after: Vec<String> = all_lines[line_num + 1..end_after]
-                            .iter()
-                            .cloned()
-                            .collect();
+                        let context_after: Vec<String> =
+                            all_lines[line_num + 1..end_after].iter().cloned().collect();
 
                         results.push(CallerResult {
                             path: file_path.clone(),
@@ -492,11 +505,10 @@ impl CalleeSearcher {
 
         // Step 2: Sort files - hierarchical first, then by depth (deeper first)
         files.sort_by_key(|path| {
-            let filename = path.file_name()
-                .and_then(|n| n.to_str())
-                .unwrap_or("");
+            let filename = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
-            let hier_name = filename.rsplit_once('.')
+            let hier_name = filename
+                .rsplit_once('.')
                 .map(|(name, _)| name)
                 .unwrap_or(filename);
 
@@ -510,9 +522,15 @@ impl CalleeSearcher {
         // Match function declarations (must have access modifier or return type before function name)
         // This matches patterns like: "public void FuncName(" or "async Task FuncName(" or "static int FuncName("
         let func_pattern_str = if self.options.case_insensitive {
-            format!(r"(?i)(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(", regex::escape(function))
+            format!(
+                r"(?i)(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(",
+                regex::escape(function)
+            )
         } else {
-            format!(r"(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(", regex::escape(function))
+            format!(
+                r"(public|private|protected|internal|static|async|virtual|override|abstract|sealed|\w+)\s+(\w+\s+)*{}\s*\(",
+                regex::escape(function)
+            )
         };
         let func_regex = regex::Regex::new(&func_pattern_str)?;
 
@@ -523,15 +541,12 @@ impl CalleeSearcher {
         for file_path in files {
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
-                let all_lines: Vec<String> = reader.lines()
-                    .filter_map(|l| l.ok())
-                    .collect();
+                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
 
                 // Determine if this file is hierarchical
-                let filename = file_path.file_name()
-                    .and_then(|n| n.to_str())
-                    .unwrap_or("");
-                let hier_name = filename.rsplit_once('.')
+                let filename = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
+                let hier_name = filename
+                    .rsplit_once('.')
                     .map(|(name, _)| name)
                     .unwrap_or(filename);
                 let depth = hier_name.matches('.').count();
@@ -566,7 +581,8 @@ impl CalleeSearcher {
                     if in_function {
                         // Update brace count (but not on the line we just entered, we already counted it)
                         if !just_entered {
-                            brace_count += line.matches('{').count() as i32 - line.matches('}').count() as i32;
+                            brace_count +=
+                                line.matches('{').count() as i32 - line.matches('}').count() as i32;
                         }
 
                         let skip_before = if just_entered {
@@ -580,15 +596,23 @@ impl CalleeSearcher {
                             let callee_name = &cap[1];
 
                             // Skip common keywords and the function itself
-                            if callee_name == function ||
-                               callee_name == "if" || callee_name == "for" || callee_name == "while" ||
-                               callee_name == "switch" || callee_name == "catch" || callee_name == "return" ||
-                               callee_name == "async" || callee_name == "await" || callee_name == "new" {
+                            if callee_name == function
+                                || callee_name == "if"
+                                || callee_name == "for"
+                                || callee_name == "while"
+                                || callee_name == "switch"
+                                || callee_name == "catch"
+                                || callee_name == "return"
+                                || callee_name == "async"
+                                || callee_name == "await"
+                                || callee_name == "new"
+                            {
                                 continue;
                             }
 
                             // Skip call sites before the function body starts on the definition line
-                            if just_entered && cap.get(0).map_or(false, |m| m.start() < skip_before) {
+                            if just_entered && cap.get(0).map_or(false, |m| m.start() < skip_before)
+                            {
                                 continue;
                             }
 
@@ -597,16 +621,12 @@ impl CalleeSearcher {
                             // Extract context
                             let context_lines = self.options.context_lines;
                             let start_before = line_num.saturating_sub(context_lines);
-                            let context_before: Vec<String> = all_lines[start_before..line_num]
-                                .iter()
-                                .cloned()
-                                .collect();
+                            let context_before: Vec<String> =
+                                all_lines[start_before..line_num].iter().cloned().collect();
 
                             let end_after = (line_num + 1 + context_lines).min(all_lines.len());
-                            let context_after: Vec<String> = all_lines[line_num + 1..end_after]
-                                .iter()
-                                .cloned()
-                                .collect();
+                            let context_after: Vec<String> =
+                                all_lines[line_num + 1..end_after].iter().cloned().collect();
 
                             results.push(CalleeResult {
                                 path: file_path.clone(),
@@ -638,9 +658,9 @@ impl CalleeSearcher {
 /// Direction for call tracing
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TraceDirection {
-    Callees,  // What this function calls (dependencies)
-    Callers,  // Who calls this function (reverse dependencies)
-    Both,     // Both directions
+    Callees, // What this function calls (dependencies)
+    Callers, // Who calls this function (reverse dependencies)
+    Both,    // Both directions
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -670,8 +690,8 @@ pub enum TraceStopReason {
 /// Options for trace searching
 #[derive(Debug, Clone)]
 pub struct TraceOptions {
-    pub max_width: usize,  // Max branches per level
-    pub verbose: bool,     // Show full paths vs abbreviated
+    pub max_width: usize, // Max branches per level
+    pub verbose: bool,    // Show full paths vs abbreviated
     pub pick: Option<usize>,
 }
 
@@ -683,9 +703,9 @@ pub struct TraceNode {
     pub line_number: usize,
     pub is_hierarchical: bool,
     pub depth: usize,
-    pub children: Vec<TraceNode>,  // callees or callers depending on direction
+    pub children: Vec<TraceNode>, // callees or callers depending on direction
     pub is_cycle: bool,
-    pub parent_path: Option<PathBuf>,  // For path abbreviation
+    pub parent_path: Option<PathBuf>, // For path abbreviation
     pub call_site: Option<TraceCallSite>,
     pub stop_reason: Option<TraceStopReason>,
     pub ambiguous_matches: usize,
@@ -761,7 +781,8 @@ impl TraceSearcher {
     ) -> anyhow::Result<TraceResult> {
         self.visited.clear();
 
-        let root = self.trace_recursive(function, scope, direction, 0, max_depth, None, None, None)?;
+        let root =
+            self.trace_recursive(function, scope, direction, 0, max_depth, None, None, None)?;
 
         let stats = self.calculate_stats(&root, max_depth);
 
@@ -789,7 +810,9 @@ impl TraceSearcher {
         let mut selected_definition = None;
 
         if definition_count > 1 && current_depth > 0 {
-            let location = fallback_location.clone().or_else(|| definitions.first().cloned());
+            let location = fallback_location
+                .clone()
+                .or_else(|| definitions.first().cloned());
             let (node_path, node_line, node_is_hierarchical, node_depth) = match location {
                 Some(loc) => (loc.path, loc.line_number, loc.is_hierarchical, loc.depth),
                 None => (PathBuf::new(), 0, false, 0),
@@ -815,14 +838,15 @@ impl TraceSearcher {
             if current_depth == 0 && definition_count > 1 {
                 if let Some(pick) = self.trace_options.pick {
                     if pick == 0 || pick > definition_count {
-                        anyhow::bail!("Invalid --pick {}. Choose a number between 1 and {}", pick, definition_count);
+                        anyhow::bail!(
+                            "Invalid --pick {}. Choose a number between 1 and {}",
+                            pick,
+                            definition_count
+                        );
                     }
                     selected_definition = Some(definitions[pick - 1].clone());
                 } else {
-                    let mut message = format!(
-                        "Multiple matches found for '{}':\n",
-                        function
-                    );
+                    let mut message = format!("Multiple matches found for '{}':\n", function);
                     for (idx, item) in definitions.iter().enumerate() {
                         message.push_str(&format!(
                             "  {}) {} in {}:{}\n",
@@ -909,12 +933,8 @@ impl TraceSearcher {
 
         // Find children based on direction
         let mut children_results = match direction {
-            TraceDirection::Callees => {
-                self.callee_searcher.find_callees(function, scope)?
-            }
-            TraceDirection::Callers => {
-                self.caller_searcher.find_callers(function, scope)?
-            }
+            TraceDirection::Callees => self.callee_searcher.find_callees(function, scope)?,
+            TraceDirection::Callers => self.caller_searcher.find_callers(function, scope)?,
             TraceDirection::Both => {
                 // For "both", we'll handle this specially in output formatting
                 // For now, just do callees
@@ -964,7 +984,8 @@ impl TraceSearcher {
                     (name, fallback, call_site)
                 }
                 TraceDirection::Callers => {
-                    let caller = self.find_enclosing_caller(&child_result.path, child_result.line_number);
+                    let caller =
+                        self.find_enclosing_caller(&child_result.path, child_result.line_number);
                     let call_site = Some(TraceCallSite {
                         path: child_result.path.clone(),
                         line_number: child_result.line_number,
@@ -1087,7 +1108,8 @@ impl TraceSearcher {
             (!is_hierarchical, std::cmp::Reverse(depth))
         });
 
-        let def_regex = build_definition_regex(function, self.callee_searcher.options.case_insensitive)?;
+        let def_regex =
+            build_definition_regex(function, self.callee_searcher.options.case_insensitive)?;
         let mut matches = Vec::new();
 
         for file_path in &files {
@@ -1128,7 +1150,8 @@ impl TraceSearcher {
         let file = fs::File::open(path).ok()?;
         let reader = BufReader::new(file);
         let lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
-        let def_regex = build_any_definition_regex(self.callee_searcher.options.case_insensitive).ok()?;
+        let def_regex =
+            build_any_definition_regex(self.callee_searcher.options.case_insensitive).ok()?;
 
         let mut last_match: Option<(String, usize)> = None;
         let max_line = line_number.saturating_sub(1);

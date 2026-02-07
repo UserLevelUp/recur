@@ -7,19 +7,41 @@ use std::fmt;
 pub struct HierarchyPattern {
     pub raw: String,
     pub case_insensitive: bool,
+    pub separator: char, // Hierarchy separator (., _, -, :, etc.)
 }
 
 impl HierarchyPattern {
     pub fn parse(pattern: &str) -> Result<Self, PatternError> {
+        Self::parse_with_separator(pattern, '.')
+    }
+
+    /// Parse a pattern with a custom hierarchy separator.
+    ///
+    /// # Examples
+    /// ```rust,ignore
+    /// // Use underscore as separator for Rust module names
+    /// let pattern = HierarchyPattern::parse_with_separator("command_*_stdin", '_')?;
+    ///
+    /// // Use dash for kebab-case
+    /// let pattern = HierarchyPattern::parse_with_separator("my-module-*", '-')?;
+    /// ```
+    pub fn parse_with_separator(pattern: &str, separator: char) -> Result<Self, PatternError> {
         Ok(Self {
             raw: pattern.to_string(),
             case_insensitive: false,
+            separator,
         })
     }
 
     /// Returns a case-insensitive version of this pattern.
     pub fn case_insensitive(mut self) -> Self {
         self.case_insensitive = true;
+        self
+    }
+
+    /// Returns a version of this pattern with a different separator.
+    pub fn with_separator(mut self, separator: char) -> Self {
+        self.separator = separator;
         self
     }
 
@@ -45,9 +67,9 @@ impl HierarchyPattern {
             return true;
         }
 
-        // Split pattern and target by dots
-        let pattern_parts: Vec<&str> = pattern.split('.').collect();
-        let target_parts: Vec<&str> = target.split('.').collect();
+        // Split pattern and target by the configured separator
+        let pattern_parts: Vec<&str> = pattern.split(self.separator).collect();
+        let target_parts: Vec<&str> = target.split(self.separator).collect();
 
         self.matches_parts(&pattern_parts, &target_parts)
     }
@@ -146,11 +168,35 @@ impl HierarchyPattern {
 #[derive(Debug, Clone)]
 pub struct HierarchicalName {
     pub full: String,
+    pub separator: char, // Hierarchy separator used in this name
 }
 
 impl HierarchicalName {
+    /// Create a new hierarchical name with the default separator (dot).
     pub fn new(full: impl Into<String>) -> Self {
-        Self { full: full.into() }
+        Self::with_separator(full, '.')
+    }
+
+    /// Create a new hierarchical name with a custom separator.
+    ///
+    /// # Examples
+    /// ```rust,ignore
+    /// // For Rust module names with underscores
+    /// let name = HierarchicalName::with_separator("command_files_stdin", '_');
+    ///
+    /// // For kebab-case
+    /// let name = HierarchicalName::with_separator("my-component-button", '-');
+    /// ```
+    pub fn with_separator(full: impl Into<String>, separator: char) -> Self {
+        Self {
+            full: full.into(),
+            separator,
+        }
+    }
+
+    /// Get the depth of this hierarchical name (number of separators).
+    pub fn depth(&self) -> usize {
+        self.full.matches(self.separator).count()
     }
 }
 

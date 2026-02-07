@@ -41,17 +41,18 @@ try
     @testset "Recur Complete Test Suite" begin
 
         # Include and run test files
-        include("runtests.files.jl")
-        include("runtests.find.jl")
-        include("runtests.tree.jl")
-        include("runtests.related.jl")
-        include("runtests.children.jl")
-        include("runtests.id.jl")
-        include("runtests.stats.jl")
-        include("runtests.callers.jl")
-        include("runtests.callees.jl")
-        include("runtests.trace.jl")
-        include("runtests.stdin.jl")       # IMPROVEMENT6 - Git integration with --stdin flag
+        include("main.command.files.test.jl")
+        include("main.command.find.test.jl")
+        include("main.command.tree.test.jl")
+        include("main.command.related.test.jl")
+        include("main.command.children.test.jl")
+        include("main.command.id.test.jl")
+        include("main.command.stats.test.jl")
+        include("main.command.callers.test.jl")
+        include("main.command.callees.test.jl")
+        include("main.command.trace.test.jl")
+        include("main.meta.dogfooding.test.jl")  # Dogfooding hierarchy: tree + separator precedence
+        include("main.command.stdin.test.jl")    # IMPROVEMENT6 - Git integration with --stdin flag
 
         # TODO: Add more test modules as they are implemented
         # include("runtests.trace-stats.jl") # IMPROVEMENT7 - Statistical analysis of call graphs

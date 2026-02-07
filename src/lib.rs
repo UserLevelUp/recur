@@ -2,10 +2,14 @@
 //!
 //! The binary (`src/main.rs`) calls into this crate.
 
+pub mod output;
 pub mod parser;
 pub mod search;
 pub mod tree;
-pub mod output;
+
+// Traits for dogfooding hierarchical organization
+#[path = "trait/mod.rs"]
+pub mod r#trait;
 
 pub fn version() -> &'static str {
     env!("CARGO_PKG_VERSION")

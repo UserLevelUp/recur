@@ -45,13 +45,23 @@ impl HierarchyTree {
     }
 
     pub fn from_paths(base: impl Into<String>, paths: &[PathBuf]) -> Self {
+        Self::from_paths_with_separator(base, paths, '.')
+    }
+
+    pub fn from_paths_with_separator(
+        base: impl Into<String>,
+        paths: &[PathBuf],
+        separator: char,
+    ) -> Self {
         let base_str = base.into();
         let mut root = Self::new(&base_str);
+        let sep_str = separator.to_string();
 
         for path in paths {
             if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
                 // Remove file extension to get hierarchical name
-                let (hier_name, ext) = filename.rsplit_once('.')
+                let (hier_name, ext) = filename
+                    .rsplit_once('.')
                     .map(|(name, ext)| (name, Some(ext.to_string())))
                     .unwrap_or((filename, None));
 
@@ -68,8 +78,8 @@ impl HierarchyTree {
                     // This is the base file itself
                     root.file_path = Some(path.clone());
                     root.extension = ext;
-                } else if suffix.starts_with('.') {
-                    let parts: Vec<&str> = suffix[1..].split('.').collect();
+                } else if suffix.starts_with(&sep_str) {
+                    let parts: Vec<&str> = suffix[sep_str.len()..].split(separator).collect();
                     root.add_path_parts(&parts, path.clone(), ext);
                 }
             }
@@ -86,8 +96,7 @@ impl HierarchyTree {
         let first = parts[0];
 
         // Find or create child node
-        let child = self.children.iter_mut()
-            .find(|c| c.root_name == first);
+        let child = self.children.iter_mut().find(|c| c.root_name == first);
 
         if let Some(child_node) = child {
             if parts.len() == 1 {
@@ -142,7 +151,14 @@ impl HierarchyTree {
         output
     }
 
-    fn format_child(&self, output: &mut String, node: &HierarchyTree, prefix: &str, is_last: bool, unicode: bool) {
+    fn format_child(
+        &self,
+        output: &mut String,
+        node: &HierarchyTree,
+        prefix: &str,
+        is_last: bool,
+        unicode: bool,
+    ) {
         let (branch, cont) = if unicode {
             if is_last {
                 ("└── ", "    ")

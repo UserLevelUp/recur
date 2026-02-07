@@ -84,7 +84,7 @@ config.json"""
             success, output, error_output = run_recur_stdin("", ["files", "**", "--stdin"])
             log_command("stdin (empty) | recur files \"**\" --stdin", success)
 
-            @test success  # Should succeed but return no results
+            @test !success  # No matches should return exit code 1
             @test isempty(strip(output))
         end
 
@@ -143,9 +143,9 @@ ApiController.cs"""
             try
                 data = JSON3.read(output)
                 json_valid = true
-                
-                @test haskey(data, "files")
-                @test length(data["files"]) == 2  # UserService.cs and UserService.Handlers.cs
+
+                @test isa(data, AbstractVector)
+                @test length(data) == 2  # UserService.cs and UserService.Handlers.cs
             catch e
                 @warn "JSON parsing failed" exception=e
             end
@@ -176,8 +176,8 @@ UserService.Models.cs"""
         success, output, error_output = run_recur_stdin(input_files, ["stats", "UserService.**", "--stdin"])
         log_command("stdin | recur stats \"UserService.**\" --stdin", success)
 
-        @test_broken success  # Will pass once stdin wired for stats command
-        @test_broken contains(output, "Total Files") || contains(output, "5")
+        @test success
+        @test contains(output, "Total files") || contains(output, "5")
     end
 
     @testset "stdin with tree command" verbose = true begin
@@ -189,8 +189,8 @@ UserService.Models.cs"""
         success, output, error_output = run_recur_stdin(input_files, ["tree", "UserService.**", "--stdin"])
         log_command("stdin | recur tree \"UserService.**\" --stdin", success)
 
-        @test_broken success  # Will pass once stdin wired for tree command
-        @test_broken contains(output, "UserService")
+        @test success
+        @test contains(output, "UserService")
     end
 
     @testset "stdin with related command" verbose = true begin
@@ -201,8 +201,8 @@ UserService.Models.cs"""
         success, output, error_output = run_recur_stdin(input_files, ["related", "UserService.cs", "--stdin"])
         log_command("stdin | recur related \"UserService.cs\" --stdin", success)
 
-        @test_broken success  # Will pass once stdin wired for related command
-        @test_broken contains(output, "UserService.Handlers.cs")
+        @test success
+        @test contains(output, "UserService.Handlers.cs")
     end
 
     @testset "stdin with children command" verbose = true begin
@@ -359,9 +359,9 @@ AlsoNoMatch.cs"""
             success, output, error_output = run_recur_stdin(input_files, ["files", "UserService.**", "--stdin"])
             log_command("stdin (nomatch) | recur files \"UserService.**\" --stdin", success)
 
-            # Should succeed but return no matches
-            @test success || contains(error_output, "No files found")  # Exit code 1 for no results is ok
-            @test isempty(strip(output)) || contains(error_output, "No files found")
+            # No matches should return exit code 1 with no output
+            @test !success
+            @test isempty(strip(output))
         end
 
         @testset "stdin with mixed valid/invalid paths" verbose = true begin
@@ -421,8 +421,8 @@ UserService.Models.cs"""
             # Test with many files (performance check)
             large_input = join(["File$i.cs" for i in 1:1000], "\n")
 
-            success, output, error_output = run_recur_stdin(large_input, ["files", "File[0-9]*", "--stdin"])
-            log_command("stdin (1000 files) | recur files \"File[0-9]*\" --stdin", success)
+            success, output, error_output = run_recur_stdin(large_input, ["files", "File*", "--stdin"])
+            log_command("stdin (1000 files) | recur files \"File*\" --stdin", success)
 
             @test success
             # Should process all 1000 files
