@@ -227,14 +227,12 @@ function run_recur_stdin(input_string::String, recur_args::Vector{String})
     cmd = `$RECUR_BIN $recur_args`
     out = IOBuffer()
     err = IOBuffer()
+    stdin_buf = IOBuffer(input_string)
     success = true
 
     try
-        # Use Julia's open() with write mode to pipe stdin
-        process = open(cmd, "r+", stdout=out, stderr=err)
-        write(process, input_string)
-        close(process.in)  # Close stdin to signal end of input
-        wait(process)
+        # Use pipeline to connect stdin, stdout, stderr
+        run(pipeline(cmd, stdin=stdin_buf, stdout=out, stderr=err))
     catch e
         if isa(e, ProcessFailedException)
             success = false

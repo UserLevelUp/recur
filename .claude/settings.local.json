@@ -24,7 +24,13 @@
       "Bash(target/release/recur.exe stats:*)",
       "Bash(target/release/recur.exe:*)",
       "Bash(rustc:*)",
-      "Bash(cargo clean:*)"
+      "Bash(cargo clean:*)",
+      "Bash(/c/src/recur/target/release-safe/recur.exe files:*)",
+      "Bash(./target/release-safe/recur.exe:*)",
+      "Bash(julia runtests.stdin.jl:*)",
+      "Bash(../target/release-safe/recur.exe:*)",
+      "Bash(RECUR_PROFILE=release-safe julia -e:*)",
+      "Bash(RECUR_PROFILE=release-safe julia:*)"
     ]
   }
 }

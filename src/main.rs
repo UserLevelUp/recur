@@ -12,7 +12,7 @@ use std::fs;
 use std::io::BufRead;
 
 use recur::parser::HierarchyPattern;
-use recur::search::{FileSearcher, ContentSearcher, IdentifierSearcher, SearchOptions};
+use recur::search::{FileSearcher, ContentSearcher, IdentifierSearcher, SearchOptions, read_paths_from_stdin};
 use recur::tree::HierarchyTree;
 use recur::output::TerminalFormatter;
 
@@ -380,6 +380,10 @@ enum Commands {
         /// Scope alias mapping (e.g., --scope-alias cw3=LevelController.CreateWizard3.**)
         #[arg(long, value_name = "ALIAS=PATTERN")]
         scope_alias: Vec<String>,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
     },
 }
 
@@ -387,35 +391,35 @@ fn main() {
     let cli = Cli::parse();
     
     let result = match cli.command {
-        Commands::Files { pattern, dir, ext, ignore_case, min_depth, max_depth, count, .. } => {
-            cmd_files(pattern, dir, ext, ignore_case, min_depth, max_depth, count, cli.json, cli.color)
+        Commands::Files { pattern, dir, ext, ignore_case, min_depth, max_depth, count, stdin } => {
+            cmd_files(pattern, dir, ext, ignore_case, min_depth, max_depth, count, stdin, cli.json, cli.color)
         }
-        Commands::Find { query, scope, dir, context, ignore_case, regex, ext, .. } => {
-            cmd_find(query, scope, dir, context, ignore_case, regex, ext, cli.json, cli.color)
+        Commands::Find { query, scope, dir, context, ignore_case, regex, ext, stdin } => {
+            cmd_find(query, scope, dir, context, ignore_case, regex, ext, stdin, cli.json, cli.color)
         }
-        Commands::Tree { base, dir, depth, count, ascii, .. } => {
-            cmd_tree(base, dir, depth, count, !ascii, cli.json)
+        Commands::Tree { base, dir, depth, count, ascii, stdin } => {
+            cmd_tree(base, dir, depth, count, !ascii, stdin, cli.json)
         }
-        Commands::Related { filename, dir, exclude_self, .. } => {
-            cmd_related(filename, dir, exclude_self, cli.json, cli.color)
+        Commands::Related { filename, dir, exclude_self, stdin } => {
+            cmd_related(filename, dir, exclude_self, stdin, cli.json, cli.color)
         }
-        Commands::Children { parent, dir, count, .. } => {
-            cmd_children(parent, dir, count, cli.json, cli.color)
+        Commands::Children { parent, dir, count, stdin } => {
+            cmd_children(parent, dir, count, stdin, cli.json, cli.color)
         }
-        Commands::Id { pattern, dir, ext, context, ignore_case, .. } => {
-            cmd_id(pattern, dir, ext, context, ignore_case, cli.json, cli.color)
+        Commands::Id { pattern, dir, ext, context, ignore_case, stdin } => {
+            cmd_id(pattern, dir, ext, context, ignore_case, stdin, cli.json, cli.color)
         }
-        Commands::Stats { pattern, dir, level, ext, .. } => {
-            cmd_stats(pattern, dir, level, ext, cli.json, cli.color)
+        Commands::Stats { pattern, dir, level, ext, stdin } => {
+            cmd_stats(pattern, dir, level, ext, stdin, cli.json, cli.color)
         }
-        Commands::Callers { function, scope, dir, context, ignore_case, ext, count, .. } => {
-            cmd_callers(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
+        Commands::Callers { function, scope, dir, context, ignore_case, ext, count, stdin } => {
+            cmd_callers(function, scope, dir, context, ignore_case, ext, count, stdin, cli.json, cli.color)
         }
-        Commands::Callees { function, scope, dir, context, ignore_case, ext, count, .. } => {
-            cmd_callees(function, scope, dir, context, ignore_case, ext, count, cli.json, cli.color)
+        Commands::Callees { function, scope, dir, context, ignore_case, ext, count, stdin } => {
+            cmd_callees(function, scope, dir, context, ignore_case, ext, count, stdin, cli.json, cli.color)
         }
-        Commands::Trace { function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, pick, scope_alias } => {
-            cmd_trace(function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, pick, scope_alias, cli.json, cli.color)
+        Commands::Trace { function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, pick, scope_alias, stdin } => {
+            cmd_trace(function, scope, dir, depth, direction, ignore_case, ext, max_width, verbose, format, pick, scope_alias, stdin, cli.json, cli.color)
         }
     };
 
@@ -433,6 +437,7 @@ fn cmd_files(
     min_depth: usize,
     max_depth: Option<usize>,
     count_only: bool,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -446,19 +451,55 @@ fn cmd_files(
     let pattern = HierarchyPattern::parse(&pattern)?;
     let pattern = if ignore_case { pattern.case_insensitive() } else { pattern };
 
-    let mut options = SearchOptions {
-        root: dir,
-        case_insensitive: ignore_case,
-        max_depth,
-        ..Default::default()
+    let all_files = if stdin {
+        // Read paths from stdin and filter by pattern
+        let stdin_paths = read_paths_from_stdin()?;
+        stdin_paths.into_iter()
+            .filter(|p| {
+                // Extract hierarchical name from filename (remove extension)
+                if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
+                    let name_without_ext = filename.rsplit_once('.')
+                        .map(|(name, _)| name)
+                        .unwrap_or(filename);
+                    let hier_name = recur::parser::HierarchicalName::new(name_without_ext);
+                    pattern.matches(&hier_name)
+                } else {
+                    false
+                }
+            })
+            .filter(|p| {
+                // Apply extension filter if specified
+                if let Some(ref ext_str) = ext {
+                    let extensions: Vec<&str> = ext_str.split(',').map(|s| s.trim()).collect();
+                    if let Some(file_ext) = p.extension().and_then(|e| e.to_str()) {
+                        extensions.iter().any(|e| {
+                            let e = e.trim_start_matches('.');
+                            file_ext == e
+                        })
+                    } else {
+                        false
+                    }
+                } else {
+                    true
+                }
+            })
+            .collect()
+    } else {
+        // Use filesystem search
+        let mut options = SearchOptions {
+            root: dir,
+            case_insensitive: ignore_case,
+            max_depth,
+            ..Default::default()
+        };
+
+        if let Some(ext_str) = ext {
+            options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+        }
+
+        let searcher = FileSearcher::new(options);
+        searcher.find(&pattern)
     };
-
-    if let Some(ext_str) = ext {
-        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-    }
-
-    let searcher = FileSearcher::new(options);
-    let all_files = searcher.find(&pattern);
 
     // Filter by min_depth
     let base_depth = pattern.raw.matches('.').count();
@@ -479,7 +520,7 @@ fn cmd_files(
         println!("{} files", files.len());
     } else if json {
         let output = recur::output::JsonFormatter::format_file_list(&files);
-        println!("{}", serde_json::to_string_pretty(&output)?);
+        println!("{}", output);
     } else {
         let mut formatter = TerminalFormatter::new(color);
         formatter.print_file_list(&files);
@@ -501,6 +542,7 @@ fn cmd_find(
     ignore_case: bool,
     use_regex: bool,
     ext: Option<String>,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -548,19 +590,40 @@ fn cmd_tree(
     max_depth: Option<usize>,
     show_count: bool,
     unicode: bool,
+    stdin: bool,
     json: bool,
 ) -> anyhow::Result<()> {
     // Find all files starting with base (recursive)
     let pattern = HierarchyPattern::parse(&format!("{}.**", base))?;
-    
-    let options = SearchOptions {
-        root: dir,
-        max_depth,
-        ..Default::default()
+
+    let files = if stdin {
+        // Read paths from stdin and filter by pattern
+        read_paths_from_stdin()?
+            .into_iter()
+            .filter(|p| {
+                // Extract hierarchical name from filename
+                if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
+                    let name_without_ext = filename.rsplit_once('.')
+                        .map(|(name, _)| name)
+                        .unwrap_or(filename);
+                    let hier_name = recur::parser::HierarchicalName::new(name_without_ext);
+                    pattern.matches(&hier_name)
+                } else {
+                    false
+                }
+            })
+            .collect()
+    } else {
+        // Use filesystem search
+        let options = SearchOptions {
+            root: dir,
+            max_depth,
+            ..Default::default()
+        };
+
+        let searcher = FileSearcher::new(options);
+        searcher.find(&pattern)
     };
-    
-    let searcher = FileSearcher::new(options);
-    let files = searcher.find(&pattern);
     
     if files.is_empty() {
         eprintln!("No files found starting with '{}'", base);
@@ -588,16 +651,45 @@ fn cmd_related(
     filename: String,
     dir: PathBuf,
     exclude_self: bool,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
-    let options = SearchOptions {
-        root: dir.clone(),
-        ..Default::default()
-    };
+    let mut files = if stdin {
+        // Read paths from stdin and find related files (siblings)
+        // Extract the parent hierarchy from the filename
+        let base = filename.rsplit_once('.')
+            .and_then(|(name, _)| name.rsplit_once('.'))
+            .map(|(parent, _)| parent)
+            .unwrap_or(&filename);
 
-    let searcher = FileSearcher::new(options);
-    let mut files = searcher.find_related(&filename);
+        let pattern = HierarchyPattern::parse(&format!("{}.*", base))?;
+
+        read_paths_from_stdin()?
+            .into_iter()
+            .filter(|p| {
+                // Extract hierarchical name from filename
+                if let Some(file_name) = p.file_name().and_then(|n| n.to_str()) {
+                    let name_without_ext = file_name.rsplit_once('.')
+                        .map(|(name, _)| name)
+                        .unwrap_or(file_name);
+                    let hier_name = recur::parser::HierarchicalName::new(name_without_ext);
+                    pattern.matches(&hier_name)
+                } else {
+                    false
+                }
+            })
+            .collect()
+    } else {
+        // Use filesystem search
+        let options = SearchOptions {
+            root: dir.clone(),
+            ..Default::default()
+        };
+
+        let searcher = FileSearcher::new(options);
+        searcher.find_related(&filename)
+    };
 
     // Filter out the input file if exclude_self is true
     if exclude_self {
@@ -629,16 +721,39 @@ fn cmd_children(
     parent: String,
     dir: PathBuf,
     count_only: bool,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
-    let options = SearchOptions {
-        root: dir,
-        ..Default::default()
+    let files = if stdin {
+        // Read paths from stdin and find children
+        let pattern = HierarchyPattern::parse(&format!("{}.**", parent))?;
+
+        read_paths_from_stdin()?
+            .into_iter()
+            .filter(|p| {
+                // Extract hierarchical name from filename
+                if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
+                    let name_without_ext = filename.rsplit_once('.')
+                        .map(|(name, _)| name)
+                        .unwrap_or(filename);
+                    let hier_name = recur::parser::HierarchicalName::new(name_without_ext);
+                    pattern.matches(&hier_name)
+                } else {
+                    false
+                }
+            })
+            .collect()
+    } else {
+        // Use filesystem search
+        let options = SearchOptions {
+            root: dir,
+            ..Default::default()
+        };
+
+        let searcher = FileSearcher::new(options);
+        searcher.find_children(&parent)
     };
-    
-    let searcher = FileSearcher::new(options);
-    let files = searcher.find_children(&parent);
 
     if count_only {
         println!("{} files", files.len());
@@ -663,6 +778,7 @@ fn cmd_id(
     ext: Option<String>,
     context: usize,
     ignore_case: bool,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -701,21 +817,59 @@ fn cmd_stats(
     dir: PathBuf,
     level: Option<usize>,
     ext: Option<String>,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
-    let mut options = SearchOptions {
-        root: dir,
-        ..Default::default()
-    };
-
-    if let Some(ext_str) = ext {
-        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-    }
-
     let pattern_parsed = HierarchyPattern::parse(&pattern)?;
-    let searcher = FileSearcher::new(options);
-    let files = searcher.find(&pattern_parsed);
+
+    let files = if stdin {
+        // Read paths from stdin and filter by pattern
+        read_paths_from_stdin()?
+            .into_iter()
+            .filter(|p| {
+                // Extract hierarchical name from filename
+                if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
+                    let name_without_ext = filename.rsplit_once('.')
+                        .map(|(name, _)| name)
+                        .unwrap_or(filename);
+                    let hier_name = recur::parser::HierarchicalName::new(name_without_ext);
+                    pattern_parsed.matches(&hier_name)
+                } else {
+                    false
+                }
+            })
+            .filter(|p| {
+                // Apply extension filter if specified
+                if let Some(ref ext_str) = ext {
+                    let extensions: Vec<&str> = ext_str.split(',').map(|s| s.trim()).collect();
+                    if let Some(file_ext) = p.extension().and_then(|e| e.to_str()) {
+                        extensions.iter().any(|e| {
+                            let e = e.trim_start_matches('.');
+                            file_ext == e
+                        })
+                    } else {
+                        false
+                    }
+                } else {
+                    true
+                }
+            })
+            .collect()
+    } else {
+        // Use filesystem search
+        let mut options = SearchOptions {
+            root: dir,
+            ..Default::default()
+        };
+
+        if let Some(ext_str) = ext {
+            options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
+        }
+
+        let searcher = FileSearcher::new(options);
+        searcher.find(&pattern_parsed)
+    };
 
     if files.is_empty() {
         if !json {
@@ -888,6 +1042,7 @@ fn cmd_callers(
     ignore_case: bool,
     ext: Option<String>,
     count_only: bool,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -955,6 +1110,7 @@ fn cmd_callees(
     ignore_case: bool,
     ext: Option<String>,
     count_only: bool,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
@@ -1027,6 +1183,7 @@ fn cmd_trace(
     format_str: String,
     pick: Option<usize>,
     scope_alias: Vec<String>,
+    stdin: bool,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
