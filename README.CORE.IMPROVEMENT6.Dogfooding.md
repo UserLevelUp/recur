@@ -81,6 +81,36 @@ recur files "main.command.**.test" -d julia-tests/
 
 ---
 
+## PRIORITY-0: Run `recur` First (Before `rg` or PowerShell)
+
+Before claiming dogfooding is implemented, run the real CLI queries from repository root:
+
+```bash
+# 1) Global dot-hierarchy view (docs/tests/metadata branches)
+recur tree "main"
+
+# 2) Source hierarchy view with Rust-safe separator
+recur tree "main" -d src/ --sep _
+recur files "main_command_*_impl" -d src/ --sep _ --count
+recur files "main_command_*_stdin" -d src/ --sep _ --count
+
+# 3) Coverage comparison across folders
+recur files "main.command.**.test" -d julia-tests/ --count
+recur files "main.command.**.readme" -d docs/ --count
+```
+
+How to read this:
+- If `recur tree "main"` looks rich but `src/` only has a small subset (for example only `files` and `stats`), Phase 2 is not complete yet.
+- Dogfooding is only "real" when source command branches, test branches, and doc branches are all visible and coherent under the shared `main` model.
+
+Why `rg` or PowerShell file listing is not enough:
+- They only show file presence, not whether `recur` hierarchy parsing and wildcard semantics (`*`, `**`) behave correctly.
+- They do not validate separator behavior (`--sep _`) in the actual search/match engine.
+- They do not validate stdin execution paths (`--stdin`) and command-level runtime behavior.
+- Dogfooding is an end-to-end contract of the tool itself; only `recur` queries prove that contract.
+
+---
+
 ## Proposed File Hierarchy
 
 ### Current State
@@ -893,6 +923,14 @@ printf "src/main_command_files_impl.rs\nsrc/main_command_stats_impl.rs\njulia-te
 # 5) Content search only in piped src files
 printf "src/main_command_files_impl.rs\nsrc/main_command_stats_impl.rs\n" \
   | recur find "Stdin" --scope "main_command_**" --stdin --sep _
+
+# 6) Improvement roadmap status visibility (docs branch)
+recur tree "main.improvement" -d docs/
+recur files "main.improvement.*.complete" -d docs/ --count
+recur files "main.improvement.**.todo" -d docs/ --count
+recur files "main.improvement.**.todo.future-plan" -d docs/ --count
+recur files "main.improvement.**.current" -d docs/
+recur files "main.improvement.**.current" -d docs/ --count
 ```
 
 What this validates:
@@ -901,6 +939,8 @@ What this validates:
 - `--stdin` now scopes to the piped file list for file, stats, find, callers, callees, and trace flows.
 - `--sep _` works consistently for Rust-friendly source naming.
 - Dot-separated `main.*` trees expose missing tests/docs/todo priority by visible absence.
+- Improvement lifecycle status (complete vs todo vs future-plan) is visible and queryable.
+- Current active cursor (`*.current`) is visible and queryable.
 
 ---
 
@@ -923,13 +963,108 @@ Model:
 1. Shared root: `main`
 2. Rust source (`src/`): `main_command_*` queried with `--sep _`
 3. Tests/docs (`julia-tests/`, `docs/`): `main.command.*` queried with dot separator
-4. Suffix chains encode status/intent (`readme`, `test`, `todo`, `todo.priority`)
+4. Suffix chains encode status/intent (`readme`, `test`, `todo`, `todo.priority`, `todo.current`)
 
 Why this is better:
 1. Valid and practical for Rust implementation.
 2. Highly readable and expressive for docs/tests.
 3. Queryable across folders with one conceptual root.
 4. Works for both humans and LLMs as a deterministic coordination contract.
+
+---
+
+## Appendix A: Phase 2 (Execution)
+
+### Phase Number
+
+**Phase 2: Structural Execution and Coverage**
+
+Phase 1 (concept and naming strategy) is complete.  
+Phase 2 focuses on making real Rust command code align with the structure.
+
+### Entry Criteria
+
+- `main` naming contract is defined and accepted.
+- `julia-tests/` and `docs/` are using `main.command.*` structure.
+- Source placeholders exist under `src/main_command_*`.
+
+### Goals
+
+1. Move command implementations out of `src/main.rs` into `src/main_command_*_impl.rs`.
+2. Move stdin-specific behavior into `src/main_command_*_stdin.rs` where applicable.
+3. Keep CLI behavior and outputs stable while refactoring internals.
+4. Use `recur` queries to verify structural coverage after each command migration.
+
+### Initial Command Order (Recommended)
+
+1. `main.command.stats`
+2. `main.command.files`
+3. `main.command.children`
+4. `main.command.related`
+5. `main.command.id`
+6. `main.command.find`
+7. `main.command.callers`
+8. `main.command.callees`
+9. `main.command.trace`
+
+### Deliverables
+
+- Real implementation modules replace placeholders for each migrated command.
+- Matching tests/docs branches remain visible under `main.command.*`.
+- Updated TODO/priority files reflect actual migration state.
+
+### Priority-0 Execution Gate (Mandatory First Check)
+
+Run these before per-command migration work:
+
+```bash
+# Global hierarchy view (docs/tests/metadata)
+recur tree "main"
+
+# Source hierarchy view (Rust-safe separator)
+recur tree "main" -d src/ --sep _
+recur files "main_command_*_impl" -d src/ --sep _ --count
+recur files "main_command_*_stdin" -d src/ --sep _ --count
+
+# Cross-folder coverage snapshot
+recur files "main.command.**.test" -d julia-tests/ --count
+recur files "main.command.**.readme" -d docs/ --count
+```
+
+Interpretation rule:
+- Do not infer Phase 2 progress from file listings alone (`rg`, PowerShell, `ls`).
+- Treat `recur` output as source of truth for hierarchy semantics (`*`, `**`, `--sep`, and `--stdin` behavior).
+- If `recur tree "main"` appears complete but `src/` branch counts are low, Phase 2 extraction is still incomplete.
+
+### Validation Loop (Per Command)
+
+```bash
+# 0) Re-run Priority-0 gate snapshot when needed
+recur tree "main"
+recur files "main_command_*_impl" -d src/ --sep _ --count
+recur files "main_command_*_stdin" -d src/ --sep _ --count
+
+# 1) Confirm source branch exists
+recur files "main_command_<name>_*" -d src/ --sep _
+
+# 2) Confirm test branch exists
+recur files "main.command.<name>.test" -d julia-tests/
+
+# 3) Confirm docs branch exists
+recur files "main.command.<name>.readme" -d docs/
+
+# 4) Run test suites
+cargo test
+julia julia-tests/runtests.jl
+```
+
+### Done Criteria for Phase 2
+
+1. All targeted command logic is extracted from `src/main.rs` into `src/main_command_*` modules.
+2. Julia integration suite passes with no new regressions.
+3. Rust tests pass.
+4. `recur tree "main"` and `src/ --sep _` counts both show coherent, aligned structure for migrated commands.
+5. TODO priorities in docs accurately reflect remaining work.
 
 ---
 
