@@ -1,4 +1,4 @@
-# Core Improvement 6: Git Integration & Impact Analysis
+a# Core Improvement 6: Git Integration & Impact Analysis
 
 ## Current Status
 
