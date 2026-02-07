@@ -272,9 +272,9 @@ Use the hierarchy to track TODOs, priorities, and blockers alongside your code:
 ```
 src/
 ├── main_command_files_impl.rs
-├── main_command_files_todo.md           # General TODOs for files command
-├── main_command_files_todo_priority.md  # High-priority tasks
-├── main_command_files_todo_blocker.md   # Blocking issues
+├── main_command_<name>_todo.md           # General TODOs for files command
+├── main_command_<name>_todo_priority.md  # High-priority tasks
+├── main_command_<name>_todo_current.md   # Active current cursor
 │
 ├── main_command_find_impl.rs
 ├── main_command_find_todo.md
@@ -290,14 +290,11 @@ recur files "main_command_*_todo" -d src/ --sep _
 # Find HIGH-PRIORITY TODOs only
 recur files "main_command_*_todo_priority" -d src/ --sep _
 
-# Find blockers
-recur files "main_command_*_todo_blocker" -d src/ --sep _
-
 # Which commands have NO TODOs? (gap analysis)
 # Compare: main_command_*_impl.rs vs main_command_*_todo.md
 
 # TODOs for a specific subsystem
-recur files "main_command_files_todo*" -d src/ --sep _
+recur files "main_command_<name>_todo*" -d src/ --sep _
 ```
 
 ### Benefits
@@ -310,7 +307,7 @@ recur files "main_command_files_todo*" -d src/ --sep _
 
 ### Example TODO File
 
-**src/main_command_files_todo_priority.md**:
+**src/main_command_<name>_todo_priority.md**:
 ```markdown
 # High-Priority TODOs: Files Command
 
@@ -323,8 +320,8 @@ recur files "main_command_files_todo*" -d src/ --sep _
 - [ ] Consider parallel file reading
 
 ## Related
-- See: main_command_files_todo.md for lower-priority tasks
-- Blocked by: main_parser_todo_blocker.md (pattern parsing issue)
+- See: main_command_<name>_todo.md for lower-priority tasks
+- Active cursor: main_command_<name>_todo_current.md
 ```
 
 ### Future: Automated TODO Reports
@@ -1087,6 +1084,8 @@ What remains is implementation and incremental refinement, not thesis definition
 
 *"The best way to validate a design is to use it yourself."*
 — Dennis Ritchie (probably)
+
+
 
 
 

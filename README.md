@@ -225,6 +225,14 @@ Ritchie’s thesis explored **recursive functions and hierarchical program struc
 
 Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
+For dogfooding state transitions and commit checkpoints, use:
+- `docs/main.git.checkpoint.readme.md`
+- `scripts/dogfooding_checkpoint.ps1`
+
+Optional built-in command (no logging unless flags are passed):
+- `recur checkpoint --snapshot`
+- `recur checkpoint --emit-parallel --checkpoint-id ck-<id>`
+
 ### Local git hook note
 
 This repo uses a **local-only** pre-commit hook on the maintainer's machine to bump `VERSION`, update `Cargo.toml`, and refresh `Cargo.lock` when committing on `main`. Git hooks live in `.git/hooks` and are not shared with other clones. If you need to update or remove it later, check `.git/hooks/pre-commit`.

@@ -91,7 +91,8 @@ pub trait StdinCapable {
                         .rsplit_once('.')
                         .map(|(name, _)| name)
                         .unwrap_or(filename);
-                    let hier_name = HierarchicalName::new(name_without_ext);
+                    let hier_name =
+                        HierarchicalName::with_separator(name_without_ext, pattern.separator);
                     pattern.matches(&hier_name)
                 } else {
                     false
@@ -175,5 +176,23 @@ mod tests {
         let filtered = TestCommand::filter_stdin_paths(paths, &pattern, None);
 
         assert_eq!(filtered.len(), 3);
+    }
+
+    #[test]
+    fn test_filter_stdin_paths_with_custom_separator() {
+        let paths = vec![
+            PathBuf::from("main_command_stats_impl.rs"),
+            PathBuf::from("main_command_stats_stdin.rs"),
+            PathBuf::from("main.command.stats.impl.rs"),
+        ];
+
+        let pattern = HierarchyPattern::parse_with_separator("main_command_*_impl", '_').unwrap();
+        let filtered = TestCommand::filter_stdin_paths(paths, &pattern, None);
+
+        assert_eq!(filtered.len(), 1);
+        assert!(filtered[0]
+            .to_str()
+            .unwrap()
+            .ends_with("main_command_stats_impl.rs"));
     }
 }

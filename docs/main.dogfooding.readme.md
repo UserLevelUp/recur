@@ -19,8 +19,12 @@ Dot notation model:
 Examples:
 - `main.command.files.test.jl`
 - `main.command.files.readme.md`
-- `main.command.files.todo.md`
-- `main.command.files.todo.priority.md`
+- `main.command.children.todo.current.md`
+- `main.improvement.6.dogfooding.todo.current.md`
+- `main.dogfooding.history.md`
+- `main.dogfooding.parallel.history.md`
+- `main.separator.history.md`
+- `main.git.checkpoint.readme.md`
 
 Rust source keeps underscore naming where needed:
 - `main_command_files_impl.rs`
@@ -63,6 +67,8 @@ Example: if `todo` exists but `todo.priority` does not, it is not currently prio
 4. Update suffixes as work moves:
    - `todo` -> `todo.priority` when escalated
    - remove `todo*` when completed
+5. Run checkpoint workflow before/after major state change:
+   - `docs/main.git.checkpoint.readme.md`
 
 ## Human + LLM Collaboration Rules
 
@@ -78,6 +84,12 @@ Example: if `todo` exists but `todo.priority` does not, it is not currently prio
 recur tree "main" -d docs/
 recur tree "main" -d julia-tests/
 
+# History logs
+recur files "main.dogfooding.history" -d docs/
+recur files "main.dogfooding.parallel.history" -d docs/
+recur files "main.separator.history" -d docs/
+recur files "main.git.checkpoint.readme" -d docs/
+
 # Tests and docs coverage
 recur files "main.command.**.test" -d julia-tests/
 recur files "main.command.**.readme" -d docs/
@@ -87,6 +99,17 @@ recur files "main.command.**.todo.priority" -d docs/
 # Rust command inventory
 recur files "main_command_*_impl" -d src/ --sep _
 recur files "main_command_*_stdin" -d src/ --sep _
+
+# Optional built-in checkpoint workflow (no side effects unless log flags are passed)
+recur checkpoint --snapshot
+recur checkpoint --snapshot --run-tests
+
+# Emit or append parallel-lane checkpoint entry
+recur checkpoint --emit-parallel --checkpoint-id ck-children-01
+recur checkpoint --append-parallel --checkpoint-id ck-children-01
+
+# Optional PowerShell helper wrapper
+powershell -ExecutionPolicy Bypass -File scripts/dogfooding_checkpoint.ps1 -RunTests
 ```
 
 ## Success Criteria
@@ -94,3 +117,4 @@ recur files "main_command_*_stdin" -d src/ --sep _
 - `main` tree is understandable at a glance.
 - Missing test/doc/todo branches are obvious by absence.
 - Suffixes communicate what to do next without extra explanation.
+

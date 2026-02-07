@@ -6,10 +6,15 @@
 //! Main CLI entry point
 
 use clap::{Parser, Subcommand};
-use std::fs;
-use std::io::BufRead;
 use std::path::{Path, PathBuf};
 use std::process;
+
+mod main_command_stats_impl;
+mod main_command_stats_stdin;
+mod main_command_files_impl;
+mod main_command_files_stdin;
+mod main_command_children_impl;
+mod main_command_checkpoint_impl;
 
 use recur::output::TerminalFormatter;
 use recur::parser::HierarchyPattern;
@@ -39,8 +44,9 @@ struct Cli {
 
     /// Hierarchy separator character (default: '.')
     /// Use '_' for Rust modules, '-' for kebab-case, ':' for namespaces
-    #[arg(long, global = true, value_name = "CHAR", default_value = ".")]
-    sep: String,
+    /// May be provided multiple times; the last value wins.
+    #[arg(long, global = true, value_name = "CHAR")]
+    sep: Vec<String>,
 }
 
 #[derive(Subcommand)]
@@ -258,6 +264,42 @@ enum Commands {
         stdin: bool,
     },
 
+    /// Optional checkpoint/log workflow for dogfooding state.
+    ///
+    /// Examples:
+    ///   recur checkpoint --snapshot
+    ///   recur checkpoint --emit-parallel
+    ///   recur checkpoint --append-parallel --checkpoint-id ck-children-01
+    Checkpoint {
+        /// Print checkpoint snapshot (git + lane state + separator)
+        #[arg(long)]
+        snapshot: bool,
+
+        /// Run `cargo test --quiet` as part of checkpoint
+        #[arg(long)]
+        run_tests: bool,
+
+        /// Emit parallel-lane checkpoint entry to stdout
+        #[arg(long)]
+        emit_parallel: bool,
+
+        /// Append parallel-lane checkpoint entry to file
+        #[arg(long)]
+        append_parallel: bool,
+
+        /// Optional checkpoint ID (default: ck-<unix-seconds>)
+        #[arg(long, value_name = "ID")]
+        checkpoint_id: Option<String>,
+
+        /// File path for appended parallel-lane entries
+        #[arg(long, default_value = "docs/main.dogfooding.parallel.history.md")]
+        parallel_log: PathBuf,
+
+        /// Source hierarchy separator for src lane queries (default: '_')
+        #[arg(long, value_name = "CHAR", default_value = "_")]
+        src_sep: String,
+    },
+
     /// Find all places where a function/method is called
     ///
     /// Examples:
@@ -399,8 +441,13 @@ enum Commands {
 fn main() {
     let cli = Cli::parse();
 
-    // Parse separator (take first character, default to '.')
-    let separator = cli.sep.chars().next().unwrap_or('.');
+    // Parse separator (take first character, default to '.').
+    // If repeated, the last --sep value wins.
+    let separator = cli
+        .sep
+        .last()
+        .and_then(|s| s.chars().next())
+        .unwrap_or('.');
 
     let result = match cli.command {
         Commands::Files {
@@ -412,7 +459,7 @@ fn main() {
             max_depth,
             count,
             stdin,
-        } => cmd_files(
+        } => main_command_files_impl::execute(
             pattern,
             dir,
             ext,
@@ -474,7 +521,9 @@ fn main() {
             dir,
             count,
             stdin,
-        } => cmd_children(parent, dir, count, stdin, separator, cli.json, cli.color),
+        } => main_command_children_impl::execute(
+            parent, dir, count, stdin, separator, cli.json, cli.color,
+        ),
         Commands::Id {
             pattern,
             dir,
@@ -499,9 +548,29 @@ fn main() {
             level,
             ext,
             stdin,
-        } => cmd_stats(
+        } => main_command_stats_impl::execute(
             pattern, dir, level, ext, stdin, separator, cli.json, cli.color,
         ),
+        Commands::Checkpoint {
+            snapshot,
+            run_tests,
+            emit_parallel,
+            append_parallel,
+            checkpoint_id,
+            parallel_log,
+            src_sep,
+        } => {
+            let src_separator = src_sep.chars().next().unwrap_or('_');
+            main_command_checkpoint_impl::execute(
+                emit_parallel,
+                append_parallel,
+                checkpoint_id,
+                parallel_log,
+                src_separator,
+                snapshot,
+                run_tests,
+            )
+        },
         Commands::Callers {
             function,
             scope,
@@ -584,129 +653,6 @@ fn main() {
         eprintln!("Error: {}", e);
         process::exit(2);
     }
-}
-
-fn cmd_files(
-    pattern: String,
-    dir: PathBuf,
-    ext: Option<String>,
-    ignore_case: bool,
-    min_depth: usize,
-    max_depth: Option<usize>,
-    count_only: bool,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    // Validate depth constraints
-    if let Some(max) = max_depth {
-        if min_depth > max {
-            anyhow::bail!(
-                "--min-depth ({}) cannot be greater than --max-depth ({})",
-                min_depth,
-                max
-            );
-        }
-    }
-
-    let pattern = HierarchyPattern::parse_with_separator(&pattern, separator)?;
-    let pattern = if ignore_case {
-        pattern.case_insensitive()
-    } else {
-        pattern
-    };
-
-    let all_files = if stdin {
-        // Read paths from stdin and filter by pattern
-        let stdin_paths = read_resolved_paths_from_stdin(&dir)?;
-        stdin_paths
-            .into_iter()
-            .filter(|p| {
-                // Extract hierarchical name from filename (remove extension)
-                if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
-                    let name_without_ext = filename
-                        .rsplit_once('.')
-                        .map(|(name, _)| name)
-                        .unwrap_or(filename);
-                    let hier_name = recur::parser::HierarchicalName::with_separator(
-                        name_without_ext,
-                        separator,
-                    );
-                    pattern.matches(&hier_name)
-                } else {
-                    false
-                }
-            })
-            .filter(|p| {
-                // Apply extension filter if specified
-                if let Some(ref ext_str) = ext {
-                    let extensions: Vec<&str> = ext_str.split(',').map(|s| s.trim()).collect();
-                    if let Some(file_ext) = p.extension().and_then(|e| e.to_str()) {
-                        extensions.iter().any(|e| {
-                            let e = e.trim_start_matches('.');
-                            file_ext == e
-                        })
-                    } else {
-                        false
-                    }
-                } else {
-                    true
-                }
-            })
-            .collect()
-    } else {
-        // Use filesystem search
-        let mut options = SearchOptions {
-            root: dir,
-            case_insensitive: ignore_case,
-            max_depth,
-            ..Default::default()
-        };
-
-        if let Some(ext_str) = ext {
-            options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-        }
-
-        let searcher = FileSearcher::new(options);
-        searcher.find(&pattern)
-    };
-
-    // Filter by min_depth
-    let base_depth = pattern.raw.matches(separator).count();
-    let files: Vec<_> = all_files
-        .into_iter()
-        .filter(|path| {
-            if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
-                let hier_name = filename
-                    .rsplit_once('.')
-                    .map(|(name, _)| name)
-                    .unwrap_or(filename);
-                let file_depth = hier_name.matches(separator).count();
-                let relative_depth = file_depth.saturating_sub(base_depth);
-                relative_depth >= min_depth
-            } else {
-                false
-            }
-        })
-        .collect();
-
-    if count_only {
-        println!("{} files", files.len());
-    } else if json {
-        let output = recur::output::JsonFormatter::format_file_list(&files);
-        println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_file_list(&files);
-    }
-
-    // Exit code: 0 if found, 1 if not found
-    if files.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
 }
 
 fn cmd_find(
@@ -901,46 +847,6 @@ fn cmd_related(
     Ok(())
 }
 
-fn cmd_children(
-    parent: String,
-    dir: PathBuf,
-    count_only: bool,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    let pattern =
-        HierarchyPattern::parse_with_separator(&format!("{}{}**", parent, separator), separator)?;
-
-    let mut options = SearchOptions {
-        root: dir.clone(),
-        ..Default::default()
-    };
-    if stdin {
-        options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
-    }
-
-    let searcher = FileSearcher::new(options);
-    let files = searcher.find(&pattern);
-
-    if count_only {
-        println!("{} files", files.len());
-    } else if json {
-        let output = recur::output::JsonFormatter::format_file_list(&files);
-        println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_file_list(&files);
-    }
-
-    if files.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
-}
-
 fn cmd_id(
     pattern: String,
     dir: PathBuf,
@@ -981,249 +887,6 @@ fn cmd_id(
 
     if results.is_empty() {
         process::exit(1);
-    }
-
-    Ok(())
-}
-
-fn cmd_stats(
-    pattern: String,
-    dir: PathBuf,
-    level: Option<usize>,
-    ext: Option<String>,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    let pattern_parsed = HierarchyPattern::parse_with_separator(&pattern, separator)?;
-
-    let files = if stdin {
-        // Read paths from stdin and filter by pattern
-        read_resolved_paths_from_stdin(&dir)?
-            .into_iter()
-            .filter(|p| {
-                // Extract hierarchical name from filename
-                if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
-                    let name_without_ext = filename
-                        .rsplit_once('.')
-                        .map(|(name, _)| name)
-                        .unwrap_or(filename);
-                    let hier_name = recur::parser::HierarchicalName::with_separator(
-                        name_without_ext,
-                        separator,
-                    );
-                    pattern_parsed.matches(&hier_name)
-                } else {
-                    false
-                }
-            })
-            .filter(|p| {
-                // Apply extension filter if specified
-                if let Some(ref ext_str) = ext {
-                    let extensions: Vec<&str> = ext_str.split(',').map(|s| s.trim()).collect();
-                    if let Some(file_ext) = p.extension().and_then(|e| e.to_str()) {
-                        extensions.iter().any(|e| {
-                            let e = e.trim_start_matches('.');
-                            file_ext == e
-                        })
-                    } else {
-                        false
-                    }
-                } else {
-                    true
-                }
-            })
-            .collect()
-    } else {
-        // Use filesystem search
-        let mut options = SearchOptions {
-            root: dir,
-            ..Default::default()
-        };
-
-        if let Some(ext_str) = ext {
-            options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-        }
-
-        let searcher = FileSearcher::new(options);
-        searcher.find(&pattern_parsed)
-    };
-
-    if files.is_empty() {
-        if !json {
-            eprintln!("No files found matching pattern: {}", pattern);
-        }
-        process::exit(1);
-    }
-
-    // Group files by depth relative to the pattern base
-    let base_depth = pattern.matches(separator).count();
-    let mut depth_map: std::collections::HashMap<usize, Vec<(PathBuf, usize)>> =
-        std::collections::HashMap::new();
-    let mut total_lines = 0;
-
-    for file_path in &files {
-        if let Some(filename) = file_path.file_name().and_then(|n| n.to_str()) {
-            // Remove extension to get hierarchy name
-            let hier_name = filename
-                .rsplit_once('.')
-                .map(|(name, _)| name)
-                .unwrap_or(filename);
-
-            let file_depth = hier_name.matches(separator).count();
-            let relative_depth = file_depth.saturating_sub(base_depth);
-
-            // Count lines
-            let line_count = if let Ok(file) = fs::File::open(file_path) {
-                let reader = std::io::BufReader::new(file);
-                let count = reader.lines().count();
-                total_lines += count;
-                count
-            } else {
-                0
-            };
-
-            depth_map
-                .entry(relative_depth)
-                .or_insert_with(Vec::new)
-                .push((file_path.clone(), line_count));
-        }
-    }
-
-    let max_depth = *depth_map.keys().max().unwrap_or(&0);
-
-    if json {
-        let output = serde_json::json!({
-            "pattern": pattern,
-            "total_files": files.len(),
-            "total_lines": total_lines,
-            "max_depth": max_depth,
-            "depth_breakdown": (0..=max_depth).map(|d| {
-                let files_at_depth = depth_map.get(&d).map(|v| v.len()).unwrap_or(0);
-                serde_json::json!({
-                    "depth": d,
-                    "file_count": files_at_depth
-                })
-            }).collect::<Vec<_>>(),
-            "files": if let Some(lvl) = level {
-                depth_map.get(&lvl).map(|files_at_level| {
-                    files_at_level.iter().map(|(path, lines)| {
-                        serde_json::json!({
-                            "path": path.display().to_string(),
-                            "lines": lines
-                        })
-                    }).collect::<Vec<_>>()
-                })
-            } else {
-                None
-            }
-        });
-        println!("{}", serde_json::to_string_pretty(&output)?);
-    } else {
-        use std::io::Write;
-        use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-
-        let mut stdout = StandardStream::stdout(if color {
-            ColorChoice::Auto
-        } else {
-            ColorChoice::Never
-        });
-
-        if color {
-            let _ = stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)).set_bold(true));
-        }
-        let _ = writeln!(stdout, "\nStatistics for: {}", pattern);
-        if color {
-            let _ = stdout.reset();
-        }
-
-        let _ = writeln!(stdout, "  Total files: {}", files.len());
-        let _ = writeln!(stdout, "  Total lines: {}", total_lines);
-        let _ = writeln!(stdout, "  Max depth:   {}", max_depth);
-
-        // Show depth breakdown
-        if level.is_none() {
-            let _ = writeln!(stdout, "\n  Depth breakdown:");
-            for d in 0..=max_depth {
-                let count = depth_map.get(&d).map(|v| v.len()).unwrap_or(0);
-                if count > 0 {
-                    if color {
-                        let _ = stdout.set_color(ColorSpec::new().set_fg(Some(Color::Green)));
-                    }
-                    let _ = write!(stdout, "    Level {}", d);
-                    if color {
-                        let _ = stdout.reset();
-                    }
-                    let _ = writeln!(stdout, ": {} files", count);
-                }
-            }
-            let _ = writeln!(
-                stdout,
-                "\n  Use -l <level> to see files at a specific depth"
-            );
-        } else if let Some(lvl) = level {
-            // Get terminal height
-            let terminal_height =
-                if let Some((_, terminal_size::Height(h))) = terminal_size::terminal_size() {
-                    h as usize
-                } else {
-                    24
-                };
-
-            let available_lines = terminal_height.saturating_sub(10);
-
-            if let Some(files_at_level) = depth_map.get(&lvl) {
-                let _ = writeln!(stdout, "\n  Files at depth level {}:", lvl);
-
-                // Sort by line count descending
-                let mut sorted_files = files_at_level.clone();
-                sorted_files.sort_by_key(|(_, lines)| std::cmp::Reverse(*lines));
-
-                let files_to_show = sorted_files.len().min(available_lines);
-                let remaining = sorted_files.len().saturating_sub(available_lines);
-
-                for (path, lines) in sorted_files.iter().take(files_to_show) {
-                    if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
-                        if color {
-                            let _ = stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
-                        }
-                        let _ = write!(stdout, "    {:6}", lines);
-                        if color {
-                            let _ = stdout.reset();
-                        }
-                        let _ = write!(stdout, " lines  ");
-                        if color {
-                            let _ = stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
-                        }
-                        let _ = writeln!(stdout, "{}", filename);
-                        if color {
-                            let _ = stdout.reset();
-                        }
-                    }
-                }
-
-                if remaining > 0 {
-                    if color {
-                        let _ = stdout.set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
-                    }
-                    let _ = writeln!(
-                        stdout,
-                        "\n    ... and {} more files (terminal shows {} of {})",
-                        remaining,
-                        files_to_show,
-                        sorted_files.len()
-                    );
-                    if color {
-                        let _ = stdout.reset();
-                    }
-                }
-            } else {
-                let _ = writeln!(stdout, "\n  No files at depth level {}", lvl);
-            }
-        }
-
-        let _ = writeln!(stdout, "");
     }
 
     Ok(())
