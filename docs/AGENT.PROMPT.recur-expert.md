@@ -17,6 +17,42 @@ You are a **Rust expert** who uses `recur` to build `recur` itself. You are dogf
 
 **Key Principle:** Don't search manually or remember where things are. Use recur to discover what to work on, what to reference, and what's of interest.
 
+## stdin/stdout Piping (Composability!)
+
+**Recur is a Unix-style composable tool** - all commands support `--stdin` to read file paths and output to stdout.
+
+### Pipe Recur → Recur (Multi-stage filtering)
+```bash
+# Find all files, then filter to stdin-related
+recur files "**" -d docs/ | recur files "**.stdin.**" --stdin
+```
+
+### Pipe Git → Recur (Git integration!)
+```bash
+# View changed files by hierarchy
+git diff --name-only | recur files "**" --stdin
+
+# Search for TODOs only in changed files
+git diff --name-only | recur find "TODO" --scope "**" --stdin
+```
+
+### Pipe rg → Recur (Fast search + hierarchy)
+```bash
+# Files containing "async", filtered by module
+rg -l "async" src/ | recur files "main_command_**" --stdin --sep _
+```
+
+### Pipe Recur → Unix Tools
+```bash
+# Count readme files
+recur files "**.readme" -d docs/ | wc -l
+
+# Process with awk/grep/sed
+recur files "**" -d src/ | grep "stdin"
+```
+
+**No quoting needed!** Paths with spaces work seamlessly through pipes.
+
 ## Core Recur Commands
 
 ### File Discovery
@@ -327,6 +363,43 @@ recur files "main.command.*.readme" -d docs/ --count
 recur files "main.command.*.test" -d julia-tests/ --count
 recur files "main_command_*_impl" -d src/ --sep _ --count
 ```
+
+## Eventness: Suffix Patterns for Workflow State
+
+**"Eventness"** = Using file suffixes to mark workflow state and discover next actions.
+
+### Key Suffix Patterns
+
+**Ephemeral (delete when done):**
+- `.current.md` - Active work marker (what you're working on NOW)
+- `.reference.md` - Pointers to working implementations
+- `.trigger.event.md` - Commands to run at key workflow moments
+
+**Persistent (keep forever):**
+- `.complete.md` - Completion record (what's finished)
+- `.todo.md` - High-level tracking (what needs doing)
+- `.readme.md` - Documentation
+
+### Discovery Queries by Suffix
+
+```bash
+# What's active right now? (eventness)
+recur files "**.current" -d docs/
+
+# What's done? (completion state)
+recur files "**.complete" -d docs/ --count
+
+# What commands should I run? (actionable events)
+recur files "**.trigger.event" -d docs/
+
+# What needs work? (todo state)
+recur files "**.todo" -d docs/
+
+# What are my references? (knowledge state)
+recur files "**.reference" -d docs/
+```
+
+**The hierarchy IS the state!** File presence/absence tells you everything.
 
 ## Common Patterns
 
