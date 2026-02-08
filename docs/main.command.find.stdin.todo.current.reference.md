@@ -1,42 +1,78 @@
-# Reference: Files Command Stdin Implementation
+# Reference: Stdin Implementation Patterns
 
-This file points to the working reference implementation for stdin support.
+This file points to working stdin implementations to use as references.
 
-## Reference Command: files
+## Two Patterns Available
 
-**Status:** ✅ Working (stdin tests passing)
+### Pattern 1: Separate Stdin Module (Recommended for find)
 
-**Source files:**
-- `src/main_command_files_impl.rs` - Main implementation
-- `src/main_command_files_stdin.rs` - Stdin-specific logic
+**files command** - Best reference for find:
+- ✅ `src/main_command_files_impl.rs` - Main implementation
+- ✅ `src/main_command_files_stdin.rs` - Separate stdin module
+- ✅ Stdin tests passing
 
-**Test files:**
-- `julia-tests/main.command.files.test.jl` - Command tests
-- `julia-tests/main.command.stdin.test.jl` - Stdin capability tests
+**stats command** - Alternative example:
+- ✅ `src/main_command_stats_impl.rs` - Main implementation
+- ✅ `src/main_command_stats_stdin.rs` - Separate stdin module
+- ✅ Stdin tests passing
 
-## How to Study Reference
+### Pattern 2: Integrated Stdin (Reference for logic)
+
+**tree command** - Integrated approach:
+- ✅ `src/main_command_tree_impl.rs` - Stdin integrated in impl
+- ✅ Has `read_resolved_paths_from_stdin()` helper
+- ✅ Stdin tests passing
+
+**related command** - Another integrated example:
+- ✅ `src/main_command_related_impl.rs` - Stdin integrated in impl
+- ✅ Has `read_resolved_paths_from_stdin()` helper
+- ✅ Stdin tests passing
+
+## How to Study References
 
 ```bash
-# View the implementation
-recur files "main_command_files_*" -d src/ --sep _
+# View all stdin implementations
+recur files "main_command_*_stdin" -d src/ --sep _
 
-# Read the stdin module
+# Read the separate module pattern (RECOMMENDED)
 cat src/main_command_files_stdin.rs
+cat src/main_command_stats_stdin.rs
+
+# Read the integrated pattern (for comparison)
+grep -A 20 "stdin" src/main_command_tree_impl.rs
+grep -A 20 "stdin" src/main_command_related_impl.rs
 
 # Check test coverage
-cd julia-tests && julia runtests.jl 2>&1 | grep "files.*stdin"
+cd julia-tests && julia runtests.jl 2>&1 | grep "stdin.*PASS"
 ```
 
-## Pattern to Follow
+## Recommended Approach for Find
 
-The `files` command shows the pattern for **standard file-list commands**.
+**Use Pattern 1 (Separate Module)** because:
+1. Find is a **content search command** (more complex)
+2. Keeps stdin logic separate and testable
+3. Follows files/stats precedent
+4. Cleaner code organization
 
-For **content search commands** like `find`, adapt the pattern to:
-1. Filter stdin paths by scope pattern (same as files)
-2. Search content in filtered paths (different - search instead of list)
+**Implementation steps:**
+1. Create `src/main_command_find_stdin.rs`
+2. Add helper function like `collect_files_from_stdin()`
+3. Use `read_paths_from_stdin()` from `recur::r#trait`
+4. Filter paths by scope pattern
+5. Return filtered paths to search
 
-## Alternative Reference: stats
+## Key Helper Function (from recur::search)
 
-`stats` is another working example:
-- `src/main_command_stats_impl.rs`
-- `src/main_command_stats_stdin.rs`
+All implementations use:
+```rust
+use recur::search::read_paths_from_stdin;
+// or
+use recur::r#trait::read_paths_from_stdin;
+```
+
+This reads file paths from stdin (one per line) and returns `Vec<PathBuf>`.
+
+## Test Files
+
+- `julia-tests/main.command.find.test.jl` - Command tests
+- `julia-tests/main.command.stdin.test.jl` - Stdin capability tests

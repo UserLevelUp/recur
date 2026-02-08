@@ -108,8 +108,38 @@ recur files "**.current" -d docs/
 
 **Ephemeral (delete when done):**
 - `main.command.<name>.todo.current.md` - Active work marker
-- `main.command.<name>.todo.current.reference.md` - Reference pointer
-- `main.command.<name>.todo.trigger.event.md` - Event commands
+- `main.command.<name>.todo.current.reference.md` - Reference pointer to working implementations
+- `main.command.<name>.todo.trigger.event.md` - Event commands to run at key moments
+
+### The Reference Pattern
+
+**When starting new work**, create a `.reference.md` file that points to working implementations:
+
+```markdown
+# Reference: <Feature> Implementation Patterns
+
+## Pattern 1: <Approach Name> (Recommended)
+- ✅ `src/working_example.rs` - Description
+- ✅ Tests passing
+
+## How to Study References
+Commands to run to understand the pattern
+
+## Recommended Approach
+Why to use this pattern
+Implementation steps
+```
+
+**Example:** When implementing `find` stdin, create `main.command.find.stdin.todo.current.reference.md` pointing to:
+- Files command (separate module pattern)
+- Stats command (alternative example)
+- Tree/related commands (for comparison)
+
+This creates **external memory** - you don't need to remember which files to look at, just query:
+```bash
+recur files "**.reference" -d docs/
+cat docs/main.command.find.stdin.todo.current.reference.md
+```
 
 ### Discovery Queries
 
@@ -162,16 +192,42 @@ recur files "**.stdin.todo" -d docs/
 ```
 
 ### 2. Setup Phase
+
+**Create tracking files:**
+
 ```bash
-# Create current work marker
+# 1. Current work marker
 # docs/main.command.find.stdin.todo.current.md
+# - What task is active
+# - What files to create/modify
+# - Links to reference and trigger files
 
-# Create reference pointer
+# 2. Reference pointer (KEY PATTERN!)
 # docs/main.command.find.stdin.todo.current.reference.md
+# - Points to working implementations
+# - Explains multiple patterns available
+# - Recommends which approach to use
+# - Shows commands to study references
+# Example:
+#   ## Pattern 1: Separate Module (Recommended)
+#   - ✅ src/main_command_files_stdin.rs
+#   ## How to Study References
+#   - cat src/main_command_files_stdin.rs
+#   ## Recommended Approach
+#   - Use Pattern 1 because...
 
-# Create trigger events
+# 3. Trigger events
 # docs/main.command.find.stdin.todo.trigger.event.md
+# - Commands to run on start
+# - Commands to run during work
+# - Commands to run on complete
 ```
+
+**Why references are powerful:**
+- Don't remember which files to look at
+- Don't search for examples manually
+- Just `cat` the reference file to see what to study
+- Multiple patterns with recommendations
 
 ### 3. Work Phase
 ```bash
@@ -289,6 +345,48 @@ recur files "main_command_<name>_*" -d src/ --sep _
 5. **Separator awareness** - Use `--sep _` for src/, dots for docs/tests
 6. **Event-driven** - Run discovery commands at workflow events
 7. **Gap analysis** - Compare file sets to find missing work
+8. **Reference pattern** - Create `.reference.md` files pointing to working implementations
+
+## Creating Good Reference Files
+
+When creating a `.todo.current.reference.md` file, include:
+
+**1. Multiple patterns** - Show different approaches available
+```markdown
+## Pattern 1: <Name> (Recommended)
+## Pattern 2: <Name> (For comparison)
+```
+
+**2. Working examples** - Point to actual files that work
+```markdown
+- ✅ `src/working_example.rs` - Description
+- ✅ Tests passing
+```
+
+**3. Study commands** - Explicit commands to run
+```markdown
+## How to Study References
+cat src/working_example.rs
+grep -A 20 "pattern" src/another_example.rs
+```
+
+**4. Recommendation** - Which pattern to use and why
+```markdown
+## Recommended Approach
+Use Pattern 1 because:
+1. Reason
+2. Reason
+```
+
+**5. Implementation steps** - Concrete next steps
+```markdown
+Implementation steps:
+1. Create src/new_file.rs
+2. Add helper function
+3. Integrate with main
+```
+
+This creates a **decision record** that helps you (or future you, or another agent) understand not just what to do, but why.
 
 ## Anti-Patterns to Avoid
 
@@ -316,6 +414,11 @@ recur files "**.current" -d docs/              # What am I working on?
 recur files "**.todo" -d docs/                 # What's left to do?
 recur files "**.reference" -d docs/            # Where's my reference?
 recur files "**.trigger.event" -d docs/        # What commands to run?
+
+# === USING REFERENCES ===
+recur files "**.reference" -d docs/                           # Find reference files
+cat docs/main.command.<name>.todo.current.reference.md        # Read reference
+# Then follow the commands in the reference to study implementations
 
 # === STATUS ===
 recur tree "main.improvement" -d docs/         # Overall progress
