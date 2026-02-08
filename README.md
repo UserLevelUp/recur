@@ -9,7 +9,7 @@
 
 **Recursive, hierarchy-aware search for modern codebases.**
 
-Development is mainly using ChatGPT 5.2 Codex and Claude Sonnet & Opus 4.5 tied to vscode.  I run out of tokens on one I usually switch to the other one.  I use Julia for tests as I'm more familiar with that to verify work.   I actually don't understand Rust at all, but it seems pretty easy to vibe code as long as I can verify and control that direction with the tests.  I also test recur in a private Github Copilot project which will remain nameless so as not to reek havoc. 
+Development is mainly using ChatGPT 5.2+ Codex and Claude Sonnet & Opus 4.5+ tied to vscode.  I run out of tokens on one I usually switch to the other one.  I use Julia for tests as I'm more familiar with that to verify work.   I actually don't understand Rust at all, but it seems pretty easy to vibe code as long as I can verify and control that direction with the tests.  I also test recur in a private Github Copilot project which will remain nameless so as not to reek havoc. 
 
 `recur` is a command-line tool for working with *hierarchically named code*: files, modules, and identifiers that encode structure using dot-separated or “C#-style” naming conventions. While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy—so you can search, navigate, and analyze related code as a structured system.
 
@@ -48,7 +48,7 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
 **What you get:** Two binaries for a complete toolset:
 - **`recur`** - Core hierarchy tool (pure, no Git dependencies)
 - **`recur-git`** - Git workflow extension (checkpoint tracking, dogfooding)
-
+  - recur-git depends on existing git binaries to already be installed
 ### From Cargo (crates.io)
 ```bash
 cargo install recur
