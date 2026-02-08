@@ -10,7 +10,7 @@ Reference:
 Planned emphasis:
 - Dual-layer workflow (`files` layer + `in-file` layer).
 - Legacy-first adoption via a single semantic-name list (`docs/main.semantic.names.txt`).
-- Human + LLM coordination with explicit event triggers and lane cursor queries.
+- Human + LLM coordination with explicit recurring triggers and lane cursor queries.
 
 Tracking ID:
 - `main.improvement.9.todo.tracking`

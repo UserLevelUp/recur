@@ -57,7 +57,7 @@ IMPROVEMENT9 should formalize two layers that can be switched and chained at wil
 - Uses folder-appropriate separators (`--sep _` for Rust modules, `.` for docs/tests).
 
 2. In-file layer (`recur in *`)
-- Answers: "Which semantic IDs, refs, tasks, or events matter inside those files?"
+- Answers: "Which semantic IDs, refs, tasks, or recurring triggers matter inside those files?"
 - Reads selected files from stdin and/or a simple semantic-name list file.
 
 The power is the composition:
@@ -146,9 +146,9 @@ main.improvement.9.todo.tracking
 - Lower hallucination risk: the LLM can query real semantic IDs and resolved files instead of inferring from prose.
 
 ### Human + LLM Combined Value
-- Shared operational state: both humans and LLMs consume the same IDs, refs, statuses, and event logs.
+- Shared operational state: both humans and LLMs consume the same IDs, refs, statuses, and recurring trigger logs.
 - Faster handoffs: "current lane" is queryable, not hidden in chat memory.
-- Better prioritization: event and dependency data can rank what to do next.
+- Better prioritization: trigger and dependency data can rank what to do next.
 - Lower cognitive load: operators ask the system for "next valid action" instead of manually stitching context.
 
 ---
@@ -169,27 +169,26 @@ This allows one query language for engineering + operations + planning.
 
 ---
 
-## Event Triggers as First-Class Data
+## Recurring Workflow Triggers Only
 
-Add explicit event IDs and trigger rules in the in-file layer:
+Avoid broad one-off event modeling in the seed list.
+Keep only recurring workflow triggers that are repeatedly useful:
 
-- `*.event.start`
-- `*.event.blocked`
-- `*.event.handoff`
-- `*.event.complete`
+- `*.todo.trigger.event`
 
-Each event can carry:
-- required checks (commands/tests)
-- produced artifacts (checkpoint IDs, reports)
-- next-lane transition rules
+Default recurring complete checklist:
+- update docs/history for the command
+- create a Git commit
+- push the branch
+- rotate `*.todo.current` to the next lane
 
-Example (conceptual):
+Example:
 
-```json
-{"id":"main.command.tree.event.complete","requires":["cargo.test.quiet","julia.runtests"],"emits":["checkpoint.ck-20260208-tree-complete"],"next":"main.command.checkpoint.todo.current"}
+```text
+main.command.checkpoint.todo.trigger.event
 ```
 
-This makes trigger behavior auditable and automatable while staying human-readable.
+This keeps trigger behavior auditable while avoiding unnecessary event complexity.
 
 ---
 
@@ -350,7 +349,7 @@ Composable stages are easier to reason about, test, and automate.
 ### Phase 4: Trace + Gaps + Focus
 - Add `recur in trace`.
 - Add `recur in gaps` with required suffix policy.
-- Add `recur in focus` ranking from event/dependency signals.
+- Add `recur in focus` ranking from trigger/dependency signals.
 
 ### Phase 5: Language Extractors
 - Markdown extractor.
@@ -410,7 +409,7 @@ Control:
   - trace references
   - report gaps
 - Legacy repos can adopt with a single semantic-name text file before any large rename campaign.
-- Event-trigger lanes are queryable and executable from data, not tribal memory.
+- Recurring-trigger lanes are queryable and executable from data, not tribal memory.
 
 ---
 

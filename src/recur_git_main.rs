@@ -1,17 +1,108 @@
-//! Optional checkpoint utilities for dogfooding workflows.
+//! recur-git - Git/workflow extension binary for recur.
 //!
-//! This module maps to hierarchical name: main.command.checkpoint.impl
+//! Keeps `recur` focused on hierarchical semantics while this binary composes
+//! git + recur-aware workflow operations.
 
 use anyhow::Context;
+use clap::{Parser, Subcommand};
 use recur::parser::HierarchyPattern;
 use recur::search::{FileSearcher, SearchOptions};
-use std::fs::OpenOptions;
+use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{self, Command};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-pub fn execute(
+#[derive(Parser)]
+#[command(name = "recur-git")]
+#[command(
+    about = "Git/workflow extension for recur. Keeps recur pure hierarchy semantics.",
+    long_about = None
+)]
+#[command(version)]
+struct Cli {
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Capture a parallel-lane checkpoint entry (git + active todo leaves)
+    ///
+    /// Examples:
+    ///   recur-git checkpoint --snapshot
+    ///   recur-git checkpoint --emit-parallel --checkpoint-id ck-children-01
+    ///   recur-git checkpoint --append-parallel --checkpoint-id ck-children-01
+    Checkpoint {
+        /// Print checkpoint snapshot (git + lane state + separator)
+        #[arg(long)]
+        snapshot: bool,
+
+        /// Run `cargo test --quiet` as part of checkpoint
+        #[arg(long)]
+        run_tests: bool,
+
+        /// Run `julia julia-tests/runtests.jl` as part of checkpoint
+        #[arg(long)]
+        run_julia_tests: bool,
+
+        /// Emit parallel-lane checkpoint entry to stdout
+        #[arg(long)]
+        emit_parallel: bool,
+
+        /// Append parallel-lane checkpoint entry to file
+        #[arg(long)]
+        append_parallel: bool,
+
+        /// Optional checkpoint ID (default: ck-<unix-seconds>)
+        #[arg(long, value_name = "ID")]
+        checkpoint_id: Option<String>,
+
+        /// File path for appended parallel-lane entries
+        #[arg(long, default_value = "docs/main.dogfooding.parallel.history.md")]
+        parallel_log: PathBuf,
+
+        /// Source hierarchy separator for src lane queries (default: '_')
+        #[arg(long, value_name = "CHAR", default_value = "_")]
+        src_sep: String,
+    },
+}
+
+fn main() {
+    let cli = Cli::parse();
+
+    let result = match cli.command {
+        Commands::Checkpoint {
+            snapshot,
+            run_tests,
+            run_julia_tests,
+            emit_parallel,
+            append_parallel,
+            checkpoint_id,
+            parallel_log,
+            src_sep,
+        } => {
+            let src_separator = src_sep.chars().next().unwrap_or('_');
+            execute_checkpoint(
+                emit_parallel,
+                append_parallel,
+                checkpoint_id,
+                parallel_log,
+                src_separator,
+                snapshot,
+                run_tests,
+                run_julia_tests,
+            )
+        }
+    };
+
+    if let Err(e) = result {
+        eprintln!("Error: {}", e);
+        process::exit(2);
+    }
+}
+
+fn execute_checkpoint(
     emit_parallel: bool,
     append_parallel: bool,
     checkpoint_id: Option<String>,
@@ -19,6 +110,7 @@ pub fn execute(
     src_separator: char,
     snapshot: bool,
     run_tests: bool,
+    run_julia_tests: bool,
 ) -> anyhow::Result<()> {
     let docs_current = find_files_by_pattern(Path::new("docs"), "main.command.**.todo.current", '.')?;
     let src_pattern = format!(
@@ -33,7 +125,11 @@ pub fn execute(
     }
 
     if run_tests {
-        run_tests_quiet()?;
+        run_cargo_tests_quiet()?;
+    }
+
+    if run_julia_tests {
+        run_julia_tests_full()?;
     }
 
     if emit_parallel || append_parallel {
@@ -54,9 +150,9 @@ pub fn execute(
             append_parallel_entry(&parallel_log, &entry)?;
             println!("Appended parallel checkpoint to {}", parallel_log.display());
         }
-    } else if !snapshot && !run_tests {
+    } else if !snapshot && !run_tests && !run_julia_tests {
         println!(
-            "No action requested. Use --emit-parallel, --append-parallel, --snapshot, or --run-tests."
+            "No action requested. Use --emit-parallel, --append-parallel, --snapshot, --run-tests, or --run-julia-tests."
         );
     }
 
@@ -179,7 +275,14 @@ fn build_parallel_entry(
 }
 
 fn append_parallel_entry(path: &Path, entry: &str) -> anyhow::Result<()> {
-    let needs_newline = path.exists() && std::fs::metadata(path)?.len() > 0;
+    if let Some(parent) = path.parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent)
+                .with_context(|| format!("Failed to create directory {}", parent.display()))?;
+        }
+    }
+
+    let needs_newline = path.exists() && fs::metadata(path)?.len() > 0;
 
     let mut file = OpenOptions::new()
         .create(true)
@@ -194,7 +297,7 @@ fn append_parallel_entry(path: &Path, entry: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn run_tests_quiet() -> anyhow::Result<()> {
+fn run_cargo_tests_quiet() -> anyhow::Result<()> {
     let status = Command::new("cargo")
         .args(["test", "--quiet"])
         .status()
@@ -202,6 +305,19 @@ fn run_tests_quiet() -> anyhow::Result<()> {
 
     if !status.success() {
         anyhow::bail!("`cargo test --quiet` failed");
+    }
+
+    Ok(())
+}
+
+fn run_julia_tests_full() -> anyhow::Result<()> {
+    let status = Command::new("julia")
+        .args(["julia-tests/runtests.jl"])
+        .status()
+        .context("Failed to execute `julia julia-tests/runtests.jl`")?;
+
+    if !status.success() {
+        anyhow::bail!("`julia julia-tests/runtests.jl` failed");
     }
 
     Ok(())

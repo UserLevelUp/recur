@@ -3,6 +3,7 @@
 # Purpose: quick ID-level scan first, then resolve to files for context with `recur files`.
 
 main.command.checkpoint.todo.current
+main.command.checkpoint.todo.next
 main.command.checkpoint.todo.trigger.event
 main.command.tree.todo.trigger.event
 main.command.tree.readme

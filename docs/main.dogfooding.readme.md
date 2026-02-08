@@ -43,6 +43,7 @@ Use suffixes intentionally:
 - `test`: executable validation
 - `todo`: open work
 - `todo.priority`: urgent open work
+- `todo.trigger.event`: manual start/complete checklist for recurring workflow steps only
 
 Optional chain/status suffixes are allowed:
 - `todo.next`
@@ -67,6 +68,8 @@ Example: if `todo` exists but `todo.priority` does not, it is not currently prio
 4. Update suffixes as work moves:
    - `todo` -> `todo.priority` when escalated
    - remove `todo*` when completed
+   - keep `todo.trigger.event` with the active `todo.current` lane
+   - recurring complete checklist should include docs update + git commit + git push
 5. Run checkpoint workflow before/after major state change:
    - `docs/main.git.checkpoint.readme.md`
 
@@ -95,18 +98,20 @@ recur files "main.command.**.test" -d julia-tests/
 recur files "main.command.**.readme" -d docs/
 recur files "main.command.**.todo" -d docs/
 recur files "main.command.**.todo.priority" -d docs/
+recur files "main.command.**.todo.trigger.event" -d docs/
 
 # Rust command inventory
 recur files "main_command_*_impl" -d src/ --sep _
 recur files "main_command_*_stdin" -d src/ --sep _
+recur files "main_command_*_todo_trigger_event" -d src/ --sep _
 
-# Optional built-in checkpoint workflow (no side effects unless log flags are passed)
-recur checkpoint --snapshot
-recur checkpoint --snapshot --run-tests
+# Checkpoint workflow via extension
+recur-git checkpoint --snapshot
+recur-git checkpoint --snapshot --run-tests --run-julia-tests
 
 # Emit or append parallel-lane checkpoint entry
-recur checkpoint --emit-parallel --checkpoint-id ck-children-01
-recur checkpoint --append-parallel --checkpoint-id ck-children-01
+recur-git checkpoint --emit-parallel --checkpoint-id ck-children-01
+recur-git checkpoint --append-parallel --checkpoint-id ck-children-01
 
 # Optional PowerShell helper wrapper
 powershell -ExecutionPolicy Bypass -File scripts/dogfooding_checkpoint.ps1 -RunTests

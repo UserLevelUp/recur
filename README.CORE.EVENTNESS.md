@@ -29,7 +29,7 @@ Use hierarchical IDs in this shape:
 Where:
 - `prefix` routes context (domain/lane/root)
 - `base` identifies the stable work unit
-- `suffix` encodes interest (state, trigger, risk, priority, event)
+- `suffix` encodes interest (state, trigger, risk, priority)
 
 Short version:
 - routing is prefix/base-driven
@@ -65,12 +65,10 @@ Examples:
 Examples:
 - `todo`
 - `todo.current`
+- `todo.next`
 - `todo.tracking`
 - `todo.priority`
-- `event.start`
-- `event.blocked`
-- `event.complete`
-- `trigger.event`
+- `todo.trigger.event`
 - `risk.high`
 
 `suffix` is what makes an item interesting right now.
@@ -121,7 +119,7 @@ Key policy:
 You can detect useful surprises even when not explicitly planned.
 
 Examples:
-- new suffix pattern appears (`event.regression`, `risk.critical`) not in policy
+- new suffix pattern appears (`todo.blocker`, `risk.critical`) not in policy
 - missing expected suffix chain (`todo` exists, `todo.current` missing)
 - sudden rise in refs/callers around one base
 - new prefix/base combination with no historical pattern
@@ -147,9 +145,9 @@ This model supports both layers from IMPROVEMENT9:
 ## Example IDs
 
 - `main.command.tree.todo.current`
-- `main.command.tree.event.complete`
-- `main.command.checkpoint.trigger.event`
-- `ops.incident.auth.outage.event.blocked`
+- `main.command.tree.todo.trigger.event`
+- `main.command.checkpoint.todo.next`
+- `ops.incident.auth.outage.todo.blocker`
 - `release.v2_3.rc1.risk.high`
 
 Any suffix can represent interest as long as it is recorded consistently.
@@ -176,7 +174,7 @@ recur files "main.command.**" -d docs/ \
   | recur in id "*.todo.*" --stdin
 
 recur files "main_command_*" -d src/ --sep _ \
-  | recur in refs "*.event.*" --stdin
+  | recur in refs "*.todo.trigger.event" --stdin
 ```
 
 ---
@@ -211,7 +209,7 @@ Then resolve IDs to files with existing file-layer commands and pull detailed co
 3. Resolve selected IDs to files (`recur files ...`) and extract suffix-bearing IDs (interest signals).
 4. Rank by eventness.
 5. Execute required triggers.
-6. Emit completion/blocked events.
+6. Run recurring completion checklist items (update docs, commit, push).
 7. Rotate current lane.
 
 Humans and LLMs should run the same loop over the same semantic list plus resolved file context.
@@ -224,7 +222,7 @@ Keep this lightweight:
 
 1. Maintain a suffix policy map (suffix -> weight/severity).
 2. Enforce one active `*.todo.current` per lane.
-3. Require `event.start` and `event.complete` for major transitions.
+3. Require `*.todo.trigger.event` for recurring start/complete workflows.
 4. Run drift checks (missing suffix chains, unresolved refs).
 
 ---

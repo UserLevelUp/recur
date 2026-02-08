@@ -6,22 +6,21 @@
 //! Main CLI entry point
 
 use clap::{Parser, Subcommand};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process;
 
 mod main_command_stats_impl;
 mod main_command_stats_stdin;
 mod main_command_files_impl;
 mod main_command_files_stdin;
+mod main_command_tree_impl;
 mod main_command_children_impl;
-mod main_command_checkpoint_impl;
-
-use recur::output::TerminalFormatter;
-use recur::parser::HierarchyPattern;
-use recur::search::{
-    read_paths_from_stdin, ContentSearcher, FileSearcher, IdentifierSearcher, SearchOptions,
-};
-use recur::tree::HierarchyTree;
+mod main_command_related_impl;
+mod main_command_id_impl;
+mod main_command_find_impl;
+mod main_command_callers_impl;
+mod main_command_callees_impl;
+mod main_command_trace_impl;
 
 #[derive(Parser)]
 #[command(name = "recur")]
@@ -264,42 +263,6 @@ enum Commands {
         stdin: bool,
     },
 
-    /// Optional checkpoint/log workflow for dogfooding state.
-    ///
-    /// Examples:
-    ///   recur checkpoint --snapshot
-    ///   recur checkpoint --emit-parallel
-    ///   recur checkpoint --append-parallel --checkpoint-id ck-children-01
-    Checkpoint {
-        /// Print checkpoint snapshot (git + lane state + separator)
-        #[arg(long)]
-        snapshot: bool,
-
-        /// Run `cargo test --quiet` as part of checkpoint
-        #[arg(long)]
-        run_tests: bool,
-
-        /// Emit parallel-lane checkpoint entry to stdout
-        #[arg(long)]
-        emit_parallel: bool,
-
-        /// Append parallel-lane checkpoint entry to file
-        #[arg(long)]
-        append_parallel: bool,
-
-        /// Optional checkpoint ID (default: ck-<unix-seconds>)
-        #[arg(long, value_name = "ID")]
-        checkpoint_id: Option<String>,
-
-        /// File path for appended parallel-lane entries
-        #[arg(long, default_value = "docs/main.dogfooding.parallel.history.md")]
-        parallel_log: PathBuf,
-
-        /// Source hierarchy separator for src lane queries (default: '_')
-        #[arg(long, value_name = "CHAR", default_value = "_")]
-        src_sep: String,
-    },
-
     /// Find all places where a function/method is called
     ///
     /// Examples:
@@ -481,7 +444,7 @@ fn main() {
             regex,
             ext,
             stdin,
-        } => cmd_find(
+        } => main_command_find_impl::execute(
             query,
             scope,
             dir,
@@ -501,13 +464,15 @@ fn main() {
             count,
             ascii,
             stdin,
-        } => cmd_tree(base, dir, depth, count, !ascii, stdin, separator, cli.json),
+        } => main_command_tree_impl::execute(
+            base, dir, depth, count, !ascii, stdin, separator, cli.json,
+        ),
         Commands::Related {
             filename,
             dir,
             exclude_self,
             stdin,
-        } => cmd_related(
+        } => main_command_related_impl::execute(
             filename,
             dir,
             exclude_self,
@@ -531,7 +496,7 @@ fn main() {
             context,
             ignore_case,
             stdin,
-        } => cmd_id(
+        } => main_command_id_impl::execute(
             pattern,
             dir,
             ext,
@@ -551,26 +516,6 @@ fn main() {
         } => main_command_stats_impl::execute(
             pattern, dir, level, ext, stdin, separator, cli.json, cli.color,
         ),
-        Commands::Checkpoint {
-            snapshot,
-            run_tests,
-            emit_parallel,
-            append_parallel,
-            checkpoint_id,
-            parallel_log,
-            src_sep,
-        } => {
-            let src_separator = src_sep.chars().next().unwrap_or('_');
-            main_command_checkpoint_impl::execute(
-                emit_parallel,
-                append_parallel,
-                checkpoint_id,
-                parallel_log,
-                src_separator,
-                snapshot,
-                run_tests,
-            )
-        },
         Commands::Callers {
             function,
             scope,
@@ -580,7 +525,7 @@ fn main() {
             ext,
             count,
             stdin,
-        } => cmd_callers(
+        } => main_command_callers_impl::execute(
             function,
             scope,
             dir,
@@ -602,7 +547,7 @@ fn main() {
             ext,
             count,
             stdin,
-        } => cmd_callees(
+        } => main_command_callees_impl::execute(
             function,
             scope,
             dir,
@@ -629,7 +574,7 @@ fn main() {
             pick,
             scope_alias,
             stdin,
-        } => cmd_trace(
+        } => main_command_trace_impl::execute(
             function,
             scope,
             dir,
@@ -652,587 +597,5 @@ fn main() {
     if let Err(e) = result {
         eprintln!("Error: {}", e);
         process::exit(2);
-    }
-}
-
-fn cmd_find(
-    query: String,
-    scope: String,
-    dir: PathBuf,
-    context: usize,
-    ignore_case: bool,
-    use_regex: bool,
-    ext: Option<String>,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    let scope_pattern = HierarchyPattern::parse_with_separator(&scope, separator)?;
-    let scope_pattern = if ignore_case {
-        scope_pattern.case_insensitive()
-    } else {
-        scope_pattern
-    };
-
-    let mut options = SearchOptions {
-        root: dir.clone(),
-        case_insensitive: ignore_case,
-        context_lines: context,
-        ..Default::default()
-    };
-
-    if let Some(ext_str) = ext {
-        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-    }
-
-    if stdin {
-        options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
-    }
-
-    let searcher = ContentSearcher::new(options);
-
-    let results = if use_regex {
-        let regex = regex::Regex::new(&query)?;
-        searcher.search_regex(&regex, &scope_pattern)
-    } else {
-        searcher.search(&query, &scope_pattern)
-    };
-
-    if json {
-        let output = recur::output::JsonFormatter::format_search_results(&results);
-        println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_search_results(&results);
-    }
-
-    if results.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
-}
-
-fn cmd_tree(
-    base: String,
-    dir: PathBuf,
-    max_depth: Option<usize>,
-    show_count: bool,
-    unicode: bool,
-    stdin: bool,
-    separator: char,
-    json: bool,
-) -> anyhow::Result<()> {
-    // Find all files starting with base (recursive)
-    // Use the separator in the pattern itself
-    let pattern =
-        HierarchyPattern::parse_with_separator(&format!("{}{}**", base, separator), separator)?;
-
-    let files = if stdin {
-        // Read paths from stdin and filter by pattern
-        read_resolved_paths_from_stdin(&dir)?
-            .into_iter()
-            .filter(|p| {
-                // Extract hierarchical name from filename
-                if let Some(filename) = p.file_name().and_then(|n| n.to_str()) {
-                    let name_without_ext = filename
-                        .rsplit_once('.')
-                        .map(|(name, _)| name)
-                        .unwrap_or(filename);
-                    let hier_name = recur::parser::HierarchicalName::with_separator(
-                        name_without_ext,
-                        separator,
-                    );
-                    pattern.matches(&hier_name)
-                } else {
-                    false
-                }
-            })
-            .collect()
-    } else {
-        // Use filesystem search
-        let options = SearchOptions {
-            root: dir,
-            max_depth,
-            ..Default::default()
-        };
-
-        let searcher = FileSearcher::new(options);
-        searcher.find(&pattern)
-    };
-
-    if files.is_empty() {
-        eprintln!("No files found starting with '{}'", base);
-        process::exit(1);
-    }
-
-    let tree = HierarchyTree::from_paths_with_separator(base, &files, separator);
-
-    if json {
-        println!("{}", tree.to_json());
-    } else {
-        print!("{}", tree.to_string(unicode));
-
-        if show_count {
-            let stats = tree.stats();
-            println!(
-                "\n{} files, {} directories (recursive)",
-                stats.total_files, stats.total_dirs
-            );
-        }
-    }
-
-    Ok(())
-}
-
-fn cmd_related(
-    filename: String,
-    dir: PathBuf,
-    exclude_self: bool,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    let stem = filename
-        .rsplit_once('.')
-        .map(|(name, _)| name)
-        .unwrap_or(&filename);
-    let base = stem
-        .rsplit_once(separator)
-        .map(|(parent, _)| parent)
-        .unwrap_or(stem);
-    let pattern =
-        HierarchyPattern::parse_with_separator(&format!("{}{}*", base, separator), separator)?;
-
-    let mut options = SearchOptions {
-        root: dir.clone(),
-        ..Default::default()
-    };
-    if stdin {
-        options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
-    }
-
-    let searcher = FileSearcher::new(options);
-    let mut files = searcher.find(&pattern);
-
-    // Filter out the input file if exclude_self is true
-    if exclude_self {
-        let input_name = Path::new(&filename)
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or(&filename);
-        files.retain(|path| {
-            if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
-                file_name != input_name
-            } else {
-                true
-            }
-        });
-    }
-
-    if json {
-        let output = recur::output::JsonFormatter::format_file_list(&files);
-        println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_file_list(&files);
-    }
-
-    if files.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
-}
-
-fn cmd_id(
-    pattern: String,
-    dir: PathBuf,
-    ext: Option<String>,
-    context: usize,
-    ignore_case: bool,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    let mut options = SearchOptions {
-        root: dir.clone(),
-        case_insensitive: ignore_case,
-        context_lines: context,
-        ..Default::default()
-    };
-
-    if let Some(ext_str) = ext {
-        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-    }
-
-    if stdin {
-        options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
-    }
-
-    let searcher = IdentifierSearcher::new(options);
-    let pattern_parsed = HierarchyPattern::parse_with_separator(&pattern, separator)?;
-    let results = searcher.search(&pattern_parsed);
-
-    if json {
-        let output = recur::output::JsonFormatter::format_search_results(&results);
-        println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_search_results(&results);
-    }
-
-    if results.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
-}
-
-fn cmd_callers(
-    function: String,
-    scope: String,
-    dir: PathBuf,
-    context: usize,
-    ignore_case: bool,
-    ext: Option<String>,
-    count_only: bool,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    use recur::output::{JsonFormatter, TerminalFormatter};
-    use recur::search::CallerSearcher;
-
-    // Parse scope pattern
-    let scope_pattern = HierarchyPattern::parse_with_separator(&scope, separator)?;
-    let scope_pattern = if ignore_case {
-        scope_pattern.case_insensitive()
-    } else {
-        scope_pattern
-    };
-
-    // Set up search options
-    let mut options = SearchOptions {
-        root: dir.clone(),
-        case_insensitive: ignore_case,
-        context_lines: context,
-        ..Default::default()
-    };
-
-    // Parse extension filter
-    if let Some(ext_str) = ext {
-        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-    }
-
-    if stdin {
-        options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
-    }
-
-    // Create caller searcher
-    let searcher = CallerSearcher::new(options);
-
-    // Perform search
-    let results = searcher.find_callers(&function, &scope_pattern)?;
-
-    // Handle count-only mode
-    if count_only {
-        println!("{}", results.len());
-        if results.is_empty() {
-            process::exit(1);
-        }
-        return Ok(());
-    }
-
-    // Format and output results
-    if json {
-        let output = JsonFormatter::format_caller_results(&results);
-        println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_caller_results(&results);
-    }
-
-    // Exit with appropriate code
-    if results.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
-}
-
-fn cmd_callees(
-    function: String,
-    scope: String,
-    dir: PathBuf,
-    context: usize,
-    ignore_case: bool,
-    ext: Option<String>,
-    count_only: bool,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    use recur::output::{JsonFormatter, TerminalFormatter};
-    use recur::search::CalleeSearcher;
-
-    // Parse scope pattern
-    let scope_pattern = HierarchyPattern::parse_with_separator(&scope, separator)?;
-    let scope_pattern = if ignore_case {
-        scope_pattern.case_insensitive()
-    } else {
-        scope_pattern
-    };
-
-    // Set up search options
-    let mut options = SearchOptions {
-        root: dir.clone(),
-        case_insensitive: ignore_case,
-        context_lines: context,
-        ..Default::default()
-    };
-
-    // Parse extension filter
-    if let Some(ext_str) = ext {
-        options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-    }
-
-    if stdin {
-        options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
-    }
-
-    // Create callee searcher
-    let searcher = CalleeSearcher::new(options);
-
-    // Perform search
-    let results = searcher.find_callees(&function, &scope_pattern)?;
-
-    // Handle count-only mode
-    if count_only {
-        println!("{}", results.len());
-        if results.is_empty() {
-            process::exit(1);
-        }
-        return Ok(());
-    }
-
-    // Format and output results
-    if json {
-        let output = JsonFormatter::format_callee_results(&results);
-        println!("{}", output);
-    } else {
-        let mut formatter = TerminalFormatter::new(color);
-        formatter.print_callee_results(&results);
-    }
-
-    // Exit with appropriate code
-    if results.is_empty() {
-        process::exit(1);
-    }
-
-    Ok(())
-}
-
-fn cmd_trace(
-    function: String,
-    scope: String,
-    dir: PathBuf,
-    depth: usize,
-    direction_str: String,
-    ignore_case: bool,
-    ext: Option<String>,
-    max_width: usize,
-    verbose: bool,
-    format_str: String,
-    pick: Option<usize>,
-    scope_alias: Vec<String>,
-    stdin: bool,
-    separator: char,
-    json: bool,
-    color: bool,
-) -> anyhow::Result<()> {
-    use recur::output::{JsonFormatter, TerminalFormatter};
-    use recur::search::{TraceDirection, TraceOptions, TraceSearcher};
-
-    // Validate depth
-    if depth > 5 {
-        anyhow::bail!("Maximum depth is 5 (to prevent exponential explosion)");
-    }
-
-    // Parse direction
-    let direction = match direction_str.to_lowercase().as_str() {
-        "callees" => TraceDirection::Callees,
-        "callers" => TraceDirection::Callers,
-        "both" => TraceDirection::Both,
-        _ => anyhow::bail!(
-            "Invalid direction '{}'. Must be 'callees', 'callers', or 'both'",
-            direction_str
-        ),
-    };
-
-    // Parse format
-    let output_format = match format_str.to_lowercase().as_str() {
-        "tree" => recur::output::TraceFormat::Tree,
-        "flat" => recur::output::TraceFormat::Flat,
-        "graph" => recur::output::TraceFormat::Graph,
-        _ => anyhow::bail!(
-            "Invalid format '{}'. Must be 'tree', 'flat', or 'graph'",
-            format_str
-        ),
-    };
-
-    let resolved_scope = apply_scope_alias(&scope, &scope_alias)?;
-
-    // Parse scope pattern
-    let scope_pattern = HierarchyPattern::parse_with_separator(&resolved_scope, separator)?;
-    let scope_pattern = if ignore_case {
-        scope_pattern.case_insensitive()
-    } else {
-        scope_pattern
-    };
-
-    // Set up search options
-    let mut search_options = SearchOptions {
-        root: dir.clone(),
-        case_insensitive: ignore_case,
-        ..Default::default()
-    };
-
-    // Parse extension filter
-    if let Some(ext_str) = ext.as_deref() {
-        search_options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
-    }
-
-    if stdin {
-        search_options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
-    }
-
-    // Create trace options
-    let trace_options = TraceOptions {
-        max_width,
-        verbose,
-        pick,
-    };
-
-    // Handle both directions by running callers + callees separately
-    if direction == TraceDirection::Both {
-        let mut caller_searcher = TraceSearcher::new(search_options.clone(), trace_options.clone());
-        let callers_result =
-            caller_searcher.trace(&function, &scope_pattern, TraceDirection::Callers, depth)?;
-
-        let mut callee_searcher = TraceSearcher::new(search_options, trace_options);
-        let callees_result =
-            callee_searcher.trace(&function, &scope_pattern, TraceDirection::Callees, depth)?;
-
-        if json {
-            let output = JsonFormatter::format_trace_result_both(&callers_result, &callees_result);
-            println!("{}", output);
-            if callees_result.root.path.as_os_str().is_empty() {
-                process::exit(1);
-            }
-            return Ok(());
-        } else {
-            if callees_result.root.path.as_os_str().is_empty() {
-                print_trace_not_found(&function, &resolved_scope, ext.as_deref());
-                process::exit(1);
-            }
-
-            let mut formatter = TerminalFormatter::new(color);
-            formatter.print_trace_both(&callers_result, &callees_result, verbose)?;
-        }
-
-        return Ok(());
-    }
-
-    // Create trace searcher
-    let mut searcher = TraceSearcher::new(search_options, trace_options);
-
-    // Perform trace
-    let trace_result = searcher.trace(&function, &scope_pattern, direction, depth)?;
-
-    // Output results
-    if json {
-        let output = JsonFormatter::format_trace_result(&trace_result);
-        println!("{}", output);
-        if trace_result.root.path.as_os_str().is_empty() {
-            process::exit(1);
-        }
-        return Ok(());
-    }
-
-    if trace_result.root.path.as_os_str().is_empty() {
-        print_trace_not_found(&function, &resolved_scope, ext.as_deref());
-        process::exit(1);
-    }
-
-    let mut formatter = TerminalFormatter::new(color);
-    formatter.print_trace_result(&trace_result, output_format, verbose)?;
-
-    Ok(())
-}
-
-fn read_resolved_paths_from_stdin(root: &Path) -> anyhow::Result<Vec<PathBuf>> {
-    let mut resolved = Vec::new();
-
-    for path in read_paths_from_stdin()? {
-        if path.is_absolute() || path.exists() {
-            resolved.push(path);
-            continue;
-        }
-
-        if path.is_relative() {
-            let candidate = root.join(&path);
-            if candidate.exists() {
-                resolved.push(candidate);
-                continue;
-            }
-        }
-
-        resolved.push(path);
-    }
-
-    Ok(resolved)
-}
-
-fn apply_scope_alias(scope: &str, aliases: &[String]) -> anyhow::Result<String> {
-    if aliases.is_empty() {
-        return Ok(scope.to_string());
-    }
-
-    let mut map = std::collections::HashMap::new();
-    for alias in aliases {
-        let Some((key, value)) = alias.split_once('=') else {
-            anyhow::bail!(
-                "Invalid --scope-alias '{}'. Expected format name=pattern",
-                alias
-            );
-        };
-        map.insert(key.trim(), value.trim());
-    }
-
-    if let Some(replacement) = map.get(scope) {
-        Ok((*replacement).to_string())
-    } else {
-        Ok(scope.to_string())
-    }
-}
-
-fn print_trace_not_found(function: &str, scope: &str, ext: Option<&str>) {
-    println!("No symbols found for '{}'.", function);
-    if let Some(ext) = ext {
-        println!(
-            "Hint: if this is a string reference, try: recur find \"{}\" --scope \"{}\" --ext {}",
-            function, scope, ext
-        );
-    } else {
-        println!(
-            "Hint: if this is a string reference, try: recur find \"{}\" --scope \"{}\"",
-            function, scope
-        );
     }
 }

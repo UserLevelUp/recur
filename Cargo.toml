@@ -21,6 +21,10 @@ path = "src/lib.rs"
 name = "recur"
 path = "src/main.rs"
 
+[[bin]]
+name = "recur-git"
+path = "src/recur_git_main.rs"
+
 [dependencies]
 # Error handling
 thiserror = "1.0"
