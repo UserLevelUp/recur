@@ -113,8 +113,19 @@ recur files "**.current" -d docs/
 
 ### The Reference Pattern
 
-**When starting new work**, create a `.reference.md` file that points to working implementations:
+**When re-implementing an existing pattern** (not for novel work), create a `.reference.md` file that points to working implementations.
 
+**Use references when:**
+- Implementing the same capability for a different command
+- Example: Adding stdin to `find` when `files`, `stats`, `tree` already have it
+- Re-applying a known pattern to a new context
+
+**Don't use references when:**
+- First time implementing something completely new
+- No existing examples exist
+- Use existing documentation instead
+
+**Reference file structure:**
 ```markdown
 # Reference: <Feature> Implementation Patterns
 
@@ -130,16 +141,17 @@ Why to use this pattern
 Implementation steps
 ```
 
-**Example:** When implementing `find` stdin, create `main.command.find.stdin.todo.current.reference.md` pointing to:
-- Files command (separate module pattern)
-- Stats command (alternative example)
-- Tree/related commands (for comparison)
-
-This creates **external memory** - you don't need to remember which files to look at, just query:
+**Example:** When implementing `find` stdin (after `files`, `stats`, `tree`, `related` already have it):
 ```bash
+# Create reference pointing to working implementations
+# docs/main.command.find.stdin.todo.current.reference.md
+
+# Discover references
 recur files "**.reference" -d docs/
 cat docs/main.command.find.stdin.todo.current.reference.md
 ```
+
+This creates **external memory for pattern re-use** - you don't need to remember which files demonstrate the pattern.
 
 ### Discovery Queries
 
@@ -349,7 +361,9 @@ recur files "main_command_<name>_*" -d src/ --sep _
 
 ## Creating Good Reference Files
 
-When creating a `.todo.current.reference.md` file, include:
+**Only create reference files when re-implementing an existing pattern.** If you're doing something completely new, skip the reference file and use documentation instead.
+
+When creating a `.todo.current.reference.md` file for pattern re-implementation, include:
 
 **1. Multiple patterns** - Show different approaches available
 ```markdown
