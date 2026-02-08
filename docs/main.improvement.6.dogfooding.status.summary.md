@@ -33,8 +33,10 @@ recur files "main_command_*_impl" -d src/ --sep _ --count
 - ✅ stats (has `main_command_stats_stdin.rs`)
 - ✅ tree
 - ✅ related
+- ✅ children (has `main_command_children_stdin.rs`)
 
 **Needs stdin (6 commands):**
+Needs stdin (5 commands):
 - ⏳ find
 - ⏳ children
 - ⏳ id

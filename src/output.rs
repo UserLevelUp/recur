@@ -1,6 +1,6 @@
 //! Output formatting (terminal, JSON, etc.).
 
-use std::io::Write;
+use std::io::{Write, IsTerminal};
 use std::path::PathBuf;
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 use crate::search::{SearchResult, CallerResult, CalleeResult, TraceResult, TraceNode, TraceDirection, TraceCallKind, TraceStopReason};
@@ -13,14 +13,18 @@ pub struct TerminalFormatter {
 
 impl TerminalFormatter {
     pub fn new(color: bool) -> Self {
-        let choice = if color {
-            ColorChoice::Auto
+        // Only enable colors if both requested AND stdout is a terminal
+        let is_tty = std::io::stdout().is_terminal();
+        let should_color = color && is_tty;
+
+        let choice = if should_color {
+            ColorChoice::Always
         } else {
             ColorChoice::Never
         };
         Self {
             stdout: StandardStream::stdout(choice),
-            color,
+            color: should_color,
         }
     }
 
