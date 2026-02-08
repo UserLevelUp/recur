@@ -73,7 +73,17 @@
       "Bash(__NEW_LINE_78dc4e586760a8d1__ ls -1 julia-tests/)",
       "Bash(__NEW_LINE_9a6fdb95b65abe2e__ echo \"Tree with underscore separator \\(shows Rust + Julia\\):\")",
       "Bash(__NEW_LINE_9a6fdb95b65abe2e__ echo -e \"\\\\nTree showing test hierarchy:\")",
-      "Bash(__NEW_LINE_9a6fdb95b65abe2e__ cat << 'EOF'\n\n✅ KEY INSIGHT: Hierarchical naming works ACROSS directories!\n\nThe tree shows files from:\n- src/ \\(Rust implementation files\\)\n- julia-tests/ \\(Julia test files\\)\n- Both unified under the same hierarchy!\n\nThis is the POWER of hierarchical naming - it transcends directory structure!\nEOF)"
+      "Bash(__NEW_LINE_9a6fdb95b65abe2e__ cat << 'EOF'\n\n✅ KEY INSIGHT: Hierarchical naming works ACROSS directories!\n\nThe tree shows files from:\n- src/ \\(Rust implementation files\\)\n- julia-tests/ \\(Julia test files\\)\n- Both unified under the same hierarchy!\n\nThis is the POWER of hierarchical naming - it transcends directory structure!\nEOF)",
+      "Bash(recur tree:*)",
+      "Bash(recur files:*)",
+      "Bash(where:*)",
+      "Bash(cargo install:*)",
+      "Bash(recur --help:*)",
+      "Bash(recur checkpoint:*)",
+      "Bash(recur-git checkpoint:*)",
+      "Bash(Get-ChildItem -Path src -Filter \"*checkpoint*\" -Recurse)",
+      "Bash(Select-Object FullName)",
+      "Bash(git add:*)"
     ]
   }
 }
