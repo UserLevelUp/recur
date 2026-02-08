@@ -48,7 +48,7 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
 **What you get:** Two binaries for a complete toolset:
 - **`recur`** - Core hierarchy tool (pure, no Git dependencies)
 - **`recur-git`** - Git workflow extension (checkpoint tracking, dogfooding)
-
+  - recur-git depends on existing git binaries to already be installed
 ### From Cargo (crates.io)
 ```bash
 cargo install recur
