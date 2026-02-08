@@ -32,7 +32,7 @@ enum Commands {
     /// Examples:
     ///   recur-git checkpoint --snapshot
     ///   recur-git checkpoint --emit-parallel --checkpoint-id ck-children-01
-    ///   recur-git checkpoint --append-parallel --checkpoint-id ck-children-01
+    ///   recur-git checkpoint --append-parallel --checkpoint-id ck-children-01 -f checkpoints.md
     Checkpoint {
         /// Print checkpoint snapshot (git + lane state + separator)
         #[arg(long)]
@@ -58,9 +58,9 @@ enum Commands {
         #[arg(long, value_name = "ID")]
         checkpoint_id: Option<String>,
 
-        /// File path for appended parallel-lane entries
-        #[arg(long, default_value = "docs/main.dogfooding.parallel.history.md")]
-        parallel_log: PathBuf,
+        /// File path for checkpoint log (required with --append-parallel)
+        #[arg(short = 'f', long = "file", value_name = "PATH")]
+        file: Option<PathBuf>,
 
         /// Source hierarchy separator for src lane queries (default: '_')
         #[arg(long, value_name = "CHAR", default_value = "_")]
@@ -79,7 +79,7 @@ fn main() {
             emit_parallel,
             append_parallel,
             checkpoint_id,
-            parallel_log,
+            file,
             src_sep,
         } => {
             let src_separator = src_sep.chars().next().unwrap_or('_');
@@ -87,7 +87,7 @@ fn main() {
                 emit_parallel,
                 append_parallel,
                 checkpoint_id,
-                parallel_log,
+                file,
                 src_separator,
                 snapshot,
                 run_tests,
@@ -106,7 +106,7 @@ fn execute_checkpoint(
     emit_parallel: bool,
     append_parallel: bool,
     checkpoint_id: Option<String>,
-    parallel_log: PathBuf,
+    file: Option<PathBuf>,
     src_separator: char,
     snapshot: bool,
     run_tests: bool,
@@ -147,8 +147,11 @@ fn execute_checkpoint(
         }
 
         if append_parallel {
-            append_parallel_entry(&parallel_log, &entry)?;
-            println!("Appended parallel checkpoint to {}", parallel_log.display());
+            let log_path = file.ok_or_else(|| {
+                anyhow::anyhow!("--file (-f) is required when using --append-parallel")
+            })?;
+            append_parallel_entry(&log_path, &entry)?;
+            println!("Appended parallel checkpoint to {}", log_path.display());
         }
     } else if !snapshot && !run_tests && !run_julia_tests {
         println!(

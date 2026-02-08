@@ -60,6 +60,55 @@ function setup_test_environment()
     create_test_file("ApiController.Auth.cs", "public async Task Authenticate() { Initialize(); ValidateEmail(email); }")
     create_test_file("ApiController.Users.cs", "public async Task GetUsers() { Initialize(); }")
 
+    # MVC Controller Actions (Task<IActionResult> signatures) - IMPROVEMENT7 extra.tests
+    # Demonstrates hierarchical partial class pattern for MVC controllers:
+    # - LevelController.CreateWizard3.Ai.cs contains AI-related controller actions
+    # - Uses partial classes to organize controller actions across hierarchy
+    # - Each action method (GenerateAiContent, ApplyAiContent) represents a view/endpoint
+    # - Pattern works with any separator: NameController.Feature.Subfeature.cs
+    # - Enables deep hierarchies: Nation.State.County.City.cs or any depth needed
+    create_test_file("LevelController.CreateWizard3.Ai.cs", """
+    public partial class LevelController {
+        // Controller action methods with Task<IActionResult> signatures
+        // These should be recognized as symbols just like regular methods
+        public async Task<IActionResult> GenerateAiContent(int wizardId) {
+            CreateChildComponent(wizardId);
+            return Ok();
+        }
+        public async Task<IActionResult> ApplyAiContent(int wizardId) {
+            CreateChildComponent(wizardId);
+            TruncateString("test");
+            return Ok();
+        }
+        // Helper methods called by controller actions
+        private async Task CreateChildComponent(int id) { }
+        private string TruncateString(string input) { return input; }
+    }
+    """)
+
+    # Example of deeper hierarchy with base controller
+    create_test_file("LocationController.cs", """
+    public class LocationController : ControllerBase {
+        protected void ValidateLocation(string location) { }
+    }
+    """)
+    create_test_file("LocationController.Nation.cs", """
+    public partial class LocationController {
+        public async Task<IActionResult> GetNations() {
+            ValidateLocation("nation");
+            return Ok();
+        }
+    }
+    """)
+    create_test_file("LocationController.Nation.State.cs", """
+    public partial class LocationController {
+        public async Task<IActionResult> GetStates(string nation) {
+            ValidateLocation(nation);
+            return Ok();
+        }
+    }
+    """)
+
     # Trace-specific hierarchy
     create_test_file("LevelController.CreateWizard3.cs", "public class LevelController { public void CreateWizard3() { ApplyTemplate(\"base\"); SaveWizard(); } public void SaveWizard() { } }")
     create_test_file("LevelController.CreateWizard3.Template.cs", "public partial class LevelController { public void ApplyTemplate(string name) { RenderTemplate(); } }")

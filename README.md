@@ -45,6 +45,10 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
 
 ## Installation
 
+**What you get:** Two binaries for a complete toolset:
+- **`recur`** - Core hierarchy tool (pure, no Git dependencies)
+- **`recur-git`** - Git workflow extension (checkpoint tracking, dogfooding)
+
 ### From Cargo (crates.io)
 ```bash
 cargo install recur
@@ -56,7 +60,7 @@ cargo build --profile release-safe --locked
 cargo install --path . --profile release-safe --locked --force --offline
 ```
 
-If `recur` is not found, add Cargo's bin folder to PATH:
+Both binaries will be installed to Cargo's bin folder. If `recur` is not found, add it to PATH:
 - Windows: `%USERPROFILE%\.cargo\bin`
 - macOS/Linux: `~/.cargo/bin`
 
@@ -221,6 +225,21 @@ Ritchie’s thesis explored **recursive functions and hierarchical program struc
 - [Contributing](CONTRIBUTING.md) — how to contribute  
 - [Implementation](IMPLEMENTATION-COMPLETE.md) — code walkthrough  
 
+## recur-git: Git Workflow Extension
+
+`recur-git` is a separate binary for Git-aware workflows. It keeps `recur` pure (focused on hierarchies) while adding checkpoint tracking for dogfooding.
+
+**Checkpoint tracking:**
+```bash
+# Snapshot current state (git + active todo leaves)
+recur-git checkpoint --snapshot
+
+# Append to checkpoint log (requires --file)
+recur-git checkpoint --append-parallel --checkpoint-id ck-phase3-01 -f checkpoints.md
+```
+
+See [`docs/main.recur-git.artifact.md`](docs/main.recur-git.artifact.md) for details.
+
 ## Contributing
 
 Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -228,10 +247,7 @@ Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 For dogfooding state transitions and commit checkpoints, use:
 - `docs/main.git.checkpoint.readme.md`
 - `scripts/dogfooding_checkpoint.ps1`
-
-Optional built-in command (no logging unless flags are passed):
-- `recur checkpoint --snapshot`
-- `recur checkpoint --emit-parallel --checkpoint-id ck-<id>`
+- `recur-git checkpoint` commands (see above)
 
 ### Local git hook note
 

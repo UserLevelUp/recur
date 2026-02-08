@@ -470,6 +470,118 @@ include("runtests.setup.jl")
         end
     end
 
+    @testset "MVC Controller Actions (Task<IActionResult>) - IMPROVEMENT7 extra.tests" begin
+        @testset "trace controller action GenerateAiContent" begin
+            success, output, error_output = run_recur("trace \"GenerateAiContent\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 2")
+
+            # KNOWN LIMITATION: C# parser doesn't recognize Task<IActionResult> signatures yet
+            # Currently fails with "No symbols found"
+            # When fixed, should recognize public async Task<IActionResult> methods as symbols
+            # and trace their call graph like regular methods
+
+            if !success && contains(output, "No symbols found")
+                println("  FAIL (KNOWN LIMITATION)")
+                @test_broken success
+                @test_broken success && contains(output, "CreateChildComponent")
+                log_test("MVC controller action is traced as symbol (KNOWN LIMITATION)")
+            else
+                # If it starts working, this will pass and remind us to update the test
+                println(success ? "  PASS" : "  FAIL")
+                @test success
+                @test contains(output, "CreateChildComponent")
+                log_test("MVC controller action is traced as symbol")
+            end
+        end
+
+        @testset "trace controller action ApplyAiContent" begin
+            success, output, error_output = run_recur("trace \"ApplyAiContent\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 2")
+
+            # KNOWN LIMITATION: C# parser doesn't recognize Task<IActionResult> signatures yet
+            if !success && contains(output, "No symbols found")
+                println("  FAIL (KNOWN LIMITATION)")
+                @test_broken success
+                @test_broken success && contains(output, "CreateChildComponent")
+                @test_broken success && contains(output, "TruncateString")
+                log_test("MVC controller action with multiple calls is traced (KNOWN LIMITATION)")
+            else
+                println(success ? "  PASS" : "  FAIL")
+                @test success
+                @test contains(output, "CreateChildComponent")
+                @test contains(output, "TruncateString")
+                log_test("MVC controller action with multiple calls is traced")
+            end
+        end
+
+        @testset "callees finds controller action methods" begin
+            success, output, error_output = run_recur("callees \"GenerateAiContent\" --scope \"LevelController.CreateWizard3.**\" --ext .cs")
+
+            # KNOWN LIMITATION: C# parser doesn't recognize Task<IActionResult> signatures yet
+            # callees should find CreateChildComponent called by GenerateAiContent
+            if !success
+                println("  FAIL (KNOWN LIMITATION)")
+                @test_broken success
+                @test_broken success && contains(output, "CreateChildComponent")
+                log_test("callees recognizes controller actions (KNOWN LIMITATION)")
+            else
+                println(success ? "  PASS" : "  FAIL")
+                @test success
+                @test contains(output, "CreateChildComponent")
+                log_test("callees recognizes controller actions")
+            end
+        end
+
+        @testset "callers finds who calls private methods from actions" begin
+            success, output, _ = run_recur("callers \"CreateChildComponent\" --scope \"LevelController.CreateWizard3.**\" --ext .cs")
+
+            # Should find both controller actions calling CreateChildComponent
+            passed = success &&
+                     (contains(output, "GenerateAiContent") || contains(output, "ApplyAiContent"))
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test (contains(output, "GenerateAiContent") || contains(output, "ApplyAiContent"))
+            log_test("callers finds controller actions as callers")
+        end
+
+        @testset "hierarchical controller actions at different depths" begin
+            # Test deeper hierarchy: LocationController.Nation.State.cs
+            success, output, error_output = run_recur("trace \"GetStates\" --scope \"LocationController.**\" --ext .cs --depth 2")
+
+            # KNOWN LIMITATION: C# parser doesn't recognize Task<IActionResult> signatures
+            if !success && contains(output, "No symbols found")
+                println("  FAIL (KNOWN LIMITATION)")
+                @test_broken success
+                @test_broken success && contains(output, "ValidateLocation")
+                log_test("hierarchical controller actions work at any depth (KNOWN LIMITATION)")
+            else
+                println(success ? "  PASS" : "  FAIL")
+                @test success
+                @test contains(output, "ValidateLocation")
+                log_test("hierarchical controller actions work at any depth")
+            end
+        end
+
+        @testset "files command lists hierarchical controllers" begin
+            # Verify files command can list the hierarchical structure
+            success, output, _ = run_recur("files \"LocationController.**\" --ext .cs")
+
+            # Should list all partial class files in hierarchy
+            passed = success &&
+                     contains(output, "LocationController.cs") &&
+                     contains(output, "LocationController.Nation.cs") &&
+                     contains(output, "LocationController.Nation.State.cs")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "LocationController.cs")
+            @test contains(output, "LocationController.Nation.cs")
+            @test contains(output, "LocationController.Nation.State.cs")
+            log_test("files command lists hierarchical controller partials")
+        end
+    end
+
     @testset "Force trace (placeholder)" begin
         @testset "trace --force resolves ambiguity" begin
             # PLACEHOLDER: force-trace flag should pick a best match when multiple definitions exist.
