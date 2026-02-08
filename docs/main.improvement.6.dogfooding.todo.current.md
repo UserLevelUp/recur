@@ -18,23 +18,27 @@ All 10 commands extracted from `src/main.rs` into `src/main_command_*_impl.rs` m
 - ✅ `main.command.trace`
 - ✅ `main.command.tree`
 
-## Phase 3: Stdin Support (IN PROGRESS)
+## Phase 3: Stdin Support ✅ COMPLETE
 
-**Stdin Working (4/10):**
+**All 10 commands have stdin support and passing tests!**
+
+**Separate stdin modules:**
 - ✅ files (has `main_command_files_stdin.rs`)
 - ✅ stats (has `main_command_stats_stdin.rs`)
+
+**Integrated in impl:**
 - ✅ tree
 - ✅ related
+- ✅ find
+- ✅ children
+- ✅ id
+- ✅ callers
+- ✅ callees
+- ✅ trace
 
-**Stdin Needed (6/10):**
-- ⏳ find
-- ⏳ children
-- ⏳ id
-- ⏳ callers
-- ⏳ callees
-- ⏳ trace
+**Test Results:** 358 pass, 0 fail, 12 broken
 
-Next focus: Add stdin support to remaining 6 commands
+**Discovery:** stdin was already fully implemented - just needed test fixes!
 
 ## Out of Scope
 
