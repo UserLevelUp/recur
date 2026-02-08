@@ -49,11 +49,13 @@ jobs:
       - name: Build (release-safe)
         run: cargo build --profile release-safe --locked
 
-      - name: Upload Windows binary
+      - name: Upload Windows binaries
         uses: actions/upload-artifact@v4
         with:
           name: recur-windows-release-safe
-          path: target/release-safe/recur.exe
+          path: |
+            target/release-safe/recur.exe
+            target/release-safe/recur-git.exe
 
   build-linux:
     runs-on: ubuntu-latest
@@ -68,11 +70,13 @@ jobs:
       - name: Build (release-safe)
         run: cargo build --profile release-safe --locked
 
-      - name: Upload Linux binary
+      - name: Upload Linux binaries
         uses: actions/upload-artifact@v4
         with:
           name: recur-linux-release-safe
-          path: target/release-safe/recur
+          path: |
+            target/release-safe/recur
+            target/release-safe/recur-git
 
   docker:
     runs-on: ubuntu-latest
