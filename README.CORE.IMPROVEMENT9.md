@@ -48,6 +48,91 @@ This model keeps Unix composability: file filtering and in-file semantics stay s
 
 ---
 
+## Design Thesis Update: Dual-Layer Hierarchy
+
+IMPROVEMENT9 should formalize two layers that can be switched and chained at will:
+
+1. File layer (`recur files/tree/stats`)
+- Answers: "Which files matter?"
+- Uses folder-appropriate separators (`--sep _` for Rust modules, `.` for docs/tests).
+
+2. In-file layer (`recur in *`)
+- Answers: "Which semantic IDs, refs, tasks, or events matter inside those files?"
+- Reads selected files from stdin and/or a simple semantic-name list file.
+
+The power is the composition:
+
+```bash
+# Select implementation modules with source separator
+recur files "main_command_*_impl" -d src/ --sep _ \
+  | recur in id "main.command.**" --stdin
+```
+
+This keeps separator policy local to the file selection phase while in-file semantics stay canonical.
+
+---
+
+## Legacy Codebase Adoption: Simple Semantic Name List First
+
+For existing repositories, do not require immediate file renaming or leaf-file proliferation.
+Start with one plain text semantic list:
+
+- `docs/main.semantic.names.txt`
+
+Format rules:
+- one semantic ID per line
+- canonical dot IDs only (`prefix.base.suffix[.qualifier]`)
+- dot notation is the default for hierarchical files and semantic IDs
+- optional blank lines and `#` comments
+- no embedded metadata schema required
+- use `.todo.tracking` when an item is centrally tracked in the list
+
+Example file:
+
+```text
+main.command.tree.todo.current
+main.command.tree.todo.trigger.event
+main.command.checkpoint.todo.current
+main.command.checkpoint.todo.trigger.event
+```
+
+Resolution model:
+
+1. Analyze/select candidate IDs quickly from the text list (human first, then LLM).
+2. Resolve selected IDs against the file layer to retrieve concrete context.
+3. Run in-file extraction only on resolved files.
+
+In this model, interest lives in semantic IDs while actual working context is retrieved from matched files at the file layer.
+
+Context retrieval examples:
+
+```bash
+# docs/tests lane (dot separator)
+recur files "main.command.checkpoint.todo.current" -d docs/
+
+# src lane (underscore separator)
+recur files "main_command_checkpoint_todo_current" -d src/ --sep _
+```
+
+Recommended command additions:
+
+1. `recur in id|refs|trace|gaps --names-file docs/main.semantic.names.txt`
+2. `recur in sync --names-file docs/main.semantic.names.txt` (refresh list from repo)
+3. `recur in drift --names-file docs/main.semantic.names.txt` (list IDs with no matching files)
+4. `recur in lane current|set --names-file ...` (single active cursor management)
+
+This gives immediate structure to legacy repos with minimal disruption.
+
+Tracking example:
+
+```text
+main.improvement.9.todo.tracking
+```
+
+`*.todo.tracking` is intended for fast, centralized queueing in one file instead of scattered per-item metadata files.
+
+---
+
 ## Why This Matters
 
 ### Human Value
@@ -58,7 +143,76 @@ This model keeps Unix composability: file filtering and in-file semantics stay s
 ### LLM Value
 - Deterministic context narrowing: LLM can query exact files first, then exact in-file symbols.
 - Better planning loops: detect missing IDs/references and propose concrete next files.
-- Lower hallucination risk: the LLM can query real graph edges instead of inferring architecture from prose.
+- Lower hallucination risk: the LLM can query real semantic IDs and resolved files instead of inferring from prose.
+
+### Human + LLM Combined Value
+- Shared operational state: both humans and LLMs consume the same IDs, refs, statuses, and event logs.
+- Faster handoffs: "current lane" is queryable, not hidden in chat memory.
+- Better prioritization: event and dependency data can rank what to do next.
+- Lower cognitive load: operators ask the system for "next valid action" instead of manually stitching context.
+
+---
+
+## Scope Expansion: Track More Than Code
+
+The same hierarchy model can represent all work categories:
+
+- engineering: `main.command.tree.impl`
+- testing: `main.command.tree.test.case.stdin`
+- docs: `main.command.tree.readme`
+- incident response: `ops.incident.auth.outage.2026_02_08`
+- release: `release.v2_3.rc1.checklist`
+- experiments: `research.llm.context.windowing.sep_policy`
+- product tasks: `product.search.ux.todo.priority`
+
+This allows one query language for engineering + operations + planning.
+
+---
+
+## Event Triggers as First-Class Data
+
+Add explicit event IDs and trigger rules in the in-file layer:
+
+- `*.event.start`
+- `*.event.blocked`
+- `*.event.handoff`
+- `*.event.complete`
+
+Each event can carry:
+- required checks (commands/tests)
+- produced artifacts (checkpoint IDs, reports)
+- next-lane transition rules
+
+Example (conceptual):
+
+```json
+{"id":"main.command.tree.event.complete","requires":["cargo.test.quiet","julia.runtests"],"emits":["checkpoint.ck-20260208-tree-complete"],"next":"main.command.checkpoint.todo.current"}
+```
+
+This makes trigger behavior auditable and automatable while staying human-readable.
+
+---
+
+## Productivity and Interest Model
+
+"Interest" here means what deserves attention now.
+Use an explicit scoring model over the semantic ID list plus discovered refs:
+
+- urgency (blocked, failing, near deadline)
+- impact (number of downstream refs)
+- freshness (stale TODOs / old checkpoints)
+- confidence (parser certainty for extracted IDs)
+
+Then expose:
+
+- `recur in focus --names-file ... --top 20` (proposed)
+- ranked work queue for humans
+- deterministic context pack for LLM sessions
+
+Result:
+- humans get a prioritized worklist
+- LLMs get high-signal context windows
+- both operate on the same evidence base
 
 ---
 
@@ -170,6 +324,7 @@ recur files "main.command.**.todo*" -d docs/ \
 
 - `recur files/tree/stats`: filesystem hierarchy truth.
 - `recur in *`: content hierarchy truth.
+- optional `--names-file`: coordination entry point (simple semantic ID seed list).
 
 Do not merge them into one monolithic command.
 Composable stages are easier to reason about, test, and automate.
@@ -183,15 +338,21 @@ Composable stages are easier to reason about, test, and automate.
 - Support `--stdin`, `--ext`, `--sep`, `--json`.
 - Reuse existing search option plumbing.
 
-### Phase 2: Reference Graph
+### Phase 2: Legacy-Friendly Semantic Name Overlay
+- Add `--names-file` read path for `recur in id`.
+- Add `recur in sync` and `recur in drift`.
+- Add "single current lane" helpers (`recur in lane`).
+
+### Phase 3: Reference Graph
 - Add `recur in refs`.
 - Emit `(from_id -> to_id, file, line)` edges.
 
-### Phase 3: Trace + Gaps
+### Phase 4: Trace + Gaps + Focus
 - Add `recur in trace`.
 - Add `recur in gaps` with required suffix policy.
+- Add `recur in focus` ranking from event/dependency signals.
 
-### Phase 4: Language Extractors
+### Phase 5: Language Extractors
 - Markdown extractor.
 - Rust comment/doc extractor.
 - JSON/YAML structured key extractor.
@@ -235,7 +396,7 @@ Control:
 ### Risk: Performance on large repos
 Control:
 - always support stdin-scoped execution
-- incremental indexing as future optimization (optional)
+- optional caching as future optimization (not required for the text-list model)
 
 ---
 
@@ -248,6 +409,8 @@ Control:
   - extract IDs
   - trace references
   - report gaps
+- Legacy repos can adopt with a single semantic-name text file before any large rename campaign.
+- Event-trigger lanes are queryable and executable from data, not tribal memory.
 
 ---
 

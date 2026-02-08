@@ -1,0 +1,13 @@
+# Semantic ID seed list for Improvement 9.
+# Format: one canonical dot ID per line.
+# Purpose: quick ID-level scan first, then resolve to files for context with `recur files`.
+
+main.command.checkpoint.todo.current
+main.command.checkpoint.todo.trigger.event
+main.command.tree.todo.trigger.event
+main.command.tree.readme
+main.dogfooding.parallel.history
+main.git.checkpoint.readme
+main.improvement.6.dogfooding.todo.current
+main.improvement.9.todo.future-plan
+main.improvement.9.todo.tracking
