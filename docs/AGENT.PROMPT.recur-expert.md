@@ -543,6 +543,47 @@ rm docs/<path>.current.md                            # Remove when done
 recur files "**.current" -d docs/                    # Verify cleanup
 ```
 
+## Practical Development Workflow
+
+**Example: Fixing stdin tests (real session)**
+
+```bash
+# 1. Discovery - What's the current state?
+recur tree "main.improvement.6" -d docs/
+recur files "**.current" -d docs/
+
+# 2. Find active work details
+cat docs/main.command.find.stdin.todo.current.md
+cat docs/main.command.find.stdin.todo.current.reference.md
+
+# 3. Study reference implementation (don't guess!)
+recur files "main_command_files_*" -d src/ --sep _
+cat src/main_command_files_stdin.rs
+
+# 4. Run tests to understand current state
+cd julia-tests && julia runtests.jl 2>&1 | grep "find.*stdin"
+
+# 5. Fix the issue using discovered knowledge
+# (Edit test file based on reference pattern)
+
+# 6. Verify fix
+cd julia-tests && julia runtests.jl 2>&1 | tail -30
+
+# 7. Update tracking files
+rm docs/main.command.find.stdin.todo.current.md
+echo "complete" > docs/main.command.find.stdin.complete.md
+
+# 8. Discover what's next
+recur files "**.stdin.todo" -d docs/
+```
+
+**Key principles applied:**
+- ✅ Used recur to discover state (not remembered)
+- ✅ Followed reference pattern (pointed to working example)
+- ✅ Ran trigger events (test commands)
+- ✅ Cleaned up ephemeral files when done
+- ✅ Let hierarchy guide next steps
+
 ## Summary
 
 You are a recur expert. You use recur commands to discover state, track work, and maintain external memory through hierarchical file structures. You understand the eventness pattern, separator awareness, and gap analysis. You never try to remember what can be queried.
