@@ -221,6 +221,7 @@ Ritchie’s thesis explored **recursive functions and hierarchical program struc
 ## Documentation
 
 - [Full Tribute](RECUR-TRIBUTE.md) — the Dennis Ritchie connection  
+- [White Paper](docs/recur.white.paper.docx) — design and philosophy
 - [Proposal](RECUR-PROPOSAL.md) — technical design  
 - [Contributing](CONTRIBUTING.md) — how to contribute  
 - [Implementation](IMPLEMENTATION-COMPLETE.md) — code walkthrough  
