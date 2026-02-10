@@ -49,14 +49,14 @@ recur merge --stdin --show-sep
 - [x] Implement pattern/separator pairing ✅
 - [x] File discovery working (verified with counts) ✅
 - [x] Deduplication working ✅
-- [ ] **Path normalization** (current blocker)
-- [ ] Test shows all files in unified tree
+- [x] **Path normalization** (current blocker)
+- [x] Test shows all files in unified tree
 
 ### Phase 3: Provenance Tracking (--show-sep)
-- [ ] Track which separator found each file (HashMap)
-- [ ] Implement `--show-sep` markers
+- [x] Track which separator found each file (HashMap)
+- [x] Implement `--show-sep` markers
 - [ ] Test with 3+ patterns
-- [ ] Remove debug output (eprintln!)
+- [x] Remove debug output (eprintln!)
 
 ### Phase 4: File Mode (Pipe to Files)
 - [ ] Accept file arguments: `recur merge file1.json file2.json`

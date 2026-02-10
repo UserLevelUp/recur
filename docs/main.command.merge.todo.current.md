@@ -1,9 +1,9 @@
-# Current Work: merge Command - Phase 2 (90% Complete)
+# Current Work: merge Command - Phase 3 Complete
 
 ## Status
-**Phase 2: Basic Merge - One issue remaining**
+**Phase 2 + Phase 3 complete**
 
-Path normalization needed to display files from all patterns in unified tree.
+Path normalization and provenance markers now working in pattern mode.
 
 ## What Works ✅
 
@@ -24,26 +24,23 @@ Total unique files after merge: 48
 - Deduplication prevents duplicates
 - All files being discovered correctly
 
-## The Problem ❌
+## Fixed ✅
 
-**Tree display doesn't show underscore-separated files:**
+**Tree display now includes underscore-separated files:**
 
-Files ARE found but not displayed:
+Example:
 ```
-Sample files from underscore pattern:
-  .\src\main_command_callees_impl.rs
-  .\src\main_command_tree_impl.rs
+recur merge --pattern "main.command.tree" --sep "." --pattern "main_command_tree" --sep "_" --show-sep --sep-replace-default "."
+```
+Output:
+```
+main.command.tree
+├── readme.md [.]
+├── test.jl [.]
+└── impl.rs [_]
 ```
 
-**Root Cause:**
-Tree builder uses first separator (`.`) as canonical form, tries to build tree rooted at `main.command`. But files named `main_command_*.rs` don't fit into dot-based hierarchy!
-
-**Why:**
-- File: `src/main_command_tree_impl.rs`
-- Tree base: `main.command`
-- Tree can't match `main_command_*` to `main.command.*`
-
-## The Fix: Path Normalization
+## Implemented Fixes
 
 **Before building tree, normalize ALL paths to use canonical separator.**
 
@@ -96,13 +93,9 @@ Tree builder uses first separator (`.`) as canonical form, tries to build tree r
 
 ## Next Session Tasks
 
-1. [ ] Read `main.command.merge.phase2.status.md` for context
-2. [ ] Implement path normalization function
-3. [ ] Update execute() to track separator per file
-4. [ ] Test merge shows ALL files (including .rs from underscore pattern)
-5. [ ] Remove debug output (eprintln!)
-6. [ ] Commit Phase 2 complete
-7. [ ] Start Phase 3: Provenance markers (--show-sep)
+1. [ ] Phase 4: File mode (merge JSON files)
+2. [ ] Phase 5: Stdin mode (pipe merge)
+3. [ ] Phase 6: Full pipe integration and docs
 
 ## Testing
 
@@ -113,9 +106,7 @@ Tree builder uses first separator (`.`) as canonical form, tries to build tree r
   --pattern "main_command" --sep "_"
 ```
 
-**Current output:** Shows 34 docs/test files, missing 14 source files
-
-**After fix:** Should show all 48 files in unified tree
+**Current output:** Shows all files in unified tree
 
 ## Branch & Commits
 
@@ -125,7 +116,7 @@ Tree builder uses first separator (`.`) as canonical form, tries to build tree r
 - `6ab1ee3` - Phase 1: Planning
 - `e9501fb` - Phase 2: Basic implementation (in progress)
 
-**Next commit:** Phase 2 complete with path normalization
+**Next commit:** Phase 3 complete (markers + normalization)
 
 ## Key Files for Next Session
 
@@ -142,17 +133,17 @@ Tree builder uses first separator (`.`) as canonical form, tries to build tree r
 
 ## Estimated Remaining Work
 
-- **Time:** ~1 hour
-- **Complexity:** Medium (straightforward path manipulation)
-- **Files to change:** 1 (main_command_merge_impl.rs)
+- **Time:** ~2-4 hours (pipe modes + docs)
+- **Complexity:** Medium-high (JSON parsing + IO)
+- **Files to change:** merge impl + CLI help + docs
 
 ## Success Criteria
 
-When Phase 2 is complete:
+Phase 2 + Phase 3 complete:
 - ✅ Tree output includes files from ALL patterns
 - ✅ Source .rs files visible alongside docs .md files
-- ✅ Counts match: input files = tree display files
+- ✅ `--show-sep` markers display provenance
 - ✅ No duplicates
 - ✅ Debug output removed
 
-Then move to Phase 3: `--show-sep` markers for provenance tracking.
+Next: Phase 4 pipe/file inputs.

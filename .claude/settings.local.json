@@ -88,7 +88,15 @@
       "Bash(git commit:*)",
       "Bash(Select-Object -Last 20)",
       "Bash(recur find \"ANSI\" --scope \"**\" -d docs)",
-      "Bash(recur find:*)"
+      "Bash(recur find:*)",
+      "Bash(git branch:*)",
+      "Bash(cargo test:*)",
+      "Bash(julia:*)",
+      "Bash(recur-git --help:*)",
+      "Bash(git push:*)",
+      "Bash(git merge:*)",
+      "Bash(recur --version:*)",
+      "Bash(cargo check:*)"
     ]
   }
 }

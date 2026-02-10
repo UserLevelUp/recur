@@ -59,11 +59,20 @@ impl HierarchyTree {
 
         for path in paths {
             if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
+                let (filename, marker) = strip_separator_marker(filename);
                 // Remove file extension to get hierarchical name
                 let (hier_name, ext) = filename
                     .rsplit_once('.')
                     .map(|(name, ext)| (name, Some(ext.to_string())))
-                    .unwrap_or((filename, None));
+                    .unwrap_or((filename.as_str(), None));
+
+                let ext = ext.map(|ext| {
+                    if let Some(marker) = marker {
+                        format!("{} [{}]", ext, marker)
+                    } else {
+                        ext
+                    }
+                });
 
                 // Skip if it doesn't start with base
                 if !hier_name.starts_with(&base_str) {
@@ -218,6 +227,20 @@ impl HierarchyTree {
             child.compute_stats(stats, depth + 1);
         }
     }
+}
+
+fn strip_separator_marker(filename: &str) -> (String, Option<char>) {
+    let chars: Vec<char> = filename.chars().collect();
+    if chars.len() >= 4 {
+        let tail = &chars[chars.len() - 4..];
+        if tail[0] == ' ' && tail[1] == '[' && tail[3] == ']' {
+            let marker = tail[2];
+            let base: String = chars[..chars.len() - 4].iter().collect();
+            return (base, Some(marker));
+        }
+    }
+
+    (filename.to_string(), None)
 }
 
 impl fmt::Display for HierarchyTree {

@@ -711,6 +711,8 @@ fn main() {
                 separators,
                 dir,
                 max_depth,
+                replace_default,
+                show_sep,
                 !ascii,
                 count,
                 cli.json,

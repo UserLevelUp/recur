@@ -77,39 +77,35 @@ pub fn execute_with_separators(
         process::exit(1);
     }
 
-    // Apply normalization if requested
-    let display_files: Vec<PathBuf> = if let Some(replace_sep) = replace_default {
-        all_files
-            .iter()
-            .map(|path| {
-                let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
-                normalize_path_separator(path, original_sep, replace_sep)
-            })
-            .collect()
-    } else {
-        all_files.clone()
-    };
+    // Normalize paths to tree separator for consistent hierarchy
+    let tree_separator = replace_default.unwrap_or(separators[0]);
+    let normalized_files: Vec<PathBuf> = all_files
+        .iter()
+        .map(|path| {
+            let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
+            normalize_path_separator(path, original_sep, tree_separator)
+        })
+        .collect();
 
     // Apply separator markers if requested (only for multi-separator queries)
     let show_markers = show_sep && separators.len() > 1;
     let tree_files: Vec<PathBuf> = if show_markers {
-        display_files
+        normalized_files
             .iter()
             .map(|path| {
-                // Get original separator for this file
-                let original_path = if replace_default.is_some() {
-                    // Find original path before normalization
-                    all_files.iter().find(|p| {
-                        p.file_name() == path.file_name() ||
-                        normalize_path_separator(p, file_separators.get(&**p).copied().unwrap_or(separators[0]), replace_default.unwrap()) == *path
-                    }).unwrap_or(path)
-                } else {
-                    path
-                };
+                let original_path = all_files
+                    .iter()
+                    .find(|p| {
+                        normalize_path_separator(
+                            p,
+                            file_separators.get(&**p).copied().unwrap_or(separators[0]),
+                            tree_separator,
+                        ) == *path
+                    })
+                    .unwrap_or(path);
 
                 let sep = file_separators.get(&**original_path).copied().unwrap_or(separators[0]);
 
-                // Append marker to filename
                 if let Some(filename) = path.file_name() {
                     let marked_filename = format!("{} [{}]", filename.to_string_lossy(), sep);
                     let mut marked_path = path.clone();
@@ -121,11 +117,9 @@ pub fn execute_with_separators(
             })
             .collect()
     } else {
-        display_files.clone()
+        normalized_files.clone()
     };
 
-    // Build tree using first separator as default (or replace_default if specified)
-    let tree_separator = replace_default.unwrap_or(separators[0]);
     let tree = HierarchyTree::from_paths_with_separator(base, &tree_files, tree_separator);
 
     if json {
@@ -153,8 +147,11 @@ fn find_files_for_separator(
     stdin: bool,
     separator: char,
 ) -> anyhow::Result<Vec<PathBuf>> {
-    let pattern =
-        HierarchyPattern::parse_with_separator(&format!("{}{}**", base, separator), separator)?;
+    let normalized_base = normalize_pattern_for_separator(base, separator);
+    let pattern = HierarchyPattern::parse_with_separator(
+        &format!("{}{}**", normalized_base, separator),
+        separator,
+    )?;
 
     if stdin {
         Ok(read_resolved_paths_from_stdin(dir)?
@@ -182,6 +179,18 @@ fn find_files_for_separator(
         let searcher = FileSearcher::new(options);
         Ok(searcher.find(&pattern))
     }
+}
+
+fn normalize_pattern_for_separator(pattern: &str, target_separator: char) -> String {
+    let mut normalized = pattern.to_string();
+
+    for source_sep in ['.', '_', '-', '/'] {
+        if source_sep != target_separator {
+            normalized = normalized.replace(source_sep, &target_separator.to_string());
+        }
+    }
+
+    normalized
 }
 
 fn execute_single_separator(

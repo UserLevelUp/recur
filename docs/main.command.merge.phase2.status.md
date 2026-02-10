@@ -1,6 +1,6 @@
-# Phase 2 Status: Path Normalization Needed
+# Phase 2 Status: Complete (Path Normalization Implemented)
 
-## Current Status: 90% Complete, One Issue Remaining
+## Current Status: Complete
 
 ### What's Working ✅
 
@@ -23,48 +23,17 @@
    - HashSet prevents duplicate entries
    - Verified with debug counters
 
-### The Issue ❌
+### Fix Implemented ✅
 
-**Files found but not displayed in tree:**
+**Path normalization before tree build:**
+- Normalize each file name to the canonical separator
+- Tree now includes underscore-derived files under dot hierarchy
 
-Sample files found from underscore pattern:
-```
-.\docs\main_command_children_stdin.rs
-.\src\main_command_callees_impl.rs
-.\src\main_command_callers_impl.rs
-.\src\main_command_children_impl.rs
-.\src\main_command_files_impl.rs
-```
+## Implemented Solution: Path Normalization
 
-**Why they don't appear:**
-- Tree builder uses first separator (`.`) as canonical form
-- Tries to build tree rooted at `main.command`
-- But underscore files are named `main_command_*` not `main.command.*`
-- Tree builder can't fit them into the dot-based hierarchy
+### Result
 
-**Example:**
-- Pattern 1: `main.command` → finds `docs/main.command.tree.readme.md`
-  - Hierarchy: `main` / `command` / `tree` / `readme`
-- Pattern 2: `main_command` → finds `src/main_command_tree_impl.rs`
-  - Hierarchy: `main` / `command` / `tree` / `impl` (when using `_` separator)
-  - But filename is `main_command_tree_impl.rs` not `main.command.tree.impl.rs`
-
-When building tree with base `main.command` and separator `.`, the tree builder doesn't recognize `main_command_tree_impl.rs` as part of that hierarchy.
-
-## The Solution: Path Normalization
-
-### What Needs to Happen
-
-Before building the tree, normalize ALL file paths to use the canonical separator:
-
-```rust
-// Current (broken):
-let tree = HierarchyTree::from_paths_with_separator(base_pattern, files, separator);
-
-// Need (fixed):
-let normalized_files = normalize_paths_to_separator(files, separators, target_separator);
-let tree = HierarchyTree::from_paths_with_separator(base_pattern, &normalized_files, target_separator);
-```
+Tree output now shows files from all patterns.
 
 ### Normalization Algorithm
 
@@ -157,7 +126,7 @@ display_tree(&normalized_files, base_pattern, canonical_separator, ...);
 recur merge --pattern "main.command" --sep "." --pattern "main_command" --sep "_"
 ```
 
-**Expected output should include:**
+**Now includes:**
 ```
 main.command
 ├── callees
@@ -193,9 +162,9 @@ Should merge all three into unified view.
 
 ## Files Modified
 
-### During This Session
+### Completed
 - `src/main.rs` - Added Merge command to CLI
-- `src/main_command_merge_impl.rs` - Implementation (needs path normalization)
+- `src/main_command_merge_impl.rs` - Implementation (path normalization)
 - `docs/main.command.merge.phase2.plan.md` - Phase 2 plan
 - `docs/main.command.merge.phase2.status.md` - This file
 

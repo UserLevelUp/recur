@@ -16,6 +16,8 @@ pub fn execute(
     separators: Vec<char>,
     dir: PathBuf,
     max_depth: Option<usize>,
+    replace_default: Option<char>,
+    show_sep: bool,
     unicode: bool,
     show_count: bool,
     json: bool,
@@ -23,31 +25,21 @@ pub fn execute(
     // Step 1: Collect files from all pattern/separator pairs
     let mut all_files: Vec<PathBuf> = Vec::new();
     let mut seen: HashSet<PathBuf> = HashSet::new();
-    let mut pattern_counts: Vec<(String, usize)> = Vec::new();
+    let mut file_separators: std::collections::HashMap<PathBuf, char> =
+        std::collections::HashMap::new();
 
     for (pattern, separator) in patterns.iter().zip(separators.iter()) {
         let files = find_files_for_pattern(pattern, *separator, &dir, max_depth)?;
         let count = files.len();
-        pattern_counts.push((format!("{} [{}]", pattern, separator), count));
-
-        eprintln!("Pattern '{}' with separator '{}': {} files found", pattern, separator, count);
-        if count > 0 && count < 20 {
-            eprintln!("  Sample files:");
-            for (i, file) in files.iter().enumerate().take(5) {
-                eprintln!("    {}: {}", i+1, file.display());
-            }
-        }
-
+        let _ = count;
         for file in files {
             // Deduplicate: only add if not seen before
             if seen.insert(file.clone()) {
-                all_files.push(file);
+                all_files.push(file.clone());
+                file_separators.insert(file, *separator);
             }
         }
     }
-
-    eprintln!("Total unique files after merge: {}", all_files.len());
-    eprintln!("");
 
     // Step 2: Check if we found anything
     if all_files.is_empty() {
@@ -55,16 +47,37 @@ pub fn execute(
         return Ok(());
     }
 
-    // Step 3: Build and display unified tree
-    // Use first pattern as base name for display
-    let base_pattern = &patterns[0];
-    // Use first separator as canonical form
-    let canonical_separator = separators[0];
+    // Step 3: Normalize paths (if requested) and display unified tree
+    let tree_separator = replace_default.unwrap_or(separators[0]);
+    let base_pattern = normalize_pattern_for_separator(&patterns[0], tree_separator);
+    let show_markers = show_sep && separators.len() > 1;
+
+    let tree_files: Vec<PathBuf> = all_files
+        .iter()
+        .map(|path| {
+            let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
+            let mut display_path = if let Some(replace_sep) = replace_default {
+                normalize_path_separator(path, original_sep, replace_sep)
+            } else {
+                path.clone()
+            };
+
+            if show_markers {
+                if let Some(filename) = display_path.file_name() {
+                    let marked_filename =
+                        format!("{} [{}]", filename.to_string_lossy(), original_sep);
+                    display_path.set_file_name(marked_filename);
+                }
+            }
+
+            display_path
+        })
+        .collect();
 
     display_tree(
-        &all_files,
-        base_pattern,
-        canonical_separator,
+        &tree_files,
+        &base_pattern,
+        tree_separator,
         unicode,
         show_count,
         json,
@@ -115,6 +128,36 @@ fn normalize_pattern_for_separator(pattern: &str, target_separator: char) -> Str
     }
 
     normalized
+}
+
+/// Normalize a file path's separator to a different character
+///
+/// Replaces the hierarchy separator in the filename (not directory path)
+/// while preserving file extensions.
+fn normalize_path_separator(path: &PathBuf, from_sep: char, to_sep: char) -> PathBuf {
+    if from_sep == to_sep {
+        return path.clone();
+    }
+
+    if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
+        let (base, ext) = filename
+            .rsplit_once('.')
+            .map(|(b, e)| (b, Some(e)))
+            .unwrap_or((filename, None));
+
+        let normalized_base = base.replace(from_sep, &to_sep.to_string());
+        let normalized_filename = if let Some(e) = ext {
+            format!("{}.{}", normalized_base, e)
+        } else {
+            normalized_base
+        };
+
+        let mut normalized_path = path.clone();
+        normalized_path.set_file_name(normalized_filename);
+        normalized_path
+    } else {
+        path.clone()
+    }
 }
 
 /// Display merged tree
