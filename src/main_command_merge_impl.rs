@@ -23,9 +23,20 @@ pub fn execute(
     // Step 1: Collect files from all pattern/separator pairs
     let mut all_files: Vec<PathBuf> = Vec::new();
     let mut seen: HashSet<PathBuf> = HashSet::new();
+    let mut pattern_counts: Vec<(String, usize)> = Vec::new();
 
     for (pattern, separator) in patterns.iter().zip(separators.iter()) {
         let files = find_files_for_pattern(pattern, *separator, &dir, max_depth)?;
+        let count = files.len();
+        pattern_counts.push((format!("{} [{}]", pattern, separator), count));
+
+        eprintln!("Pattern '{}' with separator '{}': {} files found", pattern, separator, count);
+        if count > 0 && count < 20 {
+            eprintln!("  Sample files:");
+            for (i, file) in files.iter().enumerate().take(5) {
+                eprintln!("    {}: {}", i+1, file.display());
+            }
+        }
 
         for file in files {
             // Deduplicate: only add if not seen before
@@ -34,6 +45,9 @@ pub fn execute(
             }
         }
     }
+
+    eprintln!("Total unique files after merge: {}", all_files.len());
+    eprintln!("");
 
     // Step 2: Check if we found anything
     if all_files.is_empty() {
