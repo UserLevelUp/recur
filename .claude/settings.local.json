@@ -96,7 +96,13 @@
       "Bash(git push:*)",
       "Bash(git merge:*)",
       "Bash(recur --version:*)",
-      "Bash(cargo check:*)"
+      "Bash(cargo check:*)",
+      "Bash(recur merge:*)",
+      "Bash(bash -c \"{ recur tree main.command.tree -d docs/ --sep . --json; recur tree main_command_tree -d src/ --sep _ --json; }\")",
+      "Bash(bash -c \"{ recur tree main.command -d docs/ --sep . --json; recur tree main_command -d src/ --sep _ --json; }\")",
+      "Bash(bash -c \"{ recur tree main.command.tree -d docs/ --sep .; recur tree main_command_tree -d src/ --sep _; }\")",
+      "Bash(bash -c \"{ recur tree main.command -d docs/ --sep .; recur tree main_command -d src/ --sep _; }\")",
+      "Bash(}\" |   recur merge --stdin --base main --sep . --sep _ --show-sep\n\nOutput shows provenance: readme.md [.] and impl.rs [_]\n\n**Tests:**\n- 9 cargo tests passing\n- Julia tests written \\(infrastructure has setup issues\\)\n- Manually tested all three merge modes\n- Auto-JSON detection verified\n\n**Files Modified:**\n- src/main.rs - Added --stdin flag and validation\n- src/main_command_merge_impl.rs - Stdin mode implementation\n- src/main_command_tree_impl.rs - Auto-JSON detection\n- src/main_command_files_impl.rs - Auto-JSON detection  \n- julia-tests/runtests.merge.jl - Stdin mode tests\n- docs/main.command.merge.phase5.complete.md - Documentation\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

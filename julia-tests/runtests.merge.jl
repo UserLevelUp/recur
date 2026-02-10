@@ -31,9 +31,9 @@ setup_test_environment()
         success, output, _ = run_recur([
             "merge",
             docs_json,
+            src_json,
             "--sep",
             ".",
-            src_json,
             "--sep",
             "_",
             "--base",
