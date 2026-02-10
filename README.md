@@ -1,6 +1,6 @@
 <div align="center">
   <h1>recur</h1>
-  <div class="version">v0.1.14</div>
+  <div class="version">v0.1.15</div>
   <p>
     <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
     <a href="https://www.rust-lang.org/"><img alt="Rust 1.70+" src="https://img.shields.io/badge/rust-1.70%2B-blue.svg"></a>
@@ -185,6 +185,21 @@ recur tree "ServiceName" --json              # JSON output
 recur tree "main" --sep "." --sep "_"                      # Merge docs + src
 recur tree "main" --sep "." --sep "_" --show-sep           # With domain markers
 recur tree "api" --sep "." --sep "_" --sep-replace-default "."  # Normalized
+```
+
+### `recur merge` — merge results across separators
+```bash
+# Merge docs (.) and source (_) into one view
+recur merge --pattern "main.command" --sep "." --pattern "main_command" --sep "_"
+
+# Show provenance markers in the merged tree
+recur merge --pattern "api.user" --sep "." --pattern "api_user" --sep "_" --show-sep
+
+# Normalize output to dots for display
+recur merge --pattern "main.command.tree" --sep "." --pattern "main_command_tree" --sep "_" --sep-replace-default "."
+
+# File mode: merge cached JSON outputs
+recur merge main.command.docs.json --sep "." main_command_src.json --sep "_" --base "main.command" --show-sep
 ```
 
 ### `recur related` — find sibling files

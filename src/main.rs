@@ -416,12 +416,20 @@ enum Commands {
     ///   recur merge --pattern "api.user" --sep "." --pattern "api_user" --sep "_" --pattern "api-user" --sep "-"
     Merge {
         /// Patterns to merge (repeatable, paired with --sep)
-        #[arg(long = "pattern", value_name = "PATTERN", required = true)]
+        #[arg(long = "pattern", value_name = "PATTERN")]
         patterns: Vec<String>,
 
         /// Separators for each pattern (repeatable, paired with --pattern)
-        #[arg(long = "sep", value_name = "CHAR", required = true)]
+        #[arg(long = "sep", value_name = "CHAR")]
         sep: Vec<String>,
+
+        /// JSON input files to merge (file mode)
+        #[arg(value_name = "FILE")]
+        inputs: Vec<PathBuf>,
+
+        /// Base name for tree output (required in file mode)
+        #[arg(long = "base", value_name = "BASE")]
+        base: Option<String>,
 
         /// Root directory to search
         #[arg(short = 'd', long, default_value = ".")]
@@ -688,6 +696,8 @@ fn main() {
         Commands::Merge {
             patterns,
             sep,
+            inputs,
+            base,
             dir,
             max_depth,
             ascii,
@@ -698,17 +708,41 @@ fn main() {
                 .filter_map(|s| s.chars().next())
                 .collect();
 
-            // Validate: number of patterns must match number of separators
-            if patterns.len() != separators.len() {
-                eprintln!("Error: Number of --pattern and --sep arguments must match");
-                eprintln!("  Patterns provided: {}", patterns.len());
-                eprintln!("  Separators provided: {}", separators.len());
-                std::process::exit(2);
+            let use_file_inputs = !inputs.is_empty();
+
+            if use_file_inputs {
+                if !patterns.is_empty() {
+                    eprintln!("Error: Cannot mix --pattern with file inputs");
+                    std::process::exit(2);
+                }
+                if inputs.len() != separators.len() {
+                    eprintln!("Error: Number of FILE inputs must match number of --sep arguments");
+                    eprintln!("  Files provided: {}", inputs.len());
+                    eprintln!("  Separators provided: {}", separators.len());
+                    std::process::exit(2);
+                }
+                if base.is_none() {
+                    eprintln!("Error: --base is required when using file inputs");
+                    std::process::exit(2);
+                }
+            } else {
+                if patterns.is_empty() {
+                    eprintln!("Error: At least one --pattern is required without file inputs");
+                    std::process::exit(2);
+                }
+                if patterns.len() != separators.len() {
+                    eprintln!("Error: Number of --pattern and --sep arguments must match");
+                    eprintln!("  Patterns provided: {}", patterns.len());
+                    eprintln!("  Separators provided: {}", separators.len());
+                    std::process::exit(2);
+                }
             }
 
             main_command_merge_impl::execute(
                 patterns,
                 separators,
+                inputs,
+                base,
                 dir,
                 max_depth,
                 replace_default,

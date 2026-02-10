@@ -3,17 +3,21 @@
 ///! Merges hierarchical results from multiple pattern/separator pairs into unified view.
 ///! Follows Unix philosophy: explicit composition over automatic conversion.
 
-use anyhow::Result;
+use anyhow::{bail, Context, Result};
 use recur::parser::HierarchyPattern;
 use recur::search::{FileSearcher, SearchOptions};
 use recur::tree::HierarchyTree;
 use std::collections::HashSet;
+use std::fs;
 use std::path::PathBuf;
+use serde_json::Value;
 
 /// Execute merge command
 pub fn execute(
     patterns: Vec<String>,
     separators: Vec<char>,
+    inputs: Vec<PathBuf>,
+    base: Option<String>,
     dir: PathBuf,
     max_depth: Option<usize>,
     replace_default: Option<char>,
@@ -22,6 +26,19 @@ pub fn execute(
     show_count: bool,
     json: bool,
 ) -> Result<()> {
+    if !inputs.is_empty() {
+        return execute_file_mode(
+            inputs,
+            separators,
+            base,
+            replace_default,
+            show_sep,
+            unicode,
+            show_count,
+            json,
+        );
+    }
+
     // Step 1: Collect files from all pattern/separator pairs
     let mut all_files: Vec<PathBuf> = Vec::new();
     let mut seen: HashSet<PathBuf> = HashSet::new();
@@ -56,11 +73,7 @@ pub fn execute(
         .iter()
         .map(|path| {
             let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
-            let mut display_path = if let Some(replace_sep) = replace_default {
-                normalize_path_separator(path, original_sep, replace_sep)
-            } else {
-                path.clone()
-            };
+            let mut display_path = normalize_path_separator(path, original_sep, tree_separator);
 
             if show_markers {
                 if let Some(filename) = display_path.file_name() {
@@ -84,6 +97,137 @@ pub fn execute(
     )?;
 
     Ok(())
+}
+
+fn execute_file_mode(
+    inputs: Vec<PathBuf>,
+    separators: Vec<char>,
+    base: Option<String>,
+    replace_default: Option<char>,
+    show_sep: bool,
+    unicode: bool,
+    show_count: bool,
+    json: bool,
+) -> Result<()> {
+    let base = base.context("--base is required when using file inputs")?;
+
+    let mut all_files: Vec<PathBuf> = Vec::new();
+    let mut seen: HashSet<PathBuf> = HashSet::new();
+    let mut file_separators: std::collections::HashMap<PathBuf, char> =
+        std::collections::HashMap::new();
+
+    for (input, separator) in inputs.iter().zip(separators.iter()) {
+        let files = load_files_from_json_file(input)
+            .with_context(|| format!("Failed to read JSON input: {}", input.display()))?;
+
+        for file in files {
+            if seen.insert(file.clone()) {
+                all_files.push(file.clone());
+                file_separators.insert(file, *separator);
+            }
+        }
+    }
+
+    if all_files.is_empty() {
+        println!("No files found");
+        return Ok(());
+    }
+
+    let tree_separator = replace_default.unwrap_or(separators[0]);
+    let base_pattern = normalize_pattern_for_separator(&base, tree_separator);
+    let show_markers = show_sep && separators.len() > 1;
+
+    let tree_files: Vec<PathBuf> = all_files
+        .iter()
+        .map(|path| {
+            let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
+            let mut display_path = normalize_path_separator(path, original_sep, tree_separator);
+
+            if show_markers {
+                if let Some(filename) = display_path.file_name() {
+                    let marked_filename =
+                        format!("{} [{}]", filename.to_string_lossy(), original_sep);
+                    display_path.set_file_name(marked_filename);
+                }
+            }
+
+            display_path
+        })
+        .collect();
+
+    display_tree(
+        &tree_files,
+        &base_pattern,
+        tree_separator,
+        unicode,
+        show_count,
+        json,
+    )?;
+
+    Ok(())
+}
+
+fn load_files_from_json_file(path: &PathBuf) -> Result<Vec<PathBuf>> {
+    let content = fs::read_to_string(path)
+        .with_context(|| format!("Unable to read file: {}", path.display()))?;
+    let value: Value = serde_json::from_str(&content)
+        .with_context(|| format!("Invalid JSON in: {}", path.display()))?;
+    extract_paths_from_json(&value)
+}
+
+fn extract_paths_from_json(value: &Value) -> Result<Vec<PathBuf>> {
+    match value {
+        Value::Array(items) => extract_paths_from_array(items),
+        Value::Object(map) => {
+            if let Some(files) = map.get("files") {
+                return extract_paths_from_json(files);
+            }
+
+            let mut out: Vec<PathBuf> = Vec::new();
+            collect_tree_paths(value, &mut out);
+            if out.is_empty() {
+                bail!("No file paths found in JSON object");
+            }
+            Ok(out)
+        }
+        _ => bail!("Unsupported JSON format for merge inputs"),
+    }
+}
+
+fn extract_paths_from_array(items: &[Value]) -> Result<Vec<PathBuf>> {
+    let mut out: Vec<PathBuf> = Vec::new();
+
+    for item in items {
+        match item {
+            Value::String(path) => out.push(PathBuf::from(path)),
+            Value::Object(map) => {
+                if let Some(Value::String(path)) = map.get("path") {
+                    out.push(PathBuf::from(path));
+                }
+            }
+            _ => {}
+        }
+    }
+
+    if out.is_empty() {
+        bail!("No file paths found in JSON array");
+    }
+
+    Ok(out)
+}
+
+fn collect_tree_paths(node: &Value, out: &mut Vec<PathBuf>) {
+    if let Value::Object(map) = node {
+        if let Some(Value::String(path)) = map.get("path") {
+            out.push(PathBuf::from(path));
+        }
+
+        if let Some(Value::Array(children)) = map.get("children") {
+            for child in children {
+                collect_tree_paths(child, out);
+            }
+        }
+    }
 }
 
 /// Find files matching a specific pattern with specific separator

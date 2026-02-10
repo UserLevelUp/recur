@@ -44,7 +44,7 @@ recur merge --stdin --show-sep
 - [x] Design CLI interface ✅
 - [x] Plan merging algorithm ✅
 
-### Phase 2: Basic Merge (Pattern Mode) - IN PROGRESS
+### Phase 2: Basic Merge (Pattern Mode) ✅
 - [x] Add `merge` subcommand to CLI ✅
 - [x] Implement pattern/separator pairing ✅
 - [x] File discovery working (verified with counts) ✅
@@ -52,10 +52,10 @@ recur merge --stdin --show-sep
 - [x] **Path normalization** (current blocker)
 - [x] Test shows all files in unified tree
 
-### Phase 3: Provenance Tracking (--show-sep)
+### Phase 3: Provenance Tracking (--show-sep) ✅
 - [x] Track which separator found each file (HashMap)
 - [x] Implement `--show-sep` markers
-- [ ] Test with 3+ patterns
+- [ ] Test with 3+ patterns (known issue; see main.command.merge.bug.md)
 - [x] Remove debug output (eprintln!)
 
 ### Phase 4: File Mode (Pipe to Files)
@@ -101,7 +101,7 @@ recur merge <(recur tree X) <(recur tree Y)
 All modes produce identical output. No breaking changes.
 
 ## Current Status
-**Phase 1: Planning** 🎯
+**Phase 4: File Mode (next)**
 
 Branch: `merge-pipes`
 

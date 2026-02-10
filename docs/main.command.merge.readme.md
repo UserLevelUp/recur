@@ -49,6 +49,17 @@ recur files "main_command_tree_**" --sep "_" --json | \
 recur merge --stdin --show-sep
 ```
 
+### File Mode (Phase 4)
+
+```bash
+# Merge cached JSON outputs from disk
+recur merge \
+  main.command.tree.json --sep "." \
+  main_command_tree.json --sep "_" \
+  --base "main.command.tree" \
+  --show-sep
+```
+
 ### Multi-Language Merge
 
 ```bash
@@ -86,9 +97,11 @@ recur merge [OPTIONS]
 OPTIONS:
     --pattern <PATTERN>        Pattern to search (can be repeated)
     --sep <CHAR>               Separator for corresponding pattern (can be repeated)
+  --base <BASE>               Base name for tree output (file mode)
+  <FILE>...                   JSON input files (file mode)
     --show-sep                 Show separator markers [.] [_] etc.
     --sep-replace-default <CHAR>  Normalize output to specific separator
-    --stdin                    Read JSON input from stdin (pipe mode)
+  --stdin                    Read JSON input from stdin (pipe mode, Phase 5)
     --json                     Output as JSON
     --format <tree|files>      Output format (default: tree)
     --ascii                    Use ASCII characters instead of Unicode
@@ -114,6 +127,22 @@ Pipe mode accepts JSON from other recur commands:
 # Each command outputs JSON
 recur files "api.user.**" --sep "." --json
 recur files "api_user_**" --sep "_" --json
+```
+
+### File Mode Input Format
+
+File inputs accept any of the following JSON formats:
+
+```json
+["path/one.ext", "path/two.ext"]
+```
+
+```json
+{ "files": ["path/one.ext", "path/two.ext"] }
+```
+
+```json
+{ "name": "root", "children": [{ "path": "path/one.ext" }] }
 ```
 
 ### Merging Strategy

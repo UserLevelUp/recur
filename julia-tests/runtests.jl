@@ -48,6 +48,7 @@ try
         include("main.command.children.test.jl")
         include("main.command.id.test.jl")
         include("main.command.stats.test.jl")
+        include("main.command.merge.test.jl")
         include("main.command.callers.test.jl")
         include("main.command.callees.test.jl")
         include("main.command.trace.test.jl")
