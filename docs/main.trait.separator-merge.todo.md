@@ -33,12 +33,12 @@ recur files "main.command.**" --sep "." --sep "_" --sep-replace-default "."
 ## Implementation Phases
 - [x] Phase 1: Documentation + failing tests + placeholder code
 - [x] Phase 2: Implement trait and basic multi-separator support ✅ COMPLETE!
-- [ ] Phase 3: Implement --sep-replace-default normalization logic
-- [ ] Phase 4: Implement --show-sep display logic
+- [x] Phase 3: Implement --sep-replace-default normalization logic ✅ COMPLETE!
+- [x] Phase 4: Implement --show-sep display logic ✅ COMPLETE!
 - [ ] Phase 5: Enhanced help examples showing multi-separator usage patterns
 
 ## Current Status
-**Phase 2 COMPLETE** - Multi-separator merging is WORKING!
+**Phase 4 COMPLETE** - Show-sep markers working! Gap analysis enabled!
 
 Core functionality delivered:
 - Multiple `--sep` flags accepted
