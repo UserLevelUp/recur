@@ -21,6 +21,7 @@ mod main_command_find_impl;
 mod main_command_callers_impl;
 mod main_command_callees_impl;
 mod main_command_trace_impl;
+mod main_command_merge_impl;
 
 #[derive(Parser)]
 #[command(name = "recur")]
@@ -407,6 +408,37 @@ enum Commands {
         #[arg(long)]
         stdin: bool,
     },
+
+    /// Merge hierarchical results from multiple naming conventions
+    ///
+    /// Examples:
+    ///   recur merge --pattern "main.command.tree" --sep "." --pattern "main_command_tree" --sep "_"
+    ///   recur merge --pattern "api.user" --sep "." --pattern "api_user" --sep "_" --pattern "api-user" --sep "-"
+    Merge {
+        /// Patterns to merge (repeatable, paired with --sep)
+        #[arg(long = "pattern", value_name = "PATTERN", required = true)]
+        patterns: Vec<String>,
+
+        /// Separators for each pattern (repeatable, paired with --pattern)
+        #[arg(long = "sep", value_name = "CHAR", required = true)]
+        sep: Vec<String>,
+
+        /// Root directory to search
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// Maximum depth to search recursively
+        #[arg(long)]
+        max_depth: Option<usize>,
+
+        /// Use ASCII characters instead of Unicode
+        #[arg(long = "ascii")]
+        ascii: bool,
+
+        /// Show file counts at each level
+        #[arg(long)]
+        count: bool,
+    },
 }
 
 fn main() {
@@ -653,6 +685,37 @@ fn main() {
             cli.json,
             cli.color,
         ),
+        Commands::Merge {
+            patterns,
+            sep,
+            dir,
+            max_depth,
+            ascii,
+            count,
+        } => {
+            // Parse separators from strings to chars
+            let separators: Vec<char> = sep.iter()
+                .filter_map(|s| s.chars().next())
+                .collect();
+
+            // Validate: number of patterns must match number of separators
+            if patterns.len() != separators.len() {
+                eprintln!("Error: Number of --pattern and --sep arguments must match");
+                eprintln!("  Patterns provided: {}", patterns.len());
+                eprintln!("  Separators provided: {}", separators.len());
+                std::process::exit(2);
+            }
+
+            main_command_merge_impl::execute(
+                patterns,
+                separators,
+                dir,
+                max_depth,
+                !ascii,
+                count,
+                cli.json,
+            )
+        }
     };
 
     if let Err(e) = result {
