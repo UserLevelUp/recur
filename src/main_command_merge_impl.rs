@@ -9,6 +9,7 @@ use recur::search::{FileSearcher, SearchOptions};
 use recur::tree::HierarchyTree;
 use std::collections::HashSet;
 use std::fs;
+use std::io::{stdin, Read};
 use std::path::PathBuf;
 use serde_json::Value;
 
@@ -25,7 +26,20 @@ pub fn execute(
     unicode: bool,
     show_count: bool,
     json: bool,
+    use_stdin: bool,
 ) -> Result<()> {
+    if use_stdin {
+        return execute_stdin_mode(
+            separators,
+            base,
+            replace_default,
+            show_sep,
+            unicode,
+            show_count,
+            json,
+        );
+    }
+
     if !inputs.is_empty() {
         return execute_file_mode(
             inputs,
@@ -141,6 +155,101 @@ fn execute_file_mode(
         .iter()
         .map(|path| {
             let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
+            let mut display_path = normalize_path_separator(path, original_sep, tree_separator);
+
+            if show_markers {
+                if let Some(filename) = display_path.file_name() {
+                    let marked_filename =
+                        format!("{} [{}]", filename.to_string_lossy(), original_sep);
+                    display_path.set_file_name(marked_filename);
+                }
+            }
+
+            display_path
+        })
+        .collect();
+
+    display_tree(
+        &tree_files,
+        &base_pattern,
+        tree_separator,
+        unicode,
+        show_count,
+        json,
+    )?;
+
+    Ok(())
+}
+
+fn execute_stdin_mode(
+    separators: Vec<char>,
+    base: Option<String>,
+    replace_default: Option<char>,
+    show_sep: bool,
+    unicode: bool,
+    show_count: bool,
+    json: bool,
+) -> Result<()> {
+    let base = base.context("--base is required when using --stdin")?;
+
+    let mut all_files: Vec<PathBuf> = Vec::new();
+    let mut seen: HashSet<PathBuf> = HashSet::new();
+    let mut file_separators: std::collections::HashMap<PathBuf, char> =
+        std::collections::HashMap::new();
+
+    // Read all stdin into a string
+    let mut stdin_content = String::new();
+    stdin()
+        .read_to_string(&mut stdin_content)
+        .context("Failed to read from stdin")?;
+
+    // Parse multiple JSON objects from stdin stream
+    let stream = serde_json::Deserializer::from_str(&stdin_content).into_iter::<Value>();
+    let mut source_idx = 0;
+
+    for result in stream {
+        let value = result.with_context(|| {
+            format!("Failed to parse JSON object {} from stdin", source_idx + 1)
+        })?;
+
+        // Determine separator for this source
+        let separator = separators
+            .get(source_idx)
+            .copied()
+            .unwrap_or(separators.first().copied().unwrap_or('.'));
+
+        // Extract file paths from this JSON object
+        let files = extract_paths_from_json(&value).with_context(|| {
+            format!(
+                "Failed to extract paths from JSON object {}",
+                source_idx + 1
+            )
+        })?;
+
+        // Add files with deduplication and provenance tracking
+        for file in files {
+            if seen.insert(file.clone()) {
+                all_files.push(file.clone());
+                file_separators.insert(file, separator);
+            }
+        }
+
+        source_idx += 1;
+    }
+
+    if all_files.is_empty() {
+        println!("No files found in stdin");
+        return Ok(());
+    }
+
+    let tree_separator = replace_default.unwrap_or(separators.first().copied().unwrap_or('.'));
+    let base_pattern = normalize_pattern_for_separator(&base, tree_separator);
+    let show_markers = show_sep && separators.len() > 1;
+
+    let tree_files: Vec<PathBuf> = all_files
+        .iter()
+        .map(|path| {
+            let original_sep = file_separators.get(path).copied().unwrap_or(separators.first().copied().unwrap_or('.'));
             let mut display_path = normalize_path_separator(path, original_sep, tree_separator);
 
             if show_markers {

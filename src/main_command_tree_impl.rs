@@ -16,8 +16,13 @@ pub fn execute(
     unicode: bool,
     stdin: bool,
     separator: char,
-    json: bool,
+    mut json: bool,
 ) -> anyhow::Result<()> {
+    // Auto-enable JSON when output is piped (not going to terminal)
+    if !json && !atty::is(atty::Stream::Stdout) {
+        json = true;
+    }
+
     // For now, delegate to single-separator implementation
     execute_single_separator(
         base,
@@ -42,8 +47,13 @@ pub fn execute_with_separators(
     separators: Vec<char>,
     replace_default: Option<char>,
     show_sep: bool,
-    json: bool,
+    mut json: bool,
 ) -> anyhow::Result<()> {
+    // Auto-enable JSON when output is piped (not going to terminal)
+    if !json && !atty::is(atty::Stream::Stdout) {
+        json = true;
+    }
+
     // If only one separator, use simple path
     if separators.len() == 1 && replace_default.is_none() && !show_sep {
         return execute_single_separator(

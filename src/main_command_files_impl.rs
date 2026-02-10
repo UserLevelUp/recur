@@ -19,9 +19,14 @@ pub fn execute(
     count_only: bool,
     stdin: bool,
     separator: char,
-    json: bool,
+    mut json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
+    // Auto-enable JSON when output is piped (not going to terminal)
+    if !json && !atty::is(atty::Stream::Stdout) {
+        json = true;
+    }
+
     // For now, delegate to single-separator implementation
     execute_single_separator(
         pattern,
@@ -51,9 +56,13 @@ pub fn execute_with_separators(
     separators: Vec<char>,
     replace_default: Option<char>,
     show_sep: bool,
-    json: bool,
+    mut json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
+    // Auto-enable JSON when output is piped (not going to terminal)
+    if !json && !atty::is(atty::Stream::Stdout) {
+        json = true;
+    }
     if let Some(max) = max_depth {
         if min_depth > max {
             anyhow::bail!(

@@ -414,6 +414,7 @@ enum Commands {
     /// Examples:
     ///   recur merge --pattern "main.command.tree" --sep "." --pattern "main_command_tree" --sep "_"
     ///   recur merge --pattern "api.user" --sep "." --pattern "api_user" --sep "_" --pattern "api-user" --sep "-"
+    ///   recur tree "main" --sep "." --json | recur merge --stdin --base "main"
     Merge {
         /// Patterns to merge (repeatable, paired with --sep)
         #[arg(long = "pattern", value_name = "PATTERN")]
@@ -427,7 +428,7 @@ enum Commands {
         #[arg(value_name = "FILE")]
         inputs: Vec<PathBuf>,
 
-        /// Base name for tree output (required in file mode)
+        /// Base name for tree output (required in file mode and stdin mode)
         #[arg(long = "base", value_name = "BASE")]
         base: Option<String>,
 
@@ -446,6 +447,10 @@ enum Commands {
         /// Show file counts at each level
         #[arg(long)]
         count: bool,
+
+        /// Read JSON from stdin (pipe mode)
+        #[arg(long)]
+        stdin: bool,
     },
 }
 
@@ -702,6 +707,7 @@ fn main() {
             max_depth,
             ascii,
             count,
+            stdin,
         } => {
             // Parse separators from strings to chars
             let separators: Vec<char> = sep.iter()
@@ -709,6 +715,21 @@ fn main() {
                 .collect();
 
             let use_file_inputs = !inputs.is_empty();
+
+            if stdin {
+                if !patterns.is_empty() {
+                    eprintln!("Error: Cannot mix --pattern with --stdin");
+                    std::process::exit(2);
+                }
+                if !inputs.is_empty() {
+                    eprintln!("Error: Cannot mix file inputs with --stdin");
+                    std::process::exit(2);
+                }
+                if base.is_none() {
+                    eprintln!("Error: --base is required when using --stdin");
+                    std::process::exit(2);
+                }
+            }
 
             if use_file_inputs {
                 if !patterns.is_empty() {
@@ -725,9 +746,10 @@ fn main() {
                     eprintln!("Error: --base is required when using file inputs");
                     std::process::exit(2);
                 }
-            } else {
+            } else if !stdin {
+                // Pattern mode validation (not file mode, not stdin mode)
                 if patterns.is_empty() {
-                    eprintln!("Error: At least one --pattern is required without file inputs");
+                    eprintln!("Error: At least one --pattern is required in pattern mode");
                     std::process::exit(2);
                 }
                 if patterns.len() != separators.len() {
@@ -750,6 +772,7 @@ fn main() {
                 !ascii,
                 count,
                 cli.json,
+                stdin,
             )
         }
     };
