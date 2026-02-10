@@ -1,6 +1,6 @@
 <div align="center">
   <h1>recur</h1>
-  <div class="version">v0.1.15</div>
+  <div class="version">v0.1.16</div>
   <p>
     <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
     <a href="https://www.rust-lang.org/"><img alt="Rust 1.70+" src="https://img.shields.io/badge/rust-1.70%2B-blue.svg"></a>
@@ -109,6 +109,7 @@ recur stats "ServiceName" -l 1
 ### Core capabilities
 - **Hierarchy-aware pattern matching** with `*` and `**` wildcards
 - **Multi-separator merge** — unify results across naming conventions (`.` and `_`)
+- **Unix pipe composability** — stdin mode for pure pipe workflows (auto-JSON detection)
 - **Scoped text search** within a hierarchy (grep-like, but structure-aware)
 - **Context lines** via `-C` (show surrounding lines like `grep -C`)
 - **Tree visualization** using Unicode box-drawing characters
@@ -189,7 +190,7 @@ recur tree "api" --sep "." --sep "_" --sep-replace-default "."  # Normalized
 
 ### `recur merge` — merge results across separators
 ```bash
-# Merge docs (.) and source (_) into one view
+# Pattern mode: Merge docs (.) and source (_) into one view
 recur merge --pattern "main.command" --sep "." --pattern "main_command" --sep "_"
 
 # Show provenance markers in the merged tree
@@ -198,15 +199,23 @@ recur merge --pattern "api.user" --sep "." --pattern "api_user" --sep "_" --show
 # Normalize output to dots for display
 recur merge --pattern "main.command.tree" --sep "." --pattern "main_command_tree" --sep "_" --sep-replace-default "."
 
-# Phase 4 file mode: merge cached JSON outputs
+# File mode: merge cached JSON outputs (useful for repeated analysis)
 recur tree "main.command" --sep "." --json > main.command.json
 recur tree "main_command" --sep "_" --json > main_command.json
 recur merge main.command.json --sep "." main_command.json --sep "_" --base "main.command" --show-sep
 
-# File mode with files JSON
-recur files "main.command.**" --sep "." --json > main.command.files.json
-recur files "main_command_**" --sep "_" --json > main_command.files.json
-recur merge main.command.files.json --sep "." main_command.files.json --sep "_" --base "main.command" --show-sep
+# Stdin mode: Pure Unix pipe composition (no --json flags needed!)
+bash -c "{ recur tree main.command --sep .; recur tree main_command --sep _; }" | \
+  recur merge --stdin --base "main.command" --sep . --sep _ --show-sep
+
+# PowerShell stdin mode
+@(
+  (recur tree main.command --sep . | Out-String),
+  (recur tree main_command --sep _ | Out-String)
+) -join "`n" | recur merge --stdin --base "main.command" --sep . --sep _ --show-sep
+
+# Single source via stdin (simpler case)
+recur tree main --sep . | recur merge --stdin --base "main" --sep .
 ```
 
 ### `recur related` — find sibling files
