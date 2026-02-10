@@ -214,7 +214,7 @@ recur files "**.current" -d docs/
 recur files "**.todo" -d docs/
 
 # What's the overall status?
-recur tree "main.improvement" -d docs/
+recur.exe tree main --sep "." --sep "_" --show-sep
 
 # What's completed?
 recur files "**.complete" -d docs/
