@@ -117,13 +117,31 @@ pub fn execute_with_separators(
         all_files.clone()
     };
 
-    // TODO: Apply show_sep to show separator markers
+    // Apply separator markers if requested (only for multi-separator queries)
+    let show_markers = show_sep && separators.len() > 1;
 
     if count_only {
         println!("{} files", display_files.len());
     } else if json {
         let output = JsonFormatter::format_file_list(&display_files);
         println!("{}", output);
+    } else if show_markers {
+        // Show separator markers: filename [sep]
+        for path in &display_files {
+            // Get original separator for this file
+            let original_path = if replace_default.is_some() {
+                // Find original path before normalization
+                all_files.iter().find(|p| {
+                    p.file_name() == path.file_name() ||
+                    normalize_path_separator(p, file_separators.get(&**p).copied().unwrap_or(separators[0]), replace_default.unwrap()) == *path
+                }).unwrap_or(path)
+            } else {
+                path
+            };
+
+            let sep = file_separators.get(&**original_path).copied().unwrap_or(separators[0]);
+            println!("{} [{}]", path.display(), sep);
+        }
     } else {
         let mut formatter = TerminalFormatter::new(color);
         formatter.print_file_list(&display_files);

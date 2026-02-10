@@ -90,9 +90,43 @@ pub fn execute_with_separators(
         all_files.clone()
     };
 
+    // Apply separator markers if requested (only for multi-separator queries)
+    let show_markers = show_sep && separators.len() > 1;
+    let tree_files: Vec<PathBuf> = if show_markers {
+        display_files
+            .iter()
+            .map(|path| {
+                // Get original separator for this file
+                let original_path = if replace_default.is_some() {
+                    // Find original path before normalization
+                    all_files.iter().find(|p| {
+                        p.file_name() == path.file_name() ||
+                        normalize_path_separator(p, file_separators.get(&**p).copied().unwrap_or(separators[0]), replace_default.unwrap()) == *path
+                    }).unwrap_or(path)
+                } else {
+                    path
+                };
+
+                let sep = file_separators.get(&**original_path).copied().unwrap_or(separators[0]);
+
+                // Append marker to filename
+                if let Some(filename) = path.file_name() {
+                    let marked_filename = format!("{} [{}]", filename.to_string_lossy(), sep);
+                    let mut marked_path = path.clone();
+                    marked_path.set_file_name(marked_filename);
+                    marked_path
+                } else {
+                    path.clone()
+                }
+            })
+            .collect()
+    } else {
+        display_files.clone()
+    };
+
     // Build tree using first separator as default (or replace_default if specified)
     let tree_separator = replace_default.unwrap_or(separators[0]);
-    let tree = HierarchyTree::from_paths_with_separator(base, &display_files, tree_separator);
+    let tree = HierarchyTree::from_paths_with_separator(base, &tree_files, tree_separator);
 
     if json {
         println!("{}", tree.to_json());
@@ -107,8 +141,6 @@ pub fn execute_with_separators(
             );
         }
     }
-
-    // TODO: Implement show_sep to display separator markers
 
     Ok(())
 }
