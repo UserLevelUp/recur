@@ -77,9 +77,22 @@ pub fn execute_with_separators(
         process::exit(1);
     }
 
+    // Apply normalization if requested
+    let display_files: Vec<PathBuf> = if let Some(replace_sep) = replace_default {
+        all_files
+            .iter()
+            .map(|path| {
+                let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
+                normalize_path_separator(path, original_sep, replace_sep)
+            })
+            .collect()
+    } else {
+        all_files.clone()
+    };
+
     // Build tree using first separator as default (or replace_default if specified)
     let tree_separator = replace_default.unwrap_or(separators[0]);
-    let tree = HierarchyTree::from_paths_with_separator(base, &all_files, tree_separator);
+    let tree = HierarchyTree::from_paths_with_separator(base, &display_files, tree_separator);
 
     if json {
         println!("{}", tree.to_json());
@@ -226,4 +239,44 @@ fn read_resolved_paths_from_stdin(root: &Path) -> anyhow::Result<Vec<PathBuf>> {
     }
 
     Ok(resolved)
+}
+
+/// Normalize a file path's separator to a different character
+///
+/// Replaces the hierarchy separator in the filename (not directory path)
+/// while preserving file extensions.
+///
+/// Example:
+///   main_command_files_impl.rs -> main.command.files.impl.rs
+///   (when normalizing '_' to '.')
+fn normalize_path_separator(path: &PathBuf, from_sep: char, to_sep: char) -> PathBuf {
+    // If separators are the same, no normalization needed
+    if from_sep == to_sep {
+        return path.clone();
+    }
+
+    if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
+        // Split into base name and extension
+        let (base, ext) = filename
+            .rsplit_once('.')
+            .map(|(b, e)| (b, Some(e)))
+            .unwrap_or((filename, None));
+
+        // Replace separator in base name
+        let normalized_base = base.replace(from_sep, &to_sep.to_string());
+
+        // Reconstruct filename with extension
+        let normalized_filename = if let Some(e) = ext {
+            format!("{}.{}", normalized_base, e)
+        } else {
+            normalized_base
+        };
+
+        // Reconstruct path with normalized filename
+        let mut normalized_path = path.clone();
+        normalized_path.set_file_name(normalized_filename);
+        normalized_path
+    } else {
+        path.clone()
+    }
 }

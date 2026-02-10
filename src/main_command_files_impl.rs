@@ -104,17 +104,29 @@ pub fn execute_with_separators(
         }
     }
 
-    // TODO: Apply replace_default to normalize paths
+    // Apply normalization if requested
+    let display_files: Vec<PathBuf> = if let Some(replace_sep) = replace_default {
+        all_files
+            .iter()
+            .map(|path| {
+                let original_sep = file_separators.get(path).copied().unwrap_or(separators[0]);
+                normalize_path_separator(path, original_sep, replace_sep)
+            })
+            .collect()
+    } else {
+        all_files.clone()
+    };
+
     // TODO: Apply show_sep to show separator markers
 
     if count_only {
-        println!("{} files", all_files.len());
+        println!("{} files", display_files.len());
     } else if json {
-        let output = JsonFormatter::format_file_list(&all_files);
+        let output = JsonFormatter::format_file_list(&display_files);
         println!("{}", output);
     } else {
         let mut formatter = TerminalFormatter::new(color);
-        formatter.print_file_list(&all_files);
+        formatter.print_file_list(&display_files);
     }
 
     if all_files.is_empty() {
@@ -253,6 +265,46 @@ fn filter_by_min_depth(
             }
         })
         .collect()
+}
+
+/// Normalize a file path's separator to a different character
+///
+/// Replaces the hierarchy separator in the filename (not directory path)
+/// while preserving file extensions.
+///
+/// Example:
+///   main_command_files_impl.rs -> main.command.files.impl.rs
+///   (when normalizing '_' to '.')
+fn normalize_path_separator(path: &PathBuf, from_sep: char, to_sep: char) -> PathBuf {
+    // If separators are the same, no normalization needed
+    if from_sep == to_sep {
+        return path.clone();
+    }
+
+    if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
+        // Split into base name and extension
+        let (base, ext) = filename
+            .rsplit_once('.')
+            .map(|(b, e)| (b, Some(e)))
+            .unwrap_or((filename, None));
+
+        // Replace separator in base name
+        let normalized_base = base.replace(from_sep, &to_sep.to_string());
+
+        // Reconstruct filename with extension
+        let normalized_filename = if let Some(e) = ext {
+            format!("{}.{}", normalized_base, e)
+        } else {
+            normalized_base
+        };
+
+        // Reconstruct path with normalized filename
+        let mut normalized_path = path.clone();
+        normalized_path.set_file_name(normalized_filename);
+        normalized_path
+    } else {
+        path.clone()
+    }
 }
 
 #[cfg(test)]
