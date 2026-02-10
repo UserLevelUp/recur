@@ -7,6 +7,9 @@ Covers file mode JSON inputs for Phase 4.
 
 include("runtests.setup.jl")
 
+# Setup test environment
+setup_test_environment()
+
 @testset "recur merge command" begin
     log_section("Testing: recur merge")
 
@@ -176,3 +179,6 @@ include("runtests.setup.jl")
         log_test("tree auto-enables JSON when piped")
     end
 end
+
+# Cleanup test environment
+teardown_test_environment()
