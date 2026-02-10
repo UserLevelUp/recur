@@ -43,9 +43,17 @@ struct Cli {
 
     /// Hierarchy separator character (default: '.')
     /// Use '_' for Rust modules, '-' for kebab-case, ':' for namespaces
-    /// May be provided multiple times; the last value wins.
+    /// May be provided multiple times for multi-separator queries.
     #[arg(long, global = true, value_name = "CHAR")]
     sep: Vec<String>,
+
+    /// When using multiple separators, normalize output to this separator
+    #[arg(long, global = true, value_name = "CHAR")]
+    sep_replace_default: Option<String>,
+
+    /// Show which separator was used for each file (e.g., [.] or [_])
+    #[arg(long, global = true)]
+    show_sep: bool,
 }
 
 #[derive(Subcommand)]
@@ -404,13 +412,27 @@ enum Commands {
 fn main() {
     let cli = Cli::parse();
 
-    // Parse separator (take first character, default to '.').
-    // If repeated, the last --sep value wins.
-    let separator = cli
-        .sep
-        .last()
-        .and_then(|s| s.chars().next())
-        .unwrap_or('.');
+    // Parse separators: collect all provided, or default to ['.']
+    let separators: Vec<char> = if cli.sep.is_empty() {
+        vec!['.']
+    } else {
+        cli.sep
+            .iter()
+            .filter_map(|s| s.chars().next())
+            .collect()
+    };
+
+    // For backward compatibility: single separator (last wins, or default)
+    let separator = separators.last().copied().unwrap_or('.');
+
+    // Parse --sep-replace-default flag
+    let replace_default = cli
+        .sep_replace_default
+        .as_ref()
+        .and_then(|s| s.chars().next());
+
+    // Get --show-sep flag
+    let show_sep = cli.show_sep;
 
     let result = match cli.command {
         Commands::Files {
@@ -422,19 +444,40 @@ fn main() {
             max_depth,
             count,
             stdin,
-        } => main_command_files_impl::execute(
-            pattern,
-            dir,
-            ext,
-            ignore_case,
-            min_depth,
-            max_depth,
-            count,
-            stdin,
-            separator,
-            cli.json,
-            cli.color,
-        ),
+        } => {
+            // Use multi-separator if multiple separators or new flags are present
+            if separators.len() > 1 || replace_default.is_some() || show_sep {
+                main_command_files_impl::execute_with_separators(
+                    pattern,
+                    dir,
+                    ext,
+                    ignore_case,
+                    min_depth,
+                    max_depth,
+                    count,
+                    stdin,
+                    separators.clone(),
+                    replace_default,
+                    show_sep,
+                    cli.json,
+                    cli.color,
+                )
+            } else {
+                main_command_files_impl::execute(
+                    pattern,
+                    dir,
+                    ext,
+                    ignore_case,
+                    min_depth,
+                    max_depth,
+                    count,
+                    stdin,
+                    separator,
+                    cli.json,
+                    cli.color,
+                )
+            }
+        }
         Commands::Find {
             query,
             scope,
@@ -464,9 +507,27 @@ fn main() {
             count,
             ascii,
             stdin,
-        } => main_command_tree_impl::execute(
-            base, dir, depth, count, !ascii, stdin, separator, cli.json,
-        ),
+        } => {
+            // Use multi-separator if multiple separators or new flags are present
+            if separators.len() > 1 || replace_default.is_some() || show_sep {
+                main_command_tree_impl::execute_with_separators(
+                    base,
+                    dir,
+                    depth,
+                    count,
+                    !ascii,
+                    stdin,
+                    separators.clone(),
+                    replace_default,
+                    show_sep,
+                    cli.json,
+                )
+            } else {
+                main_command_tree_impl::execute(
+                    base, dir, depth, count, !ascii, stdin, separator, cli.json,
+                )
+            }
+        }
         Commands::Related {
             filename,
             dir,
