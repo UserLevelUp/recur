@@ -1,6 +1,6 @@
 <div align="center">
   <h1>recur</h1>
-  <div class="version">v0.1.12</div>
+  <div class="version">v0.1.13</div>
   <p>
     <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
     <a href="https://www.rust-lang.org/"><img alt="Rust 1.70+" src="https://img.shields.io/badge/rust-1.70%2B-blue.svg"></a>
@@ -108,12 +108,14 @@ recur stats "ServiceName" -l 1
 
 ### Core capabilities
 - **Hierarchy-aware pattern matching** with `*` and `**` wildcards
+- **Multi-separator merge** — unify results across naming conventions (`.` and `_`)
 - **Scoped text search** within a hierarchy (grep-like, but structure-aware)
 - **Context lines** via `-C` (show surrounding lines like `grep -C`)
 - **Tree visualization** using Unicode box-drawing characters
 - **Related file discovery** (siblings within the hierarchy)
 - **Identifier search** (dot-notation identifiers in code)
 - **Hierarchy statistics** with depth analysis and pagination
+- **Cross-domain gap analysis** — verify completeness across representations
 - **Multiple output formats** (human-friendly terminal output, plus JSON for tooling)
 - **Proper exit codes** (0=success, 1=no results, 2=error)
 
@@ -124,6 +126,30 @@ recur stats "ServiceName" -l 1
 - `--json` - Output results as JSON
 - `--color` - Colorized output (auto-detected)
 
+### Multi-separator merge (Cross-domain entity tracking)
+**Problem:** Documentation uses dots (`api.user.service.md`), source code uses underscores (`api_user_service.rs`). Traditional tools can't unify them.
+
+**Solution:** Use multiple `--sep` flags to merge results across naming conventions:
+```bash
+# Merge documentation (dots) + source code (underscores)
+recur tree main --sep "." --sep "_"
+
+# Show which domain each file comes from (gap analysis)
+recur tree main --sep "." --sep "_" --show-sep
+
+# Normalize output to consistent separator
+recur files "main.command.**" --sep "." --sep "_" --sep-replace-default "."
+```
+
+**Use cases:**
+- **Living documentation** — verify code has matching docs/tests
+- **Polyglot projects** — navigate TypeScript (`.`) + Python (`_`) + Go (`/`) as one
+- **Configuration management** — track configs across file (`.`) and env-var (`_`) conventions
+- **Build pipelines** — verify artifact completeness across naming conventions
+- **Gap analysis** — `--show-sep` marks each file's origin: `[.]` or `[_]`
+
+See [`docs/main.trait.separator-merge.readme.md`](docs/main.trait.separator-merge.readme.md) for details.
+
 ## Commands
 
 ### `recur files` — find files by hierarchical pattern
@@ -133,6 +159,11 @@ recur files "Controller.**"                   # All descendants (recursive)
 recur files "*.Tests" --ext .cs              # Test files only
 recur files "Module.*" --count               # Show count only
 recur files **.AutoSave.** -i -e cs          # No quotes needed with stdin stdout
+
+# Multi-separator merge (cross-domain)
+recur files "main.**" --sep "." --sep "_"                        # Merge docs + src
+recur files "api.user.**" --sep "." --sep "_" --show-sep         # With markers
+recur files "config.**" --sep "." --sep "_" --sep-replace-default "."  # Normalized
 ```
 
 ### `recur find` — search text within a hierarchy scope
@@ -149,6 +180,11 @@ recur tree "ServiceName"                     # Unicode tree view
 recur tree "ServiceName" --count             # With file counts
 recur tree "ServiceName" --ascii             # ASCII-only (no Unicode)
 recur tree "ServiceName" --json              # JSON output
+
+# Multi-separator merge (cross-domain)
+recur tree "main" --sep "." --sep "_"                      # Merge docs + src
+recur tree "main" --sep "." --sep "_" --show-sep           # With domain markers
+recur tree "api" --sep "." --sep "_" --sep-replace-default "."  # Normalized
 ```
 
 ### `recur related` — find sibling files
