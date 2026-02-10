@@ -198,8 +198,15 @@ recur merge --pattern "api.user" --sep "." --pattern "api_user" --sep "_" --show
 # Normalize output to dots for display
 recur merge --pattern "main.command.tree" --sep "." --pattern "main_command_tree" --sep "_" --sep-replace-default "."
 
-# File mode: merge cached JSON outputs
-recur merge main.command.docs.json --sep "." main_command_src.json --sep "_" --base "main.command" --show-sep
+# Phase 4 file mode: merge cached JSON outputs
+recur tree "main.command" --sep "." --json > main.command.json
+recur tree "main_command" --sep "_" --json > main_command.json
+recur merge main.command.json --sep "." main_command.json --sep "_" --base "main.command" --show-sep
+
+# File mode with files JSON
+recur files "main.command.**" --sep "." --json > main.command.files.json
+recur files "main_command_**" --sep "_" --json > main_command.files.json
+recur merge main.command.files.json --sep "." main_command.files.json --sep "_" --base "main.command" --show-sep
 ```
 
 ### `recur related` — find sibling files
