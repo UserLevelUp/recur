@@ -38,51 +38,67 @@ recur merge --stdin --show-sep
 
 ## Implementation Phases
 
-### Phase 1: Planning & Design
-- [ ] Create eventness tracking files ✅
-- [ ] Write comprehensive README
-- [ ] Design CLI interface
-- [ ] Plan merging algorithm
-- [ ] Write test cases (Julia)
-- [ ] Document pipe mode protocol
+### Phase 1: Planning & Design ✅
+- [x] Create eventness tracking files ✅
+- [x] Write comprehensive README ✅
+- [x] Design CLI interface ✅
+- [x] Plan merging algorithm ✅
 
-### Phase 2: Basic Merge (Pattern Mode)
-- [ ] Add `merge` subcommand to CLI
-- [ ] Implement pattern/separator pairing
-- [ ] Build unified tree from multiple searches
-- [ ] Basic output (no markers)
-- [ ] Test with 2 patterns
+### Phase 2: Basic Merge (Pattern Mode) - IN PROGRESS
+- [x] Add `merge` subcommand to CLI ✅
+- [x] Implement pattern/separator pairing ✅
+- [x] File discovery working (verified with counts) ✅
+- [x] Deduplication working ✅
+- [ ] **Path normalization** (current blocker)
+- [ ] Test shows all files in unified tree
 
-### Phase 3: Provenance Tracking
-- [ ] Track which separator found each file
+### Phase 3: Provenance Tracking (--show-sep)
+- [ ] Track which separator found each file (HashMap)
 - [ ] Implement `--show-sep` markers
 - [ ] Test with 3+ patterns
-- [ ] Handle deduplication
+- [ ] Remove debug output (eprintln!)
 
-### Phase 4: Normalization
-- [ ] Implement `--sep-replace-default`
-- [ ] Normalize paths to target separator
-- [ ] Preserve markers showing original separator
-- [ ] Test normalized output
+### Phase 4: File Mode (Pipe to Files)
+- [ ] Accept file arguments: `recur merge file1.json file2.json`
+- [ ] Read JSON from files
+- [ ] Parse tree JSON format
+- [ ] Test with cached outputs
 
-### Phase 5: Pipe Mode
-- [ ] Design JSON protocol for stdin
-- [ ] Parse JSON from multiple inputs
-- [ ] Merge JSON hierarchies
-- [ ] Test piping from files/tree commands
+### Phase 5: Stdin Mode (Pure Pipes)
+- [ ] Read JSON from stdin: `recur merge --stdin`
+- [ ] Handle multiple JSON objects
+- [ ] Support JSON Lines format
+- [ ] Test with process substitution
 
-### Phase 6: Output Formats
-- [ ] Tree format (default)
-- [ ] Files format (flat list)
-- [ ] JSON output mode
-- [ ] ASCII vs Unicode tree
+### Phase 6: Full Pipe Integration
+- [ ] All three modes working (pattern, file, stdin)
+- [ ] Process substitution support
+- [ ] Performance optimization
+- [ ] Comprehensive examples
 
 ### Phase 7: Polish & Documentation
-- [ ] Help text with examples
+- [ ] Help text with all modes
 - [ ] Error messages
 - [ ] Edge case handling
-- [ ] Performance optimization
 - [ ] Update main README.md
+
+## Future Vision: Pure Unix Pipes
+
+See [phase-future.pipe-mode.md](main.command.merge.phase-future.pipe-mode.md) for complete design.
+
+**Three modes, user chooses:**
+```bash
+# Mode 1: Pattern (convenience)
+recur merge --pattern X --sep Y --pattern Z --sep W
+
+# Mode 2: Files (cacheable)
+recur merge output1.json output2.json
+
+# Mode 3: Pipes (pure Unix)
+recur merge <(recur tree X) <(recur tree Y)
+```
+
+All modes produce identical output. No breaking changes.
 
 ## Current Status
 **Phase 1: Planning** 🎯
