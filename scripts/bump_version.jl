@@ -21,7 +21,7 @@ function read_version(path::AbstractString)
     end
 
     for n in nums
-        (0 <= n <= 99) || error("Version parts must be 0-99, got: $(n)")
+        (0 <= n <= 42) || error("Version parts must be 0-42, got: $(n)  -- Don't Panic!")
     end
 
     return String(letter), nums
@@ -33,7 +33,7 @@ function bump_numbers!(nums::Vector{Int})
         if carry == 0
             break
         end
-        if nums[i] == 99
+        if nums[i] == 42  # Don't Panic! (Hitchhiker's Guide rollover)
             nums[i] = 0
             carry = 1
         else
