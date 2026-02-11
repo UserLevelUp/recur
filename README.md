@@ -268,8 +268,16 @@ recur stats "**" --json                      # JSON output
 | **Scoped search** | ❌ | ❌ | ✅ |
 | **Related file discovery** | ❌ | ❌ | ✅ |
 | **Hierarchical patterns** | ❌ | ❌ | ✅ |
+| **JSON output for piping** | ❌ | ❌ | ✅ |
+| **Multi-source merge** | ❌ | ❌ | ✅ |
+| **Cross-separator merge** | ❌ | ❌ | ✅ |
+| **Stdin mode (pipe composition)** | ❌ | ❌ | ✅ |
+| **Auto-JSON detection** | ❌ | ❌ | ✅ |
+| **Provenance tracking** | ❌ | ❌ | ✅ |
 
 **Note:** `recur` does not replace `rg` or `grep`—it complements them. For raw text-search throughput, `ripgrep` is hard to beat. `recur` focuses on a different (and increasingly common) problem: *working with structure encoded in names*.
+
+**Unique to recur:** Full Unix pipe composability with stdin mode, multi-source merging, and automatic JSON detection. Example: `recur tree docs --sep . | recur merge --stdin --base config --sep .` — no manual JSON flags needed, pure pipe workflows.
 
 ## The Tribute
 
