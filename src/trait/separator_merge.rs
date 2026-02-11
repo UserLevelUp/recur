@@ -59,8 +59,6 @@ pub trait MultiSeparatorCapable {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     // Placeholder tests for when trait is implemented
     #[test]
     fn test_separator_merge_trait_exists() {
