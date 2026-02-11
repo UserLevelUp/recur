@@ -252,7 +252,7 @@ recur stats "**" --json                      # JSON output
 
 ### Multi-Domain Gap Analysis
 ```bash
-# Find docs that exist but have no corresponding source files
+# Bash: Find docs that exist but have no corresponding source files
 bash -c "{
   recur tree api -d docs/ --sep .;
   recur tree api -d src/ --sep _;
@@ -261,9 +261,18 @@ recur merge --stdin --base api --sep . --sep _ --show-sep | \
 grep "\[.\]" | grep -v "\[_\]"  # Docs without src = gap!
 ```
 
+```powershell
+# PowerShell: Same gap analysis
+@(
+  (recur tree api -d docs/ --sep . | Out-String),
+  (recur tree api -d src/ --sep _ | Out-String)
+) -join "`n" | recur merge --stdin --base api --sep . --sep _ --show-sep |
+  Select-String "\[.\]" | Select-String "\[_\]" -NotMatch  # Docs without src = gap!
+```
+
 ### Cross-Project Entity Tracking
 ```bash
-# Merge 3 different naming conventions into unified view
+# Bash: Merge 3 different naming conventions into unified view
 bash -c "{
   recur tree config -d docs/ --sep .;
   recur tree config -d src/ --sep _;
@@ -273,9 +282,19 @@ recur merge --stdin --base config --sep . --sep _ --sep - --show-sep | \
 tee merged-view.txt | grep "\\[.\\].*\\[_\\].*\\[-\\]"  # Files in all 3 domains!
 ```
 
+```powershell
+# PowerShell: Same 3-way merge
+@(
+  (recur tree config -d docs/ --sep . | Out-String),
+  (recur tree config -d src/ --sep _ | Out-String),
+  (recur tree config -d scripts/ --sep - | Out-String)
+) -join "`n" | recur merge --stdin --base config --sep . --sep _ --sep - --show-sep |
+  Tee-Object merged-view.txt | Select-String "\[\.\].*\[_\].*\[-\]"  # Files in all 3 domains!
+```
+
 ### DevOps Pipeline Validation
 ```bash
-# Verify all services have docs, src, and tests
+# Bash: Verify all services have docs, src, and tests
 for service in auth billing payments; do
   bash -c "{
     recur tree $service -d docs/ --sep .;
@@ -288,9 +307,24 @@ for service in auth billing payments; do
 done
 ```
 
+```powershell
+# PowerShell: Same service validation loop
+foreach ($service in @('auth', 'billing', 'payments')) {
+  @(
+    (recur tree $service -d docs/ --sep . | Out-String),
+    (recur tree $service -d src/ --sep _ | Out-String),
+    (recur tree $service -d tests/ --sep - | Out-String)
+  ) -join "`n" | recur merge --stdin --base $service --sep . --sep _ --sep - --show-sep |
+    Tee-Object "reports\$service-coverage.txt" |
+    Select-String "\[\.\].*\[_\].*\[-\]" |
+    Measure-Object | Select-Object -ExpandProperty Count |
+    ForEach-Object { if ($_ -eq 0) { "$service: incomplete coverage!" } }
+}
+```
+
 ### Configuration Drift Detection
 ```bash
-# Compare expected vs deployed configs, find drift
+# Bash: Compare expected vs deployed configs, find drift
 bash -c "{
   recur tree app.config -d expected/ --sep .;
   recur tree app.config -d deployed/ --sep _;
@@ -300,9 +334,19 @@ grep "\[.\]" | grep -v "\[_\]" | \
 awk '{print "DRIFT: "$0}' | tee config-drift-report.txt
 ```
 
+```powershell
+# PowerShell: Same drift detection
+@(
+  (recur tree app.config -d expected/ --sep . | Out-String),
+  (recur tree app.config -d deployed/ --sep _ | Out-String)
+) -join "`n" | recur merge --stdin --base app.config --sep . --sep _ --show-sep |
+  Select-String "\[.\]" | Select-String "\[_\]" -NotMatch |
+  ForEach-Object { "DRIFT: $_" } | Tee-Object config-drift-report.txt
+```
+
 ### Polyglot Codebase Navigation
 ```bash
-# Merge TypeScript (.), Python (_), Go (/), Rust (-) into one hierarchy
+# Bash: Merge TypeScript (.), Python (_), Go (/), Rust (-) into one hierarchy
 bash -c "{
   recur tree api -d typescript/ --sep .;
   recur tree api -d python/ --sep _;
@@ -314,9 +358,20 @@ jq '.files[] | select(.path | contains("auth"))' | \
 less  # Unified cross-language view!
 ```
 
+```powershell
+# PowerShell: Same 4-language merge
+@(
+  (recur tree api -d typescript/ --sep . | Out-String),
+  (recur tree api -d python/ --sep _ | Out-String),
+  (recur tree api -d go/ --sep / | Out-String),
+  (recur tree api -d rust/ --sep - | Out-String)
+) -join "`n" | recur merge --stdin --base api --sep . --sep _ --sep / --sep - --show-sep |
+  jq '.files[] | select(.path | contains(\"auth\"))' | more  # Unified cross-language view!
+```
+
 ### Continuous Integration Workflow
 ```bash
-# Cache expensive tree operations, merge on-demand
+# Bash: Cache expensive tree operations, merge on-demand
 recur tree main.command -d docs/ --sep . > docs.json
 recur tree main_command -d src/ --sep _ > src.json
 recur tree main-command -d tests/ --sep - > tests.json
@@ -326,6 +381,20 @@ recur merge docs.json src.json tests.json \
   --base "main.command" --sep . --sep _ --sep - \
   --show-sep | tee ci-report.txt | \
   grep -c "\\[.\\].*\\[_\\].*\\[-\\]" > coverage-count.txt
+```
+
+```powershell
+# PowerShell: Same CI workflow (cross-platform!)
+recur tree main.command -d docs/ --sep . > docs.json
+recur tree main_command -d src/ --sep _ > src.json
+recur tree main-command -d tests/ --sep - > tests.json
+
+# Fast merge from cached JSON (no re-scanning!)
+recur merge docs.json src.json tests.json `
+  --base "main.command" --sep . --sep _ --sep - `
+  --show-sep | Tee-Object ci-report.txt |
+  Select-String "\[\.\].*\[_\].*\[-\]" |
+  Measure-Object | Select-Object -ExpandProperty Count > coverage-count.txt
 ```
 
 **Performance tip:** Use file mode (cached JSON) for repeated analysis, stdin mode for dynamic exploration.
