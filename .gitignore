@@ -29,3 +29,5 @@ Thumbs.db
 # Output files
 *.err
 .claude/settings.local.json
+
+nul
