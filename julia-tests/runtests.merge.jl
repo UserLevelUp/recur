@@ -164,11 +164,11 @@ setup_test_environment()
 
         # The output should be JSON (auto-detected pipe)
         # Try to parse it as JSON to verify
+        json_valid = false
         try
             parsed = JSON3.read(json_output)
             json_valid = true
         catch
-            json_valid = false
         end
 
         passed = json_valid

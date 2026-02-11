@@ -12,7 +12,7 @@ using Test
 using JSON3
 
 # Configuration
-const RECUR_PROFILE = get(ENV, "RECUR_PROFILE", "release")
+const RECUR_PROFILE = get(ENV, "RECUR_PROFILE", "release-safe")
 const RECUR_BIN = get(
     ENV,
     "RECUR_BIN",
@@ -183,7 +183,7 @@ function teardown_test_environment()
 end
 
 # Run recur command and capture output
-function run_recur(args::Vector{String})
+function run_recur(args::Vector{String}; input::Union{String,Nothing}=nothing)
     # Add test directory flag if not already present
     if !("-d" in args)
         push!(args, "-d")
@@ -201,7 +201,12 @@ function run_recur(args::Vector{String})
     success = true
 
     try
-        run(pipeline(cmd, stdout=out, stderr=err))
+        if input !== nothing
+            inp = IOBuffer(input)
+            run(pipeline(cmd, stdin=inp, stdout=out, stderr=err))
+        else
+            run(pipeline(cmd, stdout=out, stderr=err))
+        end
     catch e
         if isa(e, ProcessFailedException)
             success = false
