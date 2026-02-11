@@ -1,6 +1,6 @@
 <div align="center">
   <h1>recur</h1>
-  <div class="version">v0.2.0</div>
+  <div class="version">v0.1.16</div>
   <p>
     <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
     <a href="https://www.rust-lang.org/"><img alt="Rust 1.70+" src="https://img.shields.io/badge/rust-1.70%2B-blue.svg"></a>
@@ -209,9 +209,10 @@ bash -c "{ recur tree main.command --sep .; recur tree main_command --sep _; }" 
   recur merge --stdin --base "main.command" --sep . --sep _ --show-sep
 
 # PowerShell stdin mode
-$a = recur tree main.command --sep . | Out-String
-$b = recur tree main_command --sep _ | Out-String
-Write-Output $a $b | recur merge --stdin --base "main.command" --sep . --sep _ --show-sep
+@(
+  (recur tree main.command --sep . | Out-String),
+  (recur tree main_command --sep _ | Out-String)
+) -join "`n" | recur merge --stdin --base "main.command" --sep . --sep _ --show-sep
 
 # Single source via stdin (simpler case)
 recur tree main --sep . | recur merge --stdin --base "main" --sep .
@@ -262,9 +263,10 @@ grep "\[.\]" | grep -v "\[_\]"  # Docs without src = gap!
 
 ```powershell
 # PowerShell: Same gap analysis
-$docs = recur tree api -d docs/ --sep . | Out-String
-$src  = recur tree api -d src/ --sep _ | Out-String
-Write-Output $docs $src | recur merge --stdin --base api --sep . --sep _ --show-sep |
+@(
+  (recur tree api -d docs/ --sep . | Out-String),
+  (recur tree api -d src/ --sep _ | Out-String)
+) -join "`n" | recur merge --stdin --base api --sep . --sep _ --show-sep |
   Select-String "\[.\]" | Select-String "\[_\]" -NotMatch  # Docs without src = gap!
 ```
 
@@ -282,10 +284,11 @@ tee merged-view.txt | grep "\\[.\\].*\\[_\\].*\\[-\\]"  # Files in all 3 domains
 
 ```powershell
 # PowerShell: Same 3-way merge
-$docs = recur tree config -d docs/ --sep . | Out-String
-$src  = recur tree config -d src/ --sep _ | Out-String
-$scripts = recur tree config -d scripts/ --sep - | Out-String
-Write-Output $docs $src $scripts | recur merge --stdin --base config --sep . --sep _ --sep - --show-sep |
+@(
+  (recur tree config -d docs/ --sep . | Out-String),
+  (recur tree config -d src/ --sep _ | Out-String),
+  (recur tree config -d scripts/ --sep - | Out-String)
+) -join "`n" | recur merge --stdin --base config --sep . --sep _ --sep - --show-sep |
   Tee-Object merged-view.txt | Select-String "\[\.\].*\[_\].*\[-\]"  # Files in all 3 domains!
 ```
 
@@ -307,10 +310,11 @@ done
 ```powershell
 # PowerShell: Same service validation loop
 foreach ($service in @('auth', 'billing', 'payments')) {
-  $docs  = recur tree $service -d docs/ --sep . | Out-String
-  $src   = recur tree $service -d src/ --sep _ | Out-String
-  $tests = recur tree $service -d tests/ --sep - | Out-String
-  Write-Output $docs $src $tests | recur merge --stdin --base $service --sep . --sep _ --sep - --show-sep |
+  @(
+    (recur tree $service -d docs/ --sep . | Out-String),
+    (recur tree $service -d src/ --sep _ | Out-String),
+    (recur tree $service -d tests/ --sep - | Out-String)
+  ) -join "`n" | recur merge --stdin --base $service --sep . --sep _ --sep - --show-sep |
     Tee-Object "reports\$service-coverage.txt" |
     Select-String "\[\.\].*\[_\].*\[-\]" |
     Measure-Object | Select-Object -ExpandProperty Count |
@@ -332,9 +336,10 @@ awk '{print "DRIFT: "$0}' | tee config-drift-report.txt
 
 ```powershell
 # PowerShell: Same drift detection
-$expected = recur tree app.config -d expected/ --sep . | Out-String
-$deployed = recur tree app.config -d deployed/ --sep _ | Out-String
-Write-Output $expected $deployed | recur merge --stdin --base app.config --sep . --sep _ --show-sep |
+@(
+  (recur tree app.config -d expected/ --sep . | Out-String),
+  (recur tree app.config -d deployed/ --sep _ | Out-String)
+) -join "`n" | recur merge --stdin --base app.config --sep . --sep _ --show-sep |
   Select-String "\[.\]" | Select-String "\[_\]" -NotMatch |
   ForEach-Object { "DRIFT: $_" } | Tee-Object config-drift-report.txt
 ```
@@ -355,12 +360,13 @@ less  # Unified cross-language view!
 
 ```powershell
 # PowerShell: Same 4-language merge
-$ts   = recur tree api -d typescript/ --sep . | Out-String
-$py   = recur tree api -d python/ --sep _ | Out-String
-$go   = recur tree api -d go/ --sep / | Out-String
-$rs   = recur tree api -d rust/ --sep - | Out-String
-Write-Output $ts $py $go $rs | recur merge --stdin --base api --sep . --sep _ --sep / --sep - --show-sep |
-  Select-String "auth"  # Unified cross-language view!
+@(
+  (recur tree api -d typescript/ --sep . | Out-String),
+  (recur tree api -d python/ --sep _ | Out-String),
+  (recur tree api -d go/ --sep / | Out-String),
+  (recur tree api -d rust/ --sep - | Out-String)
+) -join "`n" | recur merge --stdin --base api --sep . --sep _ --sep / --sep - --show-sep |
+  jq '.files[] | select(.path | contains(\"auth\"))' | more  # Unified cross-language view!
 ```
 
 ### Continuous Integration Workflow
@@ -502,3 +508,9 @@ MIT — permissive, simple, and broadly compatible.
 ---
 
 **recur**: *Hierarchy-aware search for the 21st century—built for modern naming conventions, inspired by foundational ideas in program structure.*
+
+## Demo
+
+![skippy & Joe's Bar](demos/ascii-drinks/bar.svg)
+**Try it locally:** `powershell -ExecutionPolicy Bypass -File demos/ascii-drinks/bar.ps1`
+for the interactive version, or see [`demos/ascii-drinks/`](demos/ascii-drinks/) for the full demo.
