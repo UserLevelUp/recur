@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 420" font-family="monospace" font-size="14">
+  <style>
+    .frame { fill: #c0c0c0; }
+    .handle { fill: #808080; }
+    .title { fill: #00cccc; font-size: 16px; font-weight: bold; }
+    .subtitle { fill: #008888; font-size: 12px; }
+    .label { fill: #cccc00; font-size: 15px; font-weight: bold; }
+    .quip { fill: #44cc44; font-size: 12px; font-style: italic; }
+    .attr { fill: #228822; font-size: 11px; }
+    .info { fill: #666666; font-size: 11px; }
+    .footer { fill: #aa8800; font-size: 11px; }
+    .bg { fill: #1e1e1e; }
+    .divider { fill: #444444; }
+  </style>
+
+  <!-- Background -->
+  <rect width="480" height="420" class="bg" rx="8"/>
+
+  <!-- Header (always visible) -->
+  <text x="24" y="30" class="divider">======================================================</text>
+  <text x="24" y="50" class="title">Skippy &amp; Joe's Bar &amp; Merge</text>
+  <text x="24" y="68" class="subtitle">Hold My Beer Edition <tspan class="info">-- powered by recur merge</tspan></text>
+  <text x="24" y="82" class="divider">======================================================</text>
+
+  <!-- Drink 1: Irish Stout (0-3s) -->
+  <g opacity="1">
+    <animate attributeName="opacity" calcMode="discrete" values="1;0;0;0;0;0" keyTimes="0;0.167;0.333;0.5;0.667;0.833" dur="18s" repeatCount="indefinite"/>
+    <text x="24" y="110" class="label">=== Irish Stout ===</text>
+    <text x="40" y="140" class="frame">\~~~~~~~~~~~~/</text>
+    <text x="40" y="158"><tspan class="frame">|</tspan><tspan fill="#8b0000">##########</tspan><tspan class="frame">|  </tspan><tspan class="handle">|~~|</tspan></text>
+    <text x="40" y="176"><tspan class="frame">|</tspan><tspan fill="#8b0000">##########</tspan><tspan class="frame">|  </tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="194"><tspan class="frame">|</tspan><tspan fill="#8b0000">##########</tspan><tspan class="frame">|  </tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="212"><tspan class="frame">|</tspan><tspan fill="#8b0000">##########</tspan><tspan class="frame">|  </tspan><tspan class="handle">|__|</tspan></text>
+    <text x="40" y="230" class="frame">\__________/</text>
+    <text x="24" y="260" class="quip">"Dark as my commit history at 3am."</text>
+    <text x="24" y="276" class="attr">-- Skippy the Magnificent</text>
+  </g>
+
+  <!-- Drink 2: Golden Lager (3-6s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" calcMode="discrete" values="0;1;0;0;0;0" keyTimes="0;0.167;0.333;0.5;0.667;0.833" dur="18s" repeatCount="indefinite"/>
+    <text x="24" y="110" class="label">=== Golden Lager ===</text>
+    <text x="40" y="140" class="frame">\~~~~~~~~~~~~/</text>
+    <text x="40" y="158"><tspan class="frame">|</tspan><tspan fill="#cccc00">::::::::::</tspan><tspan class="frame">| ~</tspan><tspan class="handle">|~~|</tspan></text>
+    <text x="40" y="176"><tspan class="frame">|</tspan><tspan fill="#cccc00">::::::::::</tspan><tspan class="frame">| ~</tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="194"><tspan class="frame">|</tspan><tspan fill="#cccc00">::::::::::</tspan><tspan class="frame">| ~</tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="212"><tspan class="frame">|</tspan><tspan fill="#cccc00">::::::::::</tspan><tspan class="frame">| ~</tspan><tspan class="handle">|__|</tspan></text>
+    <text x="40" y="230" class="frame">\__________/</text>
+    <text x="24" y="260" class="quip">"Fizzy yellow confidence juice."</text>
+    <text x="24" y="276" class="attr">-- Skippy the Magnificent</text>
+  </g>
+
+  <!-- Drink 3: Hoppy IPA (6-9s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" calcMode="discrete" values="0;0;1;0;0;0" keyTimes="0;0.167;0.333;0.5;0.667;0.833" dur="18s" repeatCount="indefinite"/>
+    <text x="24" y="110" class="label">=== Hoppy IPA ===</text>
+    <text x="40" y="140" class="frame">\~~~~~~~~~~~~/</text>
+    <text x="40" y="158"><tspan class="frame">|</tspan><tspan fill="#cc8800">%%~~%%~~%%</tspan><tspan class="frame">|  </tspan><tspan class="handle">|~~|</tspan></text>
+    <text x="40" y="176"><tspan class="frame">|</tspan><tspan fill="#cc8800">%%%%%%%%%%</tspan><tspan class="frame">|  </tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="194"><tspan class="frame">|</tspan><tspan fill="#cc8800">%%%%%%%%%%</tspan><tspan class="frame">|  </tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="212"><tspan class="frame">|</tspan><tspan fill="#cc8800">%%%%%%%%%%</tspan><tspan class="frame">|  </tspan><tspan class="handle">|__|</tspan></text>
+    <text x="40" y="230" class="frame">\__________/</text>
+    <text x="24" y="260" class="quip">"For people who enjoy suffering. Respect."</text>
+    <text x="24" y="276" class="attr">-- Skippy the Magnificent</text>
+  </g>
+
+  <!-- Drink 4: Cabernet (9-12s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" calcMode="discrete" values="0;0;0;1;0;0" keyTimes="0;0.167;0.333;0.5;0.667;0.833" dur="18s" repeatCount="indefinite"/>
+    <text x="24" y="110" class="label">=== Cabernet ===</text>
+    <text x="64" y="140" class="frame">\_____/</text>
+    <text x="64" y="158"><tspan class="frame">|</tspan><tspan fill="#8b0000">#####</tspan><tspan class="frame">|</tspan></text>
+    <text x="64" y="176"><tspan class="frame">|</tspan><tspan fill="#8b0000">#####</tspan><tspan class="frame">|</tspan></text>
+    <text x="64" y="194"><tspan class="frame">|</tspan><tspan fill="#8b0000">#####</tspan><tspan class="frame">|</tspan></text>
+    <text x="64" y="212" class="frame">\_____/</text>
+    <text x="72" y="230" class="frame">| |</text>
+    <text x="72" y="248" class="frame">| |</text>
+    <text x="56" y="266" class="frame">/~~~~~\</text>
+    <text x="24" y="296" class="quip">"Bold. Like force-pushing to main."</text>
+    <text x="24" y="312" class="attr">-- Skippy the Magnificent</text>
+  </g>
+
+  <!-- Drink 5: Rose (12-15s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" calcMode="discrete" values="0;0;0;0;1;0" keyTimes="0;0.167;0.333;0.5;0.667;0.833" dur="18s" repeatCount="indefinite"/>
+    <text x="24" y="110" class="label">=== Rose ===</text>
+    <text x="64" y="140" class="frame">\_____/</text>
+    <text x="64" y="158"><tspan class="frame">|</tspan><tspan fill="#cc44cc">%%%%%</tspan><tspan class="frame">|</tspan></text>
+    <text x="64" y="176"><tspan class="frame">|</tspan><tspan fill="#cc44cc">%%%%%</tspan><tspan class="frame">|</tspan></text>
+    <text x="64" y="194"><tspan class="frame">|</tspan><tspan fill="#cc44cc">%%%%%</tspan><tspan class="frame">|</tspan></text>
+    <text x="64" y="212" class="frame">\_____/</text>
+    <text x="72" y="230" class="frame">| |</text>
+    <text x="72" y="248" class="frame">| |</text>
+    <text x="56" y="266" class="frame">/~~~~~\</text>
+    <text x="24" y="296" class="quip">"It's not pink, it's *light red*. Sure."</text>
+    <text x="24" y="312" class="attr">-- Skippy the Magnificent</text>
+  </g>
+
+  <!-- Drink 6: Just Water (15-18s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" calcMode="discrete" values="0;0;0;0;0;1" keyTimes="0;0.167;0.333;0.5;0.667;0.833" dur="18s" repeatCount="indefinite"/>
+    <text x="24" y="110" class="label">=== Just Water ===</text>
+    <text x="40" y="140" class="frame">\~~~~~~~~~~~~/</text>
+    <text x="40" y="158"><tspan class="frame">|</tspan><tspan fill="#00cccc">~~~~~~~~~~</tspan><tspan class="frame">|  </tspan><tspan class="handle">|~~|</tspan></text>
+    <text x="40" y="176"><tspan class="frame">|</tspan><tspan fill="#00cccc">..........</tspan><tspan class="frame">| ~</tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="194"><tspan class="frame">|</tspan><tspan fill="#00cccc">~~~~~~~~~~</tspan><tspan class="frame">|  </tspan><tspan class="handle">|  |</tspan></text>
+    <text x="40" y="212"><tspan class="frame">|</tspan><tspan fill="#00cccc">..........</tspan><tspan class="frame">| ~</tspan><tspan class="handle">|__|</tspan></text>
+    <text x="40" y="230" class="frame">\__________/</text>
+    <text x="24" y="260" class="quip">"Designated driver. The real MVP."</text>
+    <text x="24" y="276" class="attr">-- Skippy the Magnificent</text>
+  </g>
+
+  <!-- Footer (always visible) -->
+  <text x="24" y="350" class="info">Structure: drink.mug.* [.] / drink.wine.* [.]</text>
+  <text x="24" y="366" class="info">Contents:  drink_mug_*_2fill [_] / drink_wine_*_2fill [_]</text>
+  <text x="24" y="388" class="divider">------------------------------------------------------</text>
+  <text x="24" y="406" class="footer">Joe: "Two naming conventions walk into a bar..."</text>
+  <text x="24" y="420" class="footer">recur merge: "I'll have what they're both having."</text>
+</svg>
