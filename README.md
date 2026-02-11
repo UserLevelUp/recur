@@ -246,6 +246,90 @@ recur stats "Controller.**" --ext .cs        # Stats for .cs files only
 recur stats "**" --json                      # JSON output
 ```
 
+## Advanced Composability
+
+**Hold my beer...** 🍺 These examples showcase the full power of Unix pipe composition with multi-source merging, cross-separator unification, and provenance tracking.
+
+### Multi-Domain Gap Analysis
+```bash
+# Find docs that exist but have no corresponding source files
+bash -c "{
+  recur tree api -d docs/ --sep .;
+  recur tree api -d src/ --sep _;
+}" | \
+recur merge --stdin --base api --sep . --sep _ --show-sep | \
+grep "\[.\]" | grep -v "\[_\]"  # Docs without src = gap!
+```
+
+### Cross-Project Entity Tracking
+```bash
+# Merge 3 different naming conventions into unified view
+bash -c "{
+  recur tree config -d docs/ --sep .;
+  recur tree config -d src/ --sep _;
+  recur tree config -d scripts/ --sep -;
+}" | \
+recur merge --stdin --base config --sep . --sep _ --sep - --show-sep | \
+tee merged-view.txt | grep "\\[.\\].*\\[_\\].*\\[-\\]"  # Files in all 3 domains!
+```
+
+### DevOps Pipeline Validation
+```bash
+# Verify all services have docs, src, and tests
+for service in auth billing payments; do
+  bash -c "{
+    recur tree $service -d docs/ --sep .;
+    recur tree $service -d src/ --sep _;
+    recur tree $service -d tests/ --sep -;
+  }" | \
+  recur merge --stdin --base $service --sep . --sep _ --sep - --show-sep | \
+  tee "reports/$service-coverage.txt" | \
+  grep -c "\\[.\\].*\\[_\\].*\\[-\\]" || echo "$service: incomplete coverage!"
+done
+```
+
+### Configuration Drift Detection
+```bash
+# Compare expected vs deployed configs, find drift
+bash -c "{
+  recur tree app.config -d expected/ --sep .;
+  recur tree app.config -d deployed/ --sep _;
+}" | \
+recur merge --stdin --base app.config --sep . --sep _ --show-sep | \
+grep "\[.\]" | grep -v "\[_\]" | \
+awk '{print "DRIFT: "$0}' | tee config-drift-report.txt
+```
+
+### Polyglot Codebase Navigation
+```bash
+# Merge TypeScript (.), Python (_), Go (/), Rust (-) into one hierarchy
+bash -c "{
+  recur tree api -d typescript/ --sep .;
+  recur tree api -d python/ --sep _;
+  recur tree api -d go/ --sep /;
+  recur tree api -d rust/ --sep -;
+}" | \
+recur merge --stdin --base api --sep . --sep _ --sep / --sep - --show-sep | \
+jq '.files[] | select(.path | contains("auth"))' | \
+less  # Unified cross-language view!
+```
+
+### Continuous Integration Workflow
+```bash
+# Cache expensive tree operations, merge on-demand
+recur tree main.command -d docs/ --sep . > docs.json
+recur tree main_command -d src/ --sep _ > src.json
+recur tree main-command -d tests/ --sep - > tests.json
+
+# Fast merge from cached JSON (no re-scanning!)
+recur merge docs.json src.json tests.json \
+  --base "main.command" --sep . --sep _ --sep - \
+  --show-sep | tee ci-report.txt | \
+  grep -c "\\[.\\].*\\[_\\].*\\[-\\]" > coverage-count.txt
+```
+
+**Performance tip:** Use file mode (cached JSON) for repeated analysis, stdin mode for dynamic exploration.
+
 ## Pattern Syntax (Recursive)
 
 | Pattern | Matches | Example |
