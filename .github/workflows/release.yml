@@ -119,16 +119,11 @@ jobs:
           $install = $install -replace '%CHECKSUM64%', $hash
           Set-Content choco/tools/chocolateyInstall.ps1 $install
 
-      - name: Update version in nuspec
+      - name: Pack Chocolatey package
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}".TrimStart('v')
-          $nuspec = Get-Content choco/recur.nuspec -Raw
-          $nuspec = $nuspec -replace '<version>.*</version>', "<version>$version</version>"
-          Set-Content choco/recur.nuspec $nuspec
-
-      - name: Pack Chocolatey package
-        run: choco pack choco/recur.nuspec --output-directory choco/
+          choco pack choco/recur.nuspec --version $version --output-directory choco/
 
       - name: Push to Chocolatey
         run: choco push choco/recur.*.nupkg --source https://push.chocolatey.org/ --api-key ${{ secrets.CHOCOLATEY_API_KEY }}
