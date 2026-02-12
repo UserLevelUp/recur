@@ -22,6 +22,7 @@ mod main_command_callers_impl;
 mod main_command_callees_impl;
 mod main_command_trace_impl;
 mod main_command_merge_impl;
+mod main_command_flatten_impl;
 
 #[derive(Parser)]
 #[command(name = "recur")]
@@ -452,6 +453,37 @@ enum Commands {
         #[arg(long)]
         stdin: bool,
     },
+
+    /// Flatten structured files (XML, JSON) into hierarchical dot-paths
+    ///
+    /// Converts any structured document into recur's universal hierarchy format.
+    /// Auto-detects format from file extension, or use --format to override.
+    ///
+    /// Examples:
+    ///   recur flatten config.xml
+    ///   recur flatten data.json --filter "users"
+    ///   cat pom.xml | recur flatten --stdin
+    ///   recur flatten config.nuspec --json
+    Flatten {
+        /// File to flatten (omit for stdin)
+        file: Option<PathBuf>,
+
+        /// Read from stdin
+        #[arg(long)]
+        stdin: bool,
+
+        /// Override format detection (xml, json)
+        #[arg(long, value_name = "FORMAT")]
+        format: Option<String>,
+
+        /// Maximum depth to flatten (0 = unlimited)
+        #[arg(long, default_value = "0")]
+        max_depth: usize,
+
+        /// Filter output to paths matching this prefix
+        #[arg(long, value_name = "PREFIX")]
+        filter: Option<String>,
+    },
 }
 
 fn main() {
@@ -775,6 +807,23 @@ fn main() {
                 stdin,
             )
         }
+
+        Commands::Flatten {
+            file,
+            stdin,
+            format,
+            max_depth,
+            filter,
+        } => main_command_flatten_impl::execute(
+            file,
+            stdin,
+            format,
+            max_depth,
+            filter,
+            separator,
+            cli.json,
+            cli.color,
+        ),
     };
 
     if let Err(e) = result {
