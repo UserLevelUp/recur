@@ -441,3 +441,355 @@ pub fn execute(
 
     Ok(())
 }
+
+// ── Tests ────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // Helper to get path-value pairs for easy assertion
+    fn flat(entries: &[FlatEntry]) -> Vec<(&str, Option<&str>)> {
+        entries
+            .iter()
+            .map(|e| (e.path.as_str(), e.value.as_deref()))
+            .collect()
+    }
+
+    // ── XML: Basic elements ──────────────────────────────────
+
+    #[test]
+    fn xml_simple_elements() {
+        let xml = r#"<root><name>hello</name><version>1.0</version></root>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert_eq!(pairs, vec![
+            ("root.name", Some("hello")),
+            ("root.version", Some("1.0")),
+        ]);
+    }
+
+    #[test]
+    fn xml_nested_elements() {
+        let xml = r#"<a><b><c>deep</c></b></a>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].path, "a.b.c");
+        assert_eq!(entries[0].value.as_deref(), Some("deep"));
+    }
+
+    #[test]
+    fn xml_empty_element() {
+        let xml = r#"<root><empty></empty><has>text</has></root>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        // Empty element produces no entry (no text, no attrs)
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].path, "root.has");
+    }
+
+    // ── XML: Attributes ──────────────────────────────────────
+
+    #[test]
+    fn xml_attributes() {
+        let xml = r#"<file src="tools\**" target="tools" />"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert_eq!(pairs, vec![
+            ("file@src", Some("tools\\**")),
+            ("file@target", Some("tools")),
+        ]);
+    }
+
+    #[test]
+    fn xml_element_with_attrs_and_text() {
+        let xml = r#"<item id="42" type="widget">gadget</item>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert_eq!(pairs, vec![
+            ("item@id", Some("42")),
+            ("item@type", Some("widget")),
+            ("item", Some("gadget")),
+        ]);
+    }
+
+    // ── XML: Repeated siblings ───────────────────────────────
+
+    #[test]
+    fn xml_repeated_siblings_get_indexed() {
+        let xml = r#"<list><item>a</item><item>b</item><item>c</item></list>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert_eq!(pairs, vec![
+            ("list.item[0]", Some("a")),
+            ("list.item[1]", Some("b")),
+            ("list.item[2]", Some("c")),
+        ]);
+    }
+
+    #[test]
+    fn xml_single_element_not_indexed() {
+        let xml = r#"<list><item>only</item></list>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        assert_eq!(entries[0].path, "list.item"); // No [0]
+    }
+
+    #[test]
+    fn xml_mixed_siblings_only_duplicates_indexed() {
+        let xml = r#"<root><name>foo</name><tag>a</tag><tag>b</tag></root>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert_eq!(pairs, vec![
+            ("root.name", Some("foo")),
+            ("root.tag[0]", Some("a")),
+            ("root.tag[1]", Some("b")),
+        ]);
+    }
+
+    // ── XML: CDATA ───────────────────────────────────────────
+
+    #[test]
+    fn xml_cdata_treated_as_text() {
+        let xml = r#"<doc><content><![CDATA[Hello <world>]]></content></doc>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        assert_eq!(entries[0].path, "doc.content");
+        assert_eq!(entries[0].value.as_deref(), Some("Hello <world>"));
+    }
+
+    // ── XML: Whitespace handling ─────────────────────────────
+
+    #[test]
+    fn xml_whitespace_only_text_ignored() {
+        let xml = r#"<root>
+            <child>value</child>
+        </root>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        // Only the actual text content, not the formatting whitespace
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].path, "root.child");
+        assert_eq!(entries[0].value.as_deref(), Some("value"));
+    }
+
+    // ── XML: Self-closing tags ───────────────────────────────
+
+    #[test]
+    fn xml_self_closing_with_attrs() {
+        let xml = r#"<config><db host="localhost" port="5432" /></config>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert_eq!(pairs, vec![
+            ("config.db@host", Some("localhost")),
+            ("config.db@port", Some("5432")),
+        ]);
+    }
+
+    // ── XML: Custom separator ────────────────────────────────
+
+    #[test]
+    fn xml_custom_separator() {
+        let xml = r#"<a><b><c>val</c></b></a>"#;
+        let entries = flatten_xml(xml, '/', 0).unwrap();
+        assert_eq!(entries[0].path, "a/b/c");
+    }
+
+    // ── XML: Max depth ───────────────────────────────────────
+
+    #[test]
+    fn xml_max_depth_limits_traversal() {
+        let xml = r#"<a><b><c><d>deep</d></c></b></a>"#;
+        let entries = flatten_xml(xml, '.', 2).unwrap();
+        // Depth 2 means: a (depth 0) -> b (depth 1) -> c (depth 2, but children skipped)
+        assert!(entries.is_empty() || !entries.iter().any(|e| e.path.contains("d")));
+    }
+
+    // ── XML: Namespaces ──────────────────────────────────────
+
+    #[test]
+    fn xml_namespace_prefix_preserved() {
+        let xml = r#"<soap:Envelope><soap:Body><ns:Data>val</ns:Data></soap:Body></soap:Envelope>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        assert_eq!(entries[0].path, "soap:Envelope.soap:Body.ns:Data");
+        assert_eq!(entries[0].value.as_deref(), Some("val"));
+    }
+
+    // ── XML: Real-world nuspec ───────────────────────────────
+
+    #[test]
+    fn xml_nuspec_structure() {
+        let xml = r#"<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>recur</id>
+    <version>0.2.1</version>
+    <title>recur</title>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("package.metadata.id", Some("recur"))));
+        assert!(pairs.contains(&("package.metadata.version", Some("0.2.1"))));
+        assert!(pairs.contains(&("package.metadata.title", Some("recur"))));
+        assert!(pairs.contains(&("package.files.file@src", Some("tools\\**"))));
+        assert!(pairs.contains(&("package.files.file@target", Some("tools"))));
+    }
+
+    // ── XML: Entity references ───────────────────────────────
+
+    #[test]
+    fn xml_entities_decoded() {
+        let xml = r#"<root><text>a &amp; b &lt; c</text></root>"#;
+        let entries = flatten_xml(xml, '.', 0).unwrap();
+        assert_eq!(entries[0].value.as_deref(), Some("a & b < c"));
+    }
+
+    // ── JSON: Basic objects ──────────────────────────────────
+
+    #[test]
+    fn json_simple_object() {
+        let json = r#"{"name":"recur","version":"0.2.5"}"#;
+        let entries = flatten_json(json, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("name", Some("recur"))));
+        assert!(pairs.contains(&("version", Some("0.2.5"))));
+    }
+
+    #[test]
+    fn json_nested_object() {
+        let json = r#"{"config":{"database":{"host":"localhost","port":"5432"}}}"#;
+        let entries = flatten_json(json, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("config.database.host", Some("localhost"))));
+        assert!(pairs.contains(&("config.database.port", Some("5432"))));
+    }
+
+    // ── JSON: Arrays ─────────────────────────────────────────
+
+    #[test]
+    fn json_arrays_indexed() {
+        let json = r#"{"tags":["search","grep","hierarchy"]}"#;
+        let entries = flatten_json(json, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("tags[0]", Some("search"))));
+        assert!(pairs.contains(&("tags[1]", Some("grep"))));
+        assert!(pairs.contains(&("tags[2]", Some("hierarchy"))));
+    }
+
+    #[test]
+    fn json_array_of_objects() {
+        let json = r#"{"users":[{"name":"Joe"},{"name":"Skippy"}]}"#;
+        let entries = flatten_json(json, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("users[0].name", Some("Joe"))));
+        assert!(pairs.contains(&("users[1].name", Some("Skippy"))));
+    }
+
+    // ── JSON: Primitive types ────────────────────────────────
+
+    #[test]
+    fn json_booleans_and_null() {
+        let json = r#"{"active":true,"deleted":false,"notes":null}"#;
+        let entries = flatten_json(json, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("active", Some("true"))));
+        assert!(pairs.contains(&("deleted", Some("false"))));
+        assert!(pairs.contains(&("notes", Some("null"))));
+    }
+
+    #[test]
+    fn json_numbers() {
+        let json = r#"{"count":42,"ratio":3.14}"#;
+        let entries = flatten_json(json, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("count", Some("42"))));
+        assert!(pairs.contains(&("ratio", Some("3.14"))));
+    }
+
+    // ── JSON: Max depth ──────────────────────────────────────
+
+    #[test]
+    fn json_max_depth_limits_traversal() {
+        let json = r#"{"a":{"b":{"c":{"d":"deep"}}}}"#;
+        let entries = flatten_json(json, '.', 2).unwrap();
+        // At depth 2 we hit "a.b" which contains {"c":{"d":"deep"}}
+        // That should be serialized as a raw JSON string
+        assert!(!entries.iter().any(|e| e.path == "a.b.c.d"));
+        assert!(entries.iter().any(|e| e.path == "a.b"));
+    }
+
+    // ── JSON: Custom separator ───────────────────────────────
+
+    #[test]
+    fn json_custom_separator() {
+        let json = r#"{"a":{"b":"val"}}"#;
+        let entries = flatten_json(json, '/', 0).unwrap();
+        assert_eq!(entries[0].path, "a/b");
+    }
+
+    // ── JSON: Real-world package.json style ──────────────────
+
+    #[test]
+    fn json_package_json_style() {
+        let json = r#"{
+            "name": "my-app",
+            "version": "1.0.0",
+            "dependencies": {
+                "express": "^4.18.0",
+                "lodash": "^4.17.21"
+            },
+            "scripts": {
+                "start": "node index.js",
+                "test": "jest"
+            }
+        }"#;
+        let entries = flatten_json(json, '.', 0).unwrap();
+        let pairs = flat(&entries);
+        assert!(pairs.contains(&("name", Some("my-app"))));
+        assert!(pairs.contains(&("dependencies.express", Some("^4.18.0"))));
+        assert!(pairs.contains(&("scripts.test", Some("jest"))));
+    }
+
+    // ── Format detection ─────────────────────────────────────
+
+    #[test]
+    fn detect_xml_extensions() {
+        assert_eq!(detect_format(Some(&PathBuf::from("file.xml")), None), Format::Xml);
+        assert_eq!(detect_format(Some(&PathBuf::from("file.nuspec")), None), Format::Xml);
+        assert_eq!(detect_format(Some(&PathBuf::from("file.csproj")), None), Format::Xml);
+        assert_eq!(detect_format(Some(&PathBuf::from("file.svg")), None), Format::Xml);
+    }
+
+    #[test]
+    fn detect_json_extensions() {
+        assert_eq!(detect_format(Some(&PathBuf::from("file.json")), None), Format::Json);
+        assert_eq!(detect_format(Some(&PathBuf::from("data.jsonl")), None), Format::Json);
+    }
+
+    #[test]
+    fn detect_format_override() {
+        // Override should win over extension
+        assert_eq!(detect_format(Some(&PathBuf::from("file.xml")), Some("json")), Format::Json);
+        assert_eq!(detect_format(Some(&PathBuf::from("file.json")), Some("xml")), Format::Xml);
+    }
+
+    // ── Cross-format: same hierarchy, same output ────────────
+
+    #[test]
+    fn xml_and_json_produce_same_paths() {
+        let xml = r#"<config><db><host>localhost</host><port>5432</port></db></config>"#;
+        let json = r#"{"config":{"db":{"host":"localhost","port":"5432"}}}"#;
+
+        let xml_entries = flatten_xml(xml, '.', 0).unwrap();
+        let json_entries = flatten_json(json, '.', 0).unwrap();
+
+        let xml_pairs: Vec<_> = xml_entries.iter().map(|e| (&e.path, e.value.as_deref())).collect();
+        let json_pairs: Vec<_> = json_entries.iter().map(|e| (&e.path, e.value.as_deref())).collect();
+
+        // Both should produce config.db.host = localhost and config.db.port = 5432
+        assert!(xml_pairs.iter().any(|(p, v)| p.as_str() == "config.db.host" && *v == Some("localhost")));
+        assert!(json_pairs.iter().any(|(p, v)| p.as_str() == "config.db.host" && *v == Some("localhost")));
+        assert!(xml_pairs.iter().any(|(p, v)| p.as_str() == "config.db.port" && *v == Some("5432")));
+        assert!(json_pairs.iter().any(|(p, v)| p.as_str() == "config.db.port" && *v == Some("5432")));
+    }
+}
