@@ -28,7 +28,11 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur children` — find child files
 - `recur id` — search for hierarchical identifiers
 - `recur stats` — analyze hierarchy statistics
+- `recur callers` — find all places where a function/method is called
+- `recur callees` — find all functions/methods a given function calls
+- `recur trace` — multi-level call graph visualization
 - `recur merge` — merge results across separators
+- `recur flatten` — flatten structured files (XML, JSON) into hierarchical dot-paths
 
 Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program structure.
 ]]></description>
@@ -36,7 +40,7 @@ Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program s
     <projectSourceUrl>https://github.com/userlevelup/recur</projectSourceUrl>
     <bugTrackerUrl>https://github.com/userlevelup/recur/issues</bugTrackerUrl>
     <docsUrl>https://github.com/userlevelup/recur#readme</docsUrl>
-    <tags>search grep hierarchy recursive tree cli developer-tools rust</tags>
+    <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph</tags>
     <licenseUrl>https://github.com/userlevelup/recur/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <packageSourceUrl>https://github.com/userlevelup/recur/tree/main/choco</packageSourceUrl>
