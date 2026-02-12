@@ -120,6 +120,43 @@ complete_suffix = ".complete.md"
 - See: `README.CORE.IMPROVEMENT12.md` (document transformation vision)
 - See: `README.CORE.IMPROVEMENT13.md` (config management vision)
 
+## Predictions (check back after each phase)
+
+### After Phase 1: The Foundation
+- `recur init` exists and creates `.recur/config.toml` with auto-detected dirs/seps
+- Users stop typing `--sep _` for src/ — config handles it
+- Any project (C#, Rust, Python, mixed) can `recur init` and go
+- The config is loose enough that we haven't blocked any future phase
+- recur-git checkpoint can't read the config yet (out of scope) but the file is there waiting
+- We'll discover at least one config field we didn't plan for
+
+### After Phase 2: Expand the On-Ramp
+- TOML flattening works — recur can flatten its own config (dog food!)
+- At least 2 more formats beyond XML/JSON (TOML + one of CSV/YAML/HL7)
+- Flatten starts feeling heavy in recur core — extraction conversation begins
+- Someone asks "can it flatten HTML?" and we have to think about that
+- The `path = value` format proves itself as a universal intermediate
+
+### After Phase 3: Flatten for Code
+- `trace-stats` outputs flat `path = value` lines alongside table/JSON/CSV
+- Code complexity and flattened data are queryable with the same tools
+- We discover that trace-stats and flatten share output formatting logic
+- The "everything is a hierarchy" thesis gets proven across code AND data
+
+### After Phase 4: Farmer John's Tools
+- Select/remap/merge tools exist as small composable commands
+- Someone builds a real pipeline: flatten → farm → deliver
+- The farming step is where most of the value lives (not flatten, not unflatten)
+- `recur-to-*` (Improvement 12) becomes urgent — people want the loop closed
+- We realize some farming operations are better done by an LLM than by CLI tools
+
+### After Phase 5: The Embedding Bridge
+- Each flat line is an embeddable semantic unit
+- Cross-format semantic search works (find similar things in XML and JSON sources)
+- A small LLM + embeddings replaces most manual farming
+- The zombie spelling bee becomes possible
+- We look back and realize flatten was the most important command we built
+
 ## Origin
 
 This phased approach emerged from a prototyping session exploring `recur flatten` on a 4MB AWS SDK XML file. The conversation surfaced the full pipeline: flatten (Expelliarmus) → farm (Farmer John) → synthesize (Station) → deliver (aspect ratio for the consumer). The game/edtech angle revealed that the same flat data can serve a trillion different consumer modes — zombies, crosswords, reports, whatever the moment requires.
