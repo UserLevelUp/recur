@@ -126,4 +126,8 @@ jobs:
           choco pack choco/recur.nuspec --version $version --output-directory choco/
 
       - name: Push to Chocolatey
-        run: choco push choco/recur.*.nupkg --source https://push.chocolatey.org/ --api-key ${{ secrets.CHOCOLATEY_API_KEY }}
+        shell: pwsh
+        run: |
+          $nupkg = Get-ChildItem choco/*.nupkg | Select-Object -First 1
+          Write-Host "Pushing $($nupkg.FullName)"
+          choco push $nupkg.FullName --source https://push.chocolatey.org/ --api-key ${{ secrets.CHOCOLATEY_API_KEY }}
