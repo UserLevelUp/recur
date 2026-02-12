@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.chocolatey.org/2010/07/nuspec">
-  <metadata>
+<package xmlns="http://schemas.chocolatey.org/2012/07/nuspec">
+  <metadata minClientVersion="2.0">
     <id>recur</id>
     <version>0.2.1</version>
     <title>recur</title>
