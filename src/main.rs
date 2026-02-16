@@ -6,23 +6,29 @@
 //! Main CLI entry point
 
 use clap::{Parser, Subcommand};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process;
 
-mod main_command_stats_impl;
-mod main_command_stats_stdin;
+mod main_command_callees_impl;
+mod main_command_callers_impl;
+mod main_command_children_impl;
 mod main_command_files_impl;
 mod main_command_files_stdin;
-mod main_command_tree_impl;
-mod main_command_children_impl;
-mod main_command_related_impl;
-mod main_command_id_impl;
 mod main_command_find_impl;
-mod main_command_callers_impl;
-mod main_command_callees_impl;
-mod main_command_trace_impl;
-mod main_command_merge_impl;
+mod main_command_flatten_csv;
 mod main_command_flatten_impl;
+mod main_command_flatten_json;
+mod main_command_flatten_toml;
+mod main_command_flatten_xml;
+mod main_command_flatten_yaml;
+mod main_command_id_impl;
+mod main_command_init_impl;
+mod main_command_merge_impl;
+mod main_command_related_impl;
+mod main_command_stats_impl;
+mod main_command_stats_stdin;
+mod main_command_trace_impl;
+mod main_command_tree_impl;
 
 #[derive(Parser)]
 #[command(name = "recur")]
@@ -454,7 +460,27 @@ enum Commands {
         stdin: bool,
     },
 
-    /// Flatten structured files (XML, JSON) into hierarchical dot-paths
+    /// Initialize or analyze project-local `.recur/config.toml`
+    ///
+    /// Examples:
+    ///   recur init
+    ///   recur init --analyze
+    ///   recur init -d ../another-project --analyze
+    Init {
+        /// Project root directory
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// Analyze project directories and suggest config updates
+        #[arg(long)]
+        analyze: bool,
+
+        /// Overwrite existing `.recur/config.toml`
+        #[arg(long)]
+        force: bool,
+    },
+
+    /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
     /// Auto-detects format from file extension, or use --format to override.
@@ -462,6 +488,9 @@ enum Commands {
     /// Examples:
     ///   recur flatten config.xml
     ///   recur flatten data.json --filter "users"
+    ///   recur flatten .recur/config.toml --format toml
+    ///   recur flatten appsettings.yaml --format yaml
+    ///   recur flatten levels.csv --format csv
     ///   cat pom.xml | recur flatten --stdin
     ///   recur flatten config.nuspec --json
     Flatten {
@@ -472,7 +501,7 @@ enum Commands {
         #[arg(long)]
         stdin: bool,
 
-        /// Override format detection (xml, json)
+        /// Override format detection (xml, json, toml, yaml, csv)
         #[arg(long, value_name = "FORMAT")]
         format: Option<String>,
 
@@ -486,21 +515,56 @@ enum Commands {
     },
 }
 
-fn main() {
-    let cli = Cli::parse();
+fn parse_cli_separators(sep_args: &[String]) -> Vec<char> {
+    if sep_args.is_empty() {
+        return vec!['.'];
+    }
 
-    // Parse separators: collect all provided, or default to ['.']
-    let separators: Vec<char> = if cli.sep.is_empty() {
+    let parsed: Vec<char> = sep_args
+        .iter()
+        .filter_map(|value| value.chars().next())
+        .collect();
+    if parsed.is_empty() {
         vec!['.']
     } else {
-        cli.sep
-            .iter()
-            .filter_map(|s| s.chars().next())
-            .collect()
+        parsed
+    }
+}
+
+fn resolve_command_separators(sep_args: &[String], dir: &Path) -> Vec<char> {
+    if !sep_args.is_empty() {
+        return parse_cli_separators(sep_args);
+    }
+
+    let lookup_dir = if dir.is_absolute() {
+        dir.to_path_buf()
+    } else if let Ok(cwd) = std::env::current_dir() {
+        cwd.join(dir)
+    } else {
+        dir.to_path_buf()
     };
 
-    // For backward compatibility: single separator (last wins, or default)
-    let separator = separators.last().copied().unwrap_or('.');
+    match recur::project_config::load_nearest(&lookup_dir) {
+        Ok(Some(cfg)) => {
+            if let Some(config_sep) = cfg.separator_for_dir(&lookup_dir) {
+                return vec![config_sep];
+            }
+        }
+        Ok(None) => {}
+        Err(err) => {
+            eprintln!("Warning: could not load .recur/config.toml: {}", err);
+        }
+    }
+
+    vec!['.']
+}
+
+fn main() {
+    let cli = Cli::parse();
+    let fallback_separator = parse_cli_separators(&cli.sep)
+        .last()
+        .copied()
+        .unwrap_or('.');
 
     // Parse --sep-replace-default flag
     let replace_default = cli
@@ -522,8 +586,11 @@ fn main() {
             count,
             stdin,
         } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
             // Use multi-separator if multiple separators or new flags are present
-            if separators.len() > 1 || replace_default.is_some() || show_sep {
+            if command_separators.len() > 1 || replace_default.is_some() || show_sep {
                 main_command_files_impl::execute_with_separators(
                     pattern,
                     dir,
@@ -533,7 +600,7 @@ fn main() {
                     max_depth,
                     count,
                     stdin,
-                    separators.clone(),
+                    command_separators.clone(),
                     replace_default,
                     show_sep,
                     cli.json,
@@ -564,19 +631,24 @@ fn main() {
             regex,
             ext,
             stdin,
-        } => main_command_find_impl::execute(
-            query,
-            scope,
-            dir,
-            context,
-            ignore_case,
-            regex,
-            ext,
-            stdin,
-            separator,
-            cli.json,
-            cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_find_impl::execute(
+                query,
+                scope,
+                dir,
+                context,
+                ignore_case,
+                regex,
+                ext,
+                stdin,
+                separator,
+                cli.json,
+                cli.color,
+            )
+        }
         Commands::Tree {
             base,
             dir,
@@ -585,8 +657,11 @@ fn main() {
             ascii,
             stdin,
         } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
             // Use multi-separator if multiple separators or new flags are present
-            if separators.len() > 1 || replace_default.is_some() || show_sep {
+            if command_separators.len() > 1 || replace_default.is_some() || show_sep {
                 main_command_tree_impl::execute_with_separators(
                     base,
                     dir,
@@ -594,7 +669,7 @@ fn main() {
                     count,
                     !ascii,
                     stdin,
-                    separators.clone(),
+                    command_separators.clone(),
                     replace_default,
                     show_sep,
                     cli.json,
@@ -610,23 +685,33 @@ fn main() {
             dir,
             exclude_self,
             stdin,
-        } => main_command_related_impl::execute(
-            filename,
-            dir,
-            exclude_self,
-            stdin,
-            separator,
-            cli.json,
-            cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_related_impl::execute(
+                filename,
+                dir,
+                exclude_self,
+                stdin,
+                separator,
+                cli.json,
+                cli.color,
+            )
+        }
         Commands::Children {
             parent,
             dir,
             count,
             stdin,
-        } => main_command_children_impl::execute(
-            parent, dir, count, stdin, separator, cli.json, cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_children_impl::execute(
+                parent, dir, count, stdin, separator, cli.json, cli.color,
+            )
+        }
         Commands::Id {
             pattern,
             dir,
@@ -634,26 +719,36 @@ fn main() {
             context,
             ignore_case,
             stdin,
-        } => main_command_id_impl::execute(
-            pattern,
-            dir,
-            ext,
-            context,
-            ignore_case,
-            stdin,
-            separator,
-            cli.json,
-            cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_id_impl::execute(
+                pattern,
+                dir,
+                ext,
+                context,
+                ignore_case,
+                stdin,
+                separator,
+                cli.json,
+                cli.color,
+            )
+        }
         Commands::Stats {
             pattern,
             dir,
             level,
             ext,
             stdin,
-        } => main_command_stats_impl::execute(
-            pattern, dir, level, ext, stdin, separator, cli.json, cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_stats_impl::execute(
+                pattern, dir, level, ext, stdin, separator, cli.json, cli.color,
+            )
+        }
         Commands::Callers {
             function,
             scope,
@@ -663,19 +758,24 @@ fn main() {
             ext,
             count,
             stdin,
-        } => main_command_callers_impl::execute(
-            function,
-            scope,
-            dir,
-            context,
-            ignore_case,
-            ext,
-            count,
-            stdin,
-            separator,
-            cli.json,
-            cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_callers_impl::execute(
+                function,
+                scope,
+                dir,
+                context,
+                ignore_case,
+                ext,
+                count,
+                stdin,
+                separator,
+                cli.json,
+                cli.color,
+            )
+        }
         Commands::Callees {
             function,
             scope,
@@ -685,19 +785,24 @@ fn main() {
             ext,
             count,
             stdin,
-        } => main_command_callees_impl::execute(
-            function,
-            scope,
-            dir,
-            context,
-            ignore_case,
-            ext,
-            count,
-            stdin,
-            separator,
-            cli.json,
-            cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_callees_impl::execute(
+                function,
+                scope,
+                dir,
+                context,
+                ignore_case,
+                ext,
+                count,
+                stdin,
+                separator,
+                cli.json,
+                cli.color,
+            )
+        }
         Commands::Trace {
             function,
             scope,
@@ -712,24 +817,29 @@ fn main() {
             pick,
             scope_alias,
             stdin,
-        } => main_command_trace_impl::execute(
-            function,
-            scope,
-            dir,
-            depth,
-            direction,
-            ignore_case,
-            ext,
-            max_width,
-            verbose,
-            format,
-            pick,
-            scope_alias,
-            stdin,
-            separator,
-            cli.json,
-            cli.color,
-        ),
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_trace_impl::execute(
+                function,
+                scope,
+                dir,
+                depth,
+                direction,
+                ignore_case,
+                ext,
+                max_width,
+                verbose,
+                format,
+                pick,
+                scope_alias,
+                stdin,
+                separator,
+                cli.json,
+                cli.color,
+            )
+        }
         Commands::Merge {
             patterns,
             sep,
@@ -742,9 +852,7 @@ fn main() {
             stdin,
         } => {
             // Parse separators from strings to chars
-            let separators: Vec<char> = sep.iter()
-                .filter_map(|s| s.chars().next())
-                .collect();
+            let separators: Vec<char> = sep.iter().filter_map(|s| s.chars().next()).collect();
 
             let use_file_inputs = !inputs.is_empty();
 
@@ -808,6 +916,12 @@ fn main() {
             )
         }
 
+        Commands::Init {
+            dir,
+            analyze,
+            force,
+        } => main_command_init_impl::execute(dir, analyze, force, cli.json),
+
         Commands::Flatten {
             file,
             stdin,
@@ -820,7 +934,7 @@ fn main() {
             format,
             max_depth,
             filter,
-            separator,
+            fallback_separator,
             cli.json,
             cli.color,
         ),

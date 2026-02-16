@@ -201,9 +201,10 @@ fn execute_stdin_mode(
     stdin()
         .read_to_string(&mut stdin_content)
         .context("Failed to read from stdin")?;
+    let stdin_content = strip_utf8_bom(&stdin_content);
 
     // Parse multiple JSON objects from stdin stream
-    let stream = serde_json::Deserializer::from_str(&stdin_content).into_iter::<Value>();
+    let stream = serde_json::Deserializer::from_str(stdin_content).into_iter::<Value>();
     let mut source_idx = 0;
 
     for result in stream {
@@ -278,12 +279,16 @@ fn execute_stdin_mode(
     Ok(())
 }
 
+fn strip_utf8_bom(content: &str) -> &str {
+    content.strip_prefix('\u{FEFF}').unwrap_or(content)
+}
+
 fn load_files_from_json_file(path: &PathBuf) -> Result<Vec<PathBuf>> {
     let content = fs::read_to_string(path)
         .with_context(|| format!("Unable to read file: {}", path.display()))?;
     // Windows tools (notably some PowerShell encodings) can prepend UTF-8 BOM.
     // serde_json rejects BOM-prefixed text, so normalize before parsing.
-    let content = content.strip_prefix('\u{FEFF}').unwrap_or(&content);
+    let content = strip_utf8_bom(&content);
     let value: Value = serde_json::from_str(content)
         .with_context(|| format!("Invalid JSON in: {}", path.display()))?;
     extract_paths_from_json(&value)
@@ -465,6 +470,17 @@ mod tests {
         let files = load_files_from_json_file(&json_path)?;
         assert_eq!(files, vec![PathBuf::from("UserService.Game.Load.cs")]);
 
+        Ok(())
+    }
+
+    #[test]
+    fn stdin_json_stream_accepts_utf8_bom() -> Result<()> {
+        let input = "\u{FEFF}[\"UserService.Game.Load.cs\"]";
+        let mut stream =
+            serde_json::Deserializer::from_str(strip_utf8_bom(input)).into_iter::<Value>();
+        let value = stream.next().expect("expected one JSON object")?;
+        let files = extract_paths_from_json(&value)?;
+        assert_eq!(files, vec![PathBuf::from("UserService.Game.Load.cs")]);
         Ok(())
     }
 }

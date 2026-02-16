@@ -681,6 +681,19 @@ Treat code as canonical, then mirror intent across lanes in the same session:
 
 If one lane is missing for the feature query, treat that as a visible gap and either add it now or record it explicitly in `.todo`.
 
+## Code-First Eventness Rule
+
+Eventness should follow code, not lead it:
+1. Implement and validate the code change first.
+2. Mirror the resulting state in eventness artifacts (`.todo/.current/.complete`).
+3. Keep docs/eventness aligned to what is already true in code and tests.
+
+When using a mirror lane (future/optional), keep the same order:
+- code lane first (`src/` or feature folder)
+- mirror/event lane second (`docs/` today, `.recur/` mirror lanes when adopted)
+
+This prevents documentation-first drift and keeps eventness as durable evidence of real implementation state.
+
 ## Summary
 
 You are a recur expert. You use recur commands to discover state, track work, and maintain external memory through hierarchical file structures. You understand the eventness pattern, separator awareness, and gap analysis. You never try to remember what can be queried.

@@ -140,15 +140,25 @@ pub fn execute_with_separators(
             // Get original separator for this file
             let original_path = if replace_default.is_some() {
                 // Find original path before normalization
-                all_files.iter().find(|p| {
-                    p.file_name() == path.file_name() ||
-                    normalize_path_separator(p, file_separators.get(&**p).copied().unwrap_or(separators[0]), replace_default.unwrap()) == *path
-                }).unwrap_or(path)
+                all_files
+                    .iter()
+                    .find(|p| {
+                        p.file_name() == path.file_name()
+                            || normalize_path_separator(
+                                p,
+                                file_separators.get(&**p).copied().unwrap_or(separators[0]),
+                                replace_default.unwrap(),
+                            ) == *path
+                    })
+                    .unwrap_or(path)
             } else {
                 path
             };
 
-            let sep = file_separators.get(&**original_path).copied().unwrap_or(separators[0]);
+            let sep = file_separators
+                .get(&**original_path)
+                .copied()
+                .unwrap_or(separators[0]);
             println!("{} [{}]", path.display(), sep);
         }
     } else {

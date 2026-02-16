@@ -1,9 +1,12 @@
 //! Output formatting (terminal, JSON, etc.).
 
-use std::io::{Write, IsTerminal};
+use crate::search::{
+    CalleeResult, CallerResult, SearchResult, TraceCallKind, TraceDirection, TraceNode,
+    TraceResult, TraceStopReason,
+};
+use std::io::{IsTerminal, Write};
 use std::path::PathBuf;
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-use crate::search::{SearchResult, CallerResult, CalleeResult, TraceResult, TraceNode, TraceDirection, TraceCallKind, TraceStopReason};
 
 /// Formats output for terminal display with colors.
 pub struct TerminalFormatter {
@@ -30,7 +33,9 @@ impl TerminalFormatter {
 
     pub fn print_file(&mut self, path: &PathBuf) {
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
         }
         let _ = writeln!(self.stdout, "{}", path.display());
         if self.color {
@@ -50,12 +55,16 @@ impl TerminalFormatter {
             let start_line = result.line_number - result.context_before.len();
             for (i, line) in result.context_before.iter().enumerate() {
                 if self.color {
-                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
+                    let _ = self
+                        .stdout
+                        .set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
                 }
                 let _ = write!(self.stdout, "{}:", result.path.display());
 
                 if self.color {
-                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+                    let _ = self
+                        .stdout
+                        .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
                 }
                 let _ = write!(self.stdout, "{}-", start_line + i);
 
@@ -68,12 +77,16 @@ impl TerminalFormatter {
 
         // Print the matching line
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
         }
         let _ = write!(self.stdout, "{}:", result.path.display());
 
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Green)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Green)));
         }
         let _ = write!(self.stdout, "{}:", result.line_number);
 
@@ -87,12 +100,16 @@ impl TerminalFormatter {
             let start_line = result.line_number + 1;
             for (i, line) in result.context_after.iter().enumerate() {
                 if self.color {
-                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
+                    let _ = self
+                        .stdout
+                        .set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
                 }
                 let _ = write!(self.stdout, "{}:", result.path.display());
 
                 if self.color {
-                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+                    let _ = self
+                        .stdout
+                        .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
                 }
                 let _ = write!(self.stdout, "{}-", start_line + i);
 
@@ -116,7 +133,9 @@ impl TerminalFormatter {
             let start_line = result.line_number - result.context_before.len();
             for (i, line) in result.context_before.iter().enumerate() {
                 if self.color {
-                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+                    let _ = self
+                        .stdout
+                        .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
                 }
                 let _ = write!(self.stdout, "{}-", start_line + i);
                 if self.color {
@@ -128,7 +147,9 @@ impl TerminalFormatter {
 
         // Print file:line with hierarchical marker
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Magenta)));
         }
         let _ = write!(self.stdout, "{}:", result.path.display());
         if self.color {
@@ -136,7 +157,9 @@ impl TerminalFormatter {
         }
 
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Green)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Green)));
         }
         let _ = write!(self.stdout, "{}:", result.line_number);
         if self.color {
@@ -151,11 +174,15 @@ impl TerminalFormatter {
         };
 
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
         }
         let _ = write!(self.stdout, "{}", result.line);
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
         }
         let _ = writeln!(self.stdout, "{}", hierarchy_marker);
         if self.color {
@@ -167,7 +194,9 @@ impl TerminalFormatter {
             let start_line = result.line_number + 1;
             for (i, line) in result.context_after.iter().enumerate() {
                 if self.color {
-                    let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+                    let _ = self
+                        .stdout
+                        .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
                 }
                 let _ = write!(self.stdout, "{}-", start_line + i);
                 if self.color {
@@ -209,13 +238,15 @@ impl JsonFormatter {
     pub fn format_search_results(results: &[SearchResult]) -> String {
         let items: Vec<_> = results
             .iter()
-            .map(|r| serde_json::json!({
-                "path": r.path.display().to_string(),
-                "line_number": r.line_number,
-                "line": r.line,
-                "context_before": r.context_before,
-                "context_after": r.context_after,
-            }))
+            .map(|r| {
+                serde_json::json!({
+                    "path": r.path.display().to_string(),
+                    "line_number": r.line_number,
+                    "line": r.line,
+                    "context_before": r.context_before,
+                    "context_after": r.context_after,
+                })
+            })
             .collect();
         serde_json::to_string_pretty(&items).unwrap_or_else(|_| "[]".to_string())
     }
@@ -223,15 +254,17 @@ impl JsonFormatter {
     pub fn format_caller_results(results: &[CallerResult]) -> String {
         let items: Vec<_> = results
             .iter()
-            .map(|r| serde_json::json!({
-                "path": r.path.display().to_string(),
-                "line_number": r.line_number,
-                "line": r.line,
-                "is_hierarchical": r.is_hierarchical,
-                "depth": r.depth,
-                "context_before": r.context_before,
-                "context_after": r.context_after,
-            }))
+            .map(|r| {
+                serde_json::json!({
+                    "path": r.path.display().to_string(),
+                    "line_number": r.line_number,
+                    "line": r.line,
+                    "is_hierarchical": r.is_hierarchical,
+                    "depth": r.depth,
+                    "context_before": r.context_before,
+                    "context_after": r.context_after,
+                })
+            })
             .collect();
         serde_json::to_string_pretty(&items).unwrap_or_else(|_| "[]".to_string())
     }
@@ -240,15 +273,17 @@ impl JsonFormatter {
         // Reuse caller formatting since CalleeResult is a type alias
         let items: Vec<_> = results
             .iter()
-            .map(|r| serde_json::json!({
-                "path": r.path.display().to_string(),
-                "line_number": r.line_number,
-                "line": r.line,
-                "is_hierarchical": r.is_hierarchical,
-                "depth": r.depth,
-                "context_before": r.context_before,
-                "context_after": r.context_after,
-            }))
+            .map(|r| {
+                serde_json::json!({
+                    "path": r.path.display().to_string(),
+                    "line_number": r.line_number,
+                    "line": r.line,
+                    "is_hierarchical": r.is_hierarchical,
+                    "depth": r.depth,
+                    "context_before": r.context_before,
+                    "context_after": r.context_after,
+                })
+            })
             .collect();
         serde_json::to_string_pretty(&items).unwrap_or_else(|_| "[]".to_string())
     }
@@ -293,7 +328,8 @@ impl JsonFormatter {
                 "ambiguous_symbols": result.stats.ambiguous_symbols,
                 "width_limited": result.stats.width_limited,
             }
-        }).to_string()
+        })
+        .to_string()
     }
 
     pub fn format_trace_result_both(callers: &TraceResult, callees: &TraceResult) -> String {
@@ -350,21 +386,27 @@ impl JsonFormatter {
                     "width_limited": callees.stats.width_limited,
                 }
             }
-        }).to_string()
+        })
+        .to_string()
     }
 }
 
 /// Output format for trace results
 #[derive(Debug, Clone, Copy)]
 pub enum TraceFormat {
-    Tree,   // Tree with box-drawing characters
-    Flat,   // Flat indented format
-    Graph,  // Graph format (future)
+    Tree,  // Tree with box-drawing characters
+    Flat,  // Flat indented format
+    Graph, // Graph format (future)
 }
 
 impl TerminalFormatter {
     /// Print trace result in specified format
-    pub fn print_trace_result(&mut self, result: &TraceResult, format: TraceFormat, verbose: bool) -> anyhow::Result<()> {
+    pub fn print_trace_result(
+        &mut self,
+        result: &TraceResult,
+        format: TraceFormat,
+        verbose: bool,
+    ) -> anyhow::Result<()> {
         match format {
             TraceFormat::Tree => self.print_trace_tree(result, verbose),
             TraceFormat::Flat => self.print_trace_flat(result, verbose),
@@ -375,12 +417,21 @@ impl TerminalFormatter {
         }
     }
 
-    pub fn print_trace_both(&mut self, callers: &TraceResult, callees: &TraceResult, verbose: bool) -> anyhow::Result<()> {
+    pub fn print_trace_both(
+        &mut self,
+        callers: &TraceResult,
+        callees: &TraceResult,
+        verbose: bool,
+    ) -> anyhow::Result<()> {
         // Callers section
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_bold(true));
         }
-        let _ = writeln!(self.stdout, "Callers (who calls {}):", callees.root.function);
+        let _ = writeln!(
+            self.stdout,
+            "Callers (who calls {}):",
+            callees.root.function
+        );
         if self.color {
             let _ = self.stdout.reset();
         }
@@ -400,7 +451,11 @@ impl TerminalFormatter {
         if self.color {
             let _ = self.stdout.set_color(ColorSpec::new().set_bold(true));
         }
-        let _ = writeln!(self.stdout, "Callees (what {} calls):", callees.root.function);
+        let _ = writeln!(
+            self.stdout,
+            "Callees (what {} calls):",
+            callees.root.function
+        );
         if self.color {
             let _ = self.stdout.reset();
         }
@@ -412,13 +467,14 @@ impl TerminalFormatter {
 
         let _ = writeln!(self.stdout);
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
         }
         let _ = writeln!(
             self.stdout,
             "Summary: {} callers, {} callees",
-            callers.stats.direct_callees,
-            callees.stats.direct_callees
+            callers.stats.direct_callees, callees.stats.direct_callees
         );
         if self.color {
             let _ = self.stdout.reset();
@@ -441,7 +497,9 @@ impl TerminalFormatter {
         // Print stats
         let _ = writeln!(self.stdout);
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Yellow)));
         }
         let (direct_label, transitive_label) = match result.direction {
             TraceDirection::Callers => ("callers", "callers"),
@@ -460,7 +518,8 @@ impl TerminalFormatter {
             || result.stats.unresolved_symbols > 0
             || result.stats.cycles_detected > 0
             || result.stats.ambiguous_symbols > 0
-            || result.stats.width_limited > 0 {
+            || result.stats.width_limited > 0
+        {
             let _ = writeln!(
                 self.stdout,
                 "Stops: depth limit={}, unresolved={}, cycles={}, ambiguous={}, max width={}",
@@ -489,7 +548,9 @@ impl TerminalFormatter {
 
         let _ = write!(self.stdout, " (");
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
         }
         let path_label = trace_display_path(node, verbose);
         let _ = write!(self.stdout, "{}:{}", path_label, node.line_number);
@@ -524,10 +585,18 @@ impl TerminalFormatter {
         Ok(())
     }
 
-    fn print_trace_node(&mut self, node: &TraceNode, prefix: &str, is_last: bool, verbose: bool) -> anyhow::Result<()> {
+    fn print_trace_node(
+        &mut self,
+        node: &TraceNode,
+        prefix: &str,
+        is_last: bool,
+        verbose: bool,
+    ) -> anyhow::Result<()> {
         // Print tree lines
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Rgb(128, 128, 128))));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Rgb(128, 128, 128))));
         }
 
         let branch = if is_last { "└─ " } else { "├─ " };
@@ -568,7 +637,9 @@ impl TerminalFormatter {
         // Print hierarchical marker or cycle marker
         if node.is_cycle {
             if self.color {
-                let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Red)));
+                let _ = self
+                    .stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::Red)));
             }
             let _ = writeln!(self.stdout, " [cycle detected]");
             if self.color {
@@ -613,7 +684,12 @@ impl TerminalFormatter {
         for (i, child) in node.children.iter().enumerate() {
             let is_last_child = i == node.children.len() - 1;
             let child_prefix = if is_last { "   " } else { "│  " };
-            self.print_trace_node(child, &format!("{}{}", prefix, child_prefix), is_last_child, verbose)?;
+            self.print_trace_node(
+                child,
+                &format!("{}{}", prefix, child_prefix),
+                is_last_child,
+                verbose,
+            )?;
         }
 
         Ok(())
@@ -623,7 +699,12 @@ impl TerminalFormatter {
         self.print_trace_node_flat(&result.root, 0, verbose)
     }
 
-    fn print_trace_node_flat(&mut self, node: &TraceNode, indent_level: usize, verbose: bool) -> anyhow::Result<()> {
+    fn print_trace_node_flat(
+        &mut self,
+        node: &TraceNode,
+        indent_level: usize,
+        verbose: bool,
+    ) -> anyhow::Result<()> {
         let indent = "  ".repeat(indent_level);
 
         if self.color {
@@ -636,7 +717,9 @@ impl TerminalFormatter {
 
         let _ = write!(self.stdout, " (");
         if self.color {
-            let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
+            let _ = self
+                .stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Cyan)));
         }
         let path_label = trace_display_path(node, verbose);
         let _ = write!(self.stdout, "{}:{}", path_label, node.line_number);
@@ -647,7 +730,9 @@ impl TerminalFormatter {
 
         if node.is_cycle {
             if self.color {
-                let _ = self.stdout.set_color(ColorSpec::new().set_fg(Some(Color::Red)));
+                let _ = self
+                    .stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::Red)));
             }
             let _ = writeln!(self.stdout, " [cycle]");
             if self.color {

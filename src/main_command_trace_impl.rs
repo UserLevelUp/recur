@@ -4,7 +4,9 @@
 
 use recur::output::{JsonFormatter, TerminalFormatter, TraceFormat};
 use recur::parser::HierarchyPattern;
-use recur::search::{read_paths_from_stdin, SearchOptions, TraceDirection, TraceOptions, TraceSearcher};
+use recur::search::{
+    read_paths_from_stdin, SearchOptions, TraceDirection, TraceOptions, TraceSearcher,
+};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::process;

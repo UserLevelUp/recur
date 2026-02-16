@@ -25,14 +25,7 @@ pub fn execute(
 
     // For now, delegate to single-separator implementation
     execute_single_separator(
-        base,
-        dir,
-        max_depth,
-        show_count,
-        unicode,
-        stdin,
-        separator,
-        json,
+        base, dir, max_depth, show_count, unicode, stdin, separator, json,
     )
 }
 
@@ -114,7 +107,10 @@ pub fn execute_with_separators(
                     })
                     .unwrap_or(path);
 
-                let sep = file_separators.get(&**original_path).copied().unwrap_or(separators[0]);
+                let sep = file_separators
+                    .get(&**original_path)
+                    .copied()
+                    .unwrap_or(separators[0]);
 
                 if let Some(filename) = path.file_name() {
                     let marked_filename = format!("{} [{}]", filename.to_string_lossy(), sep);

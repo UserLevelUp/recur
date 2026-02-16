@@ -4,6 +4,7 @@
 
 pub mod output;
 pub mod parser;
+pub mod project_config;
 pub mod search;
 pub mod tree;
 
