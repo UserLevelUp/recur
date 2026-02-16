@@ -582,30 +582,41 @@ include("runtests.setup.jl")
         end
     end
 
-    @testset "Force trace (placeholder)" begin
-        @testset "trace --force resolves ambiguity" begin
-            # PLACEHOLDER: force-trace flag should pick a best match when multiple definitions exist.
-            # Intended command (when implemented):
-            #   recur trace "ApplyTemplate" --scope "LevelController.CreateWizard3.**" --ext .cs --depth 2 --force
-            #
-            # Expected behavior:
-            # - succeeds without --pick
-            # - includes ApplyTemplate node with a note like "[ambiguous: 2 matches, forced pick]"
-            # - continues into RenderTemplate
-            @test_skip true
-            log_test("trace --force resolves ambiguity (PENDING IMPLEMENTATION)")
+    @testset "Force trace" begin
+        @testset "trace --force bypasses depth cap" begin
+            success, output, error_output = run_recur("trace \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 6 --force")
+
+            passed = success &&
+                     contains(output, "CreateWizard3") &&
+                     !contains(error_output, "Maximum depth is 5")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "CreateWizard3")
+            @test !contains(error_output, "Maximum depth is 5")
+            log_test("trace --force bypasses depth cap")
         end
 
-        @testset "trace --force budget limit" begin
-            # PLACEHOLDER: optional safety budget for force-trace to avoid runaway graphs.
-            # Intended command (when implemented):
-            #   recur trace "WideRoot" --scope "WideService" --ext .cs --depth 5 --force --max-nodes 10
-            #
-            # Expected behavior:
-            # - succeeds
-            # - stops traversal with a reason like "[budget limit]"
-            @test_skip true
-            log_test("trace --force budget limit (PENDING IMPLEMENTATION)")
+        @testset "trace --force keeps max-width guardrail" begin
+            success, output, _ = run_recur("trace \"WideRoot\" --scope \"WideService\" --ext .cs --depth 6 --max-width 1 --force")
+
+            passed = success &&
+                     contains(output, "WideRoot") &&
+                     contains(output, "CallA") &&
+                     !contains(output, "CallB") &&
+                     !contains(output, "CallC") &&
+                     contains(lowercase(output), "max width")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "WideRoot")
+            @test contains(output, "CallA")
+            @test !contains(output, "CallB")
+            @test !contains(output, "CallC")
+            @test contains(lowercase(output), "max width")
+            log_test("trace --force keeps width guardrail")
         end
     end
     finally

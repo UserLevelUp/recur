@@ -15,6 +15,12 @@ cat docs/main.improvement.7.phase3.todo.current.reference.md
 # review active source lanes
 recur files "main_command_trace*" -d src/ --sep _
 recur files "main_command_call*" -d src/ --sep _
+recur files "main.command.trace.force.**" -d docs/
+
+# review guardrail behavior in code
+recur find "depth > 5" --scope "**" -d src/
+recur find "TraceStopReason" --scope "**" -d src/
+recur find "--force" --scope "**" -d src/
 
 # keep changes/test loop tight
 cargo test --bin recur

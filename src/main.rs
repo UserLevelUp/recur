@@ -414,6 +414,10 @@ enum Commands {
         /// Read file paths from stdin instead of searching filesystem
         #[arg(long)]
         stdin: bool,
+
+        /// Bypass trace depth cap safety check
+        #[arg(long)]
+        force: bool,
     },
 
     /// Merge hierarchical results from multiple naming conventions
@@ -817,6 +821,7 @@ fn main() {
             pick,
             scope_alias,
             stdin,
+            force,
         } => {
             let command_separators = resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
@@ -835,6 +840,7 @@ fn main() {
                 pick,
                 scope_alias,
                 stdin,
+                force,
                 separator,
                 cli.json,
                 cli.color,

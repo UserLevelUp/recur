@@ -23,6 +23,7 @@ Improvement 7 combines three previously separate specs into a unified pipeline:
 - Active work: `docs/main.improvement.7.phase3.todo.current.md`
 - Phase 3 references: `docs/main.improvement.7.phase3.todo.current.reference.md`
 - Phase 3 triggers: `docs/main.improvement.7.phase3.todo.trigger.event.md`
+- Active trace guardrails patch: `docs/main.command.trace.force.guardrails.todo.current.md`
 - Phase 1 completion: `docs/main.improvement.7.phase1.complete.md`
 - Phase 1 test snapshot: `docs/main.improvement.7.phase1.julia-tests.complete.md`
 

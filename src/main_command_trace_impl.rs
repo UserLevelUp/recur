@@ -25,11 +25,12 @@ pub fn execute(
     pick: Option<usize>,
     scope_alias: Vec<String>,
     stdin: bool,
+    force: bool,
     separator: char,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
-    if depth > 5 {
+    if depth > 5 && !force {
         anyhow::bail!("Maximum depth is 5 (to prevent exponential explosion)");
     }
 
