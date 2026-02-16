@@ -6,8 +6,13 @@
 pub mod content_search;
 pub mod separator_merge;
 pub mod stdin;
+pub mod traversal_budget;
 
 // Re-export commonly used items
 pub use content_search::ContentSearchCapable;
 pub use separator_merge::MultiSeparatorCapable;
 pub use stdin::{read_paths_from_stdin, StdinCapable};
+pub use traversal_budget::{
+    parse_depth_budget_mode, resolve_depth_budget_policy, DepthBudgetMode, DepthBudgetPolicy,
+    DepthBudgetResult, TraversalBudgetCapable,
+};

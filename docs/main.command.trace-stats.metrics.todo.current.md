@@ -21,6 +21,36 @@ Implement the Phase 3 metrics engine behind `recur trace-stats`:
 4. Replace bootstrap placeholder outputs with real table/json/csv data.
 5. Expand Julia tests from contract-only to metric assertions.
 
+## Progress
+
+Completed:
+
+- Function discovery from scoped files and extension filters.
+- Per-function stats via trace traversal (direct, transitive, circular, depth, risk).
+- Sorting (`transitive|direct|circular|depth|risk`) and filtering (`circular-only|high-risk|medium-risk|low-risk`).
+- Top-N limiting.
+- Real table/json/csv output with summary data.
+- Traversal guardrail policy integration:
+  - shared trait resolver (`TraversalBudgetCapable` + policy resolution)
+  - config fallback from `.recur/config.toml`:
+    - preferred `[traits.traversal_budget]`
+    - compatibility fallback `[traversal]`
+  - `trace-stats` CLI overrides: `--depth`, `--depth-guard`, `--force`
+- Activated Julia metric assertions for:
+  - non-empty stats on hierarchical dot-scoped fixtures
+  - sort behavior
+  - circular-only filter behavior
+  - low-risk filter behavior
+  - top-N behavior
+  - depth guardrail behavior (hard-fail, clamp, force bypass)
+
+Remaining:
+
+- Upgrade circular metric from cycle-node count to distinct cycle-pattern count.
+- Activate depth/risk ordering test assertions currently still skipped in `julia-tests/runtests.trace-stats.jl`.
+- Add stdin-focused trace-stats integration assertions.
+- Add larger-scope performance regression test.
+
 ## References
 
 - `README.CORE.IMPROVEMENT7.md`

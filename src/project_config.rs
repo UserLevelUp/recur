@@ -33,6 +33,34 @@ pub struct StatusConfig {
     pub complete_suffix: Option<String>,
 }
 
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TraversalConfig {
+    pub max_depth: Option<usize>,
+    pub depth_guard: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TraitPlaceholderConfig {
+    pub enabled: Option<bool>,
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TraitTraversalBudgetConfig {
+    pub enabled: Option<bool>,
+    pub max_depth: Option<usize>,
+    pub depth_guard: Option<String>,
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TraitsConfig {
+    pub content_search: Option<TraitPlaceholderConfig>,
+    pub separator_merge: Option<TraitPlaceholderConfig>,
+    pub stdin: Option<TraitPlaceholderConfig>,
+    pub traversal_budget: Option<TraitTraversalBudgetConfig>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RecurConfig {
     pub project_root: PathBuf,
@@ -40,6 +68,8 @@ pub struct RecurConfig {
     pub lanes: Vec<LaneConfig>,
     pub checkpoint: Option<CheckpointConfig>,
     pub status: Option<StatusConfig>,
+    pub traversal: Option<TraversalConfig>,
+    pub traits: Option<TraitsConfig>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -100,6 +130,8 @@ impl RecurConfig {
         let mut lanes = Vec::new();
         let mut checkpoint = None;
         let mut status = None;
+        let mut traversal = None;
+        let mut traits = None;
 
         for (section, raw_value) in table {
             let Some(section_table) = raw_value.as_table() else {
@@ -112,6 +144,12 @@ impl RecurConfig {
                 }
                 "status" => {
                     status = Some(parse_status_section(section_table));
+                }
+                "traversal" => {
+                    traversal = Some(parse_traversal_section(section_table));
+                }
+                "traits" => {
+                    traits = Some(parse_traits_section(section_table));
                 }
                 _ => {
                     if let Some(lane) = parse_lane_section(section, section_table) {
@@ -129,6 +167,8 @@ impl RecurConfig {
             lanes,
             checkpoint,
             status,
+            traversal,
+            traits,
         })
     }
 
@@ -407,6 +447,68 @@ fn parse_status_section(table: &toml::value::Table) -> StatusConfig {
     }
 }
 
+fn parse_traversal_section(table: &toml::value::Table) -> TraversalConfig {
+    TraversalConfig {
+        max_depth: table
+            .get("max_depth")
+            .and_then(|v| v.as_integer())
+            .and_then(|v| usize::try_from(v).ok()),
+        depth_guard: table
+            .get("depth_guard")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+    }
+}
+
+fn parse_trait_placeholder_section(table: &toml::value::Table) -> TraitPlaceholderConfig {
+    TraitPlaceholderConfig {
+        enabled: table.get("enabled").and_then(|v| v.as_bool()),
+        notes: table
+            .get("notes")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+    }
+}
+
+fn parse_trait_traversal_budget_section(table: &toml::value::Table) -> TraitTraversalBudgetConfig {
+    TraitTraversalBudgetConfig {
+        enabled: table.get("enabled").and_then(|v| v.as_bool()),
+        max_depth: table
+            .get("max_depth")
+            .and_then(|v| v.as_integer())
+            .and_then(|v| usize::try_from(v).ok()),
+        depth_guard: table
+            .get("depth_guard")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        notes: table
+            .get("notes")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+    }
+}
+
+fn parse_traits_section(table: &toml::value::Table) -> TraitsConfig {
+    TraitsConfig {
+        content_search: table
+            .get("content_search")
+            .and_then(|v| v.as_table())
+            .map(parse_trait_placeholder_section),
+        separator_merge: table
+            .get("separator_merge")
+            .and_then(|v| v.as_table())
+            .map(parse_trait_placeholder_section),
+        stdin: table
+            .get("stdin")
+            .and_then(|v| v.as_table())
+            .map(parse_trait_placeholder_section),
+        traversal_budget: table
+            .get("traversal_budget")
+            .and_then(|v| v.as_table())
+            .map(parse_trait_traversal_budget_section),
+    }
+}
+
 fn contains_hierarchical_files(dir: &Path) -> bool {
     for entry in WalkDir::new(dir)
         .max_depth(3)
@@ -490,6 +592,23 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("current_suffix = \".current.md\"\n");
     content.push_str("todo_suffix = \".todo.md\"\n");
     content.push_str("complete_suffix = \".complete.md\"\n");
+    content.push_str("\n[traversal]\n");
+    content.push_str("max_depth = 5\n");
+    content.push_str("depth_guard = \"hard-fail\"\n");
+    content.push_str("\n[traits.content_search]\n");
+    content.push_str("enabled = true\n");
+    content.push_str("notes = \"Project-specific content search tuning placeholder.\"\n");
+    content.push_str("\n[traits.separator_merge]\n");
+    content.push_str("enabled = true\n");
+    content.push_str("notes = \"Project-specific separator merge tuning placeholder.\"\n");
+    content.push_str("\n[traits.stdin]\n");
+    content.push_str("enabled = true\n");
+    content.push_str("notes = \"Project-specific stdin filtering tuning placeholder.\"\n");
+    content.push_str("\n[traits.traversal_budget]\n");
+    content.push_str("enabled = true\n");
+    content.push_str("max_depth = 5\n");
+    content.push_str("depth_guard = \"hard-fail\"\n");
+    content.push_str("notes = \"Preferred trait-level traversal budget overrides.\"\n");
 
     content
 }
@@ -621,6 +740,20 @@ root_pattern = "**"
 [status]
 current_suffix = ".current.md"
 
+[traversal]
+max_depth = 7
+depth_guard = "clamp"
+
+[traits.content_search]
+enabled = true
+notes = "content search trait placeholder"
+
+[traits.traversal_budget]
+enabled = true
+max_depth = 11
+depth_guard = "clamp"
+notes = "traversal budget trait placeholder"
+
 [misc]
 foo = "bar"
 "#;
@@ -631,6 +764,32 @@ foo = "bar"
         assert_eq!(config.lanes[0].sep, '_');
         assert!(config.checkpoint.is_some());
         assert!(config.status.is_some());
+        assert!(config.traversal.is_some());
+        assert_eq!(config.traversal.as_ref().and_then(|t| t.max_depth), Some(7));
+        assert_eq!(
+            config
+                .traversal
+                .as_ref()
+                .and_then(|t| t.depth_guard.as_deref()),
+            Some("clamp")
+        );
+        assert!(config.traits.is_some());
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.content_search.as_ref())
+                .and_then(|s| s.enabled),
+            Some(true)
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.traversal_budget.as_ref())
+                .and_then(|tb| tb.max_depth),
+            Some(11)
+        );
     }
 
     #[test]
@@ -652,6 +811,8 @@ foo = "bar"
             ],
             checkpoint: None,
             status: None,
+            traversal: None,
+            traits: None,
         };
 
         assert_eq!(config.separator_for_dir(Path::new("src")), Some('_'));
@@ -697,6 +858,13 @@ foo = "bar"
         let config_text = fs::read_to_string(root.join(".recur/config.toml")).unwrap();
         assert!(config_text.contains("[src]"));
         assert!(config_text.contains("sep = \"_\""));
+        assert!(config_text.contains("[traversal]"));
+        assert!(config_text.contains("max_depth = 5"));
+        assert!(config_text.contains("depth_guard = \"hard-fail\""));
+        assert!(config_text.contains("[traits.content_search]"));
+        assert!(config_text.contains("[traits.separator_merge]"));
+        assert!(config_text.contains("[traits.stdin]"));
+        assert!(config_text.contains("[traits.traversal_budget]"));
     }
 
     #[test]

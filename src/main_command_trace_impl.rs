@@ -4,12 +4,19 @@
 
 use recur::output::{JsonFormatter, TerminalFormatter, TraceFormat};
 use recur::parser::HierarchyPattern;
+use recur::r#trait::{resolve_depth_budget_policy, TraversalBudgetCapable};
 use recur::search::{
     read_paths_from_stdin, SearchOptions, TraceDirection, TraceOptions, TraceSearcher,
 };
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::process;
+
+const TRACE_MAX_DEPTH: usize = 5;
+
+struct TraceCommand;
+
+impl TraversalBudgetCapable for TraceCommand {}
 
 pub fn execute(
     function: String,
@@ -25,14 +32,26 @@ pub fn execute(
     pick: Option<usize>,
     scope_alias: Vec<String>,
     stdin: bool,
+    depth_guard: Option<String>,
     force: bool,
     separator: char,
     json: bool,
     color: bool,
 ) -> anyhow::Result<()> {
-    if depth > 5 && !force {
-        anyhow::bail!("Maximum depth is 5 (to prevent exponential explosion)");
+    let depth_policy = resolve_depth_budget_policy(&dir, depth_guard.as_deref(), TRACE_MAX_DEPTH)?;
+    let depth_budget = TraceCommand::enforce_depth_budget(
+        depth,
+        depth_policy.max_depth,
+        force,
+        depth_policy.guard_mode,
+    )?;
+    if depth_budget.clamped {
+        eprintln!(
+            "Warning: requested depth {} exceeds max depth {}; clamping to {}. Use --force to bypass.",
+            depth_budget.requested, depth_policy.max_depth, depth_budget.effective
+        );
     }
+    let effective_depth = depth_budget.effective;
 
     let direction = match direction_str.to_lowercase().as_str() {
         "callees" => TraceDirection::Callees,
@@ -85,12 +104,20 @@ pub fn execute(
 
     if direction == TraceDirection::Both {
         let mut caller_searcher = TraceSearcher::new(search_options.clone(), trace_options.clone());
-        let callers_result =
-            caller_searcher.trace(&function, &scope_pattern, TraceDirection::Callers, depth)?;
+        let callers_result = caller_searcher.trace(
+            &function,
+            &scope_pattern,
+            TraceDirection::Callers,
+            effective_depth,
+        )?;
 
         let mut callee_searcher = TraceSearcher::new(search_options, trace_options);
-        let callees_result =
-            callee_searcher.trace(&function, &scope_pattern, TraceDirection::Callees, depth)?;
+        let callees_result = callee_searcher.trace(
+            &function,
+            &scope_pattern,
+            TraceDirection::Callees,
+            effective_depth,
+        )?;
 
         if json {
             let output = JsonFormatter::format_trace_result_both(&callers_result, &callees_result);
@@ -113,7 +140,7 @@ pub fn execute(
     }
 
     let mut searcher = TraceSearcher::new(search_options, trace_options);
-    let trace_result = searcher.trace(&function, &scope_pattern, direction, depth)?;
+    let trace_result = searcher.trace(&function, &scope_pattern, direction, effective_depth)?;
 
     if json {
         let output = JsonFormatter::format_trace_result(&trace_result);

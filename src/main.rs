@@ -416,6 +416,11 @@ enum Commands {
         #[arg(long)]
         stdin: bool,
 
+        /// Depth guardrail mode override: hard-fail or clamp
+        /// Falls back to [traits.traversal_budget].depth_guard, then [traversal].depth_guard.
+        #[arg(long)]
+        depth_guard: Option<String>,
+
         /// Bypass trace depth cap safety check
         #[arg(long)]
         force: bool,
@@ -426,6 +431,7 @@ enum Commands {
     /// Examples:
     ///   recur trace-stats --scope "**" --ext .rs --top 5
     ///   recur trace-stats --scope "**" --filter circular-only
+    ///   recur trace-stats --scope "**" --depth 8 --depth-guard clamp
     ///   git diff --name-only | recur trace-stats --scope "**" --stdin --sort-by risk
     TraceStats {
         /// Hierarchical scope to analyze
@@ -459,6 +465,19 @@ enum Commands {
         /// Read file paths from stdin instead of searching filesystem
         #[arg(long)]
         stdin: bool,
+
+        /// Trace depth per root function (default: [traits.traversal_budget].max_depth, then [traversal].max_depth, then 5)
+        #[arg(long)]
+        depth: Option<usize>,
+
+        /// Depth guardrail mode override: hard-fail or clamp
+        /// Falls back to [traits.traversal_budget].depth_guard, then [traversal].depth_guard.
+        #[arg(long)]
+        depth_guard: Option<String>,
+
+        /// Bypass trace depth cap safety check
+        #[arg(long)]
+        force: bool,
 
         /// Case-insensitive search
         #[arg(short, long)]
@@ -866,6 +885,7 @@ fn main() {
             pick,
             scope_alias,
             stdin,
+            depth_guard,
             force,
         } => {
             let command_separators = resolve_command_separators(&cli.sep, &dir);
@@ -885,6 +905,7 @@ fn main() {
                 pick,
                 scope_alias,
                 stdin,
+                depth_guard,
                 force,
                 separator,
                 cli.json,
@@ -900,6 +921,9 @@ fn main() {
             top,
             format,
             stdin,
+            depth,
+            depth_guard,
+            force,
             ignore_case,
         } => {
             let command_separators = resolve_command_separators(&cli.sep, &dir);
@@ -914,6 +938,9 @@ fn main() {
                 top,
                 format,
                 stdin,
+                depth,
+                depth_guard,
+                force,
                 ignore_case,
                 separator,
                 cli.json,
