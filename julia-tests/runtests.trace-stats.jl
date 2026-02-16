@@ -1,6 +1,6 @@
 """
-Tests for 'recur trace-stats' Command (IMPROVEMENT7 - PLACEHOLDER)
-===================================================================
+Tests for 'recur trace-stats' Command (IMPROVEMENT7)
+====================================================
 
 Statistical analysis of call graph complexity. Ranks functions by:
 - Direct callees (depth 1)
@@ -9,14 +9,14 @@ Statistical analysis of call graph complexity. Ranks functions by:
 - Maximum call depth
 - Refactoring risk score
 
-This test suite is a PLACEHOLDER for IMPROVEMENT7.
-Tests will be activated once trace-stats is implemented.
+Phase 3 bootstrap currently covers command surface + validation.
+Metric computation tests remain pending for later phase work.
 """
 
 include("runtests.setup.jl")
 
-@testset "recur trace-stats command (PLACEHOLDER)" begin
-    log_section("Testing: recur trace-stats (IMPROVEMENT7 - NOT YET IMPLEMENTED)")
+@testset "recur trace-stats command" begin
+    log_section("Testing: recur trace-stats")
 
     created_here = false
     if !isdir(TEST_DIR)
@@ -26,33 +26,67 @@ include("runtests.setup.jl")
 
     try
 
-    @testset "Contract tests (PLACEHOLDER)" begin
+    @testset "Contract tests" begin
         @testset "trace-stats --help output" begin
-            # PLACEHOLDER: Will be activated when trace-stats is implemented
-            # success, output, _ = run_recur("trace-stats --help")
+            success, output, _ = run_recur("trace-stats --help")
 
-            # Expected to contain:
-            # - "trace-stats" command description
-            # - "--scope" requirement
-            # - "--sort-by" options (transitive, direct, circular, depth, risk)
-            # - "--top N" to limit results
-            # - "--filter circular-only" to show only functions with cycles
-            # - Examples showing real usage
+            passed = success &&
+                     contains(output, "trace-stats") &&
+                     contains(output, "--scope") &&
+                     contains(output, "--sort-by") &&
+                     contains(output, "--top") &&
+                     contains(output, "--filter")
 
-            @test_skip true  # Skip until trace-stats is implemented
-            log_test("trace-stats help output (PENDING IMPLEMENTATION)")
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test contains(output, "trace-stats")
+            @test contains(output, "--scope")
+            @test contains(output, "--sort-by")
+            @test contains(output, "--top")
+            @test contains(output, "--filter")
+            log_test("trace-stats help output works")
         end
 
         @testset "missing scope argument" begin
-            # PLACEHOLDER
-            # success, output, error_output = run_recur("trace-stats")
+            success, _, error_output = run_recur("trace-stats")
 
-            # Should fail with error:
-            # - "required arguments"
-            # - "--scope"
+            passed = !success &&
+                     contains(error_output, "required arguments") &&
+                     contains(error_output, "--scope")
 
-            @test_skip true
-            log_test("trace-stats missing scope (PENDING IMPLEMENTATION)")
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            @test contains(error_output, "required arguments")
+            @test contains(error_output, "--scope")
+            log_test("trace-stats missing scope returns error")
+        end
+
+        @testset "invalid sort option" begin
+            success, _, error_output = run_recur("trace-stats --scope \"**\" --sort-by latency")
+
+            passed = !success &&
+                     contains(error_output, "Invalid --sort-by")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            @test contains(error_output, "Invalid --sort-by")
+            log_test("trace-stats invalid sort returns error")
+        end
+
+        @testset "invalid filter option" begin
+            success, _, error_output = run_recur("trace-stats --scope \"**\" --filter urgent-only")
+
+            passed = !success &&
+                     contains(error_output, "Invalid --filter")
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test !success
+            @test contains(error_output, "Invalid --filter")
+            log_test("trace-stats invalid filter returns error")
         end
     end
 
@@ -296,41 +330,13 @@ end
 # Implementation Checklist for IMPROVEMENT7
 # ==========================================
 #
-# When implementing trace-stats, use this checklist:
+# Progress:
+# - [x] Step 1: Add TraceStats command to src/main.rs CLI
+# - [x] Activate contract tests (help + option validation)
+# - [x] Add to main test suite via main.command.trace-stats.test.jl
 #
-# 1. Add TraceStats command to src/main.rs CLI
-#    - Required: --scope
-#    - Optional: --sort-by (transitive|direct|circular|depth|risk)
-#    - Optional: --top N
-#    - Optional: --filter (circular-only|high-risk)
-#    - Optional: --stdin (depends on IMPROVEMENT6)
-#    - Optional: --json, --format
-#
-# 2. Implement statistical collection in src/search.rs
-#    - Extend TraceSearcher to collect stats for all functions
-#    - Count: direct callees, transitive callees, circular patterns, max depth
-#    - Calculate risk score: Low (<10), Medium (10-30), High (>30)
-#
-# 3. Add sorting logic
-#    - Sort by: transitive (default), direct, circular, depth, risk
-#    - Implement comparison functions for each sort type
-#
-# 4. Add filtering logic
-#    - Filter circular-only: show only functions with circular > 0
-#    - Filter high-risk: show only functions with risk = High
-#
-# 5. Implement output formatting in src/output.rs
-#    - Table format with columns: Function | Direct | Transitive | Circular | Depth | Risk
-#    - Summary statistics: total, avg transitive, max depth, count with circular
-#    - JSON format for tooling integration
-#
-# 6. Activate these tests
-#    - Replace @test_skip with @test
-#    - Implement actual assertions
-#    - Add golden output validation
-#
-# 7. Add to main test suite
-#    - Uncomment include("runtests.trace-stats.jl") in runtests.jl
-#
-# Estimated effort: 4-6 hours
-# Depends on: IMPROVEMENT5 (trace - DONE), IMPROVEMENT6 (--stdin - IN PROGRESS)
+# Remaining:
+# - [ ] Implement statistical collection in src/search.rs
+# - [ ] Add sorting/filtering/top-N over computed metrics
+# - [ ] Implement full table/json/csv metrics output
+# - [ ] Replace placeholder skips with real metric assertions

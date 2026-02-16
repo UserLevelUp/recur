@@ -18,13 +18,14 @@ Implement `trace-stats` to provide call graph complexity statistics across scope
 4. Add table/JSON/CSV output support.
 5. Add tests for core metrics and filters.
 
-## Active Patch Lane (Guardrails)
+## Recent Completions
 
-Parallel to `trace-stats`, we are tracking a trace safety override patch:
+- `docs/main.command.trace.force.guardrails.complete.md`
+- `docs/main.command.trace-stats.cli-surface.complete.md`
 
-- `docs/main.command.trace.force.guardrails.todo.current.md`
+## Active Patch Lane
 
-This lane keeps default safety behavior, but adds explicit `--force` bypass for requested deep traces.
+- `docs/main.command.trace-stats.metrics.todo.current.md`
 
 ## Code-First Rule
 
@@ -37,4 +38,4 @@ Follow code-first eventness:
 - `docs/main.improvement.7.phase3.todo.current.reference.md`
 - `docs/main.improvement.7.phase3.todo.trigger.event.md`
 - `docs/main.improvement.7.todo.future-plan.md`
-- `docs/main.command.trace.force.guardrails.todo.current.md`
+- `docs/main.command.trace-stats.metrics.todo.current.md`

@@ -56,7 +56,7 @@ try
         include("main.command.stdin.test.jl")    # IMPROVEMENT6 - Git integration with --stdin flag
 
         # TODO: Add more test modules as they are implemented
-        # include("runtests.trace-stats.jl") # IMPROVEMENT7 - Statistical analysis of call graphs
+        include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
         # include("runtests.gaps.jl")        # Needs feature implementation
 
     end

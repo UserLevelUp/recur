@@ -28,6 +28,7 @@ mod main_command_related_impl;
 mod main_command_stats_impl;
 mod main_command_stats_stdin;
 mod main_command_trace_impl;
+mod main_command_trace_stats_impl;
 mod main_command_tree_impl;
 
 #[derive(Parser)]
@@ -418,6 +419,50 @@ enum Commands {
         /// Bypass trace depth cap safety check
         #[arg(long)]
         force: bool,
+    },
+
+    /// Analyze call graph complexity statistics
+    ///
+    /// Examples:
+    ///   recur trace-stats --scope "**" --ext .rs --top 5
+    ///   recur trace-stats --scope "**" --filter circular-only
+    ///   git diff --name-only | recur trace-stats --scope "**" --stdin --sort-by risk
+    TraceStats {
+        /// Hierarchical scope to analyze
+        #[arg(long)]
+        scope: String,
+
+        /// Root directory to search
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// File extensions to include
+        #[arg(long)]
+        ext: Option<String>,
+
+        /// Sort by metric (transitive, direct, circular, depth, risk)
+        #[arg(long, default_value = "transitive")]
+        sort_by: String,
+
+        /// Filter results (circular-only, high-risk, medium-risk, low-risk)
+        #[arg(long)]
+        filter: Option<String>,
+
+        /// Show only top N results
+        #[arg(long)]
+        top: Option<usize>,
+
+        /// Output format (table, csv, json)
+        #[arg(long, default_value = "table")]
+        format: String,
+
+        /// Read file paths from stdin instead of searching filesystem
+        #[arg(long)]
+        stdin: bool,
+
+        /// Case-insensitive search
+        #[arg(short, long)]
+        ignore_case: bool,
     },
 
     /// Merge hierarchical results from multiple naming conventions
@@ -844,6 +889,34 @@ fn main() {
                 separator,
                 cli.json,
                 cli.color,
+            )
+        }
+        Commands::TraceStats {
+            scope,
+            dir,
+            ext,
+            sort_by,
+            filter,
+            top,
+            format,
+            stdin,
+            ignore_case,
+        } => {
+            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_trace_stats_impl::execute(
+                scope,
+                dir,
+                ext,
+                sort_by,
+                filter,
+                top,
+                format,
+                stdin,
+                ignore_case,
+                separator,
+                cli.json,
             )
         }
         Commands::Merge {

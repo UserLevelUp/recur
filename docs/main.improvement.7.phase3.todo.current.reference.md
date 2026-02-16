@@ -6,33 +6,32 @@
 
 ## Existing Implementation References
 
+- `src/main_command_trace_stats_impl.rs` - phase 3 command surface + validation bootstrap
 - `src/main_command_trace_impl.rs` - trace behavior and call graph traversal patterns
 - `src/search.rs` - recursion/stop-reason engine (depth, width, cycle)
 - `src/main_command_callers_impl.rs` - caller analysis patterns
 - `src/main_command_callees_impl.rs` - callee analysis patterns
 - `src/output.rs` - table/json output shaping
 - `src/main.rs` - CLI wiring for trace flags and command dispatch
-- `src/main_command_init_impl.rs` - existing `--force` pass-through pattern
-- `src/project_config.rs` - existing `if exists && !force` guard gate
-- `julia-tests/runtests.trace-stats.jl` - trace-stats test placeholder
-- `julia-tests/runtests.trace.jl` - `trace --force` placeholder tests
+- `julia-tests/runtests.trace-stats.jl` - trace-stats tests (contract active, metrics pending)
+- `docs/main.command.trace-stats.cli-surface.complete.md` - phase 3 step 1 completion evidence
+- `docs/main.command.trace-stats.metrics.todo.current.md` - active metrics lane
 
 ## How to Study
 
 ```bash
 cat README.CORE.IMPROVEMENT7.md
 cat src/main.rs
+cat src/main_command_trace_stats_impl.rs
 cat src/main_command_trace_impl.rs
 cat src/search.rs
 cat src/output.rs
 cat julia-tests/runtests.trace-stats.jl
-cat julia-tests/runtests.trace.jl
 ```
 
 ## Recommended Approach
 
-1. Define minimal `trace-stats` CLI + handler wiring first.
+1. Keep command surface stable while replacing bootstrap payload with computed metrics.
 2. Reuse existing trace traversal logic before introducing new graph machinery.
-3. Reuse the existing `--force` wiring model from `init` for trace safety bypass.
-4. Add deterministic stats structs + sorting/filtering with focused unit tests.
-5. Add output mode coverage (table/json/csv) after metrics are stable.
+3. Add deterministic stats structs + sorting/filtering with focused unit tests.
+4. Add output mode coverage (table/json/csv) after metrics are stable.
