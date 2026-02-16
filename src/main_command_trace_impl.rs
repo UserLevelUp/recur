@@ -4,12 +4,12 @@
 
 use recur::output::{JsonFormatter, TerminalFormatter, TraceFormat};
 use recur::parser::HierarchyPattern;
-use recur::r#trait::{resolve_depth_budget_policy, TraversalBudgetCapable};
-use recur::search::{
-    read_paths_from_stdin, SearchOptions, TraceDirection, TraceOptions, TraceSearcher,
+use recur::r#trait::{
+    read_resolved_paths_from_stdin, resolve_depth_budget_policy, TraversalBudgetCapable,
 };
+use recur::search::{SearchOptions, TraceDirection, TraceOptions, TraceSearcher};
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process;
 
 const TRACE_MAX_DEPTH: usize = 5;
@@ -160,29 +160,6 @@ pub fn execute(
     formatter.print_trace_result(&trace_result, output_format, verbose)?;
 
     Ok(())
-}
-
-fn read_resolved_paths_from_stdin(root: &Path) -> anyhow::Result<Vec<PathBuf>> {
-    let mut resolved = Vec::new();
-
-    for path in read_paths_from_stdin()? {
-        if path.is_absolute() || path.exists() {
-            resolved.push(path);
-            continue;
-        }
-
-        if path.is_relative() {
-            let candidate = root.join(&path);
-            if candidate.exists() {
-                resolved.push(candidate);
-                continue;
-            }
-        }
-
-        resolved.push(path);
-    }
-
-    Ok(resolved)
 }
 
 fn apply_scope_alias(scope: &str, aliases: &[String]) -> anyhow::Result<String> {

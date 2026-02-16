@@ -46,6 +46,14 @@ pub struct TraitPlaceholderConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TraitStdinConfig {
+    pub enabled: Option<bool>,
+    pub exclude_missing: Option<bool>,
+    pub resolve_relative_to_root: Option<bool>,
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct TraitTraversalBudgetConfig {
     pub enabled: Option<bool>,
     pub max_depth: Option<usize>,
@@ -57,7 +65,7 @@ pub struct TraitTraversalBudgetConfig {
 pub struct TraitsConfig {
     pub content_search: Option<TraitPlaceholderConfig>,
     pub separator_merge: Option<TraitPlaceholderConfig>,
-    pub stdin: Option<TraitPlaceholderConfig>,
+    pub stdin: Option<TraitStdinConfig>,
     pub traversal_budget: Option<TraitTraversalBudgetConfig>,
 }
 
@@ -488,6 +496,20 @@ fn parse_trait_traversal_budget_section(table: &toml::value::Table) -> TraitTrav
     }
 }
 
+fn parse_trait_stdin_section(table: &toml::value::Table) -> TraitStdinConfig {
+    TraitStdinConfig {
+        enabled: table.get("enabled").and_then(|v| v.as_bool()),
+        exclude_missing: table.get("exclude_missing").and_then(|v| v.as_bool()),
+        resolve_relative_to_root: table
+            .get("resolve_relative_to_root")
+            .and_then(|v| v.as_bool()),
+        notes: table
+            .get("notes")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+    }
+}
+
 fn parse_traits_section(table: &toml::value::Table) -> TraitsConfig {
     TraitsConfig {
         content_search: table
@@ -501,7 +523,7 @@ fn parse_traits_section(table: &toml::value::Table) -> TraitsConfig {
         stdin: table
             .get("stdin")
             .and_then(|v| v.as_table())
-            .map(parse_trait_placeholder_section),
+            .map(parse_trait_stdin_section),
         traversal_budget: table
             .get("traversal_budget")
             .and_then(|v| v.as_table())
@@ -603,7 +625,9 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("notes = \"Project-specific separator merge tuning placeholder.\"\n");
     content.push_str("\n[traits.stdin]\n");
     content.push_str("enabled = true\n");
-    content.push_str("notes = \"Project-specific stdin filtering tuning placeholder.\"\n");
+    content.push_str("exclude_missing = false\n");
+    content.push_str("resolve_relative_to_root = true\n");
+    content.push_str("notes = \"Project-specific stdin path resolution and filtering policy.\"\n");
     content.push_str("\n[traits.traversal_budget]\n");
     content.push_str("enabled = true\n");
     content.push_str("max_depth = 5\n");
@@ -748,6 +772,12 @@ depth_guard = "clamp"
 enabled = true
 notes = "content search trait placeholder"
 
+[traits.stdin]
+enabled = true
+exclude_missing = true
+resolve_relative_to_root = false
+notes = "stdin trait placeholder"
+
 [traits.traversal_budget]
 enabled = true
 max_depth = 11
@@ -789,6 +819,22 @@ foo = "bar"
                 .and_then(|t| t.traversal_budget.as_ref())
                 .and_then(|tb| tb.max_depth),
             Some(11)
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.stdin.as_ref())
+                .and_then(|s| s.exclude_missing),
+            Some(true)
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.stdin.as_ref())
+                .and_then(|s| s.resolve_relative_to_root),
+            Some(false)
         );
     }
 
@@ -864,6 +910,8 @@ foo = "bar"
         assert!(config_text.contains("[traits.content_search]"));
         assert!(config_text.contains("[traits.separator_merge]"));
         assert!(config_text.contains("[traits.stdin]"));
+        assert!(config_text.contains("exclude_missing = false"));
+        assert!(config_text.contains("resolve_relative_to_root = true"));
         assert!(config_text.contains("[traits.traversal_budget]"));
     }
 

@@ -4,9 +4,10 @@
 //! from stdin (e.g., from git commands) and filter them by hierarchical patterns.
 
 use crate::parser::{HierarchicalName, HierarchyPattern};
+use crate::project_config;
 use anyhow::Context;
 use std::io::{stdin, BufRead};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// Read file paths from stdin (one per line)
 ///
@@ -31,6 +32,89 @@ pub fn read_paths_from_stdin() -> anyhow::Result<Vec<PathBuf>> {
     }
 
     Ok(paths)
+}
+
+/// Stdin path resolution policy from config.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StdinPathPolicy {
+    pub exclude_missing: bool,
+    pub resolve_relative_to_root: bool,
+}
+
+impl Default for StdinPathPolicy {
+    fn default() -> Self {
+        Self {
+            exclude_missing: false,
+            resolve_relative_to_root: true,
+        }
+    }
+}
+
+/// Resolve stdin path policy from `.recur/config.toml` (trait-aware).
+pub fn resolve_stdin_path_policy(root: &Path) -> anyhow::Result<StdinPathPolicy> {
+    let lookup_root = if root.is_absolute() {
+        root.to_path_buf()
+    } else if let Ok(cwd) = std::env::current_dir() {
+        cwd.join(root)
+    } else {
+        root.to_path_buf()
+    };
+
+    let config = project_config::load_nearest(&lookup_root)?;
+    let trait_stdin = config
+        .as_ref()
+        .and_then(|cfg| cfg.traits.as_ref())
+        .and_then(|traits| traits.stdin.as_ref())
+        .filter(|cfg| cfg.enabled.unwrap_or(true));
+
+    let mut policy = StdinPathPolicy::default();
+    if let Some(cfg) = trait_stdin {
+        if let Some(exclude_missing) = cfg.exclude_missing {
+            policy.exclude_missing = exclude_missing;
+        }
+        if let Some(resolve_relative) = cfg.resolve_relative_to_root {
+            policy.resolve_relative_to_root = resolve_relative;
+        }
+    }
+
+    Ok(policy)
+}
+
+/// Resolve stdin paths against root and policy.
+pub fn resolve_stdin_paths(
+    paths: Vec<PathBuf>,
+    root: &Path,
+    policy: StdinPathPolicy,
+) -> Vec<PathBuf> {
+    let mut resolved = Vec::new();
+
+    for path in paths {
+        if path.is_absolute() || path.exists() {
+            resolved.push(path);
+            continue;
+        }
+
+        if policy.resolve_relative_to_root && path.is_relative() {
+            let candidate = root.join(&path);
+            if candidate.exists() {
+                resolved.push(candidate);
+                continue;
+            }
+        }
+
+        if !policy.exclude_missing {
+            resolved.push(path);
+        }
+    }
+
+    resolved
+}
+
+/// Read stdin file paths and resolve using project policy.
+pub fn read_resolved_paths_from_stdin(root: &Path) -> anyhow::Result<Vec<PathBuf>> {
+    let policy = resolve_stdin_path_policy(root)?;
+    let paths = read_paths_from_stdin()?;
+    Ok(resolve_stdin_paths(paths, root, policy))
 }
 
 /// Trait for commands that can read from stdin and filter by hierarchical patterns.
@@ -120,7 +204,9 @@ pub trait StdinCapable {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
     use std::path::PathBuf;
+    use tempfile::tempdir;
 
     struct TestCommand;
     impl StdinCapable for TestCommand {}
@@ -194,5 +280,66 @@ mod tests {
             .to_str()
             .unwrap()
             .ends_with("main_command_stats_impl.rs"));
+    }
+
+    #[test]
+    fn resolve_stdin_paths_keeps_missing_by_default() {
+        let root = Path::new(".");
+        let paths = vec![PathBuf::from("missing.file")];
+
+        let resolved = resolve_stdin_paths(paths, root, StdinPathPolicy::default());
+        assert_eq!(resolved, vec![PathBuf::from("missing.file")]);
+    }
+
+    #[test]
+    fn resolve_stdin_paths_excludes_missing_when_enabled() {
+        let root = Path::new(".");
+        let paths = vec![PathBuf::from("missing.file")];
+        let policy = StdinPathPolicy {
+            exclude_missing: true,
+            resolve_relative_to_root: true,
+        };
+
+        let resolved = resolve_stdin_paths(paths, root, policy);
+        assert!(resolved.is_empty());
+    }
+
+    #[test]
+    fn resolve_stdin_path_policy_reads_trait_settings() {
+        let temp = tempdir().unwrap();
+        fs::create_dir_all(temp.path().join(".recur")).unwrap();
+        fs::write(
+            temp.path().join(".recur/config.toml"),
+            r#"
+[traits.stdin]
+enabled = true
+exclude_missing = true
+resolve_relative_to_root = false
+"#,
+        )
+        .unwrap();
+
+        let policy = resolve_stdin_path_policy(temp.path()).unwrap();
+        assert!(policy.exclude_missing);
+        assert!(!policy.resolve_relative_to_root);
+    }
+
+    #[test]
+    fn resolve_stdin_path_policy_uses_defaults_when_trait_disabled() {
+        let temp = tempdir().unwrap();
+        fs::create_dir_all(temp.path().join(".recur")).unwrap();
+        fs::write(
+            temp.path().join(".recur/config.toml"),
+            r#"
+[traits.stdin]
+enabled = false
+exclude_missing = true
+resolve_relative_to_root = false
+"#,
+        )
+        .unwrap();
+
+        let policy = resolve_stdin_path_policy(temp.path()).unwrap();
+        assert_eq!(policy, StdinPathPolicy::default());
     }
 }

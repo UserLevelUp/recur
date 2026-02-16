@@ -3,10 +3,11 @@
 //! This module maps to hierarchical name: main.command.trace-stats.impl
 
 use recur::parser::HierarchyPattern;
-use recur::r#trait::{resolve_depth_budget_policy, DepthBudgetMode, TraversalBudgetCapable};
-use recur::search::{
-    read_paths_from_stdin, FileSearcher, SearchOptions, TraceDirection, TraceOptions, TraceSearcher,
+use recur::r#trait::{
+    read_resolved_paths_from_stdin, resolve_depth_budget_policy, DepthBudgetMode,
+    TraversalBudgetCapable,
 };
+use recur::search::{FileSearcher, SearchOptions, TraceDirection, TraceOptions, TraceSearcher};
 use serde_json::json;
 use std::cmp::Ordering;
 use std::collections::BTreeMap;
@@ -271,29 +272,6 @@ pub fn execute(
 
     print_table(&stats);
     Ok(())
-}
-
-fn read_resolved_paths_from_stdin(root: &Path) -> anyhow::Result<Vec<PathBuf>> {
-    let mut resolved = Vec::new();
-
-    for path in read_paths_from_stdin()? {
-        if path.is_absolute() || path.exists() {
-            resolved.push(path);
-            continue;
-        }
-
-        if path.is_relative() {
-            let candidate = root.join(&path);
-            if candidate.exists() {
-                resolved.push(candidate);
-                continue;
-            }
-        }
-
-        resolved.push(path);
-    }
-
-    Ok(resolved)
 }
 
 fn compute_function_stats(
