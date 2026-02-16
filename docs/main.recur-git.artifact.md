@@ -25,7 +25,7 @@ This follows the Unix philosophy: **do one thing well**.
 
 Captures parallel-lane checkpoint entries combining:
 - Git state (branch, head, worktree status)
-- Active todo leaves (docs and src lanes)
+- Active `current` leaves across configured lanes
 - Separator configuration
 - Optional test execution
 
@@ -43,6 +43,8 @@ recur-git checkpoint --emit-parallel --checkpoint-id ck-children-01
 
 # Append to parallel history log
 recur-git checkpoint --append-parallel --checkpoint-id ck-children-01
+# (or provide a file explicitly)
+recur-git checkpoint --append-parallel --checkpoint-id ck-children-01 -f docs/main.dogfooding.parallel.history.md
 ```
 
 ## Implementation
@@ -52,10 +54,10 @@ recur-git checkpoint --append-parallel --checkpoint-id ck-children-01
 **Binary Name:** `recur-git`
 
 **Key Features:**
-- Queries `todo.current` files using recur's hierarchical pattern matching
+- Queries current-work files using lane-aware hierarchical matching from `.recur/config.toml`
 - Captures git state via `git rev-parse` and `git status`
 - Formats structured checkpoint entries
-- Appends to parallel history logs
+- Appends to parallel history logs (`--file` or `[checkpoint].file`)
 - Optionally runs cargo tests and julia tests
 
 ## Build Configuration
@@ -97,8 +99,8 @@ When checkpointing during dogfooding:
 
 3. **Checkpoint includes:**
    - Git commit hash
-   - Active `todo.current` files in both lanes (docs and src)
-   - Separator configuration
+   - Active `current` files in configured lanes
+   - Per-lane separator configuration
    - Worktree cleanliness
 
 ## Purity Philosophy

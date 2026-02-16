@@ -6,6 +6,7 @@
 use anyhow::Context;
 use clap::{Parser, Subcommand};
 use recur::parser::HierarchyPattern;
+use recur::project_config;
 use recur::search::{FileSearcher, SearchOptions};
 use std::fs::{self, OpenOptions};
 use std::io::Write;
@@ -23,6 +24,34 @@ use std::time::{SystemTime, UNIX_EPOCH};
 struct Cli {
     #[command(subcommand)]
     command: Commands,
+}
+
+const DEFAULT_CHECKPOINT_ROOT_PATTERN: &str = "main.command.**.todo";
+const DEFAULT_CURRENT_SUFFIX: &str = ".current.md";
+
+#[derive(Debug, Clone)]
+struct LaneQuery {
+    name: String,
+    root: PathBuf,
+    display_dir: String,
+    separator: char,
+}
+
+#[derive(Debug, Clone)]
+struct CheckpointSettings {
+    lanes: Vec<LaneQuery>,
+    root_pattern: String,
+    current_suffix: String,
+    default_log_path: Option<PathBuf>,
+}
+
+#[derive(Debug, Clone)]
+struct LaneState {
+    name: String,
+    display_dir: String,
+    separator: char,
+    tree_scope: String,
+    current_files: Vec<PathBuf>,
 }
 
 #[derive(Subcommand)]
@@ -58,7 +87,7 @@ enum Commands {
         #[arg(long, value_name = "ID")]
         checkpoint_id: Option<String>,
 
-        /// File path for checkpoint log (required with --append-parallel)
+        /// File path for checkpoint log (defaults to [checkpoint].file when configured)
         #[arg(short = 'f', long = "file", value_name = "PATH")]
         file: Option<PathBuf>,
 
@@ -112,16 +141,12 @@ fn execute_checkpoint(
     run_tests: bool,
     run_julia_tests: bool,
 ) -> anyhow::Result<()> {
-    let docs_current = find_files_by_pattern(Path::new("docs"), "main.command.**.todo.current", '.')?;
-    let src_pattern = format!(
-        "main{sep}command{sep}*{sep}todo{sep}current",
-        sep = src_separator
-    );
-    let src_current = find_files_by_pattern(Path::new("src"), &src_pattern, src_separator)?;
+    let settings = resolve_checkpoint_settings(src_separator)?;
+    let lane_states = collect_lane_states(&settings)?;
     let git_state = collect_git_state();
 
     if snapshot {
-        print_snapshot(&git_state, &docs_current, &src_current, src_separator);
+        print_snapshot(&git_state, &lane_states);
     }
 
     if run_tests {
@@ -134,22 +159,14 @@ fn execute_checkpoint(
 
     if emit_parallel || append_parallel {
         let checkpoint_id = checkpoint_id.unwrap_or_else(default_checkpoint_id);
-        let entry = build_parallel_entry(
-            &checkpoint_id,
-            &git_state,
-            &docs_current,
-            &src_current,
-            src_separator,
-        );
+        let entry = build_parallel_entry(&checkpoint_id, &git_state, &lane_states);
 
         if emit_parallel {
             println!("{}", entry);
         }
 
         if append_parallel {
-            let log_path = file.ok_or_else(|| {
-                anyhow::anyhow!("--file (-f) is required when using --append-parallel")
-            })?;
+            let log_path = resolve_checkpoint_log_path(file, &settings)?;
             append_parallel_entry(&log_path, &entry)?;
             println!("Appended parallel checkpoint to {}", log_path.display());
         }
@@ -172,8 +189,8 @@ struct GitState {
 fn collect_git_state() -> GitState {
     let branch = run_capture("git", &["rev-parse", "--abbrev-ref", "HEAD"])
         .unwrap_or_else(|| "unknown".to_string());
-    let head =
-        run_capture("git", &["log", "--oneline", "-n", "1"]).unwrap_or_else(|| "unknown".to_string());
+    let head = run_capture("git", &["log", "--oneline", "-n", "1"])
+        .unwrap_or_else(|| "unknown".to_string());
     let dirty_count = run_capture("git", &["status", "--short"])
         .map(|s| s.lines().filter(|l| !l.trim().is_empty()).count())
         .unwrap_or(0);
@@ -205,7 +222,168 @@ fn run_capture(program: &str, args: &[&str]) -> Option<String> {
     }
 }
 
-fn find_files_by_pattern(root: &Path, pattern_raw: &str, separator: char) -> anyhow::Result<Vec<PathBuf>> {
+fn resolve_checkpoint_settings(src_separator: char) -> anyhow::Result<CheckpointSettings> {
+    let cwd = std::env::current_dir().context("Failed to resolve current working directory")?;
+    let config = project_config::load_nearest(&cwd).context("Failed to load .recur/config.toml")?;
+
+    let Some(config) = config else {
+        return Ok(CheckpointSettings {
+            lanes: default_lane_queries(&cwd, src_separator),
+            root_pattern: DEFAULT_CHECKPOINT_ROOT_PATTERN.to_string(),
+            current_suffix: DEFAULT_CURRENT_SUFFIX.to_string(),
+            default_log_path: None,
+        });
+    };
+
+    let mut lanes: Vec<LaneQuery> = config
+        .lanes
+        .iter()
+        .map(|lane| LaneQuery {
+            name: lane.name.clone(),
+            root: config.project_root.join(&lane.dir),
+            display_dir: lane.dir.display().to_string(),
+            separator: lane.sep,
+        })
+        .collect();
+    if lanes.is_empty() {
+        lanes = default_lane_queries(&config.project_root, src_separator);
+    }
+
+    let root_pattern = config
+        .checkpoint
+        .as_ref()
+        .and_then(|section| section.root_pattern.as_ref())
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| "**".to_string());
+
+    let current_suffix = config
+        .status
+        .as_ref()
+        .and_then(|section| section.current_suffix.as_ref())
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| DEFAULT_CURRENT_SUFFIX.to_string());
+
+    let default_log_path = config
+        .checkpoint
+        .as_ref()
+        .and_then(|section| section.file.as_ref())
+        .map(|path| {
+            if path.is_absolute() {
+                path.clone()
+            } else {
+                config.project_root.join(path)
+            }
+        });
+
+    Ok(CheckpointSettings {
+        lanes,
+        root_pattern,
+        current_suffix,
+        default_log_path,
+    })
+}
+
+fn default_lane_queries(base: &Path, src_separator: char) -> Vec<LaneQuery> {
+    vec![
+        LaneQuery {
+            name: "docs".to_string(),
+            root: base.join("docs"),
+            display_dir: "docs/".to_string(),
+            separator: '.',
+        },
+        LaneQuery {
+            name: "src".to_string(),
+            root: base.join("src"),
+            display_dir: "src/".to_string(),
+            separator: src_separator,
+        },
+    ]
+}
+
+fn collect_lane_states(settings: &CheckpointSettings) -> anyhow::Result<Vec<LaneState>> {
+    let current_leaf = extract_current_leaf(&settings.current_suffix);
+    let mut lane_states = Vec::new();
+
+    for lane in &settings.lanes {
+        let tree_scope =
+            normalize_root_pattern_for_separator(&settings.root_pattern, lane.separator);
+        let current_pattern = build_current_pattern(&tree_scope, &current_leaf, lane.separator);
+        let current_files = find_files_by_pattern(&lane.root, &current_pattern, lane.separator)?;
+
+        lane_states.push(LaneState {
+            name: lane.name.clone(),
+            display_dir: lane.display_dir.clone(),
+            separator: lane.separator,
+            tree_scope,
+            current_files,
+        });
+    }
+
+    Ok(lane_states)
+}
+
+fn resolve_checkpoint_log_path(
+    file: Option<PathBuf>,
+    settings: &CheckpointSettings,
+) -> anyhow::Result<PathBuf> {
+    if let Some(path) = file {
+        return Ok(path);
+    }
+
+    if let Some(path) = settings.default_log_path.clone() {
+        return Ok(path);
+    }
+
+    anyhow::bail!(
+        "--file (-f) is required when using --append-parallel unless [checkpoint].file is set in .recur/config.toml"
+    );
+}
+
+fn extract_current_leaf(current_suffix: &str) -> String {
+    let stem = Path::new(current_suffix)
+        .file_stem()
+        .and_then(|value| value.to_str())
+        .unwrap_or(current_suffix);
+
+    stem.split(|c| c == '.' || c == '_' || c == '-')
+        .filter(|segment| !segment.is_empty())
+        .last()
+        .unwrap_or("current")
+        .to_string()
+}
+
+fn normalize_root_pattern_for_separator(root_pattern: &str, separator: char) -> String {
+    let trimmed = root_pattern.trim();
+    if trimmed.is_empty() {
+        return "**".to_string();
+    }
+
+    if separator != '.' && !trimmed.contains(separator) && trimmed.contains('.') {
+        return trimmed.replace('.', &separator.to_string());
+    }
+
+    trimmed.to_string()
+}
+
+fn build_current_pattern(root_pattern: &str, current_leaf: &str, separator: char) -> String {
+    if root_pattern.is_empty() {
+        return format!("**{separator}{current_leaf}");
+    }
+
+    if root_pattern.ends_with(separator) {
+        format!("{root_pattern}{current_leaf}")
+    } else {
+        format!("{root_pattern}{separator}{current_leaf}")
+    }
+}
+
+fn find_files_by_pattern(
+    root: &Path,
+    pattern_raw: &str,
+    separator: char,
+) -> anyhow::Result<Vec<PathBuf>> {
     if !root.exists() {
         return Ok(Vec::new());
     }
@@ -220,20 +398,21 @@ fn find_files_by_pattern(root: &Path, pattern_raw: &str, separator: char) -> any
     Ok(files)
 }
 
-fn print_snapshot(
-    git: &GitState,
-    docs_current: &[PathBuf],
-    src_current: &[PathBuf],
-    src_separator: char,
-) {
+fn print_snapshot(git: &GitState, lane_states: &[LaneState]) {
     println!("\n== Checkpoint Snapshot ==");
     println!("git.branch: {}", git.branch);
     println!("git.head: {}", git.head);
     println!("git.worktree: {}", git.worktree);
-    println!("lane.state.docs.current: {}", format_paths(docs_current));
-    println!("lane.state.src.current: {}", format_paths(src_current));
-    println!("lane.separator.docs_tests: .");
-    println!("lane.separator.src: {}", src_separator);
+    for lane in lane_states {
+        println!(
+            "lane.state.{}.current: {}",
+            lane.name,
+            format_paths(&lane.current_files)
+        );
+    }
+    for lane in lane_states {
+        println!("lane.separator.{}: {}", lane.name, lane.separator);
+    }
 }
 
 fn default_checkpoint_id() -> String {
@@ -244,37 +423,44 @@ fn default_checkpoint_id() -> String {
     format!("ck-{}", epoch)
 }
 
-fn build_parallel_entry(
-    checkpoint_id: &str,
-    git: &GitState,
-    docs_current: &[PathBuf],
-    src_current: &[PathBuf],
-    src_separator: char,
-) -> String {
+fn build_parallel_entry(checkpoint_id: &str, git: &GitState, lane_states: &[LaneState]) -> String {
     let epoch = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
         .as_secs();
 
-    format!(
-        "### {checkpoint_id}\n\
-         - date: unix:{epoch}\n\
-         - lane.state.docs.current: {docs}\n\
-         - lane.state.src.current: {src}\n\
-         - lane.git.branch: {branch}\n\
-         - lane.git.head: {head}\n\
-         - lane.git.worktree: {worktree}\n\
-         - lane.separator.docs_tests: .\n\
-         - lane.separator.src: {src_sep}\n\
-         - evidence.docs_tree_cmd: recur tree \"main\" -d docs/\n\
-         - evidence.src_tree_cmd: recur tree \"main\" -d src/ --sep {src_sep}",
-        docs = format_paths(docs_current),
-        src = format_paths(src_current),
-        branch = git.branch,
-        head = git.head,
-        worktree = git.worktree,
-        src_sep = src_separator
-    )
+    let mut lines = vec![
+        format!("### {checkpoint_id}"),
+        format!("- date: unix:{epoch}"),
+    ];
+
+    for lane in lane_states {
+        lines.push(format!(
+            "- lane.state.{}.current: {}",
+            lane.name,
+            format_paths(&lane.current_files)
+        ));
+    }
+
+    lines.push(format!("- lane.git.branch: {}", git.branch));
+    lines.push(format!("- lane.git.head: {}", git.head));
+    lines.push(format!("- lane.git.worktree: {}", git.worktree));
+
+    for lane in lane_states {
+        lines.push(format!(
+            "- lane.separator.{}: {}",
+            lane.name, lane.separator
+        ));
+    }
+
+    for lane in lane_states {
+        lines.push(format!(
+            "- evidence.{}.tree_cmd: recur tree \"{}\" -d {} --sep {}",
+            lane.name, lane.tree_scope, lane.display_dir, lane.separator
+        ));
+    }
+
+    lines.join("\n")
 }
 
 fn append_parallel_entry(path: &Path, entry: &str) -> anyhow::Result<()> {
@@ -330,9 +516,17 @@ fn format_paths(paths: &[PathBuf]) -> String {
     if paths.is_empty() {
         "none".to_string()
     } else {
+        let cwd = std::env::current_dir().ok();
         paths
             .iter()
-            .map(|p| p.display().to_string())
+            .map(|p| {
+                if let Some(cwd) = cwd.as_ref() {
+                    if let Ok(relative) = p.strip_prefix(cwd) {
+                        return relative.display().to_string();
+                    }
+                }
+                p.display().to_string()
+            })
             .collect::<Vec<_>>()
             .join(", ")
     }
@@ -354,8 +548,33 @@ mod tests {
             head: "abc123 test".to_string(),
             worktree: "dirty=3".to_string(),
         };
-        let entry = build_parallel_entry("ck-test", &git, &[], &[], '_');
+        let lanes = vec![LaneState {
+            name: "src".to_string(),
+            display_dir: "src/".to_string(),
+            separator: '_',
+            tree_scope: "main_command_**".to_string(),
+            current_files: Vec::new(),
+        }];
+        let entry = build_parallel_entry("ck-test", &git, &lanes);
         assert!(entry.contains("### ck-test"));
         assert!(entry.contains("lane.separator.src: _"));
+    }
+
+    #[test]
+    fn extract_current_leaf_supports_status_suffix() {
+        assert_eq!(extract_current_leaf(".current.md"), "current");
+        assert_eq!(extract_current_leaf("_todo_current.md"), "current");
+    }
+
+    #[test]
+    fn normalize_root_pattern_for_separator_translates_dot_pattern() {
+        let pattern = normalize_root_pattern_for_separator("main.command.**.todo", '_');
+        assert_eq!(pattern, "main_command_**_todo");
+    }
+
+    #[test]
+    fn build_current_pattern_appends_current_leaf() {
+        let pattern = build_current_pattern("**", "current", '.');
+        assert_eq!(pattern, "**.current");
     }
 }

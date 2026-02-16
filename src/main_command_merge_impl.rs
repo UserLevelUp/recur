@@ -2,16 +2,15 @@
 ///!
 ///! Merges hierarchical results from multiple pattern/separator pairs into unified view.
 ///! Follows Unix philosophy: explicit composition over automatic conversion.
-
 use anyhow::{bail, Context, Result};
 use recur::parser::HierarchyPattern;
 use recur::search::{FileSearcher, SearchOptions};
 use recur::tree::HierarchyTree;
+use serde_json::Value;
 use std::collections::HashSet;
 use std::fs;
 use std::io::{stdin, Read};
 use std::path::PathBuf;
-use serde_json::Value;
 
 /// Execute merge command
 pub fn execute(
@@ -249,7 +248,10 @@ fn execute_stdin_mode(
     let tree_files: Vec<PathBuf> = all_files
         .iter()
         .map(|path| {
-            let original_sep = file_separators.get(path).copied().unwrap_or(separators.first().copied().unwrap_or('.'));
+            let original_sep = file_separators
+                .get(path)
+                .copied()
+                .unwrap_or(separators.first().copied().unwrap_or('.'));
             let mut display_path = normalize_path_separator(path, original_sep, tree_separator);
 
             if show_markers {
@@ -279,7 +281,10 @@ fn execute_stdin_mode(
 fn load_files_from_json_file(path: &PathBuf) -> Result<Vec<PathBuf>> {
     let content = fs::read_to_string(path)
         .with_context(|| format!("Unable to read file: {}", path.display()))?;
-    let value: Value = serde_json::from_str(&content)
+    // Windows tools (notably some PowerShell encodings) can prepend UTF-8 BOM.
+    // serde_json rejects BOM-prefixed text, so normalize before parsing.
+    let content = content.strip_prefix('\u{FEFF}').unwrap_or(&content);
+    let value: Value = serde_json::from_str(content)
         .with_context(|| format!("Invalid JSON in: {}", path.display()))?;
     extract_paths_from_json(&value)
 }
@@ -441,4 +446,25 @@ fn display_tree(
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    #[test]
+    fn load_files_from_json_file_accepts_utf8_bom() -> Result<()> {
+        let dir = tempdir()?;
+        let json_path = dir.path().join("lane1.json");
+
+        let mut bytes = vec![0xEF, 0xBB, 0xBF];
+        bytes.extend_from_slice(br#"["UserService.Game.Load.cs"]"#);
+        fs::write(&json_path, bytes)?;
+
+        let files = load_files_from_json_file(&json_path)?;
+        assert_eq!(files, vec![PathBuf::from("UserService.Game.Load.cs")]);
+
+        Ok(())
+    }
 }

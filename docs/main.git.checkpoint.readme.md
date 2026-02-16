@@ -57,7 +57,11 @@ recur-git checkpoint --emit-parallel --checkpoint-id ck-children-01
 
 # append entry to docs/main.dogfooding.parallel.history.md
 recur-git checkpoint --append-parallel --checkpoint-id ck-children-01
+# explicit path override
+recur-git checkpoint --append-parallel --checkpoint-id ck-children-01 -f docs/main.dogfooding.parallel.history.md
 ```
+
+If `-f` is omitted, `recur-git` uses `[checkpoint].file` from `.recur/config.toml` when available.
 
 ## Optional PowerShell Helper Script
 

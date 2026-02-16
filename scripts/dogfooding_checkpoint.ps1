@@ -23,7 +23,7 @@ if ($EmitParallelEntry) {
 }
 if ($AppendParallelEntry) {
     $args += "--append-parallel"
-    $args += "--parallel-log"
+    $args += "--file"
     $args += $ParallelLogPath
 }
 if (-not [string]::IsNullOrWhiteSpace($CheckpointId)) {
@@ -31,14 +31,16 @@ if (-not [string]::IsNullOrWhiteSpace($CheckpointId)) {
     $args += $CheckpointId
 }
 
-$recurGit = "recur-git"
-$cmd = Get-Command $recurGit -ErrorAction SilentlyContinue
-if (-not $cmd) {
-    if (Test-Path ".\target\release\recur-git.exe") {
-        $recurGit = ".\target\release\recur-git.exe"
-    } elseif (Test-Path ".\target\debug\recur-git.exe") {
-        $recurGit = ".\target\debug\recur-git.exe"
-    } else {
+# Prefer local build outputs for dogfooding; fall back to globally installed recur-git.
+$recurGit = $null
+if (Test-Path ".\target\debug\recur-git.exe") {
+    $recurGit = ".\target\debug\recur-git.exe"
+} elseif (Test-Path ".\target\release\recur-git.exe") {
+    $recurGit = ".\target\release\recur-git.exe"
+} else {
+    $recurGit = "recur-git"
+    $cmd = Get-Command $recurGit -ErrorAction SilentlyContinue
+    if (-not $cmd) {
         throw "Could not find recur-git binary. Build with `cargo build --bin recur-git` or install it."
     }
 }
