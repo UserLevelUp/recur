@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "extends": [
+    "demo15.profile.base.json"
+  ],
+  "name": "ascii-drinks-lager",
+  "frames": {
+    "hold_ms": 110
+  },
+  "variant": {
+    "drink": "lager"
+  }
+}

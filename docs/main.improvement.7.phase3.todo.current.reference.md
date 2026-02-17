@@ -13,7 +13,7 @@
 - `src/main_command_callees_impl.rs` - callee analysis patterns
 - `src/output.rs` - table/json output shaping
 - `src/main.rs` - CLI wiring for trace flags and command dispatch
-- `julia-tests/runtests.trace-stats.jl` - trace-stats tests (contract active, metrics pending)
+- `julia-tests/runtests.trace-stats.jl` - trace-stats tests (metrics active; placeholder lanes still skipped)
 - `docs/main.command.trace-stats.cli-surface.complete.md` - phase 3 step 1 completion evidence
 - `docs/main.command.trace-stats.metrics.todo.current.md` - active metrics lane
 

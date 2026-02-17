@@ -51,6 +51,31 @@ Remaining:
 - Add stdin-focused trace-stats integration assertions.
 - Add larger-scope performance regression test.
 
+## Validation Snapshot (2026-02-16)
+
+Command:
+
+```bash
+julia julia-tests/main.command.trace-stats.test.jl
+```
+
+Observed status:
+
+- `69 pass`
+- `7 broken` (intentional placeholders still marked with `@test_skip`)
+
+Broken/placeholder areas map directly to remaining work:
+
+- sort by risk
+- stdin integration lane
+- distinct cycle-pattern counting and false-positive coverage
+- medium/high risk fixture checks
+- large codebase performance fixture
+
+Recently activated:
+
+- `sort-by depth` ordering assertion is now active and passing in `julia-tests/runtests.trace-stats.jl`.
+
 ## References
 
 - `README.CORE.IMPROVEMENT7.md`

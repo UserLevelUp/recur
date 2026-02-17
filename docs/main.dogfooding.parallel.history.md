@@ -26,6 +26,73 @@ Checkpoint template:
 
 ## Checkpoints
 
+### ck-20260216-session-close
+- date: 2026-02-16 18:12:36 -08:00
+- lane.state.docs.current: `docs/main.improvement.7.phase3.todo.current.md` (active, paused for day)
+- lane.state.docs.next: `sort-by risk` activation lane
+- lane.state.docs.patch: `docs/main.command.trace-stats.metrics.todo.current.md`
+- lane.state.tests.patch: `julia-tests/runtests.trace-stats.jl`
+- lane.state.src.current: `src/main_command_trace_stats_impl.rs` (no source change in close checkpoint)
+- lane.git.branch: `flatten-init`
+- lane.git.head: `d55d19b Add traits.stdin policy and shared stdin path resolver`
+- lane.git.worktree: `dirty=72`
+- lane.separator.docs_tests: `.`
+- lane.separator.src: `_`
+- evidence.docs_tree_cmd: `recur tree "main.improvement.7.phase3" -d docs/`
+- evidence.tests_cmd: `julia julia-tests/main.command.trace-stats.test.jl` (`69 pass`, `7 broken`)
+
+### ck-20260216-improvement7-phase3-sort-depth-activated
+- date: 2026-02-16 17:27:07 -08:00
+- lane.state.docs.current: `docs/main.improvement.7.phase3.todo.current.md`
+- lane.state.docs.patch: `docs/main.command.trace-stats.metrics.todo.current.md`
+- lane.state.tests.patch: `julia-tests/runtests.trace-stats.jl`
+- lane.state.src.current: `src/main_command_trace_stats_impl.rs` (no source change in this checkpoint)
+- lane.git.branch: `flatten-init`
+- lane.git.head: `d55d19b Add traits.stdin policy and shared stdin path resolver`
+- lane.git.worktree: `dirty=72`
+- lane.separator.docs_tests: `.`
+- lane.separator.src: `_`
+- evidence.docs_tree_cmd: `recur tree "main.improvement.7.phase3" -d docs/`
+- evidence.tests_cmd: `julia julia-tests/main.command.trace-stats.test.jl` (`69 pass`, `7 broken`)
+
+### ck-20260216-improvement7-phase3-eventness-refresh
+- date: 2026-02-16 15:25:34 -08:00
+- lane.state.docs.current: `docs/main.improvement.7.phase3.todo.current.md`
+- lane.state.docs.patch: `docs/main.command.trace-stats.metrics.todo.current.md`
+- lane.state.src.current: `src/main_command_trace_stats_impl.rs` (no source change in this checkpoint)
+- lane.git.branch: `flatten-init`
+- lane.git.head: `d55d19b Add traits.stdin policy and shared stdin path resolver`
+- lane.git.worktree: `dirty=71`
+- lane.separator.docs_tests: `.`
+- lane.separator.src: `_`
+- evidence.docs_tree_cmd: `recur tree "main.improvement.7.phase3" -d docs/`
+- evidence.tests_cmd: `julia julia-tests/main.command.trace-stats.test.jl` (`66 pass`, `8 broken`)
+
+### ck-20260216-improvement15-parked
+- date: 2026-02-16 15:23:52 -08:00
+- lane.state.docs.current: `docs/main.improvement.7.phase3.todo.current.md` (active)
+- lane.state.docs.parked: `docs/main.improvement.15.todo.future-plan.md` (long-distance backlog)
+- lane.state.src.current: `n/a (no implementation lane opened for improvement 15)`
+- lane.git.branch: `flatten-init`
+- lane.git.head: `d55d19b Add traits.stdin policy and shared stdin path resolver`
+- lane.git.worktree: `dirty=67`
+- lane.separator.docs_tests: `.`
+- lane.separator.src: `_`
+- evidence.docs_tree_cmd: `recur tree "main.improvement" -d docs/`
+- evidence.policy: `README.CORE.IMPROVEMENT15.md`, `docs/main.improvement.15.todo.future-plan.md`
+
+### ck-20260216-improvement15-contract-freeze
+- date: 2026-02-16 15:10:46 -08:00
+- lane.state.docs.current: `docs/main.improvement.15.todo.future-plan.md`
+- lane.state.src.current: `n/a (docs/tests contract freeze checkpoint)`
+- lane.git.branch: `flatten-init`
+- lane.git.head: `d55d19b Add traits.stdin policy and shared stdin path resolver`
+- lane.git.worktree: `dirty=67`
+- lane.separator.docs_tests: `.`
+- lane.separator.src: `_`
+- evidence.docs_tree_cmd: `recur tree "main.improvement.15" -d docs/`
+- evidence.tests_cmd: `julia julia-tests/main.command.unflatten.test.jl`
+
 ### ck-20260207-bootstrap
 - date: 2026-02-07
 - lane.state.docs.current: `docs/main.command.children.todo.current.md`

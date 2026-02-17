@@ -265,14 +265,21 @@ include("runtests.setup.jl")
         end
 
         @testset "sort by depth" begin
-            # PLACEHOLDER
-            # success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by depth --top 3")
+            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by depth --top 3 --json")
 
-            # Functions with deepest call chains first
-            # Shows stack depth risk
+            data = JSON3.read(output)
+            functions = data["functions"]
 
-            @test_skip true
-            log_test("trace-stats sort by depth (PENDING IMPLEMENTATION)")
+            passed = success &&
+                     length(functions) >= 2 &&
+                     Int(functions[1]["depth"]) >= Int(functions[2]["depth"])
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test length(functions) >= 2
+            @test Int(functions[1]["depth"]) >= Int(functions[2]["depth"])
+            log_test("trace-stats sort by depth works")
         end
 
         @testset "sort by risk score" begin
@@ -477,6 +484,6 @@ end
 #
 # Remaining:
 # - [ ] Upgrade circular metric to distinct cycle-pattern counting
-# - [ ] Activate skipped depth/risk ordering assertions
+# - [ ] Activate skipped risk ordering assertions
 # - [ ] Add stdin-focused trace-stats assertions
 # - [ ] Add larger-scope performance assertions

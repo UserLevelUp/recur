@@ -3,11 +3,11 @@
 use crate::parser::{HierarchicalName, HierarchyPattern};
 use anyhow::Context;
 use std::fs;
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead, BufReader, Read};
 use std::path::PathBuf;
 
 /// Options controlling search behavior.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct SearchOptions {
     pub root: PathBuf,
     pub case_insensitive: bool,
@@ -17,6 +17,25 @@ pub struct SearchOptions {
     pub extensions: Vec<String>,
     pub context_lines: usize,
     pub input_files: Option<Vec<PathBuf>>,
+    pub max_file_bytes: Option<usize>,
+    pub skip_binary_files: bool,
+}
+
+impl Default for SearchOptions {
+    fn default() -> Self {
+        Self {
+            root: PathBuf::from("."),
+            case_insensitive: false,
+            case_sensitive: false,
+            max_depth: None,
+            include_hidden: false,
+            extensions: Vec::new(),
+            context_lines: 0,
+            input_files: None,
+            max_file_bytes: Some(1_048_576),
+            skip_binary_files: true,
+        }
+    }
 }
 
 /// Result of a content or identifier search.
@@ -158,6 +177,78 @@ impl FileSearcher {
     }
 }
 
+fn should_skip_content_file(path: &PathBuf, options: &SearchOptions) -> bool {
+    if let Some(max_file_bytes) = options.max_file_bytes {
+        if let Ok(metadata) = fs::metadata(path) {
+            if metadata.len() > max_file_bytes as u64 {
+                return true;
+            }
+        }
+    }
+
+    if options.skip_binary_files && is_likely_binary_file(path) {
+        return true;
+    }
+
+    false
+}
+
+fn is_likely_binary_file(path: &PathBuf) -> bool {
+    if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+        let ext = ext.to_ascii_lowercase();
+        if matches!(
+            ext.as_str(),
+            "dll"
+                | "exe"
+                | "bin"
+                | "so"
+                | "dylib"
+                | "class"
+                | "jar"
+                | "png"
+                | "jpg"
+                | "jpeg"
+                | "gif"
+                | "bmp"
+                | "ico"
+                | "pdf"
+                | "zip"
+                | "gz"
+                | "7z"
+                | "tar"
+                | "woff"
+                | "woff2"
+        ) {
+            return true;
+        }
+    }
+
+    let mut file = match fs::File::open(path) {
+        Ok(file) => file,
+        Err(_) => return false,
+    };
+
+    let mut buf = [0u8; 1024];
+    let read = match file.read(&mut buf) {
+        Ok(n) => n,
+        Err(_) => return false,
+    };
+    if read == 0 {
+        return false;
+    }
+
+    let sample = &buf[..read];
+    if sample.contains(&0) {
+        return true;
+    }
+
+    let control_count = sample
+        .iter()
+        .filter(|b| (**b < 0x09) || (**b > 0x0D && **b < 0x20))
+        .count();
+    control_count * 10 > read * 3
+}
+
 /// Searches file contents for a pattern.
 pub struct ContentSearcher {
     pub options: SearchOptions,
@@ -177,6 +268,10 @@ impl ContentSearcher {
 
         // Search within each file
         for file_path in files {
+            if should_skip_content_file(&file_path, &self.options) {
+                continue;
+            }
+
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
 
@@ -239,6 +334,10 @@ impl ContentSearcher {
 
         // Search within each file
         for file_path in files {
+            if should_skip_content_file(&file_path, &self.options) {
+                continue;
+            }
+
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
 
@@ -297,6 +396,10 @@ impl IdentifierSearcher {
 
         // Search for identifiers matching the pattern in file contents
         for file_path in files {
+            if should_skip_content_file(&file_path, &self.options) {
+                continue;
+            }
+
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
 
@@ -430,6 +533,10 @@ impl CallerSearcher {
 
         // Step 4: Search within each file
         for file_path in files {
+            if should_skip_content_file(&file_path, &self.options) {
+                continue;
+            }
+
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
 
@@ -539,6 +646,10 @@ impl CalleeSearcher {
 
         // Step 5: Search within each file
         for file_path in files {
+            if should_skip_content_file(&file_path, &self.options) {
+                continue;
+            }
+
             if let Ok(file) = fs::File::open(&file_path) {
                 let reader = BufReader::new(file);
                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
@@ -1113,6 +1224,10 @@ impl TraceSearcher {
         let mut matches = Vec::new();
 
         for file_path in &files {
+            if should_skip_content_file(file_path, &self.callee_searcher.options) {
+                continue;
+            }
+
             if let Ok(file) = fs::File::open(file_path) {
                 let reader = BufReader::new(file);
                 for (line_num, line) in reader.lines().enumerate() {
@@ -1147,6 +1262,10 @@ impl TraceSearcher {
         path: &PathBuf,
         line_number: usize,
     ) -> Option<(String, FunctionLocation)> {
+        if should_skip_content_file(path, &self.callee_searcher.options) {
+            return None;
+        }
+
         let file = fs::File::open(path).ok()?;
         let reader = BufReader::new(file);
         let lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();

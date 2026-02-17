@@ -24,6 +24,41 @@ Template for new entries:
 
 ## Log
 
+### 2026-02-16
+- area: `main.improvement.7.phase3` session close
+- change: closed the day after activating and validating `sort-by depth`; left resume point explicitly on `sort-by risk`.
+- state transition: no phase transition; phase 3 remains active and paused at end-of-day.
+- evidence: `docs/main.improvement.7.phase3.todo.current.md`, `docs/main.command.trace-stats.metrics.todo.current.md`, command: `julia julia-tests/main.command.trace-stats.test.jl` (`69 pass`, `7 broken`).
+- commit: pending
+
+### 2026-02-16
+- area: `main.improvement.7.phase3` / `main.command.trace-stats` sub-lane `sort-by depth`
+- change: activated `sort-by depth` ordering assertion in `julia-tests/runtests.trace-stats.jl` and validated it passing in the phase3 test module.
+- state transition: placeholder lane for depth ordering moved from skipped to active+passing; phase 3 remains active with risk ordering and other lanes still pending.
+- evidence: `julia-tests/runtests.trace-stats.jl`, `docs/main.improvement.7.phase3.todo.current.md`, `docs/main.command.trace-stats.metrics.todo.current.md`, command: `julia julia-tests/main.command.trace-stats.test.jl` (`69 pass`, `7 broken`).
+- commit: pending
+
+### 2026-02-16
+- area: `main.improvement.7.phase3` / `main.command.trace-stats`
+- change: refreshed phase3 eventness with a concrete validation snapshot and aligned remaining-work lanes to current placeholder tests.
+- state transition: no phase movement; phase 3 remains active with metrics hardening as current focus.
+- evidence: `docs/main.improvement.7.phase3.todo.current.md`, `docs/main.command.trace-stats.metrics.todo.current.md`, `docs/main.improvement.7.phase3.todo.current.reference.md`, `docs/main.improvement.7.todo.future-plan.md`, command: `julia julia-tests/main.command.trace-stats.test.jl` (`66 pass`, `8 broken`).
+- commit: pending
+
+### 2026-02-16
+- area: `main.improvement.15` lane policy
+- change: explicitly parked Improvement 15 as long-distance `todo.future-plan` and clarified that active implementation remains Improvement 7 Phase 3.
+- state transition: no active lane opened for improvement 15; status remains future backlog only.
+- evidence: `README.CORE.IMPROVEMENT15.md`, `docs/main.improvement.15.todo.future-plan.md`, `docs/main.improvement.readme.md`.
+- commit: pending
+
+### 2026-02-16
+- area: `main.improvement.15` / `main.command.unflatten`
+- change: froze Improvement 15 v1 contracts and added expected-broken Julia tests to lock the future command surface before implementation.
+- state transition: `improvement.15` moved to explicit contract-frozen state; phase A marked complete, phase C left as planned implementation.
+- evidence: `docs/main.improvement.15.contract.flat-record.v1.md`, `docs/main.command.merge.flat-format.contract.v1.md`, `docs/main.command.unflatten.contract.v1.md`, `docs/main.improvement.15.todo.future-plan.md`, `julia-tests/main.command.unflatten.test.jl`, `julia-tests/runtests.unflatten.jl`, command: `julia julia-tests/main.command.unflatten.test.jl` (16 broken expected).
+- commit: pending
+
 ### 2026-02-07
 - area: `main.command.trace`
 - change: extracted trace execution from `src/main.rs` into `src/main_command_trace_impl.rs`.

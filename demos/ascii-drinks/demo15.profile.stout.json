@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "extends": [
+    "demo15.profile.base.json"
+  ],
+  "name": "ascii-drinks-stout",
+  "frames": {
+    "hold_ms": 130
+  },
+  "variant": {
+    "drink": "stout"
+  }
+}

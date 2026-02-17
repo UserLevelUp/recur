@@ -4,11 +4,68 @@
 //! (as opposed to just listing files). It allows searching specific file lists,
 //! which is useful when combined with stdin input.
 
+use crate::project_config;
 use crate::search::{SearchOptions, SearchResult};
 use anyhow::Result;
 use std::fs;
 use std::io::{BufRead, BufReader};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+
+/// Content search policy from config with safe defaults.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ContentSearchPolicy {
+    pub max_file_bytes: usize,
+    pub skip_binary_files: bool,
+}
+
+impl Default for ContentSearchPolicy {
+    fn default() -> Self {
+        Self {
+            max_file_bytes: 1_048_576, // 1 MiB default limit when no project config exists
+            skip_binary_files: true,
+        }
+    }
+}
+
+/// Resolve content search policy from `.recur/config.toml` (trait-aware).
+pub fn resolve_content_search_policy(root: &Path) -> anyhow::Result<ContentSearchPolicy> {
+    let lookup_root = if root.is_absolute() {
+        root.to_path_buf()
+    } else if let Ok(cwd) = std::env::current_dir() {
+        cwd.join(root)
+    } else {
+        root.to_path_buf()
+    };
+
+    let config = project_config::load_nearest(&lookup_root)?;
+    let trait_content_search = config
+        .as_ref()
+        .and_then(|cfg| cfg.traits.as_ref())
+        .and_then(|traits| traits.content_search.as_ref())
+        .filter(|cfg| cfg.enabled.unwrap_or(true));
+
+    let mut policy = ContentSearchPolicy::default();
+    if let Some(cfg) = trait_content_search {
+        if let Some(max_file_bytes) = cfg.max_file_bytes {
+            if max_file_bytes > 0 {
+                policy.max_file_bytes = max_file_bytes;
+            }
+        }
+        if let Some(skip_binary_files) = cfg.skip_binary_files {
+            policy.skip_binary_files = skip_binary_files;
+        }
+    }
+
+    Ok(policy)
+}
+
+/// Apply content search policy to `SearchOptions`.
+pub fn apply_content_search_policy(options: &mut SearchOptions, root: &Path) -> anyhow::Result<()> {
+    let policy = resolve_content_search_policy(root)?;
+    options.max_file_bytes = Some(policy.max_file_bytes);
+    options.skip_binary_files = policy.skip_binary_files;
+    Ok(())
+}
 
 /// Trait for commands that search file contents.
 ///
@@ -180,6 +237,7 @@ pub trait ContentSearchCapable {
 mod tests {
     use super::*;
     use std::io::Write;
+    use tempfile::tempdir;
     use tempfile::NamedTempFile;
 
     struct TestCommand;
@@ -275,6 +333,56 @@ mod tests {
 
         assert_eq!(results.len(), 2);
 
+        Ok(())
+    }
+
+    #[test]
+    fn resolve_content_search_policy_defaults_without_config() -> Result<()> {
+        let temp = tempdir()?;
+        let policy = resolve_content_search_policy(temp.path())?;
+        assert_eq!(policy.max_file_bytes, 1_048_576);
+        assert!(policy.skip_binary_files);
+        Ok(())
+    }
+
+    #[test]
+    fn resolve_content_search_policy_reads_trait_settings() -> Result<()> {
+        let temp = tempdir()?;
+        std::fs::create_dir_all(temp.path().join(".recur"))?;
+        std::fs::write(
+            temp.path().join(".recur/config.toml"),
+            r#"
+[traits.content_search]
+enabled = true
+max_file_bytes = 4096
+skip_binary_files = false
+"#,
+        )?;
+
+        let policy = resolve_content_search_policy(temp.path())?;
+        assert_eq!(policy.max_file_bytes, 4096);
+        assert!(!policy.skip_binary_files);
+        Ok(())
+    }
+
+    #[test]
+    fn apply_content_search_policy_updates_search_options() -> Result<()> {
+        let temp = tempdir()?;
+        std::fs::create_dir_all(temp.path().join(".recur"))?;
+        std::fs::write(
+            temp.path().join(".recur/config.toml"),
+            r#"
+[traits.content_search]
+enabled = true
+max_file_bytes = 2048
+skip_binary_files = true
+"#,
+        )?;
+
+        let mut options = SearchOptions::default();
+        apply_content_search_policy(&mut options, temp.path())?;
+        assert_eq!(options.max_file_bytes, Some(2048));
+        assert!(options.skip_binary_files);
         Ok(())
     }
 }

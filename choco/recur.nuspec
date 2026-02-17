@@ -2,37 +2,40 @@
 <package>
   <metadata>
     <id>recur</id>
-    <version>0.2.1</version>
+    <version>0.2.6</version>
     <title>recur</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
     <summary>Recursive, hierarchy-aware search for modern codebases</summary>
     <description><![CDATA[**recur** is a command-line tool for working with hierarchically named code: files, modules, and identifiers that encode structure using dot-separated or custom naming conventions.
 
-While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy — so you can search, navigate, and analyze related code as a structured system.
+While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy - so you can search, navigate, and analyze related code as a structured system.
 
 ## Features
 - Hierarchy-aware pattern matching with `*` and `**` wildcards
-- Multi-separator merge — unify results across naming conventions (`.` and `_`)
-- Unix pipe composability — stdin mode for pure pipe workflows
+- Multi-separator merge - unify results across naming conventions (`.` and `_`)
+- Project-aware config via `.recur/config.toml` (`recur init`, `recur init --analyze`)
+- Unix pipe composability - stdin mode for pure pipe workflows
 - Scoped text search within a hierarchy (grep-like, but structure-aware)
 - Tree visualization using Unicode box-drawing characters
-- Related file discovery (siblings within the hierarchy)
+- Optional recur-git companion binary for checkpoint workflows (when included in release zip)
 - JSON output for tooling integration
 
 ## Commands
-- `recur files` — find files by hierarchical pattern
-- `recur find` — search text within a hierarchy scope
-- `recur tree` — visualize hierarchy as a tree
-- `recur related` — find sibling files
-- `recur children` — find child files
-- `recur id` — search for hierarchical identifiers
-- `recur stats` — analyze hierarchy statistics
-- `recur callers` — find all places where a function/method is called
-- `recur callees` — find all functions/methods a given function calls
-- `recur trace` — multi-level call graph visualization
-- `recur merge` — merge results across separators
-- `recur flatten` — flatten structured files (XML, JSON) into hierarchical dot-paths
+- `recur init` - initialize or analyze `.recur/config.toml`
+- `recur files` - find files by hierarchical pattern
+- `recur find` - search text within a hierarchy scope
+- `recur tree` - visualize hierarchy as a tree
+- `recur related` - find sibling files
+- `recur children` - find child files
+- `recur id` - search for hierarchical identifiers
+- `recur stats` - analyze hierarchy statistics
+- `recur callers` - find all places where a function/method is called
+- `recur callees` - find all functions/methods a given function calls
+- `recur trace` - multi-level call graph visualization
+- `recur merge` - merge results across separators
+- `recur flatten` - flatten structured files (XML, JSON) into hierarchical dot-paths
+- `recur-git checkpoint` - capture parallel-lane git/todo checkpoints
 
 Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program structure.
 ]]></description>
@@ -40,7 +43,7 @@ Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program s
     <projectSourceUrl>https://github.com/userlevelup/recur</projectSourceUrl>
     <bugTrackerUrl>https://github.com/userlevelup/recur/issues</bugTrackerUrl>
     <docsUrl>https://github.com/userlevelup/recur#readme</docsUrl>
-    <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph</tags>
+    <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph config git checkpoint</tags>
     <licenseUrl>https://github.com/userlevelup/recur/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <packageSourceUrl>https://github.com/userlevelup/recur/tree/main/choco</packageSourceUrl>

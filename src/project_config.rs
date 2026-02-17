@@ -46,6 +46,14 @@ pub struct TraitPlaceholderConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TraitContentSearchConfig {
+    pub enabled: Option<bool>,
+    pub max_file_bytes: Option<usize>,
+    pub skip_binary_files: Option<bool>,
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct TraitStdinConfig {
     pub enabled: Option<bool>,
     pub exclude_missing: Option<bool>,
@@ -63,7 +71,7 @@ pub struct TraitTraversalBudgetConfig {
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct TraitsConfig {
-    pub content_search: Option<TraitPlaceholderConfig>,
+    pub content_search: Option<TraitContentSearchConfig>,
     pub separator_merge: Option<TraitPlaceholderConfig>,
     pub stdin: Option<TraitStdinConfig>,
     pub traversal_budget: Option<TraitTraversalBudgetConfig>,
@@ -478,6 +486,21 @@ fn parse_trait_placeholder_section(table: &toml::value::Table) -> TraitPlacehold
     }
 }
 
+fn parse_trait_content_search_section(table: &toml::value::Table) -> TraitContentSearchConfig {
+    TraitContentSearchConfig {
+        enabled: table.get("enabled").and_then(|v| v.as_bool()),
+        max_file_bytes: table
+            .get("max_file_bytes")
+            .and_then(|v| v.as_integer())
+            .and_then(|v| usize::try_from(v).ok()),
+        skip_binary_files: table.get("skip_binary_files").and_then(|v| v.as_bool()),
+        notes: table
+            .get("notes")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+    }
+}
+
 fn parse_trait_traversal_budget_section(table: &toml::value::Table) -> TraitTraversalBudgetConfig {
     TraitTraversalBudgetConfig {
         enabled: table.get("enabled").and_then(|v| v.as_bool()),
@@ -515,7 +538,7 @@ fn parse_traits_section(table: &toml::value::Table) -> TraitsConfig {
         content_search: table
             .get("content_search")
             .and_then(|v| v.as_table())
-            .map(parse_trait_placeholder_section),
+            .map(parse_trait_content_search_section),
         separator_merge: table
             .get("separator_merge")
             .and_then(|v| v.as_table())
@@ -619,7 +642,11 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("depth_guard = \"hard-fail\"\n");
     content.push_str("\n[traits.content_search]\n");
     content.push_str("enabled = true\n");
-    content.push_str("notes = \"Project-specific content search tuning placeholder.\"\n");
+    content.push_str("max_file_bytes = 1048576\n");
+    content.push_str("skip_binary_files = true\n");
+    content.push_str(
+        "notes = \"Project-specific content search limits and binary handling policy.\"\n",
+    );
     content.push_str("\n[traits.separator_merge]\n");
     content.push_str("enabled = true\n");
     content.push_str("notes = \"Project-specific separator merge tuning placeholder.\"\n");
@@ -770,6 +797,8 @@ depth_guard = "clamp"
 
 [traits.content_search]
 enabled = true
+max_file_bytes = 2048
+skip_binary_files = false
 notes = "content search trait placeholder"
 
 [traits.stdin]
@@ -811,6 +840,22 @@ foo = "bar"
                 .and_then(|t| t.content_search.as_ref())
                 .and_then(|s| s.enabled),
             Some(true)
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.content_search.as_ref())
+                .and_then(|s| s.max_file_bytes),
+            Some(2048)
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.content_search.as_ref())
+                .and_then(|s| s.skip_binary_files),
+            Some(false)
         );
         assert_eq!(
             config
@@ -908,6 +953,8 @@ foo = "bar"
         assert!(config_text.contains("max_depth = 5"));
         assert!(config_text.contains("depth_guard = \"hard-fail\""));
         assert!(config_text.contains("[traits.content_search]"));
+        assert!(config_text.contains("max_file_bytes = 1048576"));
+        assert!(config_text.contains("skip_binary_files = true"));
         assert!(config_text.contains("[traits.separator_merge]"));
         assert!(config_text.contains("[traits.stdin]"));
         assert!(config_text.contains("exclude_missing = false"));

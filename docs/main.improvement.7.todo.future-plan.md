@@ -29,6 +29,13 @@ Improvement 7 combines three previously separate specs into a unified pipeline:
 - Phase 1 completion: `docs/main.improvement.7.phase1.complete.md`
 - Phase 1 test snapshot: `docs/main.improvement.7.phase1.julia-tests.complete.md`
 
+## Eventness Snapshot (2026-02-16)
+
+- Active phase remains Phase 3 (`trace-stats`).
+- Validation snapshot: `julia julia-tests/main.command.trace-stats.test.jl` -> `69 pass`, `7 broken`.
+- Broken count is currently expected from placeholder lanes tracked in `docs/main.command.trace-stats.metrics.todo.current.md`.
+- `sort-by depth` placeholder lane has been activated; remaining ordering placeholder is `sort-by risk`.
+
 ## Discovery
 
 ```bash

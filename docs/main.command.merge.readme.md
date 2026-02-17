@@ -145,6 +145,23 @@ File inputs accept any of the following JSON formats:
 { "name": "root", "children": [{ "path": "path/one.ext" }] }
 ```
 
+`recur flatten --json` output is also accepted because merge reads arrays of objects that contain a `path` field.
+
+### Flatten Interop (Current State)
+
+You can feed flatten output into merge today, but with caveats:
+
+1. merge uses path-only tree reconstruction and ignores flatten `value`/`kind`.
+2. Dot-separated flattened paths are lossy because merge treats the last segment as a file extension.
+
+Recommended workaround for now:
+
+```bash
+recur --sep _ flatten source-a.xml --json > a.flat.json
+recur --sep _ flatten source-b.json --json > b.flat.json
+recur merge a.flat.json --sep _ b.flat.json --sep _ --base config
+```
+
 ### Merging Strategy
 
 1. Parse all JSON inputs

@@ -1,6 +1,6 @@
 <div align="center">
   <h1>recur</h1>
-  <div class="version">v0.2.5</div>
+  <div class="version">v0.2.6</div>
   <p>
     <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
     <a href="https://www.rust-lang.org/"><img alt="Rust 1.70+" src="https://img.shields.io/badge/rust-1.70%2B-blue.svg"></a>
@@ -78,6 +78,11 @@ yay -S recur
 
 ## Quick Start
 
+> **Important:** `recur` searches directories recursively.
+> Run it from your project/solution root (or pass `-d <path>`) so you only scan relevant files.
+> Avoid running from `C:\`, `C:\Windows`, `/`, or other system roots unless you intentionally want a full-machine scan.
+> For safer defaults, run `recur init` to create `.recur/config.toml` with project-local settings and excludes.
+
 ```bash
 # Search within a hierarchy scope (recursive)
 recur find "async" --scope "Controller.Api"
@@ -116,6 +121,8 @@ recur stats "ServiceName" -l 1
 - **Related file discovery** (siblings within the hierarchy)
 - **Identifier search** (dot-notation identifiers in code)
 - **Hierarchy statistics** with depth analysis and pagination
+- **Project-aware config** via `.recur/config.toml` (`recur init`, `recur init --analyze`)
+- **Structured flattening** (`recur flatten`) for XML/JSON/TOML/YAML/CSV to `path = value` records
 - **Cross-domain gap analysis** — verify completeness across representations
 - **Multiple output formats** (human-friendly terminal output, plus JSON for tooling)
 - **Proper exit codes** (0=success, 1=no results, 2=error)
@@ -152,6 +159,22 @@ recur files "main.command.**" --sep "." --sep "_" --sep-replace-default "."
 See [`docs/main.trait.separator-merge.readme.md`](docs/main.trait.separator-merge.readme.md) for details.
 
 ## Commands
+
+### `recur init` — initialize or analyze project config
+```bash
+recur init                                  # Create .recur/config.toml from detected lanes
+recur init --analyze                        # Suggest lane/separator updates
+recur init -d ../another-project --analyze  # Analyze a different project root
+recur init --force                          # Overwrite existing .recur/config.toml
+recur init --analyze --json                 # Machine-readable report
+```
+
+```bash
+# Typical workflow
+recur init
+recur files "main_command_**" -d src/ --count   # No --sep needed when .recur/config.toml maps src/ => _
+recur init --analyze                             # Re-check lane/separator drift after refactors
+```
 
 ### `recur files` — find files by hierarchical pattern
 ```bash
@@ -216,6 +239,42 @@ bash -c "{ recur tree main.command --sep .; recur tree main_command --sep _; }" 
 
 # Single source via stdin (simpler case)
 recur tree main --sep . | recur merge --stdin --base "main" --sep .
+```
+
+`merge` can read `flatten --json` output (it accepts arrays of objects with a `path` field), but there is a current limitation:
+- With dot-separated flattened paths (for example `config.db.host`), merge's tree model treats the last segment as a file extension, so leaf shape is lossy.
+- Merge also discards flattened `value`/`kind`; it merges paths only.
+
+Use this workaround today when merging flattened datasets:
+
+```bash
+# Use an underscore hierarchy for flatten inputs you plan to merge
+recur --sep _ flatten config.xml --json > xml.flat.json
+recur --sep _ flatten config.json --json > json.flat.json
+recur merge xml.flat.json --sep _ json.flat.json --sep _ --base config
+```
+
+```powershell
+# PowerShell stdin mode (avoid temp-file encoding issues)
+@(
+  (recur --sep _ flatten config.xml --json | Out-String),
+  (recur --sep _ flatten config.json --json | Out-String)
+) -join "`n" | recur merge --stdin --base config --sep _ --sep _
+```
+
+See `docs/main.command.merge.readme.md` for merge internals and `docs/main.command.flatten.readme.md` for flatten details.
+
+### `recur flatten` — flatten XML/JSON/TOML/YAML/CSV into hierarchical records
+```bash
+recur flatten config.xml                          # path = value text output
+recur flatten config.json --json                  # JSON array output
+recur flatten .recur/config.toml --format toml    # TOML support
+recur flatten appsettings.yaml --format yaml      # YAML support
+recur flatten levels.csv --format csv             # CSV support
+recur flatten config.xml --filter "config.db"     # Prefix filter
+recur flatten config.json --max-depth 2           # Depth cap (0 = unlimited)
+cat pom.xml | recur flatten --stdin --format xml  # Stdin mode
+recur --sep _ flatten config.json --json          # Use custom hierarchy separator
 ```
 
 ### `recur related` — find sibling files
@@ -453,6 +512,11 @@ Ritchie’s thesis explored **recursive functions and hierarchical program struc
 - [Proposal](RECUR-PROPOSAL.md) — technical design  
 - [Contributing](CONTRIBUTING.md) — how to contribute  
 - [Implementation](IMPLEMENTATION-COMPLETE.md) — code walkthrough  
+- [Recur Expert Playbook](julia-expert/references/recur-playbook.md) — canonical agent workflow guide
+- [Init Command Notes](docs/main.command.init.readme.md) — project-aware `.recur/config.toml` bootstrap
+- [Flatten Command Notes](docs/main.command.flatten.readme.md) — structured data flattening and merge interop caveats
+
+`AGENT.PROMPT.recur-expert.md` and `docs/AGENT.PROMPT.recur-expert.md` are pointer files only.
 
 ## recur-git: Git Workflow Extension
 
@@ -487,7 +551,7 @@ git clone https://github.com/userlevelup/recur
 cd recur
 cargo test
 cargo build --profile release-safe --locked
-cargo run --profile release-safe -- tree "main" -d src
+cargo run --profile release-safe --bin recur -- tree "main" -d src
 cargo install --path . --profile release-safe --locked --force --offline
 ```
 

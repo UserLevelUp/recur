@@ -33,6 +33,48 @@ Number prefixes control visual ordering:
 - `3bottom` / `3bowl` — bottom of the glass
 - `4stem`, `5base` — wine glass stem and base
 
+## Demo2: Block Layers + Transparency
+
+`demo2.sh` levels this up using full-canvas text blocks:
+- Dot separator (`.`): structure layers (`mask`, `cup`)
+- Underscore separator (`_`): drink fill layers
+- Hyphen separator (`-`): optional effect layers
+
+Instead of stitching many small parts, each file is a full frame where a
+transparent character (default `#`) means "let lower layer show through."
+By default, transparency mask glyphs are hidden in the final render.
+Effect layers are opt-in (`INCLUDE_EFFECTS=1`).
+`recur merge` is used to unify layer discovery across separators before render.
+When effects are enabled, water auto-cycles sparkle frames (`frame-01..frame-10`).
+
+Example layer names:
+- `demo2.scene.mug.layer.05.mask.txt`
+- `demo2.scene.mug.layer.20.cup.txt`
+- `demo2_scene_mug_stout_layer_10_fill.txt`
+- `demo2-scene-mug-layer-30-sparkle-frame-01.txt`
+
+## Demo3: Compile + Play Cache
+
+`demo3.sh` shows a near-future pipeline shape:
+- `recur tree` + `recur merge` build a merged layer manifest
+- `jq` extracts layer/frame rows
+- `gawk` composes frames once into cache
+- playback is a tiny frame loop (`cat + sleep`)
+
+This demonstrates the "selector + orchestration + minimal pipe" model with
+faster replay after initial compile.
+
+## Demo15: Simplicity Target (Future-State)
+
+`demo15.sh` is intentionally a vision script for Improvement 15:
+- one recur merge stage for layer selection
+- one recur unflatten stage for render/materialization
+- a tiny shell loop for playback only
+
+It is expected to fail today because the required surface does not exist yet
+(`merge --format flat` and `unflatten`). The point is to pin the desired UX
+for where recur should go.
+
 ## Scripts
 
 ### PowerShell (Windows)
@@ -51,6 +93,9 @@ Number prefixes control visual ordering:
 | `demo.sh` | Quick walkthrough showing recur merge in action |
 | `pour.sh <glass> <drink>` | Pour a specific drink (e.g., `./pour.sh mug stout`) |
 | `tasting.sh [mug\|wine\|all]` | Animated tasting menu cycling through drinks |
+| `demo2.sh [drink\|all] [delay]` | Block-layer compositor with transparency and a simple animation loop |
+| `demo3.sh [run\|compile\|play\|clean] [drink\|all] [delay]` | Compile/play cached frames from recur-merged manifests |
+| `demo15.sh [drink\|all]` | Future-state recur-native pipeline (expected to fail until Improvement 15) |
 
 ## Available Drinks
 
@@ -94,6 +139,21 @@ chmod +x *.sh
 ./demo.sh
 ./pour.sh mug ipa
 ./tasting.sh wine
+./demo2.sh
+./demo2.sh stout
+SHOW_MERGE=1 ./demo2.sh water 1.2
+LOOP=1 ./demo2.sh all 0.7
+SHOW_TRANSPARENT=1 ./demo2.sh stout
+INCLUDE_EFFECTS=1 ./demo2.sh water
+INCLUDE_EFFECTS=1 WATER_SPARKLE_DELAY=0.08 ./demo2.sh water
+INCLUDE_EFFECTS=1 WATER_SPARKLE_CYCLE=0 ./demo2.sh water
+./demo3.sh
+./demo3.sh water
+./demo3.sh compile all
+./demo3.sh play all
+INCLUDE_EFFECTS=1 WATER_SPARKLE_DELAY=0.05 ./demo3.sh run water
+./demo3.sh clean
+./demo15.sh water
 ```
 
 ## The Interactive Bar (`bar.ps1`)

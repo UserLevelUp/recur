@@ -4,8 +4,9 @@
 
 use recur::output::{JsonFormatter, TerminalFormatter};
 use recur::parser::HierarchyPattern;
-use recur::search::{read_paths_from_stdin, ContentSearcher, SearchOptions};
-use std::path::{Path, PathBuf};
+use recur::r#trait::{apply_content_search_policy, read_resolved_paths_from_stdin};
+use recur::search::{ContentSearcher, SearchOptions};
+use std::path::PathBuf;
 use std::process;
 
 pub fn execute(
@@ -39,6 +40,8 @@ pub fn execute(
         options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
     }
 
+    apply_content_search_policy(&mut options, &dir)?;
+
     if stdin {
         options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);
     }
@@ -65,27 +68,4 @@ pub fn execute(
     }
 
     Ok(())
-}
-
-fn read_resolved_paths_from_stdin(root: &Path) -> anyhow::Result<Vec<PathBuf>> {
-    let mut resolved = Vec::new();
-
-    for path in read_paths_from_stdin()? {
-        if path.is_absolute() || path.exists() {
-            resolved.push(path);
-            continue;
-        }
-
-        if path.is_relative() {
-            let candidate = root.join(&path);
-            if candidate.exists() {
-                resolved.push(candidate);
-                continue;
-            }
-        }
-
-        resolved.push(path);
-    }
-
-    Ok(resolved)
 }

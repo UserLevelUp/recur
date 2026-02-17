@@ -5,7 +5,8 @@
 use recur::output::{JsonFormatter, TerminalFormatter, TraceFormat};
 use recur::parser::HierarchyPattern;
 use recur::r#trait::{
-    read_resolved_paths_from_stdin, resolve_depth_budget_policy, TraversalBudgetCapable,
+    apply_content_search_policy, read_resolved_paths_from_stdin, resolve_depth_budget_policy,
+    TraversalBudgetCapable,
 };
 use recur::search::{SearchOptions, TraceDirection, TraceOptions, TraceSearcher};
 use std::collections::HashMap;
@@ -91,6 +92,8 @@ pub fn execute(
     if let Some(ext_str) = ext.as_deref() {
         search_options.extensions = ext_str.split(',').map(|s| s.trim().to_string()).collect();
     }
+
+    apply_content_search_policy(&mut search_options, &dir)?;
 
     if stdin {
         search_options.input_files = Some(read_resolved_paths_from_stdin(&dir)?);

@@ -9,7 +9,10 @@ pub mod stdin;
 pub mod traversal_budget;
 
 // Re-export commonly used items
-pub use content_search::ContentSearchCapable;
+pub use content_search::{
+    apply_content_search_policy, resolve_content_search_policy, ContentSearchCapable,
+    ContentSearchPolicy,
+};
 pub use separator_merge::MultiSeparatorCapable;
 pub use stdin::{
     read_paths_from_stdin, read_resolved_paths_from_stdin, resolve_stdin_path_policy,

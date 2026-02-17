@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "name": "ascii-drinks-base",
+  "output": {
+    "format": "text",
+    "newline": "\n",
+    "trim_trailing_whitespace": true
+  },
+  "render": {
+    "transparent_token": "#",
+    "token_map": {
+      ".": ".",
+      "_": "_",
+      "-": "-"
+    }
+  },
+  "frames": {
+    "enabled": true,
+    "group_by": "frame",
+    "order": "numeric",
+    "hold_ms": 90
+  }
+}

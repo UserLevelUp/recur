@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "extends": [
+    "demo15.profile.base.json"
+  ],
+  "name": "ascii-drinks-water",
+  "frames": {
+    "hold_ms": 75
+  },
+  "variant": {
+    "drink": "water",
+    "effect": "sparkle-cycle"
+  }
+}

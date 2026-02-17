@@ -49,6 +49,7 @@ try
         include("main.command.id.test.jl")
         include("main.command.stats.test.jl")
         include("main.command.merge.test.jl")
+        include("main.command.unflatten.test.jl")  # IMPROVEMENT15 - frozen contract tests (expected broken)
         include("main.command.callers.test.jl")
         include("main.command.callees.test.jl")
         include("main.command.trace.test.jl")
