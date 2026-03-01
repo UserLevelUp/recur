@@ -283,14 +283,33 @@ include("runtests.setup.jl")
         end
 
         @testset "sort by risk score" begin
-            # PLACEHOLDER
-            # success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by risk --top 3")
+            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by risk --top 3 --json")
 
-            # Combined complexity score
-            # Risk levels: Low (<10 transitive), Medium (10-30), High (>30)
+            data = JSON3.read(output)
+            functions = data["functions"]
 
-            @test_skip true
-            log_test("trace-stats sort by risk (PENDING IMPLEMENTATION)")
+            risk_rank = Dict("Low" => 0, "Medium" => 1, "High" => 2)
+            ranks = [get(risk_rank, String(f["risk"]), -1) for f in functions]
+            non_increasing_risk = if length(ranks) <= 1
+                true
+            else
+                all(i -> ranks[i] >= ranks[i + 1], 1:(length(ranks) - 1))
+            end
+
+            passed = success &&
+                     length(functions) > 0 &&
+                     String(data["request"]["sort_by"]) == "risk" &&
+                     all(r -> r >= 0, ranks) &&
+                     non_increasing_risk
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test length(functions) > 0
+            @test String(data["request"]["sort_by"]) == "risk"
+            @test all(r -> r >= 0, ranks)
+            @test non_increasing_risk
+            log_test("trace-stats sort by risk works")
         end
     end
 

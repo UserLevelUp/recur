@@ -4,6 +4,7 @@
 ///! Follows Unix philosophy: explicit composition over automatic conversion.
 use anyhow::{bail, Context, Result};
 use recur::parser::HierarchyPattern;
+use recur::r#trait::strip_utf8_bom;
 use recur::search::{FileSearcher, SearchOptions};
 use recur::tree::HierarchyTree;
 use serde_json::Value;
@@ -277,10 +278,6 @@ fn execute_stdin_mode(
     )?;
 
     Ok(())
-}
-
-fn strip_utf8_bom(content: &str) -> &str {
-    content.strip_prefix('\u{FEFF}').unwrap_or(content)
 }
 
 fn load_files_from_json_file(path: &PathBuf) -> Result<Vec<PathBuf>> {

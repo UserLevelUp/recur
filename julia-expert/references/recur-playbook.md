@@ -60,6 +60,9 @@ recur files "**" -d src/ | grep "stdin"
 # Sort matches by modified date (PowerShell object pipeline)
 recur files "GITHUB-ISSUE**" | ConvertFrom-Json | ForEach-Object { Get-Item $_ } | Sort-Object LastWriteTime -Descending
 
+# Completed tasks with timestamps (newest first)
+recur files "**.complete" -d docs/ | ConvertFrom-Json | ForEach-Object { Get-Item $_ } | Sort-Object LastWriteTime -Descending | Select-Object LastWriteTime, Name
+
 # Count matches
 (recur files "**.todo" -d docs/ | ConvertFrom-Json | Measure-Object).Count
 
@@ -67,7 +70,7 @@ recur files "GITHUB-ISSUE**" | ConvertFrom-Json | ForEach-Object { Get-Item $_ }
 recur files "**.current" -d docs/ | ConvertFrom-Json | ForEach-Object { Get-Item $_ } | Where-Object { $_.Length -gt 1000 }
 ```
 
-**PowerShell tip:** `recur files` outputs a JSON array by default. Use `ConvertFrom-Json` before object operations.
+**PowerShell tip:** `recur files` already outputs a JSON array by default in normal pipelines. Use `ConvertFrom-Json` before object operations; only add `--json` when you need to force machine format explicitly.
 
 ## Core Recur Commands
 
@@ -115,7 +118,9 @@ recur init
 
 # Re-check config against current folders/files
 recur init --analyze
+# Optional: force machine output when needed
 recur init --analyze --json
+# JSON keys to review: additions, separator_updates, missing_directories
 
 # Regenerate existing config intentionally
 recur init --force
@@ -293,11 +298,28 @@ recur files "**.current" -d docs/
 recur files "**.todo" -d docs/
 
 # What's the overall status?
-recur.exe tree main --sep "." --sep "_" --show-sep
+recur tree "main" --sep . --sep _ --show-sep
 
 # What's completed?
 recur files "**.complete" -d docs/
 ```
+
+## Current Repo Baseline (2026-03-01)
+
+- Active `.current` markers:
+  - `docs/main.choco.todo.current.md`
+  - `docs/main.command.trace-stats.metrics.todo.current.md`
+  - `docs/main.improvement.7.phase3.todo.current.md`
+- Improvement 7 status:
+  - `phase1` complete
+  - `phase2` complete
+  - `phase3` active (`todo.current`)
+- Test baseline:
+  - `cargo test` is green (`97 passed, 0 failed`, with `7` ignored doc tests).
+  - `julia julia-tests/runtests.jl` currently reports `457 passed, 4 failed, 42 broken`.
+- Current fix targets from Julia failures:
+  - `julia-tests/runtests.tree.jl` (`tree --count` expectation drift)
+  - `julia-tests/runtests.stdin.jl` (empty stdin output and output comparison parsing)
 
 ## External Memory Pattern
 
@@ -603,6 +625,7 @@ cat docs/main.command.<name>.todo.current.reference.md        # Read reference
 
 # === STATUS ===
 recur tree "main.improvement" -d docs/         # Overall progress
+recur tree "main" --sep . --sep _ --show-sep  # Cross-lane status (docs + src)
 recur files "**.complete" -d docs/ --count     # How much done?
 recur files "**.stdin.todo" -d docs/ --count   # How much left?
 
@@ -614,6 +637,8 @@ recur tree "main" -d src/ --sep _                    # Source structure
 # === PROJECT CONFIG ===
 recur init                                            # Generate .recur/config.toml
 recur init --analyze                                 # Suggest lane/separator updates
+# Optional: force machine output when needed
+recur init --analyze --json                          # Inspect additions/separator drift
 
 # === FLATTEN ===
 recur flatten config.xml                             # XML -> path=value
@@ -624,6 +649,7 @@ recur --sep _ flatten config.json --json             # Merge-friendly flattened 
 recur files "main.command.*.test" -d julia-tests/    # All tests
 cargo test                                           # Run Rust tests
 cd julia-tests && julia runtests.jl                  # Run Julia tests
+# Baseline (2026-03-01): Rust green; Julia 457 pass / 4 fail / 42 broken
 
 # === CLEANUP ===
 recur files "**.current" -d docs/                    # Find ephemeral files
@@ -671,6 +697,25 @@ recur files "**.stdin.todo" -d docs/
 - ✅ Ran trigger events (test commands)
 - ✅ Cleaned up ephemeral files when done
 - ✅ Let hierarchy guide next steps
+
+**Example: Phase 3 trace-stats lane (current, 2026-03-01)**
+
+```bash
+# 1. Confirm active lane
+recur files "**.current" -d docs/
+cat docs/main.improvement.7.phase3.todo.current.md
+cat docs/main.command.trace-stats.metrics.todo.current.md
+
+# 2. Confirm phase history
+recur files "main.improvement.7.phase*.complete" -d docs/
+
+# 3. Validate implementation baseline
+cargo test
+cd julia-tests && julia runtests.jl
+
+# 4. Cross-lane status view (docs + src separators)
+recur tree "main" --sep . --sep _ --show-sep
+```
 
 ## Cross-Lane Rule (Portable)
 

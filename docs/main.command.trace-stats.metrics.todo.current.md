@@ -39,6 +39,7 @@ Completed:
 - Activated Julia metric assertions for:
   - non-empty stats on hierarchical dot-scoped fixtures
   - sort behavior
+  - risk ordering behavior (`--sort-by risk`)
   - circular-only filter behavior
   - low-risk filter behavior
   - top-N behavior
@@ -47,9 +48,9 @@ Completed:
 Remaining:
 
 - Upgrade circular metric from cycle-node count to distinct cycle-pattern count.
-- Activate depth/risk ordering test assertions currently still skipped in `julia-tests/runtests.trace-stats.jl`.
 - Add stdin-focused trace-stats integration assertions.
 - Add larger-scope performance regression test.
+- Add medium/high risk fixture assertions.
 
 ## Validation Snapshot (2026-02-16)
 
@@ -75,6 +76,20 @@ Broken/placeholder areas map directly to remaining work:
 Recently activated:
 
 - `sort-by depth` ordering assertion is now active and passing in `julia-tests/runtests.trace-stats.jl`.
+- `sort-by risk` ordering assertion is now active and passing in `julia-tests/runtests.trace-stats.jl`.
+
+## Validation Snapshot (2026-03-01)
+
+Command:
+
+```bash
+julia julia-tests/main.command.trace-stats.test.jl
+```
+
+Observed status:
+
+- `74 pass`
+- `6 broken` (intentional placeholders still marked with `@test_skip`)
 
 ## References
 

@@ -1,8 +1,5 @@
 use crate::main_command_flatten_impl::{EntryKind, FlatEntry};
-
-fn strip_utf8_bom(content: &str) -> &str {
-    content.strip_prefix('\u{FEFF}').unwrap_or(content)
-}
+use recur::r#trait::strip_utf8_bom;
 
 pub(crate) fn flatten_json_value(
     value: &serde_json::Value,

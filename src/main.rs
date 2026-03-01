@@ -6,7 +6,8 @@
 //! Main CLI entry point
 
 use clap::{Parser, Subcommand};
-use std::path::{Path, PathBuf};
+use recur::r#trait::{CliSeparatorPolicy, SeparatorCapable};
+use std::path::PathBuf;
 use std::process;
 
 mod main_command_callees_impl;
@@ -583,62 +584,16 @@ enum Commands {
     },
 }
 
-fn parse_cli_separators(sep_args: &[String]) -> Vec<char> {
-    if sep_args.is_empty() {
-        return vec!['.'];
-    }
-
-    let parsed: Vec<char> = sep_args
-        .iter()
-        .filter_map(|value| value.chars().next())
-        .collect();
-    if parsed.is_empty() {
-        vec!['.']
-    } else {
-        parsed
-    }
-}
-
-fn resolve_command_separators(sep_args: &[String], dir: &Path) -> Vec<char> {
-    if !sep_args.is_empty() {
-        return parse_cli_separators(sep_args);
-    }
-
-    let lookup_dir = if dir.is_absolute() {
-        dir.to_path_buf()
-    } else if let Ok(cwd) = std::env::current_dir() {
-        cwd.join(dir)
-    } else {
-        dir.to_path_buf()
-    };
-
-    match recur::project_config::load_nearest(&lookup_dir) {
-        Ok(Some(cfg)) => {
-            if let Some(config_sep) = cfg.separator_for_dir(&lookup_dir) {
-                return vec![config_sep];
-            }
-        }
-        Ok(None) => {}
-        Err(err) => {
-            eprintln!("Warning: could not load .recur/config.toml: {}", err);
-        }
-    }
-
-    vec!['.']
-}
-
 fn main() {
     let cli = Cli::parse();
-    let fallback_separator = parse_cli_separators(&cli.sep)
+    let fallback_separator = CliSeparatorPolicy::parse_cli_separators(&cli.sep)
         .last()
         .copied()
         .unwrap_or('.');
 
     // Parse --sep-replace-default flag
-    let replace_default = cli
-        .sep_replace_default
-        .as_ref()
-        .and_then(|s| s.chars().next());
+    let replace_default =
+        CliSeparatorPolicy::parse_optional_separator(cli.sep_replace_default.as_deref());
 
     // Get --show-sep flag
     let show_sep = cli.show_sep;
@@ -654,7 +609,7 @@ fn main() {
             count,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             // Use multi-separator if multiple separators or new flags are present
@@ -700,7 +655,7 @@ fn main() {
             ext,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_find_impl::execute(
@@ -725,7 +680,7 @@ fn main() {
             ascii,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             // Use multi-separator if multiple separators or new flags are present
@@ -754,7 +709,7 @@ fn main() {
             exclude_self,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_related_impl::execute(
@@ -773,7 +728,7 @@ fn main() {
             count,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_children_impl::execute(
@@ -788,7 +743,7 @@ fn main() {
             ignore_case,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_id_impl::execute(
@@ -810,7 +765,7 @@ fn main() {
             ext,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_stats_impl::execute(
@@ -827,7 +782,7 @@ fn main() {
             count,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_callers_impl::execute(
@@ -854,7 +809,7 @@ fn main() {
             count,
             stdin,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_callees_impl::execute(
@@ -888,7 +843,7 @@ fn main() {
             depth_guard,
             force,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_trace_impl::execute(
@@ -926,7 +881,7 @@ fn main() {
             force,
             ignore_case,
         } => {
-            let command_separators = resolve_command_separators(&cli.sep, &dir);
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
             let separator = command_separators.last().copied().unwrap_or('.');
 
             main_command_trace_stats_impl::execute(
@@ -957,8 +912,8 @@ fn main() {
             count,
             stdin,
         } => {
-            // Parse separators from strings to chars
-            let separators: Vec<char> = sep.iter().filter_map(|s| s.chars().next()).collect();
+            // Parse explicit separators; merge validation decides whether counts are sufficient.
+            let separators = CliSeparatorPolicy::parse_explicit_separators(&sep);
 
             let use_file_inputs = !inputs.is_empty();
 
