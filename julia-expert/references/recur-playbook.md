@@ -145,6 +145,20 @@ recur --sep _ flatten config.json --json
 - Use `recur --sep _ flatten ... --json` when planning to merge flattened inputs.
 - Windows interop: `merge` file mode tolerates UTF-8 BOM JSON files (common from PowerShell output).
 
+**Observation (validated in this repo, 2026-03-01):**
+- `flatten | merge --stdin` works only when `flatten` emits JSON.
+- `flatten` text output (`path = value`) is not parseable by `merge --stdin`.
+- Prefer `_` separators for flatten->merge structure safety.
+- Choose `--base` to match your intended merged root (for example `--base a` for `a_b` paths).
+
+```bash
+# Recommended pipeline (PowerShell/bash style)
+recur --sep _ flatten nested.json --format json --json | recur merge --stdin --base a --sep _ --json
+
+# Not currently valid (merge expects JSON from stdin)
+recur flatten nested.json --format json | recur merge --stdin --base a --sep . --json
+```
+
 ### Git Workflow Checkpoints (`recur-git`)
 ```bash
 # Snapshot lane/git state
