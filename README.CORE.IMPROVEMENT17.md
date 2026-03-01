@@ -58,6 +58,16 @@ This allows focused, staged processing of deep structures instead of whole-tree 
 5. **Collision-aware policies**
    - explicit handling when keys contain separator tokens.
 
+## Separator Domain Rule (Proposed)
+
+Use separator tokens by domain, not uniformly:
+
+1. `:` / `::` are **in-file domain separators** (namespaces/symbol scopes).
+2. File-system lane/eventness workflows should use file-safe separators (`.`, `_`, `-`, `__`).
+3. Before cross-file merge/eventness discovery, normalize in-file `:`/`::` paths into the target file-safe separator domain.
+
+This avoids Windows filename constraints and keeps in-file traversal semantics separate from file-lane hierarchy semantics.
+
 ## Dependency Chain
 
 1. Improvement 15 core implementation (`unflatten` MVP).

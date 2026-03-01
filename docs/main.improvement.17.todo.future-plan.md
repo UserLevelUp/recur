@@ -18,6 +18,12 @@ Prepare a future-safe design for:
 2. depth-window chunking/filtering of flat records,
 3. token-aware unflatten round-trips.
 
+## Domain Constraint
+
+- Treat `:` / `::` as in-file separators only.
+- Normalize to file-safe separators (`.`, `_`, `-`, `__`) before file-level merge/eventness operations.
+- Keep this normalization explicit and deterministic in contracts.
+
 ## Current Snapshot (2026-03-01)
 
 - Token separators validated in `tree/files/merge` paths.
