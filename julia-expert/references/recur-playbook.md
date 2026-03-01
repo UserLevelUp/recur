@@ -150,6 +150,7 @@ recur --sep _ flatten config.json --json
 - `flatten` text output (`path = value`) is not parseable by `merge --stdin`.
 - Prefer `_` separators for flatten->merge structure safety.
 - Choose `--base` to match your intended merged root (for example `--base a` for `a_b` paths).
+- Multi-character separators (`--sep "__"`) are token-capable in `tree/files/merge`, but `flatten` currently still executes with single-character separator behavior.
 
 ```bash
 # Recommended pipeline (PowerShell/bash style)
@@ -158,6 +159,10 @@ recur --sep _ flatten nested.json --format json --json | recur merge --stdin --b
 # Not currently valid (merge expects JSON from stdin)
 recur flatten nested.json --format json | recur merge --stdin --base a --sep . --json
 ```
+
+See also:
+- `docs/main.command.flatten.separator-token.investigation.md`
+- `README.CORE.IMPROVEMENT17.md` (future depth-window/token separator roadmap)
 
 ### Git Workflow Checkpoints (`recur-git`)
 ```bash
