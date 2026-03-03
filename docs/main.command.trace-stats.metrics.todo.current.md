@@ -1,7 +1,7 @@
 # Command: trace-stats Metrics Pipeline
 
 Status: `todo.current` (active)
-Date: 2026-02-16
+Date: 2026-03-01
 
 ## Goal
 
@@ -52,7 +52,7 @@ Remaining:
 - Add larger-scope performance regression test.
 - Add medium/high risk fixture assertions.
 
-## Validation Snapshot (2026-02-16)
+## Historical Validation Snapshot (2026-02-16)
 
 Command:
 
@@ -67,7 +67,6 @@ Observed status:
 
 Broken/placeholder areas map directly to remaining work:
 
-- sort by risk
 - stdin integration lane
 - distinct cycle-pattern counting and false-positive coverage
 - medium/high risk fixture checks
@@ -90,6 +89,21 @@ Observed status:
 
 - `74 pass`
 - `6 broken` (intentional placeholders still marked with `@test_skip`)
+
+Current placeholder map (`6 broken`):
+
+- stdin integration lane (`1`)
+- circular distinct cycle-pattern count (`1`)
+- circular no-false-positive coverage (`1`)
+- medium risk fixture assertion (`1`)
+- high risk fixture assertion (`1`)
+- large codebase performance fixture (`1`)
+
+Phase 3 close-out criteria:
+
+1. Remove the six remaining `@test_skip` placeholders by implementing each lane.
+2. Keep metrics output stable across table/json/csv modes.
+3. Validate `julia julia-tests/main.command.trace-stats.test.jl` with no broken placeholders.
 
 ## References
 

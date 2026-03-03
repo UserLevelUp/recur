@@ -503,6 +503,7 @@ end
 #
 # Remaining:
 # - [ ] Upgrade circular metric to distinct cycle-pattern counting
-# - [ ] Activate skipped risk ordering assertions
 # - [ ] Add stdin-focused trace-stats assertions
+# - [ ] Add no-false-positive circular assertions
+# - [ ] Add medium/high risk fixture assertions
 # - [ ] Add larger-scope performance assertions

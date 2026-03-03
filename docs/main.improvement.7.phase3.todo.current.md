@@ -1,7 +1,7 @@
 # Improvement 7 Phase 3: trace-stats
 
 Status: `todo.current` (active)
-Date: 2026-02-16
+Date: 2026-03-01
 
 ## Goal
 
@@ -25,21 +25,27 @@ Implement `trace-stats` to provide call graph complexity statistics across scope
 - Core metrics implementation active: `docs/main.command.trace-stats.metrics.todo.current.md`
 - Current focus: metric accuracy hardening (distinct cycle patterns), stdin coverage, and performance checks
 
-## Eventness Snapshot (2026-02-16)
+## Eventness Snapshot (2026-03-01)
 
 - Validation run: `julia julia-tests/main.command.trace-stats.test.jl`
-- Current suite status: `69 pass`, `7 broken` (expected placeholders via `@test_skip`)
+- Current suite status: `74 pass`, `6 broken` (intentional placeholder lanes via `@test_skip`)
 - Active execution lane remains metrics hardening, not command-surface work.
-- Sub-lane activated: `sort-by depth` ordering assertion is now active and passing.
-- Session status: paused for today; resume from `sort-by risk` activation lane next.
+- Ordering lanes active and passing: `sort-by depth`, `sort-by risk`.
+- Remaining work is concentrated in six placeholder tests across stdin, circular accuracy, risk fixtures, and performance.
 
 Phase 3 work left is concentrated in:
 
-1. Activate remaining skipped ordering assertion (`sort-by risk`).
-2. Add stdin-focused trace-stats integration assertions.
-3. Upgrade circular metric to distinct cycle-pattern counting and add no-false-positive coverage.
-4. Add medium/high risk fixture assertions.
-5. Add larger-scope performance regression fixture.
+1. Add stdin-focused trace-stats integration assertions.
+2. Upgrade circular metric to distinct cycle-pattern counting and add no-false-positive coverage.
+3. Add medium/high risk fixture assertions.
+4. Add larger-scope performance regression fixture.
+
+## Phase 3 Exit Criteria
+
+1. Remove remaining `trace-stats` `@test_skip` placeholders by implementing those lanes.
+2. Keep `recur trace-stats` behavior stable for scope/filter/sort/top/guardrail options.
+3. Validate `julia julia-tests/main.command.trace-stats.test.jl` with no broken placeholders.
+4. Record completion eventness and promote to `docs/main.improvement.7.phase3.complete.md`.
 
 ## Recent Completions
 
