@@ -58,6 +58,7 @@ try
 
         # TODO: Add more test modules as they are implemented
         include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
+        include("main.command.trace-id.test.jl")     # IMPROVEMENT8 - trace-id MVP contract tests (expected broken)
         # include("runtests.gaps.jl")        # Needs feature implementation
 
     end

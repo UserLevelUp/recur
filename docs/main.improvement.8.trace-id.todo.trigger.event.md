@@ -20,9 +20,11 @@ recur files "main_command_*_impl" -d src/ --sep _
 # Verify target command lanes as they are added
 recur files "main_command_trace_id_*" -d src/ --sep _
 recur files "main.command.trace-id.**" -d docs/
+recur files "main.command.trace-id.**" -d julia-tests/
 
 # Tight implementation loop
 cargo test --bin recur
+julia julia-tests/main.command.trace-id.test.jl
 ```
 
 ## On Validate
