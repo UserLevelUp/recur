@@ -19,3 +19,6 @@ Next TODO:
 1. Keep dot notation as the default canonical format for semantic IDs.
 2. Use `docs/main.semantic.names.txt` as the centralized `.todo.tracking` queue.
 3. Resolve queued IDs through file-layer commands (`recur files` / `recur tree`) before in-file analysis.
+
+Deferred lane added:
+- `docs/main.improvement.9.trace-id.todo.future-plan.md`

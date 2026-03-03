@@ -1,6 +1,6 @@
 [package]
 name = "recur"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2021"
 authors = ["User Level Up Contributors"]
 description = "Recursive hierarchical search tool for modern codebases - Honoring Dennis Ritchie's 1968 thesis (58 years of recursive hierarchies)"

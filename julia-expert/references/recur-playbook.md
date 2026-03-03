@@ -19,6 +19,29 @@ The same query-first workflow is portable to external projects (including Visual
 
 **Key Principle:** Don't search manually or remember where things are. Use recur to discover what to work on, what to reference, and what's of interest.
 
+## Search vs State (Use the Right Layer)
+
+Recur solves two different problems. Pick the layer before you pick the command:
+
+- Search and analysis (solve code and behavior issues): `find`, `id`, `callers`, `callees`, `trace`, `trace-stats`, `flatten`
+- State and workflow tracking (manage active work): `files`, `tree`, `stats`, `related`, `children`, `merge`, suffix-based eventness files
+
+When debugging or proving safety, use search tools first. Use state tools to track and hand off work.
+
+## Skim-Then-Explore Rule
+
+Before deep work in an unfamiliar subsystem, spend 5 minutes finding existing guidance and then explore organically:
+
+```bash
+# Find local guides/checklists first
+recur files "**agent**" -d docs/
+recur files "**readme**" -d docs/
+
+# Then start real discovery
+recur files "**.current" -d docs/
+recur find "<symbol-or-text>" --scope "**" -d src/
+```
+
 ## stdin/stdout Piping (Composability!)
 
 **Recur is a Unix-style composable tool** - all commands support `--stdin` to read file paths and output to stdout.
@@ -72,6 +95,8 @@ recur files "**.current" -d docs/ | ConvertFrom-Json | ForEach-Object { Get-Item
 
 **PowerShell tip:** `recur files` already outputs a JSON array by default in normal pipelines. Use `ConvertFrom-Json` before object operations; only add `--json` when you need to force machine format explicitly.
 
+**Pipeline tip:** In non-terminal pipelines, recur output is machine-oriented. When scripting, assume JSON and parse it explicitly (`ConvertFrom-Json` or `jq`) unless you intentionally force text.
+
 ## Core Recur Commands
 
 ### File Discovery
@@ -97,6 +122,32 @@ recur find "StdinCapable" --scope "main_command_**" -d src/ --sep _
 # With context lines
 recur find "pattern" --scope "**" -C 2
 ```
+
+### Static Analysis (Bug-Finding Commands)
+```bash
+# Hierarchical identifiers inside file content (dot-path strings)
+recur id "ulu.topic.dot.**" --ext .cs
+
+# Who calls this? (impact before rename/remove)
+recur callers "FunctionName" --scope "**" --ext .rs --count
+
+# What does this call? (dependency inspection)
+recur callees "FunctionName" --scope "**" --ext .rs
+
+# Multi-level call graph (use --pick when names are ambiguous)
+recur trace "FunctionName" --scope "**" --ext .rs --depth 2 --direction both
+recur trace "FunctionName" --scope "**" --ext .rs --pick 1
+
+# Complexity hotspots and circular-risk lanes
+recur trace-stats --scope "**" --ext .rs --sort-by risk --top 10
+recur trace-stats --scope "**" --ext .rs --filter circular-only
+```
+
+**Static analysis guardrails:**
+- `callers`/`callees`/`trace` are text-based analysis, not full AST/type resolution.
+- If `trace` reports multiple matches, use `--pick <N>` instead of rewriting the query.
+- `trace` and `trace-stats` have traversal guardrails (`--depth-guard`, `--force`) for safe defaults on large scopes.
+- If `callees` shows little or no downstream detail for a function that mostly calls external libraries, switch to source reading for that boundary.
 
 ### Related Files
 ```bash
@@ -240,6 +291,29 @@ recur files "main_command_<name>_*" -d src/ --sep _
 recur tree "main.command.<name>" -d docs/
 ```
 
+### Stale Eventness Detection
+
+Eventness files are only useful while they are fresh:
+
+- If both `.current` and `.complete` exist for the same work item, delete `.current` immediately.
+- If a `.current` file is old and no longer actionable, either refresh it with new resume context or close it.
+- Keep `.current` files concrete: last error, file/line, hypothesis, and next command.
+
+```bash
+# Detect overlap/staleness
+recur files "**.current" -d docs/
+recur files "**.complete" -d docs/
+```
+
+```powershell
+# Age check using git history (better than filesystem mtime)
+$files = recur files "**.current" -d docs/ | ConvertFrom-Json
+foreach ($f in $files) {
+  $age = git log -1 --format="%ar" -- $f
+  Write-Host "$age  $f"
+}
+```
+
 **3. Complete Work**
 ```bash
 # Clean up ephemeral files
@@ -261,7 +335,7 @@ recur files "**.current" -d docs/
 - `main.improvement.<n>.todo.md` - Improvement tracking
 
 **Ephemeral (delete when done):**
-- `main.command.<name>.todo.current.md` - Active work marker
+- `main.command.<name>.todo.current.md` - Active work marker with resume context (error, file/line, hypothesis, next step)
 - `main.command.<name>.todo.current.reference.md` - Reference pointer to working implementations
 - `main.command.<name>.todo.trigger.event.md` - Event commands to run at key moments
 
@@ -566,6 +640,11 @@ recur files "main_command_<name>_*" -d src/ --sep _
 6. **Event-driven** - Run discovery commands at workflow events
 7. **Gap analysis** - Compare file sets to find missing work
 8. **Reference pattern** - Create `.reference.md` files pointing to working implementations
+9. **Search first for debugging** - Use `id/find/callers/callees/trace/trace-stats` before writing eventness docs
+10. **Use `id` for dot-path identifiers** - Prefer `recur id "prefix.**"` over plain text search for hierarchical identifiers
+11. **Stale detection is mandatory** - `.current` + `.complete` overlap means `.current` is stale
+12. **Skim then explore** - 5-minute doc skim prevents dead-end command loops
+13. **Mirror lanes in the same session** - if code changed, add/update docs/tests/automation lane state before ending the session
 
 ## Creating Good Reference Files
 
@@ -736,6 +815,26 @@ cd julia-tests && julia runtests.jl
 recur tree "main" --sep . --sep _ --show-sep
 ```
 
+## Phase Lifecycle Checklist (Portable)
+
+Use this for epics/phases in any project (not just this repo).
+
+**Before phase start:**
+1. Create a `.todo.current.md` for active scope.
+2. Create a `.todo.current.reference.md` only if reusing an existing pattern.
+3. Create lane markers/scripts for verification lanes (tests, automation, DB checks) you will need.
+
+**During phase:**
+1. Run discovery (`**.current`, tree for the epic prefix).
+2. Keep implementation and validation tight (`cargo test`, lane-specific tests/scripts).
+3. Update `.current` with concrete resume context after each significant checkpoint.
+
+**After phase completion:**
+1. Delete `.current*` ephemerals.
+2. Add a concise `.complete.md` summary.
+3. Fold durable findings into persistent `.todo.md` or readme artifacts.
+4. Re-run discovery to confirm cleanup and expose the next visible gap.
+
 ## Cross-Lane Rule (Portable)
 
 Treat code as canonical, then mirror intent across lanes in the same session:
@@ -757,6 +856,21 @@ When using a mirror lane (future/optional), keep the same order:
 - mirror/event lane second (`docs/` today, `.recur/` mirror lanes when adopted)
 
 This prevents documentation-first drift and keeps eventness as durable evidence of real implementation state.
+
+## Julia Verification Lane (Optional)
+
+For data migration/verification-heavy projects, keep Julia scripts as a first-class lane:
+
+- Prefer committed `.jl` scripts over inline shell snippets.
+- Default scripts to read-only checks.
+- Gate mutations behind `--fix`.
+
+```bash
+julia jl/<name>.check.jl
+julia jl/<name>.check.jl --fix
+```
+
+When reading SQL results in Julia, prefer SQL-side null handling (`COALESCE(...)`) to avoid brittle null coercion patterns in script code.
 
 ## Summary
 
