@@ -91,5 +91,6 @@ Deferred to Improvement 9:
 - `docs/main.command.trace-id.test.todo.current.md`
 - `docs/main.command.trace-id.test.todo.current.reference.md`
 - `docs/main.command.trace-id.test.todo.trigger.event.md`
+- `docs/main.command.trace-id.pipeline.todo.md`
 - `docs/main.command.flatten.todo.future-plan.md`
 - `docs/main.improvement.9.trace-id.todo.future-plan.md`

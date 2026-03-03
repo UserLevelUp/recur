@@ -143,6 +143,93 @@ include("runtests.setup.jl")
         end
     end
 
+    @testset "Traversal budget propagation (expected broken)" begin
+        @testset "callees --help exposes budget flags" begin
+            success, output, _ = run_recur("callees --help")
+
+            passed = success &&
+                     contains(output, "--depth") &&
+                     contains(output, "--depth-guard") &&
+                     contains(output, "--force")
+
+            println(passed ? "  PASS" : "  BROKEN")
+
+            @test success
+            @test_broken contains(output, "--depth")
+            @test_broken contains(output, "--depth-guard")
+            @test_broken contains(output, "--force")
+            log_test("callees budget flags contract (expected broken)")
+        end
+
+        @testset "hard-fail rejects depth above cap" begin
+            success, _, error_output = run_recur(
+                "callees \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 6 --depth-guard hard-fail"
+            )
+
+            passed = !success &&
+                     contains(error_output, "Maximum depth is 5")
+
+            println(passed ? "  PASS" : "  BROKEN")
+
+            @test_broken !success && contains(error_output, "Maximum depth is 5")
+            log_test("callees hard-fail contract (expected broken)")
+        end
+
+        @testset "clamp mode allows execution with warning" begin
+            success, output, error_output = run_recur(
+                "callees \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 6 --depth-guard clamp"
+            )
+
+            passed = success &&
+                     contains(output, "ApplyTemplate") &&
+                     contains(lowercase(error_output), "clamping")
+
+            println(passed ? "  PASS" : "  BROKEN")
+
+            @test_broken success
+            @test_broken contains(output, "ApplyTemplate")
+            @test_broken contains(lowercase(error_output), "clamping")
+            log_test("callees clamp contract (expected broken)")
+        end
+
+        @testset "force bypasses hard-fail cap" begin
+            success, output, _ = run_recur(
+                "callees \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 6 --depth-guard hard-fail --force"
+            )
+
+            passed = success &&
+                     contains(output, "ApplyTemplate")
+
+            println(passed ? "  PASS" : "  BROKEN")
+
+            @test_broken success
+            @test_broken contains(output, "ApplyTemplate")
+            log_test("callees force contract (expected broken)")
+        end
+
+        @testset "depth propagation expands transitive callees" begin
+            success_d1, output_d1, _ = run_recur(
+                "callees \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 1"
+            )
+            success_d2, output_d2, _ = run_recur(
+                "callees \"CreateWizard3\" --scope \"LevelController.CreateWizard3.**\" --ext .cs --depth 2"
+            )
+
+            passed = success_d1 &&
+                     success_d2 &&
+                     !contains(output_d1, "RenderTemplate") &&
+                     contains(output_d2, "RenderTemplate")
+
+            println(passed ? "  PASS" : "  BROKEN")
+
+            @test_broken success_d1 &&
+                         success_d2 &&
+                         !contains(output_d1, "RenderTemplate") &&
+                         contains(output_d2, "RenderTemplate")
+            log_test("callees depth propagation contract (expected broken)")
+        end
+    end
+
     @testset "Output formats" begin
         # Command: recur callees "CreateUser" --scope "**" --count
         # Should output only the count of callees

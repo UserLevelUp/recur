@@ -34,6 +34,10 @@ function seed_trace_id_fixture()
     """)
 end
 
+function recur_cmd(args::Vector{String})
+    Cmd(vcat([RECUR_BIN], args))
+end
+
 @testset "recur trace-id command (IMPROVEMENT8, expected broken)" begin
     log_section("Testing: recur trace-id (expected broken)")
 
@@ -151,6 +155,94 @@ end
             @test_broken success
             @test_broken parse_ok
             @test_broken parse_ok && haskey(parsed, :request)
+        end
+
+        @testset "Phase 5: cross-command JSON pipeline contracts" begin
+            @testset "trace -> merge (edge metadata placeholder)" begin
+                input_cmd = recur_cmd([
+                    "trace",
+                    "CreateWizard3",
+                    "--scope",
+                    "**",
+                    "--ext",
+                    ".cs",
+                    "--depth",
+                    "1",
+                    "-d",
+                    TEST_DIR,
+                ])
+
+                success, output, _ = run_recur_piped(
+                    input_cmd,
+                    ["merge", "--stdin", "--base", "pipeline.trace", "--sep", ".", "--json"],
+                )
+
+                # Contract target: merged output should eventually retain semantic edge metadata.
+                @test_broken success && contains(output, "\"edge_type\"")
+            end
+
+            @testset "callers -> merge (edge metadata placeholder)" begin
+                input_cmd = recur_cmd([
+                    "callers",
+                    "ValidateEmail",
+                    "--scope",
+                    "**",
+                    "--ext",
+                    ".cs",
+                    "--json",
+                    "-d",
+                    TEST_DIR,
+                ])
+
+                success, output, _ = run_recur_piped(
+                    input_cmd,
+                    ["merge", "--stdin", "--base", "pipeline.callers", "--sep", ".", "--json"],
+                )
+
+                @test_broken success && contains(output, "\"edge_type\"")
+            end
+
+            @testset "callees -> merge (edge metadata placeholder)" begin
+                input_cmd = recur_cmd([
+                    "callees",
+                    "CreateUser",
+                    "--scope",
+                    "**",
+                    "--ext",
+                    ".cs",
+                    "--json",
+                    "-d",
+                    TEST_DIR,
+                ])
+
+                success, output, _ = run_recur_piped(
+                    input_cmd,
+                    ["merge", "--stdin", "--base", "pipeline.callees", "--sep", ".", "--json"],
+                )
+
+                @test_broken success && contains(output, "\"edge_type\"")
+            end
+
+            @testset "trace-id -> merge (full composition placeholder)" begin
+                input_cmd = recur_cmd([
+                    "trace-id",
+                    "ulu.topic.dot.ownership.create",
+                    "--scope",
+                    "**",
+                    "--ext",
+                    ".cs",
+                    "--json",
+                    "-d",
+                    TEST_DIR,
+                ])
+
+                success, output, _ = run_recur_piped(
+                    input_cmd,
+                    ["merge", "--stdin", "--base", "pipeline.trace-id", "--sep", ".", "--json"],
+                )
+
+                @test_broken success && contains(output, "\"edge_type\"")
+            end
         end
     finally
         if created_here

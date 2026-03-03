@@ -5,6 +5,7 @@
 - `julia-tests/runtests.trace-stats.jl` - command contract + metrics progression
 - `julia-tests/runtests.trace.jl` - trace contract and depth behavior
 - `julia-tests/runtests.id.jl` - identifier search baseline
+- `julia-tests/runtests.merge.jl` - stdin JSON composition and auto-JSON behavior
 - `julia-tests/runtests.unflatten.jl` - frozen future-contract style with `@test_broken`
 
 ## Study Commands

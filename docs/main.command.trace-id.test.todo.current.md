@@ -34,6 +34,14 @@ Create a phased, crunchable test suite for trace-id so implementation can procee
 2. stdin-limited file set behavior works.
 3. Depth guardrail and `--force` semantics are consistent.
 
+### Phase 5: Cross-Command JSON Pipeline Contracts (Medium confidence)
+
+1. `trace --json | merge --stdin` contract is captured.
+2. `callers --json | merge --stdin` contract is captured.
+3. `callees --json | merge --stdin` contract is captured.
+4. `trace-id --json | merge --stdin` contract is captured.
+5. Current expectation is placeholder metadata (`edge_type`) until semantic merge extensions land.
+
 ## Initial Test Artifacts
 
 - `julia-tests/runtests.trace-id.jl`
