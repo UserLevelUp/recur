@@ -59,13 +59,21 @@ Implement a build-now `trace-id` MVP that can trace hierarchical identifier flow
 3. Add Julia integration tests with phased `@test_broken` contracts.
 4. Keep command out of full-suite include until minimum contract lands.
 
-## Out of Scope (Deferred)
+## Implemented (Previously Listed as Deferred)
 
-Deferred to Improvement 9:
+The following was originally listed as "Improvement 9" scope but landed in Improvement 8:
 
-1. Project-custom heuristic config (`.recur/trace-id.toml`).
-2. `merge --edge-type` semantic lane stitching.
-3. Full multi-lane composition across call/route/config graphs.
+1. Project-custom heuristic config — implemented as `[traits.trace_id]` in `.recur/config.toml`
+   (not a separate `.recur/trace-id.toml`; uses the unified trait system).
+   - `recur trait set trace_id.producer_keywords "..."` tunes classification at runtime.
+   - `src/trait/trace_id.rs` — `resolve_trace_id_policy()` reads this section.
+2. `recur trait` command — first-class `list`/`get`/`set` CLI for managing all trait config.
+   See `docs/main.command.trait.readme.md` and `docs/main.command.trait.todo.current.md`.
+
+## Still Deferred (Improvement 9)
+
+1. `merge --edge-type` semantic lane stitching.
+2. Full multi-lane composition across call/route/config graphs.
 
 ## Working Files
 

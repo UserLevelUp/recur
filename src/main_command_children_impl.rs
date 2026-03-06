@@ -4,8 +4,9 @@
 
 use recur::output::{JsonFormatter, TerminalFormatter};
 use recur::parser::HierarchyPattern;
-use recur::search::{read_paths_from_stdin, FileSearcher, SearchOptions};
-use std::path::{Path, PathBuf};
+use recur::r#trait::read_resolved_paths_from_stdin;
+use recur::search::{FileSearcher, SearchOptions};
+use std::path::PathBuf;
 use std::process;
 
 pub fn execute(
@@ -48,25 +49,3 @@ pub fn execute(
     Ok(())
 }
 
-fn read_resolved_paths_from_stdin(root: &Path) -> anyhow::Result<Vec<PathBuf>> {
-    let mut resolved = Vec::new();
-
-    for path in read_paths_from_stdin()? {
-        if path.is_absolute() || path.exists() {
-            resolved.push(path);
-            continue;
-        }
-
-        if path.is_relative() {
-            let candidate = root.join(&path);
-            if candidate.exists() {
-                resolved.push(candidate);
-                continue;
-            }
-        }
-
-        resolved.push(path);
-    }
-
-    Ok(resolved)
-}

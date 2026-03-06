@@ -32,14 +32,23 @@ function seed_trace_id_fixture()
         }
     }
     """)
+
+    create_test_file("OwnershipCreateConsumer.cs", """
+    public class OwnershipCreateConsumer {
+        private readonly ILogger<OwnershipCreateConsumer> _logger;
+        public OwnershipCreateConsumer(ILogger<OwnershipCreateConsumer> logger) {
+            _logger = logger;
+        }
+    }
+    """)
 end
 
 function recur_cmd(args::Vector{String})
     Cmd(vcat([RECUR_BIN], args))
 end
 
-@testset "recur trace-id command (IMPROVEMENT8, expected broken)" begin
-    log_section("Testing: recur trace-id (expected broken)")
+@testset "recur trace-id command (IMPROVEMENT8)" begin
+    log_section("Testing: recur trace-id")
 
     created_here = false
     if !isdir(TEST_DIR)
@@ -50,16 +59,16 @@ end
     try
         seed_trace_id_fixture()
 
-        @testset "Phase 1: CLI contract (broken until command exists)" begin
-            success, output, _ = run_recur(["trace-id", "--help"])
+        @testset "Phase 1: CLI contract" begin
+            success, output, _ = run_recur(["trace-id", "-d", TEST_DIR, "--help"])
 
-            @test_broken success
-            @test_broken contains(lowercase(output), "trace-id")
-            @test_broken contains(output, "--scope")
-            @test_broken contains(output, "--format")
-            @test_broken contains(output, "--depth")
-            @test_broken contains(output, "--depth-guard")
-            @test_broken contains(output, "--force")
+            @test success
+            @test contains(lowercase(output), "trace-id")
+            @test contains(output, "--scope")
+            @test contains(output, "--format")
+            @test contains(output, "--depth")
+            @test contains(output, "--depth-guard")
+            @test contains(output, "--force")
         end
 
         @testset "Phase 2: Role detection contracts" begin
@@ -82,13 +91,33 @@ end
                 parse_ok = false
             end
 
-            @test_broken success
-            @test_broken parse_ok
-            @test_broken parse_ok && haskey(parsed, :identifier)
-            @test_broken parse_ok && haskey(parsed, :define)
-            @test_broken parse_ok && haskey(parsed, :produce)
-            @test_broken parse_ok && haskey(parsed, :consume)
-            @test_broken parse_ok && haskey(parsed, :trigger)
+            @test success
+            @test parse_ok
+            if parse_ok
+                @test haskey(parsed, :identifier) || haskey(parsed, "identifier")
+                @test haskey(parsed, :define) || haskey(parsed, "define")
+                @test haskey(parsed, :produce) || haskey(parsed, "produce")
+                @test haskey(parsed, :consume) || haskey(parsed, "consume")
+                @test haskey(parsed, :trigger) || haskey(parsed, "trigger")
+
+                define = haskey(parsed, :define) ? parsed[:define] : parsed["define"]
+                produce = haskey(parsed, :produce) ? parsed[:produce] : parsed["produce"]
+                consume = haskey(parsed, :consume) ? parsed[:consume] : parsed["consume"]
+                trigger = haskey(parsed, :trigger) ? parsed[:trigger] : parsed["trigger"]
+
+                @test length(define) >= 1
+                @test length(produce) >= 1
+                @test length(consume) >= 1
+                @test length(trigger) >= 1
+
+                produce_lines = [String(item["line"]) for item in produce]
+                consume_lines = [String(item["line"]) for item in consume]
+
+                @test any(line -> contains(lowercase(line), "publishasync"), produce_lines)
+                @test any(line -> contains(lowercase(line), "queuebind"), consume_lines)
+                @test !any(line -> contains(line, "OwnershipCreateConsumer"), consume_lines)
+                @test !any(line -> contains(line, "ILogger<OwnershipCreateConsumer>"), consume_lines)
+            end
         end
 
         @testset "Phase 3: Glob and multi-id contracts" begin
@@ -111,9 +140,12 @@ end
                 parse_ok = false
             end
 
-            @test_broken success
-            @test_broken parse_ok
-            @test_broken parse_ok && length(parsed) >= 2
+            @test success
+            @test parse_ok
+            if parse_ok
+                @test parsed isa AbstractVector
+                @test length(parsed) >= 2
+            end
         end
 
         @testset "Phase 4: stdin + guardrail contracts" begin
@@ -152,9 +184,16 @@ end
                 parse_ok = false
             end
 
-            @test_broken success
-            @test_broken parse_ok
-            @test_broken parse_ok && haskey(parsed, :request)
+            @test success
+            @test parse_ok
+            has_request = parse_ok && (haskey(parsed, :request) || haskey(parsed, "request"))
+            @test has_request
+            if has_request
+                request = haskey(parsed, :request) ? parsed[:request] : parsed["request"]
+                @test Int(request["depth_requested"]) == 6
+                @test Int(request["depth_effective"]) == 5
+                @test String(request["depth_guard"]) == "clamp"
+            end
         end
 
         @testset "Phase 5: cross-command JSON pipeline contracts" begin

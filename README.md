@@ -1,6 +1,6 @@
 <div align="center">
   <h1>recur</h1>
-  <div class="version">v0.2.7</div>
+  <div class="version">v0.2.8</div>
   <p>
     <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
     <a href="https://www.rust-lang.org/"><img alt="Rust 1.70+" src="https://img.shields.io/badge/rust-1.70%2B-blue.svg"></a>
@@ -120,8 +120,10 @@ recur stats "ServiceName" -l 1
 - **Tree visualization** using Unicode box-drawing characters
 - **Related file discovery** (siblings within the hierarchy)
 - **Identifier search** (dot-notation identifiers in code)
+- **Identifier flow tracing** (`recur trace-id` for define/produce/consume/trigger lanes)
 - **Hierarchy statistics** with depth analysis and pagination
 - **Project-aware config** via `.recur/config.toml` (`recur init`, `recur init --analyze`)
+- **Trait config management** via `recur trait` (list/get/set trait keys in `.recur/config.toml`)
 - **Structured flattening** (`recur flatten`) for XML/JSON/TOML/YAML/CSV to `path = value` records
 - **Cross-domain gap analysis** — verify completeness across representations
 - **Multiple output formats** (human-friendly terminal output, plus JSON for tooling)
@@ -174,6 +176,27 @@ recur init --analyze --json                 # Machine-readable report
 recur init
 recur files "main_command_**" -d src/ --count   # No --sep needed when .recur/config.toml maps src/ => _
 recur init --analyze                             # Re-check lane/separator drift after refactors
+```
+
+
+### `recur trace-id` - trace hierarchical identifier flow
+```bash
+recur trace-id "ulu.topic.dot.ownership.create" --scope "**" --ext ".cs"
+recur trace-id "ulu.topic.dot.ownership.create" --scope "**" --ext ".cs" --json
+recur trace-id "ulu.topic.dot.**" --scope "**" --ext ".cs" --json
+git diff --name-only origin/main...HEAD | recur trace-id "ulu.topic.dot.**" --scope "**" --stdin --ext ".cs" --json
+```
+
+### `recur trait` - manage trait settings in project config
+`recur trait` reads/writes trait settings in `.recur/config.toml`.
+Run `recur init` first so the config file exists.
+
+```bash
+recur trait list
+recur trait get traversal_budget.max_depth
+recur trait set traversal_budget.max_depth 3
+recur trait set traversal_budget.depth_guard clamp
+recur trait set trace_id.producer_keywords "\"publish,send,emit,enqueue\""
 ```
 
 ### `recur files` — find files by hierarchical pattern

@@ -43,4 +43,3 @@ mod tests {
         assert_eq!(TestCommand::normalize_utf8_bom(content), "abc");
     }
 }
-

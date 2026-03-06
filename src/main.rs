@@ -28,6 +28,8 @@ mod main_command_merge_impl;
 mod main_command_related_impl;
 mod main_command_stats_impl;
 mod main_command_stats_stdin;
+mod main_command_trait_impl;
+mod main_command_trace_id_impl;
 mod main_command_trace_impl;
 mod main_command_trace_stats_impl;
 mod main_command_tree_impl;
@@ -37,7 +39,7 @@ mod main_command_tree_impl;
 #[command(about = "Recursive hierarchical search tool for modern codebases\n\nHonoring Dennis M. Ritchie's 1968 PhD thesis on recursive hierarchies (58 years)", long_about = None)]
 #[command(version)]
 #[command(
-    after_help = "Dennis Ritchie (1941-2011) pioneered recursive hierarchical structures in his 1968 thesis.\n58 years later, recur brings hierarchical understanding to code search.\n\nHomepage: https://github.com/userlevelup/recur"
+    after_help = "Dennis Ritchie (1941-2011) pioneered recursive hierarchical structures in his 1968 thesis.\n58 years later, recur brings hierarchical understanding to code search.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -529,6 +531,22 @@ enum Commands {
         stdin: bool,
     },
 
+    /// Manage trait configuration in .recur/config.toml
+    ///
+    /// Examples:
+    ///   recur trait list
+    ///   recur trait get trace_id.enabled
+    ///   recur trait set trace_id.producer_keywords "publish,send,dispatch"
+    ///   recur trait set traversal_budget.max_depth 3
+    Trait {
+        #[command(subcommand)]
+        command: main_command_trait_impl::TraitSubcommand,
+
+        /// Project root directory
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+    },
+
     /// Initialize or analyze project-local `.recur/config.toml`
     ///
     /// Examples:
@@ -585,6 +603,14 @@ enum Commands {
 }
 
 fn main() {
+    if let Some(result) = main_command_trace_id_impl::maybe_execute_from_args() {
+        if let Err(e) = result {
+            eprintln!("Error: {}", e);
+            process::exit(2);
+        }
+        return;
+    }
+
     let cli = Cli::parse();
     let fallback_separator = CliSeparatorPolicy::parse_cli_separators(&cli.sep)
         .last()
@@ -975,6 +1001,10 @@ fn main() {
                 cli.json,
                 stdin,
             )
+        }
+
+        Commands::Trait { command, dir } => {
+            main_command_trait_impl::execute(command, dir, cli.json)
         }
 
         Commands::Init {

@@ -44,3 +44,36 @@ root_pattern = "**"
 current_suffix = ".current.md"
 todo_suffix = ".todo.md"
 complete_suffix = ".complete.md"
+
+[traversal]
+max_depth = 5
+depth_guard = "hard-fail"
+
+[traits.content_search]
+enabled = true
+max_file_bytes = 1048576
+skip_binary_files = true
+notes = "Project-specific content search limits and binary handling policy."
+
+[traits.separator_merge]
+enabled = true
+notes = "Project-specific separator merge tuning placeholder."
+
+[traits.stdin]
+enabled = true
+exclude_missing = false
+resolve_relative_to_root = true
+notes = "Project-specific stdin path resolution and filtering policy."
+
+[traits.traversal_budget]
+enabled = true
+max_depth = 5
+depth_guard = "hard-fail"
+notes = "Preferred trait-level traversal budget overrides."
+
+[traits.trace_id]
+enabled = true
+producer_keywords = "publish,send,emit,enqueue"
+consumer_keywords = "subscribe,queuebind,routingkey,consumer"
+trigger_keywords = "register(,registerrule,register,routing pattern,*."
+notes = "Project-specific trace-id role classification keywords."

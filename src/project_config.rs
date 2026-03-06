@@ -70,11 +70,21 @@ pub struct TraitTraversalBudgetConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TraitTraceIdConfig {
+    pub enabled: Option<bool>,
+    pub producer_keywords: Option<String>,
+    pub consumer_keywords: Option<String>,
+    pub trigger_keywords: Option<String>,
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct TraitsConfig {
     pub content_search: Option<TraitContentSearchConfig>,
     pub separator_merge: Option<TraitPlaceholderConfig>,
     pub stdin: Option<TraitStdinConfig>,
     pub traversal_budget: Option<TraitTraversalBudgetConfig>,
+    pub trace_id: Option<TraitTraceIdConfig>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -519,6 +529,28 @@ fn parse_trait_traversal_budget_section(table: &toml::value::Table) -> TraitTrav
     }
 }
 
+fn parse_trait_trace_id_section(table: &toml::value::Table) -> TraitTraceIdConfig {
+    TraitTraceIdConfig {
+        enabled: table.get("enabled").and_then(|v| v.as_bool()),
+        producer_keywords: table
+            .get("producer_keywords")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        consumer_keywords: table
+            .get("consumer_keywords")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        trigger_keywords: table
+            .get("trigger_keywords")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        notes: table
+            .get("notes")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+    }
+}
+
 fn parse_trait_stdin_section(table: &toml::value::Table) -> TraitStdinConfig {
     TraitStdinConfig {
         enabled: table.get("enabled").and_then(|v| v.as_bool()),
@@ -551,6 +583,10 @@ fn parse_traits_section(table: &toml::value::Table) -> TraitsConfig {
             .get("traversal_budget")
             .and_then(|v| v.as_table())
             .map(parse_trait_traversal_budget_section),
+        trace_id: table
+            .get("trace_id")
+            .and_then(|v| v.as_table())
+            .map(parse_trait_trace_id_section),
     }
 }
 
@@ -660,6 +696,12 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("max_depth = 5\n");
     content.push_str("depth_guard = \"hard-fail\"\n");
     content.push_str("notes = \"Preferred trait-level traversal budget overrides.\"\n");
+    content.push_str("\n[traits.trace_id]\n");
+    content.push_str("enabled = true\n");
+    content.push_str("producer_keywords = \"publish,send,emit,enqueue\"\n");
+    content.push_str("consumer_keywords = \"subscribe,queuebind,routingkey,consumer\"\n");
+    content.push_str("trigger_keywords = \"register(,registerrule,register,routing pattern,*.\"\n");
+    content.push_str("notes = \"Project-specific trace-id role classification keywords.\"\n");
 
     content
 }
@@ -813,6 +855,13 @@ max_depth = 11
 depth_guard = "clamp"
 notes = "traversal budget trait placeholder"
 
+[traits.trace_id]
+enabled = true
+producer_keywords = "publish,send"
+consumer_keywords = "subscribe,queuebind"
+trigger_keywords = "register(,routing pattern"
+notes = "trace-id trait placeholder"
+
 [misc]
 foo = "bar"
 "#;
@@ -880,6 +929,30 @@ foo = "bar"
                 .and_then(|t| t.stdin.as_ref())
                 .and_then(|s| s.resolve_relative_to_root),
             Some(false)
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.trace_id.as_ref())
+                .and_then(|s| s.producer_keywords.as_deref()),
+            Some("publish,send")
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.trace_id.as_ref())
+                .and_then(|s| s.consumer_keywords.as_deref()),
+            Some("subscribe,queuebind")
+        );
+        assert_eq!(
+            config
+                .traits
+                .as_ref()
+                .and_then(|t| t.trace_id.as_ref())
+                .and_then(|s| s.trigger_keywords.as_deref()),
+            Some("register(,routing pattern")
         );
     }
 
@@ -960,6 +1033,7 @@ foo = "bar"
         assert!(config_text.contains("exclude_missing = false"));
         assert!(config_text.contains("resolve_relative_to_root = true"));
         assert!(config_text.contains("[traits.traversal_budget]"));
+        assert!(config_text.contains("[traits.trace_id]"));
     }
 
     #[test]
