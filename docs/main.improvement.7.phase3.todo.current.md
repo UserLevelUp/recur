@@ -1,7 +1,7 @@
 # Improvement 7 Phase 3: trace-stats
 
 Status: `todo.current` (active)
-Date: 2026-03-01
+Date: 2026-03-06
 
 ## Goal
 

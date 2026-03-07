@@ -1,7 +1,7 @@
 # Command: trace-stats Metrics Pipeline
 
 Status: `todo.current` (active)
-Date: 2026-03-01
+Date: 2026-03-06
 
 ## Goal
 
@@ -77,7 +77,7 @@ Recently activated:
 - `sort-by depth` ordering assertion is now active and passing in `julia-tests/runtests.trace-stats.jl`.
 - `sort-by risk` ordering assertion is now active and passing in `julia-tests/runtests.trace-stats.jl`.
 
-## Validation Snapshot (2026-03-01)
+## Validation Snapshot (2026-03-06)
 
 Command:
 
@@ -85,25 +85,33 @@ Command:
 julia julia-tests/main.command.trace-stats.test.jl
 ```
 
-Observed status:
+Last known status (2026-03-01): `74 pass`, `6 broken`
 
-- `74 pass`
-- `6 broken` (intentional placeholders still marked with `@test_skip`)
+### Precise @test_skip Map (julia-tests/runtests.trace-stats.jl)
 
-Current placeholder map (`6 broken`):
+| Line | Testset | What's needed |
+|------|---------|---------------|
+| 369  | stdin — trace-stats on changed files | Activate `run_recur_with_stdin`; add stdin fixture files + assert |
+| 384  | circular — count distinct patterns | Fixture: A→B→A + A→C→A = 2 patterns; upgrade circular metric in src |
+| 393  | circular — no false positives | Fixture: linear chain; assert circular == 0 |
+| 424  | medium risk (10-30 transitive) | Add deep fixture function with 10-30 reachable callees |
+| 432  | high risk (>30 transitive) | Add very deep fixture function with >30 reachable callees |
+| 484  | large codebase performance | Seed 100+ functions; assert completion within time budget |
 
-- stdin integration lane (`1`)
-- circular distinct cycle-pattern count (`1`)
-- circular no-false-positive coverage (`1`)
-- medium risk fixture assertion (`1`)
-- high risk fixture assertion (`1`)
-- large codebase performance fixture (`1`)
+### Implementation Order (recommended)
 
-Phase 3 close-out criteria:
+1. **stdin** — no Rust changes needed; just activate the commented test body
+2. **medium/high risk fixtures** — add fixture functions to test seed; no Rust changes
+3. **circular no-false-positive** — add fixture + assert; likely no Rust changes
+4. **circular distinct patterns** — requires Rust change to `src/main_command_trace_stats_impl.rs`
+5. **performance** — last; seed large fixture; assert timing
 
-1. Remove the six remaining `@test_skip` placeholders by implementing each lane.
-2. Keep metrics output stable across table/json/csv modes.
-3. Validate `julia julia-tests/main.command.trace-stats.test.jl` with no broken placeholders.
+### Phase 3 Close-out Criteria
+
+1. All 6 `@test_skip` replaced with passing assertions.
+2. `julia julia-tests/main.command.trace-stats.test.jl` shows 0 broken.
+3. Create `docs/main.improvement.7.phase3.complete.md`.
+4. Delete this `.current.md` and `docs/main.improvement.7.phase3.todo.current.md`.
 
 ## References
 
