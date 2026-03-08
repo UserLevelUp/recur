@@ -149,9 +149,8 @@ end
         end
 
         @testset "Phase 3b: JSON site schema - edge_type field" begin
-            # Each site in define/produce/consume/trigger arrays should include
+            # Each site in define/produce/consume/trigger arrays includes
             # an edge_type field matching the role name.
-            # Requires: Rust change in main_command_trace_id_impl.rs to add edge_type to TraceIdSite
             success, output, _ = run_recur([
                 "trace-id",
                 "ulu.topic.dot.ownership.create",
@@ -177,12 +176,14 @@ end
             @test parse_ok
 
             if parse_ok
-                for role in ["define", "produce", "consume", "trigger"]
-                    sites = parsed[role]
+                for (role_sym, role_str) in [(:define, "define"), (:produce, "produce"), (:consume, "consume"), (:trigger, "trigger")]
+                    sites = haskey(parsed, role_sym) ? parsed[role_sym] : get(parsed, role_str, [])
                     if length(sites) > 0
                         first_site = sites[1]
-                        @test_broken haskey(first_site, "edge_type")
-                        @test_broken String(get(first_site, "edge_type", "")) == role
+                        has_edge_type = haskey(first_site, :edge_type) || haskey(first_site, "edge_type")
+                        @test has_edge_type
+                        edge_val = has_edge_type ? String(get(first_site, :edge_type, get(first_site, "edge_type", ""))) : ""
+                        @test edge_val == role_str
                     end
                 end
             end

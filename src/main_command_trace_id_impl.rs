@@ -53,6 +53,7 @@ struct TraceIdSite {
     path: String,
     line_number: usize,
     line: String,
+    edge_type: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -455,7 +456,7 @@ fn build_record(
     let define = dedupe_sites(
         define_hits
             .iter()
-            .map(result_to_site)
+            .map(|r| result_to_site(r, "define"))
             .collect::<Vec<TraceIdSite>>(),
     );
 
@@ -485,14 +486,13 @@ fn build_record(
             continue;
         }
 
-        let site = TraceIdSite {
-            path: line.path.display().to_string(),
-            line_number: line.line_number,
-            line: line.line.clone(),
-        };
-
         if is_produce_line(&line.line, trace_policy) {
-            produce.push(site.clone());
+            produce.push(TraceIdSite {
+                path: line.path.display().to_string(),
+                line_number: line.line_number,
+                line: line.line.clone(),
+                edge_type: "produce".to_string(),
+            });
         }
         if is_consume_line(&line.line, trace_policy)
             && line_matches_identifier_or_symbol_token(
@@ -503,10 +503,20 @@ fn build_record(
             )
             && !is_structural_consume_noise(&line.line)
         {
-            consume.push(site.clone());
+            consume.push(TraceIdSite {
+                path: line.path.display().to_string(),
+                line_number: line.line_number,
+                line: line.line.clone(),
+                edge_type: "consume".to_string(),
+            });
         }
         if is_trigger_line(&line.line, trace_policy) {
-            trigger.push(site);
+            trigger.push(TraceIdSite {
+                path: line.path.display().to_string(),
+                line_number: line.line_number,
+                line: line.line.clone(),
+                edge_type: "trigger".to_string(),
+            });
         }
     }
 
@@ -538,11 +548,12 @@ fn collect_scoped_lines(paths: Vec<PathBuf>) -> Vec<ScopedLine> {
     out
 }
 
-fn result_to_site(result: &SearchResult) -> TraceIdSite {
+fn result_to_site(result: &SearchResult, edge_type: &str) -> TraceIdSite {
     TraceIdSite {
         path: result.path.display().to_string(),
         line_number: result.line_number,
         line: result.line.clone(),
+        edge_type: edge_type.to_string(),
     }
 }
 
