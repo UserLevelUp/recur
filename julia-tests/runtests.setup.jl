@@ -138,6 +138,55 @@ function setup_test_environment()
     }
     """)
 
+    # Medium risk fixture: MediumRoot has 13 transitive callees (10-30 → Medium)
+    create_test_file("MediumService.cs", """
+    public class MediumService {
+        public void MediumRoot() { M1(); M2(); M3(); M4(); }
+        public void M1() { M1a(); M1b(); M1c(); }
+        public void M2() { M2a(); M2b(); }
+        public void M3() { M3a(); M3b(); }
+        public void M4() { M4a(); M4b(); }
+        public void M1a() { }
+        public void M1b() { }
+        public void M1c() { }
+        public void M2a() { }
+        public void M2b() { }
+        public void M3a() { }
+        public void M3b() { }
+        public void M4a() { }
+        public void M4b() { }
+    }
+    """)
+
+    # High risk fixture: HighRoot has 36 transitive callees (>30 → High)
+    create_test_file("HighService.cs", """
+    public class HighService {
+        public void HighRoot() { H1(); H2(); H3(); H4(); H5(); H6(); }
+        public void H1() { H1a(); H1b(); H1c(); H1d(); H1e(); }
+        public void H2() { H2a(); H2b(); H2c(); H2d(); H2e(); }
+        public void H3() { H3a(); H3b(); H3c(); H3d(); H3e(); }
+        public void H4() { H4a(); H4b(); H4c(); H4d(); H4e(); }
+        public void H5() { H5a(); H5b(); H5c(); H5d(); H5e(); }
+        public void H6() { H6a(); H6b(); H6c(); H6d(); H6e(); }
+        public void H1a() { } public void H1b() { } public void H1c() { } public void H1d() { } public void H1e() { }
+        public void H2a() { } public void H2b() { } public void H2c() { } public void H2d() { } public void H2e() { }
+        public void H3a() { } public void H3b() { } public void H3c() { } public void H3d() { } public void H3e() { }
+        public void H4a() { } public void H4b() { } public void H4c() { } public void H4d() { } public void H4e() { }
+        public void H5a() { } public void H5b() { } public void H5c() { } public void H5d() { } public void H5e() { }
+        public void H6a() { } public void H6b() { } public void H6c() { } public void H6d() { } public void H6e() { }
+    }
+    """)
+
+    # Performance fixture: 100+ functions in one service
+    funcs = join(["        public void PerfFunc$(i)() { }" for i in 1:100], "\n")
+    calls = join(["PerfFunc$(i)();" for i in 1:100], " ")
+    create_test_file("PerformanceService.cs", """
+    public class PerformanceService {
+        public void PerfRoot() { $calls }
+    $funcs
+    }
+    """)
+
     # Config hierarchy
     create_test_file("config.json", "{\"database\": {\"connection\": \"test\"}}")
     create_test_file("config.database.json", "{\"host\": \"localhost\"}")

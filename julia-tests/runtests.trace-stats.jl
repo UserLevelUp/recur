@@ -356,18 +356,23 @@ include("runtests.setup.jl")
         end
     end
 
-    @testset "Git integration with stdin (PLACEHOLDER)" begin
+    @testset "Git integration with stdin" begin
         @testset "trace-stats on changed files" begin
-            # PLACEHOLDER
-            # This depends on IMPROVEMENT6 (--stdin flag)
-            # stdin_input = "LevelController.CreateWizard3.cs\nDynamicGameComponentService.Delete.cs"
-            # success, output, _ = run_recur_with_stdin("trace-stats --scope \"**\" --stdin --sort-by risk", stdin_input)
+            stdin_input = joinpath(TEST_DIR, "LevelController.CreateWizard3.cs") * "\n" *
+                          joinpath(TEST_DIR, "DynamicGameComponentService.Delete.cs")
 
-            # Show complexity stats only for changed files
-            # Helps prioritize testing in PR reviews
+            success, output, _ = run_recur_stdin(stdin_input, ["trace-stats", "--scope", "**", "--stdin", "--sort-by", "risk", "--json", "-d", TEST_DIR])
 
-            @test_skip true
-            log_test("trace-stats with stdin (PENDING IMPROVEMENT6 + IMPROVEMENT7)")
+            data = success ? JSON3.read(output) : nothing
+            functions = success ? data["functions"] : []
+
+            passed = success && length(functions) > 0
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test length(functions) > 0
+            log_test("trace-stats with stdin filters to provided files")
         end
     end
 
@@ -386,12 +391,22 @@ include("runtests.setup.jl")
         end
 
         @testset "no false positives" begin
-            # PLACEHOLDER
-            # Functions without circular references should show Circular = 0
-            # Even if they have complex call graphs
+            success, output, _ = run_recur("trace-stats --scope \"WideService\" --ext .cs --json")
 
-            @test_skip true
-            log_test("no false circular positives (PENDING IMPLEMENTATION)")
+            data = JSON3.read(output)
+            functions = data["functions"]
+            wide_root = filter(f -> String(f["name"]) == "WideRoot", functions)
+
+            passed = success &&
+                     length(wide_root) == 1 &&
+                     Int(wide_root[1]["circular"]) == 0
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test length(wide_root) == 1
+            @test Int(wide_root[1]["circular"]) == 0
+            log_test("no false circular positives in linear call graph")
         end
     end
 
@@ -418,19 +433,47 @@ include("runtests.setup.jl")
         end
 
         @testset "medium risk (10-30 transitive)" begin
-            # PLACEHOLDER
-            # Functions with 10-30 transitive callees should show Risk = Medium
+            success, output, _ = run_recur("trace-stats --scope \"MediumService\" --ext .cs --json")
 
-            @test_skip true
-            log_test("medium risk scoring (PENDING IMPLEMENTATION)")
+            data = JSON3.read(output)
+            functions = data["functions"]
+            medium_root = filter(f -> String(f["name"]) == "MediumRoot", functions)
+
+            passed = success &&
+                     length(medium_root) == 1 &&
+                     Int(medium_root[1]["transitive"]) >= 10 &&
+                     Int(medium_root[1]["transitive"]) <= 30 &&
+                     String(medium_root[1]["risk"]) == "Medium"
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test length(medium_root) == 1
+            @test Int(medium_root[1]["transitive"]) >= 10
+            @test Int(medium_root[1]["transitive"]) <= 30
+            @test String(medium_root[1]["risk"]) == "Medium"
+            log_test("medium risk scoring works (10-30 transitive)")
         end
 
         @testset "high risk (>30 transitive)" begin
-            # PLACEHOLDER
-            # Functions with > 30 transitive callees should show Risk = High
+            success, output, _ = run_recur("trace-stats --scope \"HighService\" --ext .cs --json")
 
-            @test_skip true
-            log_test("high risk scoring (PENDING IMPLEMENTATION)")
+            data = JSON3.read(output)
+            functions = data["functions"]
+            high_root = filter(f -> String(f["name"]) == "HighRoot", functions)
+
+            passed = success &&
+                     length(high_root) == 1 &&
+                     Int(high_root[1]["transitive"]) > 30 &&
+                     String(high_root[1]["risk"]) == "High"
+
+            println(passed ? "  PASS" : "  FAIL")
+
+            @test success
+            @test length(high_root) == 1
+            @test Int(high_root[1]["transitive"]) > 30
+            @test String(high_root[1]["risk"]) == "High"
+            log_test("high risk scoring works (>30 transitive)")
         end
     end
 
@@ -474,14 +517,23 @@ include("runtests.setup.jl")
         end
     end
 
-    @testset "Performance on large codebases (PLACEHOLDER)" begin
+    @testset "Performance on large codebases" begin
         @testset "handles 100+ functions" begin
-            # PLACEHOLDER
-            # Create test environment with 100+ functions
-            # Verify trace-stats completes in reasonable time
+            t_start = time()
+            success, output, _ = run_recur("trace-stats --scope \"PerformanceService\" --ext .cs --json")
+            elapsed = time() - t_start
 
-            @test_skip true
-            log_test("large codebase performance (PENDING IMPLEMENTATION)")
+            data = success ? JSON3.read(output) : nothing
+            functions = success ? data["functions"] : []
+
+            passed = success && length(functions) > 0 && elapsed < 30.0
+
+            println(passed ? "  PASS ($(round(elapsed, digits=2))s)" : "  FAIL ($(round(elapsed, digits=2))s)")
+
+            @test success
+            @test length(functions) > 0
+            @test elapsed < 30.0
+            log_test("large codebase (100+ functions) completes within time budget")
         end
     end
 
