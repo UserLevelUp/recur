@@ -1,6 +1,6 @@
 # trace-id: edge_type Field in JSON Output
 
-Status: `todo.current` (active — tests written, Rust pending)
+Status: `todo.current` (Layer 1 complete — Layer 2 deferred to Improvement 9)
 Date: 2026-03-08
 
 ## Goal
