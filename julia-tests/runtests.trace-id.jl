@@ -148,6 +148,46 @@ end
             end
         end
 
+        @testset "Phase 3b: JSON site schema - edge_type field" begin
+            # Each site in define/produce/consume/trigger arrays should include
+            # an edge_type field matching the role name.
+            # Requires: Rust change in main_command_trace_id_impl.rs to add edge_type to TraceIdSite
+            success, output, _ = run_recur([
+                "trace-id",
+                "ulu.topic.dot.ownership.create",
+                "--scope",
+                "**",
+                "--ext",
+                ".cs",
+                "--json",
+                "-d",
+                TEST_DIR,
+            ])
+
+            parsed = nothing
+            parse_ok = false
+            try
+                parsed = JSON3.read(output)
+                parse_ok = true
+            catch
+                parse_ok = false
+            end
+
+            @test success
+            @test parse_ok
+
+            if parse_ok
+                for role in ["define", "produce", "consume", "trigger"]
+                    sites = parsed[role]
+                    if length(sites) > 0
+                        first_site = sites[1]
+                        @test_broken haskey(first_site, "edge_type")
+                        @test_broken String(get(first_site, "edge_type", "")) == role
+                    end
+                end
+            end
+        end
+
         @testset "Phase 4: stdin + guardrail contracts" begin
             stdin_files = join([
                 "DotControlEvents.cs",

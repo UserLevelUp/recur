@@ -125,6 +125,16 @@ function setup_test_environment()
         public void FunctionB() { FunctionA(); }
     }
     """)
+    # Distinct cycle fixture: CycleRoot has two distinct back-edges (circular = 2)
+    #   CycleRoot → PathA → CycleRoot  [pattern 1]
+    #   CycleRoot → PathB → CycleRoot  [pattern 2]
+    create_test_file("DistinctCycleService.cs", """
+    public class DistinctCycleService {
+        public void CycleRoot() { PathA(); PathB(); }
+        public void PathA() { CycleRoot(); }
+        public void PathB() { CycleRoot(); }
+    }
+    """)
     create_test_file("WideService.cs", """
     public class WideService {
         public void WideRoot() {

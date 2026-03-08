@@ -378,16 +378,19 @@ include("runtests.setup.jl")
 
     @testset "Circular reference detection accuracy (PLACEHOLDER)" begin
         @testset "count distinct circular patterns" begin
-            # PLACEHOLDER
-            # Test setup:
-            #   CreateWizard3() → ApplyTemplate() → RenderTemplate() → CreateWizard3()  [pattern 1]
-            #   CreateWizard3() → SaveWizard() → ValidateWizard() → CreateWizard3()    [pattern 2]
-            #
-            # Expected:
-            #   CreateWizard3: Circular = 2 (two distinct patterns)
+            # Fixture: DistinctCycleService has two distinct back-edges through CycleRoot:
+            #   CycleRoot → PathA → CycleRoot  [pattern 1]
+            #   CycleRoot → PathB → CycleRoot  [pattern 2]
+            # Expected: circular = 2 (distinct patterns, not just presence flag)
+            # Requires: Rust change in main_command_trace_stats_impl.rs
+            success, output, _ = run_recur("trace-stats --scope \"DistinctCycleService\" --ext .cs --json")
 
-            @test_skip true
-            log_test("circular pattern counting (PENDING IMPLEMENTATION)")
+            data = success ? JSON3.read(output) : nothing
+            functions = success ? data["functions"] : []
+            cycle_root = filter(f -> String(f["name"]) == "CycleRoot", functions)
+
+            @test_broken length(cycle_root) == 1 && Int(cycle_root[1]["circular"]) == 2
+            log_test("circular pattern counting (PENDING RUST IMPLEMENTATION)")
         end
 
         @testset "no false positives" begin
