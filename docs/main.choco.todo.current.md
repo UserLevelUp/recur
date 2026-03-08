@@ -8,7 +8,7 @@ Keep the Chocolatey package metadata in sync as commands are added or updated. T
 
 ## Current Gap
 
-No current gap for command coverage.
+No current gap for command coverage (synced at v0.2.8, 2026-03-08).
 
 `choco/recur.nuspec` currently lists all `recur --help` commands:
 - `recur init`
@@ -24,6 +24,9 @@ No current gap for command coverage.
 - `recur trace`
 - `recur merge`
 - `recur flatten`
+- `recur trait`
+- `recur trace-id`
+- `recur trace-stats`
 
 It also calls out the companion `recur-git checkpoint` command installed when `recur-git.exe` is present in the release zip.
 
