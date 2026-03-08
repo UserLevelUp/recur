@@ -376,21 +376,22 @@ include("runtests.setup.jl")
         end
     end
 
-    @testset "Circular reference detection accuracy (PLACEHOLDER)" begin
+    @testset "Circular reference detection accuracy" begin
         @testset "count distinct circular patterns" begin
             # Fixture: DistinctCycleService has two distinct back-edges through CycleRoot:
             #   CycleRoot → PathA → CycleRoot  [pattern 1]
             #   CycleRoot → PathB → CycleRoot  [pattern 2]
-            # Expected: circular = 2 (distinct patterns, not just presence flag)
-            # Requires: Rust change in main_command_trace_stats_impl.rs
+            # Expected: circular = 2 (visit_key is function:path:line so each back-edge is distinct)
             success, output, _ = run_recur("trace-stats --scope \"DistinctCycleService\" --ext .cs --json")
 
             data = success ? JSON3.read(output) : nothing
             functions = success ? data["functions"] : []
             cycle_root = filter(f -> String(f["name"]) == "CycleRoot", functions)
 
-            @test_broken length(cycle_root) == 1 && Int(cycle_root[1]["circular"]) == 2
-            log_test("circular pattern counting (PENDING RUST IMPLEMENTATION)")
+            @test success
+            @test length(cycle_root) == 1
+            @test Int(cycle_root[1]["circular"]) == 2
+            log_test("circular pattern counting works (distinct back-edges via visit_key)")
         end
 
         @testset "no false positives" begin
