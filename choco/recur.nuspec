@@ -28,6 +28,9 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur children` — find child files
 - `recur id` — search for hierarchical identifiers
 - `recur stats` — analyze hierarchy statistics
+- `recur callers` — find all places a function or method is called
+- `recur callees` — find all functions or methods called by a given function
+- `recur trace` — visualize recursive call paths across multiple levels
 - `recur merge` — merge results across separators
 
 Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program structure.
