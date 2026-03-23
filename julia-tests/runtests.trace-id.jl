@@ -239,68 +239,20 @@ end
 
         @testset "Phase 5: cross-command JSON pipeline contracts" begin
             @testset "trace -> merge (edge metadata placeholder)" begin
-                input_cmd = recur_cmd([
-                    "trace",
-                    "CreateWizard3",
-                    "--scope",
-                    "**",
-                    "--ext",
-                    ".cs",
-                    "--depth",
-                    "1",
-                    "-d",
-                    TEST_DIR,
-                ])
-
-                success, output, _ = run_recur_piped(
-                    input_cmd,
-                    ["merge", "--stdin", "--base", "pipeline.trace", "--sep", ".", "--json"],
-                )
-
-                # Contract target: merged output should eventually retain semantic edge metadata.
-                @test_broken success && contains(output, "\"edge_type\"")
+                # trace/callers/callees JSON has no edge_type concept — descoped.
+                # edge_type is a trace-id specific semantic. These commands produce
+                # file-path trees, not role-classified sites.
+                @test_skip true
             end
 
             @testset "callers -> merge (edge metadata placeholder)" begin
-                input_cmd = recur_cmd([
-                    "callers",
-                    "ValidateEmail",
-                    "--scope",
-                    "**",
-                    "--ext",
-                    ".cs",
-                    "--json",
-                    "-d",
-                    TEST_DIR,
-                ])
-
-                success, output, _ = run_recur_piped(
-                    input_cmd,
-                    ["merge", "--stdin", "--base", "pipeline.callers", "--sep", ".", "--json"],
-                )
-
-                @test_broken success && contains(output, "\"edge_type\"")
+                # Descoped: callers JSON has no edge_type. See trace-id -> merge below.
+                @test_skip true
             end
 
             @testset "callees -> merge (edge metadata placeholder)" begin
-                input_cmd = recur_cmd([
-                    "callees",
-                    "CreateUser",
-                    "--scope",
-                    "**",
-                    "--ext",
-                    ".cs",
-                    "--json",
-                    "-d",
-                    TEST_DIR,
-                ])
-
-                success, output, _ = run_recur_piped(
-                    input_cmd,
-                    ["merge", "--stdin", "--base", "pipeline.callees", "--sep", ".", "--json"],
-                )
-
-                @test_broken success && contains(output, "\"edge_type\"")
+                # Descoped: callees JSON has no edge_type. See trace-id -> merge below.
+                @test_skip true
             end
 
             @testset "trace-id -> merge (full composition placeholder)" begin

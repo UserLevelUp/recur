@@ -1,0 +1,10 @@
+# Sudoku demo: project-local trait config
+# recur does not know what Sudoku is — this config IS the vocabulary contract.
+# publish/subscribe already in defaults; trigger added here for Sudoku's keyword.
+
+[traits.trace_id]
+enabled = true
+producer_keywords = "publish,emit,propagate"
+consumer_keywords = "subscribe,bind,consume"
+trigger_keywords = "trigger,register,solve"
+notes = "Sudoku demo: classify move events by role (publish/subscribe/trigger)"

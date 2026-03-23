@@ -1,3 +1,9 @@
+> **SUPERSEDED** — This spec proposed a Roslyn-based `recur index` approach.
+> The implemented path diverged: `recur callers`, `recur trace`, and `recur trace-stats`
+> were built as language-agnostic text-based tools — no Roslyn dependency.
+> The `recur index` command was never implemented. This doc is a historical artifact.
+> Improvement 8 in the eventness system refers to `trace-id` MVP, not this spec.
+
 ## 🎯 GitHub Issues: `recur index` Feature Proposal (3 Phases)
 
 ---

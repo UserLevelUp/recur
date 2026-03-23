@@ -1,7 +1,313 @@
 # Demo: Sudoku + trace-id (Pure Separation Architecture)
 
-Status: `todo.current` (active analysis / planning)
-Date: 2026-03-08
+Status: `todo.current` (active — Phase 4 complete, Phase 5 next)
+Date: 2026-03-13
+
+## Phase 1 Complete (2026-03-13)
+
+`julia-tests/runtests.demo.sudoku.jl` — 32 pass, 0 fail, 0 broken. Wired into full suite.
+
+**Proven:**
+- trace-id works on plain `.txt` eventness files (not just code)
+- `publish` / `subscribe` classify with DEFAULT vocabulary (no config needed)
+- `trigger` requires project-local `.recur/config.toml` — proves recur is data-driven
+- Full cascade (define/produce/consume/trigger) fires with project config
+- JSON `edge_type` field present per site
+- Project config in `-d` directory is auto-discovered (portable, self-contained)
+
+## Phase 2 Complete (2026-03-13)
+
+`Recur.jl` wrapper + `demos/sudoku/puzzles/easy-001/` — 20 tests green.
+`Recur.trace_id()` → subprocess → JSON → all 4 roles proven.
+
+## Phase 3 Complete (2026-03-13)
+
+`julia-tests/runtests.demo.sudoku.phase3.jl` — 46 pass, 0 fail. Wired into full suite.
+`demos/sudoku/julia/Generator.jl` — Sudoku geometry + flow file authoring + cascade generation.
+Suite total: 644 passed.
+
+**Proven:**
+- `box_of(row, col)` computes correct box numbers (fixed handwritten fixture: box.5 → box.2)
+- `all_peers(3, 5)` returns exactly 20 unique peers (row 8 + col 8 + box-only 4)
+- `write_flow_event` writes correctly-formed file — all 20 subscribe lines reference identifier
+- Flow file produced by Generator classifies correctly: 20 consume sites, all 4 roles
+- `generate_cascade` returns `{cell, value, cascade}` dict
+- `generate_cascades` writes `sudoku.cascades.json` for a subset solution
+
+**Key insight captured:** Traditional solvers recurse in memory. This externalizes the
+stack into files — the cascade JSON is the stack trace, queryable by any consumer.
+The reasoning recurs in the file hierarchy. The tool is called `recur`.
+
+## Phase 4 Complete (2026-03-13)
+
+`julia-tests/runtests.demo.sudoku.phase4.jl` — 39 pass, 0 fail. Wired into full suite.
+Suite total: 683 passed.
+
+**Proven:**
+- `Engine.load_solution` parses 81 cells with correct values
+- `Engine.make_grid` builds masked 9x9 grid (nothing = player must fill)
+- `Engine.is_valid_placement` validates against solution
+- `Engine.get_candidates` returns only the solution value for empty cells
+- `Engine.is_solved` returns true only when all 81 cells match solution
+- `Engine.apply_placement!` mutates grid; subsequent Generator+Recur integration classifies 20 consume sites
+- `Display.render_grid` outputs multi-line ASCII box-drawing grid
+- `Display.render_cascade` formats define/produce/consume/trigger counts
+
+**Architecture proven:**
+- Engine.jl: rules + grid state + validity
+- Generator.jl: flow event file authoring (Phase 3)
+- Recur.jl: subprocess wrapper (Phase 2)
+- Display.jl: terminal renderer
+- Game.jl: game loop orchestrator (ties all four)
+
+## Phase 5: HTML5 Static Game — In Progress
+
+Status: `in-progress` (core game working, polishing)
+
+### What's Working (2026-03-15)
+
+- **Grid + cascade panel** — 9x9 grid with cell selection, digit input, cascade display
+- **Difficulty switching** — Easy/Medium/Hard buttons change mask (symmetric 180° rotation)
+- **Wrong answer handling** — incorrect digits shown in red with conflict explanations
+  - Row/col/box violations explained with specific conflicting cell
+  - Logic-only conflicts show candidates and elimination guidance
+- **Progressive hint system** — 5 levels via H key:
+  - Level 0: Nudge (how many candidates)
+  - Level 1: Elimination (which values ruled out and why)
+  - Level 2: Candidates (exact list of remaining values)
+  - Level 3: Strategy (Hidden Single, Pointing Pair, Naked Pair, X-Wing detection)
+  - Level 4: Answer (reveals the solution value)
+- **Hint overlay toggle** — highlights constraint peers on the grid
+- **Cascade panel** — shows define/produce/consume/trigger from pre-generated JSON
+  - Expandable "How was this generated?" section explains the 3-step recur pipeline
+- **New Puzzle button** — calls `/api/generate` which runs the same pipeline as `generate.jl`:
+  1. `Generator.generate_solution()` — random valid 9x9 grid via backtracking
+  2. `Generator.write_solution_file()` + `write_flow_event()` for all 81 cells
+  3. `Recur.trace_id()` × 81 — subprocess calls to `recur trace-id --json`
+  4. Writes `sudoku.cascades.json` — browser reloads with new puzzle
+- **Win detection** — banner + panel message when all cells correctly placed
+- **serve.jl** — local dev server with static files + `/api/generate` endpoint
+  - Loads Generator.jl + Recur.jl at startup (one-time cost)
+  - Julia is sandboxed: only predefined API endpoints exposed, no user code execution
+
+### Files Implemented
+
+```
+demos/sudoku/html5/
+  index.html               # Single page — grid left, cascade panel right
+  serve.jl                 # Local dev server + /api/generate API
+  generate.jl              # Offline cascade generation (same pipeline, no server)
+  css/game.css             # Grid + panel + difficulty + hint styling
+  js/
+    puzzle.js              # Load solution.txt + cascades.json, build mask, index by cell
+    grid.js                # DOM-based 9x9 grid, cell selection, digit input, highlights
+    cascade.js             # Cascade panel renderer (roles, conflicts, hints, pipeline)
+    solver.js              # Conflict detection, candidates, progressive hints, strategies
+    game.js                # Game loop orchestrator — wires grid ↔ solver ↔ cascade
+  data/easy-001/           # Pre-generated by generate.jl or /api/generate
+    sudoku.solution.txt
+    sudoku.cascades.json
+```
+
+### Strategy Overlays — DONE (2026-03-15)
+
+All 7 strategies wired with `overlayCells` in solver.js. `highlightStrategy` (amber)
+and `highlightEliminations` (red dashed) both implemented and styled.
+
+| # | Strategy | Status |
+|---|----------|--------|
+| 1 | Naked Single | done + overlay |
+| 2 | Hidden Single | done + overlay |
+| 3 | Pointing Pair | done + overlay |
+| 4 | Naked Pair | done + overlay |
+| 5 | X-Wing | done + overlay |
+| 6 | Box/Line Reduction | done + overlay |
+| 7 | Swordfish | done + overlay |
+
+### Crosshatch + Pencil Marks + Pencil Mode — DONE (2026-03-15)
+
+**Crosshatch (3D constraint intersection):**
+- Click cell → row band (warm), col band (cool), box band (green) appear
+- Click same cell → everything clears (toggle select/deselect)
+- H key → crosshatch clears, strategy overlay replaces it
+
+**Pencil marks (MANUAL — not auto-populated):**
+- Every empty cell has a 3×3 mini-grid for candidates, starts EMPTY
+- Player adds marks via pencil mode (P key) — this is where they LEARN elimination
+- Auto-fill is opt-in cheat via button in Pencil Ins panel, never automatic
+- Pencil marks in crosshatch bands get tinted to match the band color
+
+**Pencil mode (P key toggle):**
+- Normal mode: digit key = place value
+- Pencil mode: digit key = toggle that candidate on/off in selected cell
+- Manual marks appear bright (`.pm-manual`)
+- Player annotates their own reasoning before committing
+
+**Pencil Ins panel (right side, persistent):**
+- Shows all cells with manual pencil marks and their values
+- "Auto-fill all candidates" button (cheat, clearly labeled)
+- Updates live as player adds/removes marks
+
+**Eventness mapping:**
+```
+crosshatch.row        → warm band     (row constraint plane)
+crosshatch.col        → cool band     (col constraint plane)
+crosshatch.box        → green band    (box constraint plane)
+strategy-highlight    → amber         (produce — pattern source)
+elimination-highlight → red dashed    (consume — affected peers)
+selected cell         → bright        (trigger — where player acts)
+pencil marks          → manual only   (player's own elimination work)
+```
+
+### Next: Server-Side Strategy APIs (serve.jl)
+
+| Endpoint | What it enables |
+|---|---|
+| `POST /api/candidates` | Server-authoritative live candidates |
+| `POST /api/solve-step` | "What should I do next?" — easiest cell + strategy |
+| `POST /api/elimination-wave` | Animate ripple after placement |
+| `POST /api/walkthrough` | Full solve sequence — step-by-step replay |
+
+### Why This Phase Matters
+
+Phase 5 proves recur's deepest design principle: **recur makes itself unnecessary.**
+
+The Julia game (Phase 4) calls recur live — subprocess per move. The HTML5 game
+calls recur zero times. It loads pre-generated JSON that recur produced, and
+navigates it with plain JavaScript. The player sees the same cascades, the same
+define/produce/consume/trigger structure, the same peer relationships — but recur
+isn't running.
+
+This is the point. recur is a **discoverability engine that teaches structure.**
+Once the structure is externalized into JSON, any tool — JavaScript, Python, a
+spreadsheet, a human reading the file — can navigate it independently.
+
+### The Independence Principle
+
+recur exists to help users, tools, and AI find patterns in hierarchical data.
+But the patterns are *in the data*, not in recur. recur is a lens, not a crutch.
+
+The Sudoku demo teaches this in three steps:
+
+1. **Phase 2-4 (Julia + recur live):** recur classifies flow events in real time.
+   The user sees: "recur finds define/produce/consume/trigger for me."
+
+2. **Phase 5 (HTML5 + pre-generated JSON):** Same game, same cascades, no recur.
+   The user sees: "The structure recur found is just JSON. I can read it myself."
+
+3. **The takeaway:** You don't need recur to *use* hierarchical structure.
+   You need recur to *discover* it. Once discovered, it's yours.
+
+This applies to every recur use case:
+- Code navigation: recur shows you the call graph. Once you see it, you navigate it.
+- Event tracing: recur finds the cascade. Once traced, it's a JSON file.
+- Project structure: recur maps the hierarchy. Once mapped, it's a tree you know.
+
+**Making tools, people, and AI independent is the goal.** recur helps you find
+the strategy. Then you apply the strategy yourself, with whatever tools you prefer.
+
+### Data Contract
+
+`sudoku.cascades.json` is an array of entries, each shaped:
+
+```json
+{
+  "cell": "sudoku.r3.c5",
+  "value": 7,
+  "cascade": {
+    "identifier": "sudoku.r3.c5",
+    "define":  [{ "edge_type":"define",  "line":"...", "line_number":N, "path":"..." }],
+    "produce": [{ "edge_type":"produce", "line":"...", "line_number":N, "path":"..." }],
+    "consume": [{ "edge_type":"consume", "line":"...", "line_number":N, "path":"..." }],
+    "trigger": [{ "edge_type":"trigger", "line":"...", "line_number":N, "path":"..." }],
+    "request": { ... }
+  }
+}
+```
+
+JavaScript indexes this by cell id. When the player places a value, look up
+the cascade and render it. No recur, no server, no subprocess.
+
+### File Layout
+
+```
+demos/sudoku/html5/
+  index.html          <- single page, loads everything
+  css/
+    game.css          <- grid + cascade panel styling
+  js/
+    puzzle.js         <- load & index cascades.json, solution, mask
+    grid.js           <- 9x9 grid renderer (DOM), cell selection, input
+    cascade.js        <- cascade panel renderer (define/produce/consume/trigger)
+    game.js           <- game loop: init, placement, win check, wire grid<->cascade
+  data/
+    easy-001/         <- generated by Julia (copy from puzzles/)
+      sudoku.cascades.json
+      sudoku.solution.txt
+```
+
+### Module Responsibilities
+
+| Module | Does | Doesn't |
+|---|---|---|
+| `puzzle.js` | Parse solution, build mask, index cascades by cell | Render anything |
+| `grid.js` | Draw 9×9 grid, pencil marks, crosshatch, cell toggle, pencil mode | Know cascade data |
+| `solver.js` | Candidate computation, strategy detection, progressive hints | Know DOM/rendering |
+| `cascade.js` | Render cascade panel, conflict explanations, hint display | Know grid state |
+| `game.js` | Wire grid ↔ solver ↔ cascade, track state, refresh pencil marks | Know rendering details |
+
+### Interaction Flow
+
+```
+User clicks cell → grid.js toggles selection
+  → game.js shows crosshatch overlay (row/col/box bands)
+  → pencil marks visible in all empty cells (auto-computed candidates)
+User clicks same cell → grid.js deselects
+  → game.js clears all overlays
+
+User types digit (normal mode) → grid.js fires "digit-placed"
+  → game.js validates → correct: refreshPencilMarks() + cascade panel
+  → incorrect: conflict explanation + highlights
+
+User types digit (pencil mode) → grid.js toggles pencil mark on/off
+  → manual mark appears brighter than auto-computed
+
+User presses H → game.js gets hint from solver.js
+  → crosshatch clears, strategy overlay replaces it
+  → panel shows strategy explanation + overlay legend
+
+User presses P → game.js toggles pencil mode indicator
+```
+
+### Design Decisions
+
+1. **No build step.** Vanilla HTML/CSS/JS, ES modules, no bundler. Open
+   `index.html` in a browser and play. This is a demo, not a product.
+
+2. **Cascade panel mirrors Display.jl.** Same role counts, same structure —
+   just HTML instead of ASCII. Proves they're the same data, different renderer.
+
+3. **Peer highlighting is the visual payoff.** When you place a number, the
+   cascade's `consume` array tells you which cells were notified. Highlight
+   those cells on the grid. That's the "aha" moment — recur's output driving UI.
+
+4. **Mask = difficulty.** puzzle.js strips revealed cells from solution to
+   create the playable grid. Same concept as `recur files --stdin` but in JS.
+
+5. **The game proves independence.** Every feature of the HTML5 game uses
+   data that recur produced but does not require recur to run. The JSON
+   *is* the knowledge transfer.
+
+### Implementation Steps
+
+1. Run Generator.jl to produce full `sudoku.cascades.json` for easy-001
+2. Create `demos/sudoku/html5/` directory structure
+3. `puzzle.js` — parse solution.txt, index cascades.json by cell id
+4. `grid.js` — DOM-based 9x9 grid with click selection + number input
+5. `cascade.js` — cascade panel rendering (role counts + line details)
+6. `game.js` — wire everything, state management, win detection
+7. `index.html` + `game.css` — layout with grid left, cascade panel right
+8. Test: open in browser, play through easy-001, verify cascades match Julia output
 
 ---
 
@@ -347,16 +653,17 @@ demos/sudoku/html5/
 JavaScript reads JSON. The hierarchical structure from recur is preserved in the files.
 HTML5 navigates `sudoku.cascades.json` hierarchically — same structure recur produced.
 
-### Optional: Live mode (Julia as local server)
-Julia can also serve as a local HTTP server for on-the-fly trace-id queries:
+### Live mode (Julia local server) — Implemented
+
+`serve.jl` serves static files AND exposes `/api/generate` for on-demand puzzle creation:
 ```bash
-julia run.jl --serve          # Julia listens on localhost:8765
-# HTML5 POSTs { cell: "r3c5", value: 7 }
-# Julia calls: recur trace-id "sudoku.r3.c5" --json
-# Julia returns the live cascade JSON to the browser
+julia demos/sudoku/html5/serve.jl    # Listens on localhost:8787
+# Browser clicks "New Puzzle" → POST /api/generate
+# Julia: generate_solution() → write flow events → recur trace-id × 81 → cascades.json
+# Browser reloads with new puzzle — same pipeline as offline generate.jl
 ```
-Live mode enables novel placements not in the pre-generated package.
-Static mode (pre-generated JSON) is the default and works fully offline.
+Static mode (pre-generated JSON) works fully offline — just open `index.html`.
+Live mode adds the "New Puzzle" button for generating fresh puzzles via Julia+recur.
 
 ---
 

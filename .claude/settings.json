@@ -1,7 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(julia julia-tests/runtests.trace-stats.jl)",
+      "Bash(julia -e \":*)",
+      "Bash(recur trace-stats --scope \"HighService\" --ext .cs --json -d julia-tests/test_environment)",
+      "Bash(recur trace-stats --scope \"HighService\" --ext .cs --json -d test_environment)",
+      "Bash(recur children \"main.command\" -d docs/ --sep .)",
+      "Bash(recur children \"main.command.traverse\" -d docs/ --sep .)",
+      "Bash(recur related \"main.command.traverse.trace_id\" -d docs/ --sep .)",
+      "Bash(recur find \"publish\" --scope \"main.command.map**\" -d docs/)",
+      "Bash(recur trace-id \"recur.pipe.json\" --scope \"main.command.map**\" --format full -d docs/)",
+      "Bash(recur find \"publish\" -d docs/)",
+      "Bash(recur find \"publish\" --scope \"**\" -d docs/)",
+      "Bash(recur find \"publish\" --scope \"main.command.**\" -d docs/)",
+      "Bash(recur trace-id \"recur.pipe.json\" --scope \"main.command.**\" --format full -d docs/)",
+      "Bash(julia julia-tests/runtests.trace-id.jl)",
+      "Bash(julia -e \"include\\(\"\"julia-tests/runtests.setup.jl\"\"\\); setup_test_environment\\(\\); seed_trace_id_fixture\\(\\)\")",
+      "Bash(recur trace-id \"ulu.topic.dot.ownership.create\" --scope \"**\" --ext .cs --json -d test_environment)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''define edge_type:'', d[''define''][0].get\\(''edge_type'',''MISSING''\\) if d[''define''] else ''no define sites''\\)\")",
+      "Bash(julia -e \"include\\(\"\"julia-tests/runtests.setup.jl\"\"\\); setup_test_environment\\(\\)\")",
+      "Bash(recur trace-stats --scope \"DistinctCycleService\" --ext .cs --json -d test_environment)"
     ]
   }
 }

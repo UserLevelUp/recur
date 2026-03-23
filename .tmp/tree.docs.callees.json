@@ -1,0 +1,22 @@
+{
+  "name": "main.command.callees",
+  "children": [
+    {
+      "name": "readme",
+      "children": [],
+      "path": "docs\\main.command.callees.readme.md"
+    },
+    {
+      "name": "stdin",
+      "children": [
+        {
+          "name": "todo",
+          "children": [],
+          "path": "docs\\main.command.callees.stdin.todo.md"
+        }
+      ],
+      "path": null
+    }
+  ],
+  "path": null
+}

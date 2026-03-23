@@ -1,0 +1,114 @@
+"""
+serve.jl — Local dev server for the HTML5 Sudoku demo.
+
+Usage: julia demos/sudoku/html5/serve.jl
+Then open: http://localhost:8787
+
+Serves static files AND a /api/generate endpoint that creates
+new puzzles on demand using Julia + recur.
+
+Security: only predefined API endpoints are exposed.
+No user-supplied code is ever executed.
+"""
+
+using HTTP
+
+const DIR = @__DIR__
+const PORT = 8787
+
+# Load Generator + Recur modules (one-time cost at startup)
+const JULIA_DIR = normpath(joinpath(DIR, "..", "julia"))
+include(joinpath(JULIA_DIR, "Recur.jl"))
+include(joinpath(JULIA_DIR, "Generator.jl"))
+using .Recur
+using .Generator
+
+const MIME_TYPES = Dict(
+    ".html" => "text/html",
+    ".css"  => "text/css",
+    ".js"   => "application/javascript",
+    ".json" => "application/json",
+    ".txt"  => "text/plain",
+)
+
+const DATA_DIR = joinpath(DIR, "data", "easy-001")
+
+function handler(req)
+    # Strip query string first, then handle root
+    path_clean = split(req.target, "?")[1]
+    if path_clean == "/"
+        path_clean = "/index.html"
+    end
+
+    # ── API endpoints ──────────────────────────────────────────────
+    if path_clean == "/api/generate" && req.method == "POST"
+        return handle_generate()
+    end
+
+    # ── Static file serving ────────────────────────────────────────
+    filepath = joinpath(DIR, lstrip(path_clean, '/'))
+
+    if !isfile(filepath)
+        return HTTP.Response(404, "Not found: $path_clean")
+    end
+
+    ext = lowercase(last(splitext(filepath)))
+    mime = get(MIME_TYPES, ext, "application/octet-stream")
+    body = read(filepath)
+    return HTTP.Response(200, ["Content-Type" => mime, "Access-Control-Allow-Origin" => "*"], body)
+end
+
+"""
+Generate a new random puzzle: solution → flow events → recur trace-id → cascades JSON.
+Writes to data/easy-001/ (overwrites) and returns the cascades + solution as JSON.
+"""
+function handle_generate()
+    try
+        println("  [API] Generating new puzzle...")
+        t0 = time()
+
+        # 1. Generate random valid solution
+        grid = Generator.generate_solution()
+        pairs = Generator.solution_to_pairs(grid)
+        println("  [API] Solution generated ($(round(time() - t0, digits=2))s)")
+
+        # 2. Write solution file
+        Generator.write_solution_file(grid, DATA_DIR)
+
+        # 3. Generate cascades (calls recur 81 times)
+        t1 = time()
+        cascades_path = Generator.generate_cascades(pairs, DATA_DIR, Recur)
+        println("  [API] Cascades generated — 81 recur calls ($(round(time() - t1, digits=2))s)")
+
+        # 4. Read back and return as JSON
+        cascades_json = read(cascades_path, String)
+
+        # Build solution map for the response
+        solution_lines = ["$(id) = $(val)" for (id, val) in pairs]
+
+        response = """{
+  "status": "ok",
+  "solution_text": $(repr(join(solution_lines, "\n"))),
+  "cascades": $(cascades_json),
+  "elapsed_ms": $(round(Int, (time() - t0) * 1000))
+}"""
+
+        println("  [API] Done in $(round(time() - t0, digits=2))s")
+        return HTTP.Response(200, [
+            "Content-Type" => "application/json",
+            "Access-Control-Allow-Origin" => "*",
+        ], response)
+
+    catch e
+        msg = sprint(showerror, e)
+        println("  [API] Error: $msg")
+        return HTTP.Response(500, [
+            "Content-Type" => "application/json",
+        ], """{"status": "error", "message": $(repr(msg))}""")
+    end
+end
+
+println("Serving at http://localhost:$PORT")
+println("API: POST /api/generate — creates a new random puzzle")
+println("Open that URL in your browser, then Ctrl+C to stop.")
+HTTP.serve(handler, "127.0.0.1", PORT)

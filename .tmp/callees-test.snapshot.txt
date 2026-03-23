@@ -1,0 +1,45 @@
+
+============================================================
+  Testing: recur callees
+============================================================
+  -> recur callees CreateUser --scope ** -d test_environment
+  ? PASS
+  -> recur callees ProcessRequest --scope UserService.** -d test_environment
+  ? PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ? PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ? PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ? PASS
+  -> recur callees createuser --scope ** -i -d test_environment
+  ? PASS
+  -> recur callees CreateUser --scope ** --ext .cs -d test_environment
+  ? PASS
+  -> recur callees CreateUser --scope ** -C 1 -d test_environment
+  ? PASS
+  -> recur callees --help -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard hard-fail -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard clamp -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard hard-fail --force -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 1 -d test_environment
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  BROKEN
+  -> recur callees CreateUser --scope ** --count -d test_environment
+  ? PASS
+  -> recur callees CreateUser --scope ** --json -d test_environment
+  ? PASS
+  -> recur callees ProcessRequest --scope UserService.** --json -d test_environment
+  ? PASS
+  -> recur callees NonExistentFunction --scope ** -d test_environment
+  ? PASS
+  -> recur callees ValidateEmail --scope ** -d test_environment
+  ? PASS
+  -> recur callees CreateUser --scope NonExistent.** -d test_environment
+  ? PASS
+Test Summary:         | Pass  Broken  Total  Time
+recur callees command |   24      10     34  0.5s

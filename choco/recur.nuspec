@@ -2,8 +2,8 @@
 <package>
   <metadata>
     <id>recur</id>
-    <version>0.2.6</version>
-    <title>recur</title>
+    <version>0.2.8</version>
+    <title>Recur</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
     <summary>Recursive, hierarchy-aware search for modern codebases</summary>
@@ -35,6 +35,9 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur trace` - multi-level call graph visualization
 - `recur merge` - merge results across separators
 - `recur flatten` - flatten structured files (XML, JSON) into hierarchical dot-paths
+- `recur trait` - manage project trait config (`list`, `get`, `set` in `.recur/config.toml`)
+- `recur trace-id` - trace a hierarchical identifier through files; classify as define/produce/consume/trigger
+- `recur trace-stats` - call-graph metrics: direct, transitive, circular, depth, risk
 - `recur-git checkpoint` - capture parallel-lane git/todo checkpoints
 
 Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program structure.
@@ -43,7 +46,7 @@ Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program s
     <projectSourceUrl>https://github.com/userlevelup/recur</projectSourceUrl>
     <bugTrackerUrl>https://github.com/userlevelup/recur/issues</bugTrackerUrl>
     <docsUrl>https://github.com/userlevelup/recur#readme</docsUrl>
-    <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph config git checkpoint</tags>
+    <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph config git checkpoint trace eventness identifier</tags>
     <licenseUrl>https://github.com/userlevelup/recur/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <packageSourceUrl>https://github.com/userlevelup/recur/tree/main/choco</packageSourceUrl>

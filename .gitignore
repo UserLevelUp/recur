@@ -31,3 +31,9 @@ Thumbs.db
 .claude/settings.local.json
 
 nul
+
+# Sudoku demo generated artifacts
+demos/sudoku/puzzles/*/sudoku.flow.r*c*.txt
+demos/sudoku/puzzles/*/sudoku.cascades.json
+demos/sudoku/html5/data/*/sudoku.flow.r*c*.txt
+demos/sudoku/html5/data/*/sudoku.cascades.json
