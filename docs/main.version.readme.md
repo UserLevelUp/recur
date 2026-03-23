@@ -7,6 +7,7 @@ Persistent guidance for version branches and release records.
 Use one branch per releasable version.
 The branch name should be the version lane, for example `a.0.2.8`.
 This keeps release integration work isolated and easy to search.
+If a packaging or moderation fix is for an older submitted version, branch from that older release point and name it for that version, for example `a.0.2.5` from `v0.2.5`.
 
 Feature branches should roll into the version branch before the version is finalized.
 Example: merge `trace-id` into `a.0.2.8`, then do release checks and packaging there.
@@ -30,6 +31,8 @@ When creating a new version, review these together:
 - `README.md`
 - `choco/recur.nuspec`
 - `docs/main.version.a.X.Y.Z.complete.md`
+
+For Chocolatey, keep nuspec `<id>` lowercase and nuspec `<title>` in title case.
 
 ## What to Record in the Version Doc
 
