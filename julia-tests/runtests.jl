@@ -60,6 +60,9 @@ try
         include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
         include("main.command.trace-id.test.jl")     # IMPROVEMENT8 - trace-id MVP contract tests (expected broken)
         include("main.command.trait.test.jl")        # Trait config command + traversal budget placeholders
+        include("runtests.demo.sudoku.jl")           # Demo: Sudoku + trace-id Phase 1+2 (file protocol + Recur.jl)
+        include("runtests.demo.sudoku.phase3.jl")    # Demo: Sudoku Phase 3 (Generator.jl — flow files + cascades)
+        include("runtests.demo.sudoku.phase4.jl")    # Demo: Sudoku Phase 4 (Engine.jl + Display.jl + Game.jl)
         # include("runtests.gaps.jl")        # Needs feature implementation
 
     end

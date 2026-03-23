@@ -1,7 +1,7 @@
 # Improvement 9: trace-id Pipeline + Sudoku Demo
 
-Status: `todo.current` (active)
-Date: 2026-03-08
+Status: `todo.current` (active — Sudoku Phase 1-3 complete, Phase 4 next)
+Date: 2026-03-13
 
 ## Focus
 
@@ -9,6 +9,22 @@ Two lanes, both trace-id ecosystem:
 
 1. **merge edge-type pipeline** — `trace-id --json | merge --stdin` retains `edge_type`
 2. **Sudoku demo** — full showcase of recur as discoverability engine
+
+## Progress (2026-03-13)
+
+**Sudoku demo Phase 1+2+3 complete:** 644 tests green (32 + 20 + 46 + rest of suite).
+- Phase 1: file protocol proof — plain .txt, default vocab, config isolation, edge_type
+- Phase 2: Recur.jl wrapper + puzzle fixture — full Julia→subprocess→JSON loop
+- Phase 3: Generator.jl — Sudoku geometry, flow file authoring, cascades.json generation
+  - Fixed: box.5 → box.2 (handwritten fixture had wrong box number, Generator computes correctly)
+  - Proven: 20 unique peers per cell, all subscribe lines reference identifier
+- Artifacts: `demos/sudoku/julia/` (Recur.jl, Generator.jl), `julia-tests/runtests.demo.sudoku.phase3.jl`
+
+**Phase 4 next:**
+- Phase 1d config isolation (fragile repo config dependency)
+- Dogfooding doc validation (speculative vocabulary)
+
+**Lane 1 (merge edge-type) unchanged** — Phase 5 `@test_broken` still waiting.
 
 ## Lane 1: merge edge-type
 

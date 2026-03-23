@@ -1,0 +1,22 @@
+
+============================================================
+  Testing: recur trace-id
+============================================================
+
+============================================================
+  Setting up test environment
+============================================================
+  -> recur trace-id -d test_environment --help
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json -d test_environment
+  -> recur trace-id ulu.topic.dot.** --scope ** --ext .cs --json -d test_environment
+  -> <stdin> | recur trace-id ulu.topic.dot.ownership.create --scope ** --stdin --ext .cs --depth 6 --depth-guard clamp --json -d test_environment
+  -> <piped> | recur merge --stdin --base pipeline.trace --sep . --json
+  -> <piped> | recur merge --stdin --base pipeline.callers --sep . --json
+  -> <piped> | recur merge --stdin --base pipeline.callees --sep . --json
+  -> <piped> | recur merge --stdin --base pipeline.trace-id --sep . --json
+
+============================================================
+  Cleaning up test environment
+============================================================
+Test Summary:                         | Pass  Broken  Total  Time
+recur trace-id command (IMPROVEMENT8) |   13       6     19  0.5s

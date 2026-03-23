@@ -1,0 +1,11 @@
+{
+  "name": "main.command.trace-id",
+  "children": [
+    {
+      "name": "test",
+      "children": [],
+      "path": "julia-tests\\main.command.trace-id.test.jl"
+    }
+  ],
+  "path": null
+}
