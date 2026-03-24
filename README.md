@@ -331,6 +331,38 @@ recur stats "Controller.**" --ext .cs        # Stats for .cs files only
 recur stats "**" --json                      # JSON output
 ```
 
+### `recur callers` — find who calls a function or method
+```bash
+recur callers "CreateUser" --scope "UserService.**"
+recur callers "ValidateEmail" --scope "**" --ext .cs
+recur callers "ProcessData" --scope "**" --count
+git diff --name-only | recur callers "CreateUser" --scope "**" --stdin
+```
+
+### `recur callees` — find what a function or method calls
+```bash
+recur callees "CreateUser" --scope "UserService.**"
+recur callees "ProcessRequest" --scope "**" --ext .cs
+recur callees "Initialize" --scope "**" --count
+git diff --name-only | recur callees "Initialize" --scope "**" --stdin
+```
+
+### `recur trace` — visualize multi-level call paths
+```bash
+recur trace "ApplyAiContent" --scope "LevelController.**" --depth 2
+recur trace "GetDeletedComponents" --scope "**" --direction callers --depth 2
+recur trace "ValidateInput" --scope "**" --direction both --depth 1
+recur trace "HandleRequest" --scope "**" --format graph --depth 3
+```
+
+### `recur trace-stats` — analyze call-graph complexity
+```bash
+recur trace-stats --scope "**" --ext .rs --top 5
+recur trace-stats --scope "**" --filter circular-only
+recur trace-stats --scope "**" --depth 8 --depth-guard clamp
+git diff --name-only | recur trace-stats --scope "**" --stdin --sort-by risk
+```
+
 ## Advanced Composability
 
 **Hold my beer...** 🍺 These examples showcase the full power of Unix pipe composition with multi-source merging, cross-separator unification, and provenance tracking.
