@@ -3,13 +3,13 @@ name = "recur"
 version = "0.2.8"
 edition = "2021"
 authors = ["User Level Up Contributors"]
-description = "Recursive hierarchical search tool for modern codebases - Honoring Dennis Ritchie's 1968 thesis (58 years of recursive hierarchies)"
+description = "Hierarchy-aware code search for modern codebases"
 license = "MIT"
 repository = "https://github.com/userlevelup/recur"
 homepage = "https://github.com/userlevelup/recur"
 documentation = "https://docs.rs/recur"
 readme = "README.md"
-keywords = ["search", "grep", "recursive", "hierarchy", "ritchie"]
+keywords = ["search", "grep", "recursive", "hierarchy", "cli"]
 categories = ["command-line-utilities", "development-tools", "filesystem"]
 rust-version = "1.70"
 

@@ -1,7 +1,7 @@
-//! recur - Recursive Hierarchical Search Tool
+//! recur - Hierarchy-Aware Code Search
 //!
-//! In honor of Dennis M. Ritchie's 1968 PhD thesis on recursive hierarchies.
-//! 58 years of recursive hierarchical thinking, now in your terminal.
+//! Named in quiet tribute to Dennis M. Ritchie's early work on recursive
+//! program structure.
 //!
 //! Main CLI entry point
 
@@ -36,10 +36,13 @@ mod main_command_tree_impl;
 
 #[derive(Parser)]
 #[command(name = "recur")]
-#[command(about = "Recursive hierarchical search tool for modern codebases\n\nHonoring Dennis M. Ritchie's 1968 PhD thesis on recursive hierarchies (58 years)", long_about = None)]
+#[command(
+    about = "Hierarchy-aware code search for modern codebases\n\nNamed in tribute to Dennis Ritchie's early work on recursive program structure.",
+    long_about = None
+)]
 #[command(version)]
 #[command(
-    after_help = "Dennis Ritchie (1941-2011) pioneered recursive hierarchical structures in his 1968 thesis.\n58 years later, recur brings hierarchical understanding to code search.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help"
+    after_help = "A quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help"
 )]
 struct Cli {
     #[command(subcommand)]

@@ -3,11 +3,11 @@
   <metadata>
     <id>recur</id>
     <version>0.2.8</version>
-    <title>Recur</title>
+    <title>recur - Hierarchy-Aware Code Search</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
-    <summary>Recursive, hierarchy-aware search for modern codebases</summary>
-    <description><![CDATA[**recur** is a command-line tool for working with hierarchically named code: files, modules, and identifiers that encode structure using dot-separated or custom naming conventions.
+    <summary>Hierarchy-aware code search for modern codebases</summary>
+    <description><![CDATA[**recur** is a command-line tool for searching hierarchically named code: files, modules, and identifiers whose names encode structure using dot-separated or custom conventions.
 
 While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy - so you can search, navigate, and analyze related code as a structured system.
 
@@ -40,16 +40,18 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur trace-stats` - call-graph metrics: direct, transitive, circular, depth, risk
 - `recur-git checkpoint` - capture parallel-lane git/todo checkpoints
 
-Inspired by Dennis M. Ritchie's 1968 work on recursive hierarchies and program structure.
+Named as a quiet tribute to Dennis M. Ritchie's early work on recursive program structure.
 ]]></description>
-    <projectUrl>https://github.com/userlevelup/recur</projectUrl>
-    <projectSourceUrl>https://github.com/userlevelup/recur</projectSourceUrl>
-    <bugTrackerUrl>https://github.com/userlevelup/recur/issues</bugTrackerUrl>
-    <docsUrl>https://github.com/userlevelup/recur#readme</docsUrl>
+    <projectUrl>https://github.com/UserLevelUp/recur</projectUrl>
+    <projectSourceUrl>https://github.com/UserLevelUp/recur/tree/main/src</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/UserLevelUp/recur/issues</bugTrackerUrl>
+    <docsUrl>https://github.com/UserLevelUp/recur#readme</docsUrl>
+    <releaseNotes>https://github.com/UserLevelUp/recur/releases</releaseNotes>
+    <iconUrl>https://cdn.jsdelivr.net/gh/UserLevelUp/recur@main/choco/recur-icon.svg</iconUrl>
     <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph config git checkpoint trace eventness identifier</tags>
-    <licenseUrl>https://github.com/userlevelup/recur/blob/main/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/UserLevelUp/recur/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <packageSourceUrl>https://github.com/userlevelup/recur/tree/main/choco</packageSourceUrl>
+    <packageSourceUrl>https://github.com/UserLevelUp/recur/tree/main/choco</packageSourceUrl>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />

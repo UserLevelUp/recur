@@ -13,6 +13,10 @@ Packaging and release guides:
 - `docs/main.version.readme.md`
 - `docs/main.recur.expert.recurring.md`
 
+Active queue discovery:
+- `recur files "**.current" -d docs/`
+- Treat `*.current` files as the live queue and `*.complete` files as release/history records
+
 State history logs:
 - `docs/main.dogfooding.history.md`
 - `docs/main.dogfooding.parallel.history.md`

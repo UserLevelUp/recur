@@ -39,6 +39,18 @@ In practice, expect more files like `todo`, `current`, `complete`, `future-plan`
 Use `recurring` when you want a durable "remember this workflow next time" rediscovery point.
 Use the other eventness forms for active project progress and one-off improvement tracking.
 
+## Active Queue Rule
+
+When deciding what is still active, trust `**.current` results before `complete` records.
+`complete` is a release/history record; `current` is the live queue.
+
+In practice:
+
+- Start with `recur files "**.current" -d docs/`
+- Treat those files as the official active lanes unless a newer rediscovery note says otherwise
+- Use `complete` docs for baseline/history, not for deciding what is left
+- If a feature branch has already been merged, the remaining work usually lives in the `current` improvement and test lanes, not in the old feature branch name itself
+
 ## Canonical references
 
 - `docs/AGENT.PROMPT.recur-expert.md`
@@ -52,9 +64,9 @@ Use the other eventness forms for active project progress and one-off improvemen
 Run these first when returning to the repo:
 
 ```powershell
+recur files "**.current" -d docs/
 recur files "**.recurring" -d docs/
 recur find "recur expert" --scope "**" -d docs/ -i
-recur files "**.current" -d docs/
 recur files "**.reference" -d docs/
 recur files "**agent**" -d docs/
 recur find "trace-id" --scope "**" -d docs/ -i
@@ -66,6 +78,9 @@ recur find "trace-id" --scope "**" -d docs/ -i
 - Docs and workflow files usually use `.` separators, for example `recur files "main.**" -d docs/`
 - Before deep work, skim the recur guidance docs for 5 minutes, then explore with real queries
 - Prefer existing references and current work items before inventing a new pattern
+- For release/package work, use the version branch lane `a.X.Y.Z`
+- If moderation or packaging feedback is for an older already-submitted version, branch from that historical release point, for example `a.0.2.5` from `v0.2.5`
+- The main workspace may stay on the current version branch while an older version branch lives in a separate worktree
 
 ## Why this file exists
 

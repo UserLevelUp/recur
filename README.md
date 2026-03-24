@@ -7,13 +7,13 @@
   </p>
 </div>
 
-**Recursive, hierarchy-aware search for modern codebases.**
+**Hierarchy-aware code search for modern codebases.**
 
 Development is mainly using ChatGPT 5.2+ Codex and Claude Sonnet & Opus 4.5+ tied to vscode.  I run out of tokens on one I usually switch to the other one.  I use Julia for tests as I'm more familiar with that to verify work.   I actually don't understand Rust at all, but it seems pretty easy to vibe code as long as I can verify and control that direction with the tests.  I also test recur in a private Github Copilot project which will remain nameless so as not to reek havoc. 
 
 `recur` is a command-line tool for working with *hierarchically named code*: files, modules, and identifiers that encode structure using dot-separated or “C#-style” naming conventions. While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy—so you can search, navigate, and analyze related code as a structured system.
 
-*Inspired by Dennis M. Ritchie’s 1968 work on recursive hierarchies and program structure.*
+*Named in quiet tribute to Dennis Ritchie's early work on recursive program structure.*
 
 ```bash
 # Search within a hierarchical scope
@@ -519,18 +519,20 @@ recur merge docs.json src.json tests.json `
 > *"Program Structure and Computational Complexity"*  
 > — Dennis Ritchie, PhD Thesis, Harvard, 1968
 
-Ritchie’s thesis explored **recursive functions and hierarchical program structures**—ideas that later shaped Unix and C. `recur` is a small tribute to that legacy: bringing hierarchy-aware understanding to everyday developer search workflows.
+Ritchie's thesis explored **recursive functions and hierarchical program structures**. Those ideas later shaped Unix and C. `recur` borrows a small part of that spirit by treating structure as something worth seeing directly.
+
+The tribute is also personal. I had the chance to speak with Dennis Ritchie briefly around 2004 or 2005, and what stayed with me was how generous and soft-spoken he was.
 
 ## Why the name “recur”?
 
 1. **Recursive** — searches hierarchies recursively  
-2. **Recur** — short and memorable (in the tradition of `grep`, `awk`, `sed`)  
-3. **Ritchie** — honors Dennis Ritchie’s early work on hierarchical program structure  
+2. **Recur** — short and memorable, in the tradition of `grep`, `awk`, and `sed`  
+3. **Ritchie** — a quiet nod to Dennis Ritchie's early work on program structure  
 4. **Unix philosophy** — aim for a focused tool that composes well
 
 ## Documentation
 
-- [Full Tribute](RECUR-TRIBUTE.md) — the Dennis Ritchie connection  
+- [Full Tribute](RECUR-TRIBUTE.md) — the Dennis Ritchie note  
 - [White Paper](docs/recur.white.paper.docx) — design and philosophy
 - [Proposal](RECUR-PROPOSAL.md) — technical design  
 - [Contributing](CONTRIBUTING.md) — how to contribute  
@@ -586,7 +588,7 @@ MIT — permissive, simple, and broadly compatible.
 
 `recur` is possible because of the tools and ideas that came before:
 
-- **Dennis M. Ritchie (1941–2011)** — for foundational work on recursion and program structure  
+- **Dennis M. Ritchie (1941–2011)** — for foundational work on recursion, program structure, and the systems ideas underneath so much of modern computing  
 - **Ken Thompson** — for `grep` and the standard it set for developer tooling  
 - **Andrew Gallant (BurntSushi)** — for `ripgrep` and modern Rust CLI excellence  
 - **The Unix philosophy** — “Do one thing well”  

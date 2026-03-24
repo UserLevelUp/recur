@@ -1,0 +1,50 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <polygon points="0 0, 9 4.5, 0 9" fill="#d4891a"/>
+    </marker>
+
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <radialGradient id="bg" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#252830"/>
+      <stop offset="100%" stop-color="#16181b"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="256" height="256" rx="44" fill="url(#bg)"/>
+  <rect width="256" height="256" rx="44" fill="none" stroke="#2e3238" stroke-width="1.5"/>
+
+  <line x1="90" y1="72" x2="90" y2="138"
+        stroke="#a89878" stroke-width="3.2" stroke-linecap="round"/>
+  <line x1="90" y1="154" x2="90" y2="196"
+        stroke="#a89878" stroke-width="3.2" stroke-linecap="round"/>
+  <line x1="106" y1="154" x2="182" y2="196"
+        stroke="#a89878" stroke-width="3.2" stroke-linecap="round"/>
+
+  <path d="M 107 146 C 215 146, 215 54, 109 54"
+        fill="none"
+        stroke="#d4891a"
+        stroke-width="5"
+        stroke-linecap="round"
+        marker-end="url(#arr)"
+        filter="url(#glow)"/>
+
+  <rect x="72" y="36" width="36" height="36" rx="6"
+        fill="#e8dcc8" stroke="#c8b098" stroke-width="2"/>
+
+  <rect x="72" y="138" width="36" height="36" rx="6"
+        fill="#e8dcc8" stroke="#c8b098" stroke-width="2"/>
+
+  <rect x="73" y="196" width="34" height="34" rx="5"
+        fill="#ddd0b8" stroke="#baa888" stroke-width="1.8"/>
+
+  <rect x="164" y="196" width="34" height="34" rx="5"
+        fill="#ddd0b8" stroke="#baa888" stroke-width="1.8"/>
+</svg>

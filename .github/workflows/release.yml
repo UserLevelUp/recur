@@ -110,20 +110,12 @@ jobs:
           name: windows-zip
           path: artifacts
 
-      - name: Compute checksum and update install script
-        shell: pwsh
-        run: |
-          $zip = Get-ChildItem artifacts/*.zip | Select-Object -First 1
-          $hash = (Get-FileHash $zip -Algorithm SHA256).Hash
-          $install = Get-Content choco/tools/chocolateyInstall.ps1 -Raw
-          $install = $install -replace '%CHECKSUM64%', $hash
-          Set-Content choco/tools/chocolateyInstall.ps1 $install
-
       - name: Pack Chocolatey package
         shell: pwsh
         run: |
           $version = "${{ github.ref_name }}".TrimStart('v')
-          choco pack choco/recur.nuspec --version $version --output-directory choco/
+          $zip = Get-ChildItem artifacts/*.zip | Select-Object -First 1
+          ./scripts/pack_choco_release.ps1 -Version $version -ZipPath $zip.FullName -OutputDirectory choco
 
       - name: Push to Chocolatey
         shell: pwsh
