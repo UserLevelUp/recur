@@ -23,10 +23,19 @@ The same query-first workflow is portable to external projects (including Visual
 
 Recur solves two different problems. Pick the layer before you pick the command:
 
-- Search and analysis (solve code and behavior issues): `find`, `id`, `callers`, `callees`, `trace`, `trace-stats`, `flatten`
-- State and workflow tracking (manage active work): `files`, `tree`, `stats`, `related`, `children`, `merge`, suffix-based eventness files
+- Search and analysis (solve code and behavior issues): `find`, `id`, `trace-id`, `callers`, `callees`, `trace`, `trace-stats`, `flatten`
+- State and workflow tracking (manage active work): `files`, `tree`, `stats`, `related`, `children`, `merge`, `init`, `trait`, suffix-based eventness files
 
 When debugging or proving safety, use search tools first. Use state tools to track and hand off work.
+
+## Eventness Note
+
+Eventness in this repo is a naming convention layered on top of recur, not part of recur's core ontology.
+Use it as a marker of interest around stable names:
+
+- stable identity in `prefix.base.suffix`
+- expanded eventness while interest is live
+- collapsed or closed eventness when the extra signal is no longer needed
 
 ## Skim-Then-Explore Rule
 
@@ -128,6 +137,10 @@ recur find "pattern" --scope "**" -C 2
 # Hierarchical identifiers inside file content (dot-path strings)
 recur id "ulu.topic.dot.**" --ext .cs
 
+# Trace hierarchical identifier flow (define/produce/consume/trigger)
+recur trace-id "ulu.topic.dot.ownership.create" --scope "**" --ext .cs
+recur trace-id "ulu.topic.dot.**" --scope "**" --ext .cs --json
+
 # Who calls this? (impact before rename/remove)
 recur callers "FunctionName" --scope "**" --ext .rs --count
 
@@ -175,6 +188,14 @@ recur init --analyze --json
 
 # Regenerate existing config intentionally
 recur init --force
+```
+
+### Trait Config (`trait`)
+```bash
+# Inspect or update trait-backed config
+recur trait list
+recur trait get traversal_budget.max_depth
+recur trait set traversal_budget.depth_guard clamp
 ```
 
 ### Structured Flattening (`flatten`)

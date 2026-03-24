@@ -9,8 +9,8 @@ Use `recur` first for discovery instead of manually browsing for files.
 
 Pick the right layer before choosing commands:
 
-- Search and analysis: `find`, `id`, `callers`, `callees`, `trace`, `trace-stats`, `flatten`
-- State and workflow: `files`, `tree`, `stats`, `related`, `children`, `merge`
+- Search and analysis: `find`, `id`, `trace-id`, `callers`, `callees`, `trace`, `trace-stats`, `flatten`
+- State and workflow: `files`, `tree`, `stats`, `related`, `children`, `merge`, `init`, `trait`
 
 ## Naming Basics
 
@@ -30,6 +30,17 @@ Examples in this repo:
 
 The point of the simple prefix is not minimalism for its own sake.
 It is to preserve extra hierarchical layers for the interesting parts that come later.
+
+## Interest Marker Note
+
+Eventness in this repo is a naming convention layered on stable hierarchical names.
+It is not recur's core ontology.
+
+Treat it as a visible marker of interest:
+
+- stable identity lives in `prefix.base.suffix`
+- expanded eventness carries live working context
+- collapsed or closed eventness keeps only the amount of signal that still matters
 
 ## Eventness Reminder
 
@@ -53,11 +64,11 @@ In practice:
 
 ## Canonical references
 
-- `docs/AGENT.PROMPT.recur-expert.md`
-- `julia-expert/references/recur-playbook.md`
-- `ulu_docs/recur-agent.md`
-- `ulu_docs/recur-agent.workflow.md`
-- `ulu_docs/recur-agent.static-analysis.md`
+- `julia-expert/references/recur-playbook.md` - canonical prompt/playbook
+- `docs/AGENT.PROMPT.recur-expert.md` - pointer to canonical prompt
+- `ulu_docs/recur-agent.md` - supplemental older agent notes
+- `ulu_docs/recur-agent.workflow.md` - supplemental workflow notes
+- `ulu_docs/recur-agent.static-analysis.md` - supplemental static-analysis notes
 
 ## Fast start
 
@@ -68,7 +79,8 @@ recur files "**.current" -d docs/
 recur files "**.recurring" -d docs/
 recur find "recur expert" --scope "**" -d docs/ -i
 recur files "**.reference" -d docs/
-recur files "**agent**" -d docs/
+recur files "**agent**" -d ulu_docs/
+recur tree "main" --sep . --sep _ --show-sep
 recur find "trace-id" --scope "**" -d docs/ -i
 ```
 
