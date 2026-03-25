@@ -74,6 +74,11 @@ Both binaries will be installed to Cargo's bin folder. If `recur` is not found, 
 sudo apt install recur
 ```
 
+### Windows (Chocolatey)
+```powershell
+choco install recur
+```
+
 ### Arch Linux
 ```bash
 # Coming soon (AUR)
