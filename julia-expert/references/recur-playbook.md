@@ -19,6 +19,24 @@ The same query-first workflow is portable to external projects (including Visual
 
 **Key Principle:** Don't search manually or remember where things are. Use recur to discover what to work on, what to reference, and what's of interest.
 
+## Fast Rehydration
+
+When bringing Skippy or another LLM back into this repo, load context in this order:
+
+1. `docs/eventness_explained_whitepaper.docx` for the deeper eventness theory and equation framing.
+2. `README.CORE.EVENTNESS.md` for the repo's operational eventness model.
+3. `docs/main.recur.expert.recurring.md` for the repo-specific rediscovery rules.
+4. `julia-expert/references/recur-playbook.md` for the concrete query-first workflow.
+
+After that, stop reading and switch to live discovery:
+
+```powershell
+recur files "**.current" -d docs/
+recur files "**.recurring" -d docs/
+recur files "**.reference" -d docs/
+recur tree "main" --sep . --sep _ --show-sep
+```
+
 ## Search vs State (Use the Right Layer)
 
 Recur solves two different problems. Pick the layer before you pick the command:
@@ -36,6 +54,12 @@ Use it as a marker of interest around stable names:
 - stable identity in `prefix.base.suffix`
 - expanded eventness while interest is live
 - collapsed or closed eventness when the extra signal is no longer needed
+- use `recur` commands during expansion to discover what is interesting and store the most useful commands inside those files when it helps rediscovery
+- collapse to `complete`, `future-plan`, `recurring`, or full removal depending on what residue is worth keeping
+
+Canonical theory references:
+- `docs/eventness_explained_whitepaper.docx`
+- `README.CORE.EVENTNESS.md`
 
 ## Skim-Then-Explore Rule
 
@@ -318,6 +342,7 @@ Eventness files are only useful while they are fresh:
 
 - If both `.current` and `.complete` exist for the same work item, delete `.current` immediately.
 - If a `.current` file is old and no longer actionable, either refresh it with new resume context or close it.
+- If the interest window ended, collapse the expanded state to `.complete`, `.future-plan`, `.recurring`, or full removal.
 - Keep `.current` files concrete: last error, file/line, hypothesis, and next command.
 
 ```bash
@@ -337,7 +362,12 @@ foreach ($f in $files) {
 
 **3. Complete Work**
 ```bash
-# Clean up ephemeral files
+# Collapse to the right durable residue first when needed
+# docs/main.command.<name>.complete.md
+# docs/main.command.<name>.todo.future-plan.md
+# docs/main.command.<name>.recurring.md
+
+# Then clean up ephemeral files
 rm docs/main.command.<name>.todo.current.md
 rm docs/main.command.<name>.todo.current.reference.md
 rm docs/main.command.<name>.todo.trigger.event.md
@@ -583,6 +613,12 @@ recur files "main_command_*_impl" -d src/ --sep _ --count
 
 **"Eventness"** = Using file suffixes to mark workflow state and discover next actions.
 
+Operational lifecycle:
+- expand around `prefix.base.suffix[.expanding.eventness][.ext]`
+- use `recur` commands to discover interest while the window is live
+- collapse to `prefix.base.suffix[.collapsing.eventness][.ext]`
+- keep `recurring` when the result should be easy to find again later
+
 ### Key Suffix Patterns
 
 **Ephemeral (delete when done):**
@@ -592,8 +628,10 @@ recur files "main_command_*_impl" -d src/ --sep _ --count
 
 **Persistent (keep forever):**
 - `.complete.md` - Completion record (what's finished)
+- `.future-plan.md` - Lower-intensity follow-up that should survive collapse
 - `.todo.md` - High-level tracking (what needs doing)
 - `.readme.md` - Documentation
+- `.recurring.md` - Durable rediscovery point for workflows that should be found again later
 
 ### Discovery Queries by Suffix
 

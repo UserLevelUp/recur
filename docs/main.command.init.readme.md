@@ -15,6 +15,23 @@ recur init
 Creates:
 - `.recur/config.toml` with detected lanes (for example `src/`, `docs/`, `julia-tests/`)
 - `.recur/checkpoints.md` (if missing)
+- all default `[traits.*]` sections used by `recur trait`
+
+Generated lane names are normalized to lowercase kebab-case section names.
+If two directories collapse to the same normalized lane name, `recur init`
+appends a numeric suffix so the generated TOML stays valid.
+
+Example:
+
+```toml
+[test-quick]
+dir = "test-quick/"
+sep = "-"
+
+[test-quick-2]
+dir = "test_quick/"
+sep = "."
+```
 
 ## Analyze mode
 
@@ -52,3 +69,13 @@ recur files "main_command_**" -d src/ --count
 ```
 
 works without explicitly passing `--sep _` when `src/` is mapped to `_` in config.
+
+## Testing
+
+- `julia-tests/main.command.init.test.jl` - command-level wrapper for init CLI coverage
+- `julia-tests/runtests.init.jl` - init command contract, analyze mode, and collision tests
+
+## Related
+
+- `docs/main.command.config.readme.md`
+- `docs/main.command.init.lane-name-collision.complete.md`

@@ -19,8 +19,10 @@ That gives the hierarchy room to add a base, suffix, and eventness cleanly over 
 
 Useful mental models:
 
-- `prefix.base.suffix.[eventness-expanded].[ext]`
-- `prefix.base.suffix.[eventness-collapsed].[ext]`
+- `prefix.base.suffix[.expanding.eventness][.ext]`
+- `prefix.base.suffix[.collapsing.eventness][.ext]`
+
+`.ext` is optional. Most files in this repo have one; some do not.
 
 Examples in this repo:
 
@@ -40,11 +42,24 @@ Treat it as a visible marker of interest:
 
 - stable identity lives in `prefix.base.suffix`
 - expanded eventness carries live working context
+- during expansion, use `recur` commands to discover what is interesting and store exact `recur` commands inside the eventness files when that helps resume work
 - collapsed or closed eventness keeps only the amount of signal that still matters
+- collapse usually ends in `complete`, `future-plan`, `recurring`, or full removal of the ephemeral file
+
+## Recurring Lifecycle
+
+Treat eventness as a recurring operating pattern:
+
+1. Expand interest around a stable subject.
+2. Use `recur` commands to discover the next useful questions and commands.
+3. Store those commands in the expanded eventness files when they improve rediscovery.
+4. Collapse once the interest window closes.
+5. Keep only the durable residue that still matters, or remove the file entirely.
 
 ## Eventness Reminder
 
-`recurring` is a valid rediscovery/eventness concept, but most work in this repo is non-recurring improvement work.
+`recurring` is a valid rediscovery/eventness concept, and it is also a good collapsed form when the useful outcome is "remember this pattern next time."
+Most work in this repo is still non-recurring improvement work.
 In practice, expect more files like `todo`, `current`, `complete`, `future-plan`, `reference`, and `trigger.event` than `recurring`.
 
 Use `recurring` when you want a durable "remember this workflow next time" rediscovery point.
@@ -62,8 +77,28 @@ In practice:
 - Use `complete` docs for baseline/history, not for deciding what is left
 - If a feature branch has already been merged, the remaining work usually lives in the `current` improvement and test lanes, not in the old feature branch name itself
 
+## Fast Rehydration Order
+
+When training Skippy or another LLM back into this repo, rehydrate in this order:
+
+1. `docs/eventness_explained_whitepaper.docx` for the deeper eventness theory and equation framing.
+2. `README.CORE.EVENTNESS.md` for the operational model used in this repo.
+3. `docs/main.recur.expert.recurring.md` for the repo-specific rediscovery rules.
+4. `julia-expert/references/recur-playbook.md` for the concrete command workflow.
+
+Then switch from reading to query-time discovery:
+
+```powershell
+recur files "**.current" -d docs/
+recur files "**.recurring" -d docs/
+recur files "**.reference" -d docs/
+recur tree "main" --sep . --sep _ --show-sep
+```
+
 ## Canonical references
 
+- `docs/eventness_explained_whitepaper.docx` - deeper eventness theory and equation framing
+- `README.CORE.EVENTNESS.md` - operational eventness model for this repo
 - `julia-expert/references/recur-playbook.md` - canonical prompt/playbook
 - `docs/AGENT.PROMPT.recur-expert.md` - pointer to canonical prompt
 - `ulu_docs/recur-agent.md` - supplemental older agent notes

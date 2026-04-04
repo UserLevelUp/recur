@@ -403,6 +403,7 @@ pub fn discover_lanes(root: &Path) -> Result<Vec<LaneConfig>> {
     }
 
     sort_lanes(&mut lanes);
+    uniquify_lane_names(&mut lanes);
     Ok(lanes)
 }
 
@@ -804,7 +805,24 @@ fn sort_lanes(lanes: &mut [LaneConfig]) {
         lane_order(&a.dir)
             .cmp(&lane_order(&b.dir))
             .then_with(|| a.name.cmp(&b.name))
+            .then_with(|| {
+                normalize_path_for_compare(&a.dir).cmp(&normalize_path_for_compare(&b.dir))
+            })
     });
+}
+
+fn uniquify_lane_names(lanes: &mut [LaneConfig]) {
+    let mut seen: BTreeMap<String, usize> = BTreeMap::new();
+
+    for lane in lanes {
+        let base_name = lane.name.clone();
+        let entry = seen.entry(base_name.clone()).or_insert(0);
+        *entry += 1;
+
+        if *entry > 1 {
+            lane.name = format!("{}-{}", base_name, *entry);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -1034,6 +1052,40 @@ foo = "bar"
         assert!(config_text.contains("resolve_relative_to_root = true"));
         assert!(config_text.contains("[traits.traversal_budget]"));
         assert!(config_text.contains("[traits.trace_id]"));
+    }
+
+    #[test]
+    fn init_project_deduplicates_colliding_lane_names() {
+        let temp = tempdir().unwrap();
+        let root = temp.path();
+        fs::create_dir_all(root.join("test-quick")).unwrap();
+        fs::create_dir_all(root.join("test_quick")).unwrap();
+
+        fs::write(root.join("test-quick/main-command-tree-notes.md"), "").unwrap();
+        fs::write(root.join("test_quick/main.command.tree.readme.md"), "").unwrap();
+
+        init_project(root, false).unwrap();
+
+        let config_text = fs::read_to_string(root.join(".recur/config.toml")).unwrap();
+        assert!(config_text.contains("[test-quick]"));
+        assert!(config_text.contains("dir = \"test-quick/\""));
+        assert!(config_text.contains("[test-quick-2]"));
+        assert!(config_text.contains("dir = \"test_quick/\""));
+
+        let loaded = load_from_root(root)
+            .unwrap()
+            .expect("generated config should parse");
+        let lane_dirs: BTreeMap<String, String> = loaded
+            .lanes
+            .iter()
+            .map(|lane| (lane.name.clone(), normalize_path_for_compare(&lane.dir)))
+            .collect();
+
+        assert_eq!(lane_dirs.get("test-quick"), Some(&"test-quick".to_string()));
+        assert_eq!(
+            lane_dirs.get("test-quick-2"),
+            Some(&"test_quick".to_string())
+        );
     }
 
     #[test]

@@ -35,6 +35,15 @@ Short version:
 - routing is prefix/base-driven
 - attention is suffix-driven
 
+Operational repo shape often looks like:
+
+`<prefix>.<base>.<suffix>[.<eventness>][.<ext>]`
+
+In practice:
+- `suffix` is usually the durable artifact or lane anchor
+- the extra right-hand eventness chain expands or collapses current interest
+- `.ext` is optional; most files have one, some do not
+
 ---
 
 ## Meaning of Each Part
@@ -93,6 +102,58 @@ This avoids hardcoding base depth.
 
 ---
 
+## Operational Lifecycle
+
+This repo uses eventness as a recurring pattern:
+
+### 1) Expansion
+
+When interest is live, expand around a stable subject:
+
+`prefix.base.suffix[.expanding.eventness][.ext]`
+
+Examples:
+- `main.command.trace-id.test.todo.current.md`
+- `main.command.trace-id.test.todo.current.reference.md`
+- `main.command.trace-id.test.todo.trigger.event.md`
+
+Expanded files can hold:
+- resume context
+- hypotheses
+- exact `recur` commands to run next
+- references to related files or lanes
+
+### 2) Interest Discovery
+
+During expansion, use `recur` commands to discover what is actually interesting now.
+The files do not replace query-time discovery; they improve it.
+
+Typical loop:
+- `recur files "**.current" -d docs/`
+- `recur files "**.trigger.event" -d docs/`
+- `recur tree "main" --sep . --sep _ --show-sep`
+- `recur find "<symbol-or-text>" --scope "**" -d src/`
+
+This is why eventness works well with humans and LLMs: the repo stores both the current state and the next useful queries.
+
+### 3) Collapse
+
+Once the interest has paid off, collapse the expanded state:
+
+`prefix.base.suffix[.collapsing.eventness][.ext]`
+
+Typical outcomes:
+- keep a stable completion record: `*.complete.*`
+- keep a lower-intensity reminder: `*.future-plan.*`
+- keep a durable rediscovery point: `*.recurring.*`
+- remove the ephemeral file entirely when no residue is worth keeping
+
+### 4) Recurring Rediscovery
+
+`recurring` is apt when the value is not "this is active now" but "this workflow or pattern should be easy to find again later."
+
+---
+
 ## Eventness Score
 
 Eventness is a ranking score for "what should get attention now."
@@ -102,7 +163,7 @@ Suggested formula:
 `eventness = suffix_weight + prefix_prior + freshness + impact + anomaly_bonus`
 
 Where:
-- `suffix_weight`: strongest signal (blocked > current > todo > complete)
+- `suffix_weight`: strongest signal (blocked > current > todo > recurring > complete)
 - `prefix_prior`: domain urgency prior (`ops` may outrank `research`)
 - `freshness`: time decay / staleness
 - `impact`: downstream references, dependency fan-out
@@ -121,6 +182,7 @@ You can detect useful surprises even when not explicitly planned.
 Examples:
 - new suffix pattern appears (`todo.blocker`, `risk.critical`) not in policy
 - missing expected suffix chain (`todo` exists, `todo.current` missing)
+- expanded eventness never collapsed after the interest window closed
 - sudden rise in refs/callers around one base
 - new prefix/base combination with no historical pattern
 
@@ -146,7 +208,9 @@ This model supports both layers from IMPROVEMENT9:
 
 - `main.command.tree.todo.current`
 - `main.command.tree.todo.trigger.event`
+- `main.command.trace-id.test.todo.current.reference`
 - `main.command.checkpoint.todo.next`
+- `main.package.crates-io.recurring`
 - `ops.incident.auth.outage.todo.blocker`
 - `release.v2_3.rc1.risk.high`
 
@@ -166,6 +230,11 @@ recur files "main_command_*_todo_current" -d src/ --sep _
 ```bash
 recur files "main.command.*.todo.trigger.event" -d docs/
 recur files "main_command_*_todo_trigger_event" -d src/ --sep _
+```
+
+### Recurring rediscovery (today)
+```bash
+recur files "**.recurring" -d docs/
 ```
 
 ### Interest extraction (IMPROVEMENT9 target)
@@ -209,8 +278,9 @@ Then resolve IDs to files with existing file-layer commands and pull detailed co
 3. Resolve selected IDs to files (`recur files ...`) and extract suffix-bearing IDs (interest signals).
 4. Rank by eventness.
 5. Execute required triggers.
-6. Run recurring completion checklist items (update docs, commit, push).
-7. Rotate current lane.
+6. Collapse the expanded eventness to the right durable residue.
+7. Run recurring completion checklist items (update docs, commit, push).
+8. Rotate current lane.
 
 Humans and LLMs should run the same loop over the same semantic list plus resolved file context.
 
@@ -223,7 +293,8 @@ Keep this lightweight:
 1. Maintain a suffix policy map (suffix -> weight/severity).
 2. Enforce one active `*.todo.current` per lane.
 3. Require `*.todo.trigger.event` for recurring start/complete workflows.
-4. Run drift checks (missing suffix chains, unresolved refs).
+4. Collapse stale expanded eventness once the interest window closes.
+5. Run drift checks (missing suffix chains, unresolved refs).
 
 ---
 

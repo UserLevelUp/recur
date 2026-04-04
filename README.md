@@ -575,6 +575,7 @@ The tribute is also personal. I had the chance to speak with Dennis Ritchie brie
 
 - [Full Tribute](RECUR-TRIBUTE.md) — the Dennis Ritchie note  
 - [White Paper](docs/recur.white.paper.docx) — design and philosophy
+- [Eventness Explained](docs/eventness_explained_whitepaper.docx) - eventness explained in equation form
 - [Proposal](RECUR-PROPOSAL.md) — technical design  
 - [Contributing](CONTRIBUTING.md) — how to contribute  
 - [Implementation](IMPLEMENTATION-COMPLETE.md) — code walkthrough  
