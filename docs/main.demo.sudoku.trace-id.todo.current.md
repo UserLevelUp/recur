@@ -1,7 +1,11 @@
 # Demo: Sudoku + trace-id (Pure Separation Architecture)
 
-Status: `todo.current` (active — Phase 4 complete, Phase 5 next)
-Date: 2026-03-13
+Status: `todo.current` (active — standalone lane, Phase 5 HTML5 in progress)
+Date: 2026-03-24 (standalone since 2026-03-24, originally 2026-03-13)
+
+Note: This lane was formerly Lane 2 of improvement 9. Now standalone because
+the Sudoku demo *uses* trace-id but doesn't *change* it. The merge edge-type
+pipeline work remains in `docs/main.improvement.9.trace-id.todo.current.md`.
 
 ## Phase 1 Complete (2026-03-13)
 

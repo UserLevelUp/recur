@@ -28,10 +28,10 @@ mod main_command_merge_impl;
 mod main_command_related_impl;
 mod main_command_stats_impl;
 mod main_command_stats_stdin;
-mod main_command_trait_impl;
 mod main_command_trace_id_impl;
 mod main_command_trace_impl;
 mod main_command_trace_stats_impl;
+mod main_command_trait_impl;
 mod main_command_tree_impl;
 
 #[derive(Parser)]

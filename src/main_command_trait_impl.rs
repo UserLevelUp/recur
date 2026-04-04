@@ -64,10 +64,10 @@ fn ensure_config_exists(root: &Path) -> anyhow::Result<PathBuf> {
 }
 
 fn load_config_table(path: &Path) -> anyhow::Result<toml::value::Table> {
-    let text = fs::read_to_string(path)
-        .with_context(|| format!("Failed to read {}", path.display()))?;
-    let value: TomlValue = toml::from_str(&text)
-        .with_context(|| format!("Failed to parse {}", path.display()))?;
+    let text =
+        fs::read_to_string(path).with_context(|| format!("Failed to read {}", path.display()))?;
+    let value: TomlValue =
+        toml::from_str(&text).with_context(|| format!("Failed to parse {}", path.display()))?;
 
     match value {
         TomlValue::Table(table) => Ok(table),
@@ -134,8 +134,13 @@ fn get_trait_value(root: &Path, key: &str, json_output: bool) -> anyhow::Result<
     let path = ensure_config_exists(root)?;
     let table = load_config_table(&path)?;
     let key_path = normalize_trait_key_path(key, false)?;
-    let value = get_value_at_path(&table, &key_path)
-        .with_context(|| format!("Key '{}' not found in {}", key_path.join("."), path.display()))?;
+    let value = get_value_at_path(&table, &key_path).with_context(|| {
+        format!(
+            "Key '{}' not found in {}",
+            key_path.join("."),
+            path.display()
+        )
+    })?;
 
     if json_output {
         let payload = json!({
@@ -242,10 +247,7 @@ fn set_value_at_path(
             .expect("entry should be table after table check");
     }
 
-    current.insert(
-        path.last().expect("path must not be empty").clone(),
-        value,
-    );
+    current.insert(path.last().expect("path must not be empty").clone(), value);
     Ok(())
 }
 
@@ -314,7 +316,10 @@ mod tests {
     fn parse_cli_value_infers_common_scalar_types() {
         assert_eq!(parse_cli_value("true"), TomlValue::Boolean(true));
         assert_eq!(parse_cli_value("42"), TomlValue::Integer(42));
-        assert_eq!(parse_cli_value("\"hello\""), TomlValue::String("hello".to_string()));
+        assert_eq!(
+            parse_cli_value("\"hello\""),
+            TomlValue::String("hello".to_string())
+        );
         assert_eq!(parse_cli_value("raw"), TomlValue::String("raw".to_string()));
     }
 
