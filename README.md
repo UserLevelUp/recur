@@ -2,7 +2,7 @@
   <p>
     <img src="choco/recur-icon.svg" alt="recur icon" width="128">
   </p>
-  <p><em>Curly braces for semantic file naming.</em></p>
+  <p><em>Curly braces for semantic naming.</em></p>
   <h1>recur</h1>
   <div class="version">v0.2.8</div>
   <p>
