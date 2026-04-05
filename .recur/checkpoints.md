@@ -1,1 +1,34 @@
 # recur checkpoints
+
+### ck-20260405-055946
+- date: unix:1775393995
+- lane.state.src.current: none
+- lane.state.docs.current: docs/main.choco.todo.current.md, docs/main.command.tests.progress.current.md, docs/main.command.trace-id.run.todo.current.md, docs/main.demo.sudoku.trace-id.todo.current.md, docs/main.package.crates-io.todo.current.md
+- lane.state.julia-tests.current: none
+- lane.state.scripts.current: none
+- lane.state.benches.current: none
+- lane.state.demos.current: none
+- lane.state.julia-expert.current: none
+- lane.state.test-quick.current: none
+- lane.state.test-stdin.current: none
+- lane.git.branch: a.0.2.8
+- lane.git.head: 8f0ab74 trace-id: persist runs and preserve edge_type through merge
+- lane.git.worktree: clean
+- lane.separator.src: _
+- lane.separator.docs: .
+- lane.separator.julia-tests: .
+- lane.separator.scripts: _
+- lane.separator.benches: _
+- lane.separator.demos: _
+- lane.separator.julia-expert: -
+- lane.separator.test-quick: .
+- lane.separator.test-stdin: .
+- evidence.src.tree_cmd: recur tree "**" -d src/ --sep _
+- evidence.docs.tree_cmd: recur tree "**" -d docs/ --sep .
+- evidence.julia-tests.tree_cmd: recur tree "**" -d julia-tests/ --sep .
+- evidence.scripts.tree_cmd: recur tree "**" -d scripts/ --sep _
+- evidence.benches.tree_cmd: recur tree "**" -d benches/ --sep _
+- evidence.demos.tree_cmd: recur tree "**" -d demos/ --sep _
+- evidence.julia-expert.tree_cmd: recur tree "**" -d julia-expert/ --sep -
+- evidence.test-quick.tree_cmd: recur tree "**" -d test_quick/ --sep .
+- evidence.test-stdin.tree_cmd: recur tree "**" -d test_stdin/ --sep .
