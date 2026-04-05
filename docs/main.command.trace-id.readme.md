@@ -36,6 +36,10 @@ recur trace-id "<identifier>" [flags]
 | `--depth <N>` | Max traversal depth | 2 |
 | `--depth-guard <POLICY>` | On depth cap hit: `hard-fail`, `clamp`, `warn` | `hard-fail` |
 | `--force` | Bypass depth cap | false |
+| `--save-run` | Persist latest JSON artifact under `.recur/trace-id/runs/<name>/` | false |
+| `--reuse-if-fresh` | Reuse saved JSON when query/config/input files still match | false |
+| `--check-run` | Report whether a saved run is `fresh`, `stale`, or `missing` | false |
+| `--run-name <NAME>` | Stable name for saved run artifacts | none |
 | `-d <DIR>` | Working directory | `.` |
 
 ## Examples
@@ -71,6 +75,15 @@ cat changed-files.txt | recur trace-id "my.event.id" --scope "**" --stdin
 
 # Custom separator (underscore convention)
 recur trace-id "my_event_id" --scope "**" --sep _
+
+# Save a reusable run artifact
+recur trace-id "my.event.id" --scope "**" --json --save-run --run-name my.event.primary
+
+# Reuse the saved run if nothing relevant changed
+recur trace-id "my.event.id" --scope "**" --json --reuse-if-fresh --run-name my.event.primary
+
+# Check freshness only
+recur trace-id "my.event.id" --scope "**" --check-run --run-name my.event.primary
 ```
 
 ## JSON Output Shape
@@ -79,13 +92,13 @@ recur trace-id "my_event_id" --scope "**" --sep _
 {
   "identifier": "my.event.id",
   "define": [
-    { "path": "src/Topics.cs", "line_number": 4, "line": "  const string MyEvent = \"my.event.id\";" }
+    { "path": "src/Topics.cs", "line_number": 4, "line": "  const string MyEvent = \"my.event.id\";", "edge_type": "define" }
   ],
   "produce": [
-    { "path": "src/Publisher.cs", "line_number": 12, "line": "  await bus.PublishAsync(Topics.MyEvent);" }
+    { "path": "src/Publisher.cs", "line_number": 12, "line": "  await bus.PublishAsync(Topics.MyEvent);", "edge_type": "produce" }
   ],
   "consume": [
-    { "path": "src/Subscriber.cs", "line_number": 8, "line": "  channel.QueueBind(\"q\", \"x\", routingKey: Topics.MyEvent);" }
+    { "path": "src/Subscriber.cs", "line_number": 8, "line": "  channel.QueueBind(\"q\", \"x\", routingKey: Topics.MyEvent);", "edge_type": "consume" }
   ],
   "trigger": [],
   "request": {
@@ -102,7 +115,7 @@ recur trace-id "my_event_id" --scope "**" --sep _
 }
 ```
 
-Note: `edge_type` field on each site is pending (see `main.command.trace-id.edge-type.todo.current.md`).
+Each site object includes `edge_type`: `define`, `produce`, `consume`, or `trigger`.
 
 ## Trait Configuration
 
@@ -124,10 +137,42 @@ recur trait set trace_id.trigger_keywords "trigger,register,solve"
 
 ## Pipeline
 
-`trace-id --json` output pipes into `recur merge`:
+`trace-id --json` output pipes into `recur merge`, and merge JSON retains `edge_type`
+on leaf nodes:
 
 ```bash
-recur trace-id "my.event.id" --scope "**" --json | recur merge --stdin --base trace --sep .
+recur trace-id "my.event.id" --scope "**" --json | recur merge --stdin --base trace --sep . --json
+```
+
+## Saved Runs
+
+`trace-id` can persist metadata-only run artifacts under `.recur/trace-id/runs/<name>/`.
+
+Files:
+
+- `manifest.toml` - query identity, config fingerprint, file fingerprint, file count
+- `latest.json` - last saved `trace-id` JSON result
+
+Freshness is based on:
+
+- query shape (`pattern`, `scope`, separator, depth, stdin/ext flags)
+- nearest `.recur/config.toml` content when present
+- scoped file set metadata (path, size, modified time)
+
+This keeps the feature inside recur's metadata boundary: it stores the discovered
+trace result and freshness signals, not duplicated source files.
+
+Examples:
+
+```bash
+# Save a run
+recur trace-id "my.event.id" --scope "**" --json --save-run --run-name my.event.primary
+
+# Reuse only when fresh; otherwise fall back to a live trace
+recur trace-id "my.event.id" --scope "**" --json --reuse-if-fresh --run-name my.event.primary
+
+# Inspect freshness for scripting or eventness workflows
+recur trace-id "my.event.id" --scope "**" --check-run --run-name my.event.primary --json
 ```
 
 ## Works On Any Text Files
@@ -176,5 +221,5 @@ recur does not know it is playing Sudoku.
 - `src/main_command_trace_id_impl.rs` — implementation
 - `src/trait/trace_id.rs` — trait policy resolver
 - `docs/main.command.trait.readme.md` — trait configuration
-- `docs/main.command.trace-id.edge-type.todo.current.md` — edge_type pending
+- `docs/main.command.trace-id.edge-type.complete.md` — edge_type field record
 - `docs/main.demo.sudoku.trace-id.todo.current.md` — Sudoku demo context

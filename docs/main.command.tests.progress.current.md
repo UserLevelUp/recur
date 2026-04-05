@@ -1,12 +1,21 @@
 # Command Tests Progress Snapshot
 
 Status: `current`
-Date: 2026-03-03
+Date: 2026-04-05
 
 ## Current Counts
 
-- `trace-id`: `recur trace-id command (IMPROVEMENT8) |   13       6     19  0.5s`
+- `trace-id`: `recur trace-id command (IMPROVEMENT8) |   63       3     66  0.7s`
 - `callees`: `recur callees command |   24      10     34  0.5s`
+
+## Trace-id Notes
+
+- Phase 4b now covers saved runs: `--save-run`, `--check-run`, `--reuse-if-fresh`
+- Phase 5 `trace-id -> merge` now passes and retains `edge_type` through merge JSON
+- Remaining `Broken = 3` entries are the permanent `@test_skip` placeholders for
+  `trace`, `callers`, and `callees` edge-metadata composition
+- Eventness lane for saved-run polish: `docs/main.command.trace-id.run.todo.current.md`
+- Improvement close-out: `docs/main.improvement.9.trace-id.complete.md`
 
 ## Repro Commands
 

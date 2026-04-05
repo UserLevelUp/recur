@@ -145,7 +145,13 @@ File inputs accept any of the following JSON formats:
 { "name": "root", "children": [{ "path": "path/one.ext" }] }
 ```
 
-`recur flatten --json` output is also accepted because merge reads arrays of objects that contain a `path` field.
+`recur flatten --json` output is also accepted because merge reads arrays of objects
+that contain a `path` field.
+
+`recur trace-id --json` output is also accepted. When `recur merge --json` is used,
+leaf nodes retain merged `edge_type` arrays, and arbitrary trace-id file names are
+rooted under the requested `--base` while keeping the emitted `path` pointed at the
+original file name.
 
 ### Flatten Interop (Current State)
 

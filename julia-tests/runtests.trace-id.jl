@@ -69,6 +69,10 @@ end
             @test contains(output, "--depth")
             @test contains(output, "--depth-guard")
             @test contains(output, "--force")
+            @test contains(output, "--save-run")
+            @test contains(output, "--reuse-if-fresh")
+            @test contains(output, "--check-run")
+            @test contains(output, "--run-name")
         end
 
         @testset "Phase 2: Role detection contracts" begin
@@ -237,6 +241,119 @@ end
             end
         end
 
+        @testset "Phase 4b: saved runs persist and refresh" begin
+            mkpath(joinpath(TEST_DIR, ".recur"))
+            write(
+                joinpath(TEST_DIR, ".recur", "config.toml"),
+                """
+                [traits.trace_id]
+                enabled = true
+                """,
+            )
+
+            run_name = "ownership-create-primary"
+            run_dir = joinpath(TEST_DIR, ".recur", "trace-id", "runs", run_name)
+            manifest_path = joinpath(run_dir, "manifest.toml")
+            latest_json_path = joinpath(run_dir, "latest.json")
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "ulu.topic.dot.ownership.create",
+                "--scope",
+                "**",
+                "--ext",
+                ".cs",
+                "--json",
+                "--save-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            @test success
+            @test isfile(manifest_path)
+            @test isfile(latest_json_path)
+            @test contains(read(manifest_path, String), "name = \"ownership-create-primary\"")
+
+            saved = JSON3.read(read(latest_json_path, String))
+            @test haskey(saved, :request) || haskey(saved, "request")
+            @test haskey(saved, :define) || haskey(saved, "define")
+            @test contains(output, "\"edge_type\"")
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "ulu.topic.dot.ownership.create",
+                "--scope",
+                "**",
+                "--ext",
+                ".cs",
+                "--json",
+                "--check-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            @test success
+            @test contains(output, "\"status\": \"fresh\"")
+
+            cached_output = replace(
+                read(latest_json_path, String),
+                "\"pattern\": \"ulu.topic.dot.ownership.create\"" => "\"pattern\": \"cached.reuse.marker\"",
+            )
+            write(latest_json_path, cached_output)
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "ulu.topic.dot.ownership.create",
+                "--scope",
+                "**",
+                "--ext",
+                ".cs",
+                "--json",
+                "--reuse-if-fresh",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            @test success
+            @test contains(output, "\"pattern\": \"cached.reuse.marker\"")
+
+            create_test_file(
+                "OwnershipCreatePublisher.cs",
+                """
+                public class OwnershipCreatePublisher {
+                    public async Task PublishAgain() {
+                        await _bus.PublishAsync(DotControlTopics.OwnershipCreate);
+                    }
+                }
+                """,
+            )
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "ulu.topic.dot.ownership.create",
+                "--scope",
+                "**",
+                "--ext",
+                ".cs",
+                "--json",
+                "--check-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            @test success
+            @test contains(output, "\"status\": \"stale\"")
+            @test contains(output, "input files changed")
+        end
+
         @testset "Phase 5: cross-command JSON pipeline contracts" begin
             @testset "trace -> merge (edge metadata placeholder)" begin
                 # trace/callers/callees JSON has no edge_type concept — descoped.
@@ -273,7 +390,18 @@ end
                     ["merge", "--stdin", "--base", "pipeline.trace-id", "--sep", ".", "--json"],
                 )
 
-                @test_broken success && contains(output, "\"edge_type\"")
+                parsed = nothing
+                parse_ok = false
+                try
+                    parsed = JSON3.read(output)
+                    parse_ok = true
+                catch
+                    parse_ok = false
+                end
+
+                @test success
+                @test parse_ok
+                @test contains(output, "\"edge_type\"")
             end
         end
     finally
