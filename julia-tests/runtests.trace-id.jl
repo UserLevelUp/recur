@@ -43,6 +43,37 @@ function seed_trace_id_fixture()
     """)
 end
 
+function seed_trace_id_transition_fixture()
+    mkpath(joinpath(TEST_DIR, ".recur"))
+    write(
+        joinpath(TEST_DIR, ".recur", "config.toml"),
+        """
+        [traits.trace_id]
+        enabled = true
+        producer_keywords = "publish,send,emit"
+        consumer_keywords = "subscribe,bind,consume"
+        trigger_keywords = "trigger,advance,rollback,restore"
+        notes = "Trace-id transition audit fixture"
+        """,
+    )
+
+    create_test_file(
+        "transition.audit.state.txt",
+        """
+        transition.audit.order.42 = todo.current
+        """,
+    )
+
+    create_test_file(
+        "transition.audit.forward.txt",
+        """
+        transition.audit.order.42 publish review.current
+        review.current subscribe transition.audit.order.42
+        transition.audit.order.42 trigger advance
+        """,
+    )
+end
+
 function recur_cmd(args::Vector{String})
     Cmd(vcat([RECUR_BIN], args))
 end
@@ -255,6 +286,7 @@ end
             run_dir = joinpath(TEST_DIR, ".recur", "trace-id", "runs", run_name)
             manifest_path = joinpath(run_dir, "manifest.toml")
             latest_json_path = joinpath(run_dir, "latest.json")
+            history_dir = joinpath(run_dir, "history")
 
             success, output, _ = run_recur([
                 "trace-id",
@@ -274,6 +306,7 @@ end
             @test success
             @test isfile(manifest_path)
             @test isfile(latest_json_path)
+            @test !isdir(history_dir)
             @test contains(read(manifest_path, String), "name = \"ownership-create-primary\"")
 
             saved = JSON3.read(read(latest_json_path, String))
@@ -352,6 +385,165 @@ end
             @test success
             @test contains(output, "\"status\": \"stale\"")
             @test contains(output, "input files changed")
+        end
+
+        @testset "Phase 4c: transition audit stays traceable across rollback" begin
+            seed_trace_id_transition_fixture()
+
+            run_name = "transition.audit.order.42"
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "transition.audit.order.42",
+                "--scope",
+                "transition.audit.**",
+                "--ext",
+                ".txt",
+                "--json",
+                "--save-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            parsed = nothing
+            parse_ok = false
+            try
+                parsed = JSON3.read(output)
+                parse_ok = true
+            catch
+                parse_ok = false
+            end
+
+            @test success
+            @test parse_ok
+            if parse_ok
+                define = get(parsed, :define, get(parsed, "define", []))
+                produce = get(parsed, :produce, get(parsed, "produce", []))
+                consume = get(parsed, :consume, get(parsed, "consume", []))
+                trigger = get(parsed, :trigger, get(parsed, "trigger", []))
+
+                produce_lines = [String(item["line"]) for item in produce]
+                consume_lines = [String(item["line"]) for item in consume]
+                trigger_lines = [String(item["line"]) for item in trigger]
+
+                @test length(define) >= 1
+                @test any(line -> contains(line, "review.current"), produce_lines)
+                @test any(line -> contains(line, "review.current subscribe"), consume_lines)
+                @test any(line -> contains(line, "advance"), trigger_lines)
+                @test !any(line -> contains(line, "rollback"), trigger_lines)
+            end
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "transition.audit.order.42",
+                "--scope",
+                "transition.audit.**",
+                "--ext",
+                ".txt",
+                "--json",
+                "--check-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            @test success
+            @test contains(output, "\"status\": \"fresh\"")
+
+            create_test_file(
+                "transition.audit.rollback.txt",
+                """
+                transition.audit.order.42 publish todo.current
+                todo.current subscribe transition.audit.order.42
+                transition.audit.order.42 trigger rollback
+                """,
+            )
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "transition.audit.order.42",
+                "--scope",
+                "transition.audit.**",
+                "--ext",
+                ".txt",
+                "--json",
+                "--check-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            @test success
+            @test contains(output, "\"status\": \"stale\"")
+            @test contains(output, "input files changed")
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "transition.audit.order.42",
+                "--scope",
+                "transition.audit.**",
+                "--ext",
+                ".txt",
+                "--json",
+                "--save-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            parsed = nothing
+            parse_ok = false
+            try
+                parsed = JSON3.read(output)
+                parse_ok = true
+            catch
+                parse_ok = false
+            end
+
+            @test success
+            @test parse_ok
+            if parse_ok
+                produce = get(parsed, :produce, get(parsed, "produce", []))
+                consume = get(parsed, :consume, get(parsed, "consume", []))
+                trigger = get(parsed, :trigger, get(parsed, "trigger", []))
+
+                produce_lines = [String(item["line"]) for item in produce]
+                consume_lines = [String(item["line"]) for item in consume]
+                trigger_lines = [String(item["line"]) for item in trigger]
+                trigger_paths = [String(item["path"]) for item in trigger]
+
+                @test any(line -> contains(line, "review.current"), produce_lines)
+                @test any(line -> contains(line, "todo.current"), produce_lines)
+                @test any(line -> contains(line, "review.current subscribe"), consume_lines)
+                @test any(line -> contains(line, "todo.current subscribe"), consume_lines)
+                @test any(line -> contains(line, "advance"), trigger_lines)
+                @test any(line -> contains(line, "rollback"), trigger_lines)
+                @test any(path -> contains(path, "transition.audit.forward"), trigger_paths)
+                @test any(path -> contains(path, "transition.audit.rollback"), trigger_paths)
+            end
+
+            success, output, _ = run_recur([
+                "trace-id",
+                "transition.audit.order.42",
+                "--scope",
+                "transition.audit.**",
+                "--ext",
+                ".txt",
+                "--json",
+                "--check-run",
+                "--run-name",
+                run_name,
+                "-d",
+                TEST_DIR,
+            ])
+
+            @test success
+            @test contains(output, "\"status\": \"fresh\"")
         end
 
         @testset "Phase 5: cross-command JSON pipeline contracts" begin

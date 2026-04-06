@@ -153,6 +153,9 @@ Files:
 - `manifest.toml` - query identity, config fingerprint, file fingerprint, file count
 - `latest.json` - last saved `trace-id` JSON result
 
+Current persistence is `latest`-only: saved runs keep `manifest.toml` plus
+`latest.json`, and do not create timestamped `history/` artifacts yet.
+
 Freshness is based on:
 
 - query shape (`pattern`, `scope`, separator, depth, stdin/ext flags)
@@ -174,6 +177,35 @@ recur trace-id "my.event.id" --scope "**" --json --reuse-if-fresh --run-name my.
 # Inspect freshness for scripting or eventness workflows
 recur trace-id "my.event.id" --scope "**" --check-run --run-name my.event.primary --json
 ```
+
+## Transition Audit Pattern
+
+`trace-id` is a strong fit for auditable eventness transitions when the same
+identifier is carried through forward and backward state changes.
+
+Pattern:
+
+- canonical eventness or mirror state remains the source of truth
+- transition files carry the shared identifier as reusable evidence
+- `--save-run` captures one semantic snapshot of those transition files
+- `--check-run` turns `stale` when the transition evidence changes
+- rerunning `trace-id` refreshes the saved evidence for the new state
+
+Example eventness lines:
+
+```text
+transition.audit.order.42 = todo.current
+transition.audit.order.42 publish review.current
+review.current subscribe transition.audit.order.42
+transition.audit.order.42 trigger advance
+transition.audit.order.42 publish todo.current
+todo.current subscribe transition.audit.order.42
+transition.audit.order.42 trigger rollback
+```
+
+That pattern does not make the saved run canonical by itself. It makes the saved
+run auditable evidence that the semantic transition path can be rediscovered and
+rechecked over time.
 
 ## Works On Any Text Files
 

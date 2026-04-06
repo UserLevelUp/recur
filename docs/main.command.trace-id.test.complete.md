@@ -2,6 +2,7 @@
 
 Status: `complete` (Phases 1-4 closed here, Phase 5 closed via improvement 9)
 Date completed: 2026-04-05
+Last updated: 2026-04-06
 Original date: 2026-03-03
 
 ## What Was Done
@@ -33,6 +34,11 @@ Phased test suite for trace-id, implemented in `julia-tests/runtests.trace-id.jl
 - `--save-run`, `--check-run`, `--reuse-if-fresh`, and `--run-name` are covered
 - freshness transitions from `fresh` to `stale` are exercised in the suite
 
+### Phase 4c: Transition Audit - DONE
+- plain-text eventness files can carry forward and rollback transition evidence
+- a saved run becomes `stale` when rollback evidence changes the scoped file set
+- rerunning `trace-id` refreshes auditable evidence for both directions
+
 ### Phase 5: Cross-Command JSON Pipeline - DONE
 - `trace-id -> merge` now passes and retains `edge_type`
 - the three non-trace-id edge-metadata placeholders remain permanent `@test_skip`
@@ -40,7 +46,7 @@ Phased test suite for trace-id, implemented in `julia-tests/runtests.trace-id.jl
 
 ## Test Counts
 
-Current suite snapshot: `63 pass, 3 broken, 66 total`
+Current suite snapshot: `88 pass, 3 broken, 91 total`
 
 ## Artifacts
 
