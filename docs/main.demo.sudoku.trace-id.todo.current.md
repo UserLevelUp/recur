@@ -5,7 +5,35 @@ Date: 2026-03-24 (standalone since 2026-03-24, originally 2026-03-13)
 
 Note: This lane was formerly Lane 2 of improvement 9. Now standalone because
 the Sudoku demo *uses* trace-id but doesn't *change* it. The merge edge-type
-pipeline work remains in `docs/main.improvement.9.trace-id.todo.current.md`.
+pipeline work is complete in `docs/main.improvement.9.trace-id.complete.md`.
+
+## Freshness Refresh (2026-04-05)
+
+The repo now has two new capabilities that matter to this demo:
+
+- `trace-id --json | merge --stdin --json` preserves role metadata
+- `trace-id` runs can be persisted and reused when the puzzle inputs are still fresh
+
+For Sudoku, the practical framing is:
+
+1. raw eventness files stay the source of truth
+2. saved trace-id runs are reusable evidence
+3. `lore file` remains a concept-stage label, not a locked artifact name
+
+`Lore file` here means a future generated artifact category that hides the
+recur/eventness mechanics used to produce it, while keeping the useful structure for
+the next consumer.
+
+Today the concrete artifact is still `sudoku.cascades.json`.
+It is browser-facing generated data, but we should not rename it conceptually into a
+formal lore file until that idea is settled.
+
+### Next Action With Current Lore
+
+1. Keep the browser runtime recur-free
+2. Teach `Generator.jl` / `Recur.jl` to use `--save-run` and `--reuse-if-fresh`
+3. Continue treating `sudoku.cascades.json` as the browser-facing generated cascade artifact
+4. Only regenerate cascades when the puzzle package eventness actually changed
 
 ## Phase 1 Complete (2026-03-13)
 
@@ -478,8 +506,8 @@ The game engine (Julia or JS) owns all Sudoku logic:
 3. **Accept input** — human picks cell + value
 4. **Validate** — check against solution (engine knows the rules)
 5. **Write move event** — write `sudoku.flow.r{R}c{C}` with proper keywords
-6. **Call recur** — `recur trace-id "sudoku.r{R}.c{C}" --scope "sudoku.**" --json`
-7. **Render cascade** — parse JSON, display define/produce/consume/trigger in UI
+6. **Call recur or reuse saved run** — `recur trace-id "sudoku.r{R}.c{C}" --scope "sudoku.**" --json --reuse-if-fresh --run-name "sudoku.r{R}.c{C}"`
+7. **Render cascade / lore** — parse JSON, display define/produce/consume/trigger in UI
 8. **Propagate** — update candidate lists, detect naked singles, write next events
 9. **Hint** — switch to easier mask, call `recur files --stdin` with new mask
 
@@ -656,6 +684,9 @@ demos/sudoku/html5/
 **No recur installed in the browser.** Julia generated the puzzle package.
 JavaScript reads JSON. The hierarchical structure from recur is preserved in the files.
 HTML5 navigates `sudoku.cascades.json` hierarchically — same structure recur produced.
+That makes `sudoku.cascades.json` a generated cascade artifact.
+If we later formalize a lore-file concept, this artifact is a likely candidate, but it
+is not being renamed in principle yet.
 
 ### Live mode (Julia local server) — Implemented
 
@@ -774,4 +805,5 @@ docs/
 - `src/main_command_trace_id_impl.rs` — trace-id implementation
 - `src/main_command_trait_impl.rs` — trait config (producer_keywords tuning)
 - `docs/main.improvement.8.trace-id.todo.current.md` — trace-id MVP lane
-- `docs/main.improvement.9.trace-id.todo.future-plan.md` — merge edge-type (future)
+- `docs/main.improvement.9.trace-id.complete.md` — merge role passthrough complete
+- `docs/main.command.trace-id.run.todo.current.md` — saved-run follow-up lane
