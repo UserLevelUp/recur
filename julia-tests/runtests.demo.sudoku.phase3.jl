@@ -8,6 +8,7 @@ Proves Generator.jl correctly:
   - Flow files classify correctly under recur trace-id
   - generate_cascade returns valid JSON for one placement
   - generate_cascades writes sudoku.cascades.json for a subset
+  - stable saved runs persist and can be reused when inputs stay fresh
 
 Generator knows Sudoku rules. recur knows nothing about Sudoku.
 The separation is enforced by the file protocol: Generator writes,
@@ -196,6 +197,47 @@ end
                 @test haskey(first_entry, :cell)   || haskey(first_entry, "cell")
                 @test haskey(first_entry, :value)  || haskey(first_entry, "value")
                 @test haskey(first_entry, :cascade) || haskey(first_entry, "cascade")
+            end
+        finally
+            rm(dir, recursive=true)
+        end
+    end
+
+    @testset "Phase 3h: generate_cascade persists and reuses fresh saved runs" begin
+        include(GENERATOR_JL_PATH)
+        include(RECUR_JL_PATH)
+        dir = make_generator_test_dir()
+        try
+            first = Generator.generate_cascade(3, 5, 7, dir, Recur)
+            @test first !== nothing
+
+            run_dir = joinpath(dir, ".recur", "trace-id", "runs", "sudoku.r3.c5")
+            manifest_path = joinpath(run_dir, "manifest.toml")
+            latest_json_path = joinpath(run_dir, "latest.json")
+
+            @test isfile(manifest_path)
+            @test isfile(latest_json_path)
+            @test contains(read(manifest_path, String), "name = \"sudoku.r3.c5\"")
+
+            latest_text = read(latest_json_path, String)
+            cached_text = replace(
+                replace(
+                    latest_text,
+                    "\"pattern\":\"sudoku.r3.c5\"" => "\"pattern\":\"cached.reuse.marker\"",
+                ),
+                "\"pattern\": \"sudoku.r3.c5\"" => "\"pattern\": \"cached.reuse.marker\"",
+            )
+            @test cached_text != latest_text
+            write(latest_json_path, cached_text)
+
+            reused = Generator.generate_cascade(3, 5, 7, dir, Recur)
+            @test reused !== nothing
+
+            if reused !== nothing
+                cascade = get(reused, :cascade, get(reused, "cascade", nothing))
+                request = cascade === nothing ? nothing : get(cascade, :request, get(cascade, "request", nothing))
+                pattern = request === nothing ? nothing : String(get(request, :pattern, get(request, "pattern", "")))
+                @test pattern == "cached.reuse.marker"
             end
         finally
             rm(dir, recursive=true)

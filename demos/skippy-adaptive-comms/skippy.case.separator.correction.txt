@@ -1,0 +1,10 @@
+skippy.case.separator.correction = active
+skippy.case.separator.correction publish skippy.jab.family.separator.goblin
+skippy.case.separator.correction publish skippy.boast.unfair.advantage
+skippy.case.separator.correction publish skippy.lament.paperwork.goblin
+skippy.case.separator.correction publish skippy.relationship.playful.precise.current
+skippy.jab.family.separator.goblin subscribe skippy.case.separator.correction
+skippy.boast.unfair.advantage subscribe skippy.case.separator.correction
+skippy.lament.paperwork.goblin subscribe skippy.case.separator.correction
+skippy.relationship.playful.precise.current subscribe skippy.case.separator.correction
+skippy.case.separator.correction trigger skippy.trigger.respectful.mockery

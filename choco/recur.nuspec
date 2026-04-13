@@ -3,7 +3,7 @@
   <metadata>
     <id>recur</id>
     <version>0.2.8</version>
-    <title>recur - Hierarchy-Aware Code Search</title>
+    <title>Recur</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
     <summary>Hierarchy-aware code search for modern codebases</summary>

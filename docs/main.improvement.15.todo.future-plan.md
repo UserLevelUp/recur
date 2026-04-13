@@ -35,6 +35,18 @@ Current state:
 - Contracts are now the source of truth for future work.
 - This branch is explicitly parked as long-distance.
 
+Strategic notes:
+
+- `unflatten` is expected to stay long-distance until `merge` is more mature.
+- Do not overfit `unflatten` to today's merge behavior; richer composition may
+  arrive first.
+- Future symbolic or symbolism-aware merge work could make `unflatten` easier
+  and more powerful by passing additive semantic hints into the flat record
+  pipeline.
+- `trace-id` is a likely validation layer for this future work: it can audit
+  whether important identifiers and transitions survived the round-trip, but it
+  does not define structural reconstruction by itself.
+
 ## Frozen v1 Contract Set
 
 - `docs/main.improvement.15.contract.flat-record.v1.md`
@@ -46,6 +58,8 @@ Current state:
 - Keeps future implementation aligned across branches and sessions.
 - Lets demo specs (for example `demos/ascii-drinks/demo15.sh`) target a stable CLI/data shape.
 - Reduces rework when `unflatten` is finally implemented.
+- Leaves room for future symbolic merge metadata as additive hints without
+  forcing `unflatten` to commit early to a richer ontology.
 
 ## Implementation Order (When Work Starts)
 
@@ -65,6 +79,8 @@ Current state:
 - `merge --format flat` accepted and documented.
 - path/value/kind retained (not path-only projection).
 - input source precedence is deterministic.
+- additive metadata remains compatible with v1 consumers when ignored by default
+  (for example symbol/provenance hints from future merge work).
 
 ### Phase C
 
@@ -72,6 +88,8 @@ Current state:
 - supports stdin and file input.
 - supports `--format text|json`.
 - supports `--on-conflict` with deterministic defaults.
+- structural reconstruction stays independent from any optional symbolic merge
+  hints.
 
 ### Phase C Scoped Checklist (Do Not Start Yet)
 
@@ -102,6 +120,9 @@ Current state:
 - round-trip fixtures pass for standard cases.
 - docs updated to show native recur pipeline.
 - `demo15.sh` moves from expected-fail to runnable.
+- semantic validation proves more than structure alone:
+  `trace-id` or equivalent audit checks confirm that important identifiers and
+  workflow transitions still survive `flatten -> merge(flat) -> unflatten`.
 
 ## Discovery
 

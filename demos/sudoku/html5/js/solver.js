@@ -476,6 +476,284 @@ function boxCells(row, col) {
 
 // ── Progressive hint system ───────────────────────────────────────
 
+function cellIdentifier(row, col) {
+  return `sudoku.r${row}.c${col}`;
+}
+
+function bestFocusGroup(grid, row, col) {
+  const rowFilled = countFilled(grid, 'row', row);
+  const colFilled = countFilled(grid, 'col', col);
+  const boxFilled = countFilled(grid, 'box', row, col);
+  const boxNum = boxOf(row, col);
+
+  const groups = [
+    { type: 'row', groupNum: row, filled: rowFilled, label: `row ${row}` },
+    { type: 'column', groupNum: col, filled: colFilled, label: `column ${col}` },
+    { type: 'box', groupNum: boxNum, filled: boxFilled, label: `box ${boxNum}` },
+  ];
+
+  groups.sort((a, b) => b.filled - a.filled || a.label.localeCompare(b.label));
+  return {
+    ...groups[0],
+    pressure: rowFilled + colFilled + boxFilled,
+    rowFilled,
+    colFilled,
+    boxFilled,
+  };
+}
+
+function compareEyeballEntries(a, b) {
+  return (
+    a.priority - b.priority ||
+    a.candidateCount - b.candidateCount ||
+    b.impact - a.impact ||
+    b.pressure - a.pressure ||
+    a.row - b.row ||
+    a.col - b.col
+  );
+}
+
+function buildTechniqueEntry(grid, row, col) {
+  const id = cellIdentifier(row, col);
+  const cands = candidates(grid, row, col);
+  if (cands.length === 0) return null;
+
+  const focus = bestFocusGroup(grid, row, col);
+
+  if (cands.length === 1) {
+    return {
+      kind: 'naked-single',
+      signature: `naked-single:${id}`,
+      priority: 0,
+      candidateCount: cands.length,
+      impact: 9,
+      pressure: focus.pressure,
+      row,
+      col,
+      id,
+      title: 'Naked Single',
+      focusLabel: `Scan ${focus.label}, then return to ${id}.`,
+      preview: 'Only one candidate survives in this cell after elimination.',
+      whyThisFirst: `${id} is already reduced to one legal value, so it is the fastest stable move on the board.`,
+      whatToNotice: `Check the row, column, and box around ${id}. Every digit except one is already blocked.`,
+      whyNotElsewhere: 'Other unsolved cells still have multiple candidates or depend on a larger shared pattern.',
+      nextEscalation: 'If it still feels hazy, use the first two hint levels to see the eliminations without revealing the answer.',
+    };
+  }
+
+  const hs = findHiddenSingle(grid, row, col);
+  if (hs.found) {
+    const groupLabel = hs.group === 'column' ? `column ${hs.groupNum}` : `${hs.group} ${hs.groupNum}`;
+    return {
+      kind: 'hidden-single',
+      signature: `hidden-single:${hs.group}:${hs.groupNum}:${hs.value}`,
+      priority: 1,
+      candidateCount: cands.length,
+      impact: 8,
+      pressure: focus.pressure,
+      row,
+      col,
+      id,
+      title: 'Hidden Single',
+      focusLabel: `Scan ${groupLabel}, then check ${id}.`,
+      preview: `One missing digit only fits in this cell within ${groupLabel}.`,
+      whyThisFirst: `${groupLabel} has a bottleneck: one digit has only one legal landing spot, and ${id} is that spot.`,
+      whatToNotice: `List the missing digits in ${groupLabel} and see which one has nowhere else to go.`,
+      whyNotElsewhere: `Cells outside ${groupLabel} are not forced by a single-group bottleneck yet.`,
+      nextEscalation: 'Press H for the group-based hint if you want the pattern highlighted without jumping straight to the final digit.',
+    };
+  }
+
+  const pp = findPointingPair(grid, row, col);
+  if (pp.found) {
+    return {
+      kind: 'pointing-pair',
+      signature: `pointing-pair:${pp.boxNum}:${pp.lineType}:${pp.line}:${pp.value}`,
+      priority: 2,
+      candidateCount: cands.length,
+      impact: pp.eliminates.length + pp.cells.length,
+      pressure: focus.pressure,
+      row,
+      col,
+      id,
+      title: 'Pointing Pair',
+      focusLabel: `Look inside box ${pp.boxNum}, then follow ${pp.lineType} ${pp.line}.`,
+      preview: `A box pattern is squeezing one digit into a single ${pp.lineType}.`,
+      whyThisFirst: `When a box confines a digit to one ${pp.lineType}, the rest of that ${pp.lineType} becomes easier to clean up.`,
+      whatToNotice: `Inside box ${pp.boxNum}, find the candidate cells that line up on the same ${pp.lineType}.`,
+      whyNotElsewhere: 'Other areas do not currently create as many immediate eliminations from one clean pattern.',
+      nextEscalation: 'Use a strategy hint if you want the pattern cells highlighted while still hiding the final placement.',
+    };
+  }
+
+  const blr = findBoxLineReduction(grid, row, col);
+  if (blr.found) {
+    return {
+      kind: 'box-line-reduction',
+      signature: `box-line-reduction:${blr.boxNum}:${blr.lineType}:${blr.lineNum}:${blr.value}`,
+      priority: 3,
+      candidateCount: cands.length,
+      impact: blr.eliminates.length + blr.cells.length,
+      pressure: focus.pressure,
+      row,
+      col,
+      id,
+      title: 'Box/Line Reduction',
+      focusLabel: `Scan ${blr.lineType} ${blr.lineNum}, then compare it against box ${blr.boxNum}.`,
+      preview: 'A row-or-column pattern is squeezing a box from the outside.',
+      whyThisFirst: `This line already limits a digit to one box, so the rest of that box can be pruned quickly.`,
+      whatToNotice: `Track one candidate across ${blr.lineType} ${blr.lineNum} and see that all of its legal spots stay inside box ${blr.boxNum}.`,
+      whyNotElsewhere: 'Other groups are not offering the same outside-in reduction yet.',
+      nextEscalation: 'If the reduction is still slippery, press H for the highlighted strategy cells before asking for the answer.',
+    };
+  }
+
+  const np = findNakedPair(grid, row, col);
+  if (np.found) {
+    return {
+      kind: 'naked-pair',
+      signature: `naked-pair:${np.group}:${np.groupNum}:${np.values.join(',')}`,
+      priority: 4,
+      candidateCount: cands.length,
+      impact: np.eliminates.length + np.pair.length,
+      pressure: focus.pressure,
+      row,
+      col,
+      id,
+      title: 'Naked Pair',
+      focusLabel: `Scan ${np.group} ${np.groupNum} for a shared two-cell pattern.`,
+      preview: 'Two cells share the same pair, which squeezes the rest of the group.',
+      whyThisFirst: `A locked pair removes ambiguity from several peers at once, making it a strong training pattern.`,
+      whatToNotice: `Find two cells in ${np.group} ${np.groupNum} that show the same two-candidate set.`,
+      whyNotElsewhere: `Other groups do not currently have a pair that produces as many safe eliminations.`,
+      nextEscalation: 'Use a strategy hint if you want the pair highlighted without exposing the final placement.',
+    };
+  }
+
+  const xw = findXWing(grid, row, col);
+  if (xw.found) {
+    return {
+      kind: 'x-wing',
+      signature: `x-wing:${xw.value}:${xw.rows.join(',')}:${xw.cols.join(',')}`,
+      priority: 5,
+      candidateCount: cands.length,
+      impact: xw.eliminates.length + 4,
+      pressure: focus.pressure,
+      row,
+      col,
+      id,
+      title: 'X-Wing',
+      focusLabel: `Compare rows ${xw.rows.join(' and ')} across columns ${xw.cols.join(' and ')}.`,
+      preview: 'A rectangle pattern is creating stable eliminations across two lines.',
+      whyThisFirst: 'This is a rarer but very clean pattern: once the rectangle locks in, the outside columns become easier to prune.',
+      whatToNotice: 'Look for two rows that place the same candidate in the same two columns.',
+      whyNotElsewhere: 'Most other unsolved cells are still waiting on simpler singles or pair-based structure.',
+      nextEscalation: 'If you want help seeing the rectangle, press H for the strategy overlay before revealing anything final.',
+    };
+  }
+
+  const sf = findSwordfish(grid, row, col);
+  if (sf.found) {
+    return {
+      kind: 'swordfish',
+      signature: `swordfish:${sf.value}:${sf.rows.join(',')}:${sf.cols.join(',')}`,
+      priority: 6,
+      candidateCount: cands.length,
+      impact: sf.eliminates.length + sf.cells.length,
+      pressure: focus.pressure,
+      row,
+      col,
+      id,
+      title: 'Swordfish',
+      focusLabel: `Track three rows against columns ${sf.cols.join(', ')}.`,
+      preview: 'A larger line pattern is starting to lock one candidate into a three-by-three sweep.',
+      whyThisFirst: 'This is a high-value pattern when the simpler techniques are exhausted, because it clears many cells at once.',
+      whatToNotice: 'Find three rows whose candidate positions compress into the same three columns.',
+      whyNotElsewhere: 'Nothing simpler is currently resolving this branch of the puzzle cleanly.',
+      nextEscalation: 'Use the strategy hint to highlight the sweep if you want help seeing the structure before the answer.',
+    };
+  }
+
+  const candidatePreview = cands.length === 2
+    ? 'Two candidates remain here, making it one of the tighter cells on the board.'
+    : `${cands.length} candidates remain here, but the surrounding groups are already highly constrained.`;
+
+  return {
+    kind: 'constrained-scan',
+    signature: `constrained-scan:${id}`,
+    priority: 7,
+    candidateCount: cands.length,
+    impact: 1,
+    pressure: focus.pressure,
+    row,
+    col,
+    id,
+    title: 'Constrained Scan',
+    focusLabel: `Start with ${focus.label}, then inspect ${id}.`,
+    preview: candidatePreview,
+    whyThisFirst: `${focus.label} is already dense with information, so this cell is under stronger pressure than most of the board.`,
+    whatToNotice: `Count the missing digits in ${focus.label} and compare them against this cell's row, column, and box.`,
+    whyNotElsewhere: 'Other cells currently have looser candidate sets or would require a deeper chain to justify a move.',
+    nextEscalation: 'Use the early hint levels for elimination and candidates if you want a nudge without surrendering the answer.',
+  };
+}
+
+export function eyeballOrder(grid, selectedRow = null, selectedCol = null, limit = 3) {
+  const selectedId = Number.isInteger(selectedRow) && Number.isInteger(selectedCol)
+    ? cellIdentifier(selectedRow, selectedCol)
+    : null;
+
+  const rawEntries = [];
+  for (let row = 1; row <= 9; row++) {
+    for (let col = 1; col <= 9; col++) {
+      if (grid[row - 1][col - 1] !== 0) continue;
+      const entry = buildTechniqueEntry(grid, row, col);
+      if (entry) rawEntries.push(entry);
+    }
+  }
+
+  rawEntries.sort(compareEyeballEntries);
+
+  const bySignature = new Map();
+  for (const entry of rawEntries) {
+    const existing = bySignature.get(entry.signature);
+    if (!existing) {
+      bySignature.set(entry.signature, entry);
+      continue;
+    }
+    if (entry.id === selectedId && existing.id !== selectedId) {
+      bySignature.set(entry.signature, entry);
+    }
+  }
+
+  const uniqueEntries = [...bySignature.values()].sort(compareEyeballEntries);
+  const items = uniqueEntries.slice(0, limit).map((entry, index) => ({
+    ...entry,
+    rank: index + 1,
+    selected: entry.id === selectedId,
+  }));
+
+  const selectedSummary = selectedId
+    ? uniqueEntries.find(entry => entry.id === selectedId) ?? rawEntries.find(entry => entry.id === selectedId) ?? null
+    : null;
+  const selectedRank = selectedSummary
+    ? uniqueEntries.findIndex(entry => entry.id === selectedSummary.id) + 1
+    : null;
+
+  return {
+    items,
+    selectedId,
+    selectedRank: selectedRank > 0 ? selectedRank : null,
+    selectedInTop: items.some(item => item.id === selectedId),
+    selectedSummary: selectedSummary
+      ? {
+          ...selectedSummary,
+          rank: selectedRank > 0 ? selectedRank : null,
+        }
+      : null,
+  };
+}
+
 /**
  * Generate a progressive hint for a cell.
  * Each call with a higher `level` reveals more:
@@ -497,9 +775,11 @@ export function hint(grid, solution, row, col, level = 0) {
   const id = `sudoku.r${row}.c${col}`;
   const answer = solution.get(id);
   const cands = candidates(grid, row, col);
+  const eyeball = eyeballOrder(grid, row, col);
+  const withEyeball = payload => ({ ...payload, eyeball });
 
   if (grid[row - 1][col - 1] !== 0) {
-    return { level: -1, title: 'Already filled', lines: ['This cell already has a value.'], strategy: null, cell: { row, col }, overlayCells: null };
+    return withEyeball({ level: -1, title: 'Already filled', lines: ['This cell already has a value.'], strategy: null, cell: { row, col }, overlayCells: null });
   }
 
   // Compute generic peers for level 0-1 overlays
@@ -526,7 +806,7 @@ export function hint(grid, solution, row, col, level = 0) {
       bestPeers = genericPeers.filledBox;
     }
 
-    return {
+    return withEyeball({
       level: 0,
       title: 'Look at the constraints',
       lines: [
@@ -536,7 +816,7 @@ export function hint(grid, solution, row, col, level = 0) {
       strategy: 'Scanning — look at the most filled group first.',
       cell: { row, col },
       overlayCells: { strategy: bestPeers, eliminates: [], peers: genericPeers.allFilled },
-    };
+    });
   }
 
   if (level === 1) {
@@ -553,7 +833,7 @@ export function hint(grid, solution, row, col, level = 0) {
       }
     }
 
-    return {
+    return withEyeball({
       level: 1,
       title: 'Elimination',
       lines: [
@@ -563,13 +843,13 @@ export function hint(grid, solution, row, col, level = 0) {
       strategy: 'Elimination — cross off values that conflict with peers in the same row, column, or box.',
       cell: { row, col },
       overlayCells: { strategy: conflictCells, eliminates: [], peers: genericPeers.allFilled },
-    };
+    });
   }
 
   if (level === 2) {
     // Hint 2: Candidates remaining
     if (cands.length === 1) {
-      return {
+      return withEyeball({
         level: 2,
         title: 'Naked Single',
         lines: [
@@ -581,10 +861,10 @@ export function hint(grid, solution, row, col, level = 0) {
         strategy: 'Naked Single — the simplest strategy. When elimination leaves exactly one candidate, place it.',
         cell: { row, col },
         overlayCells: { strategy: genericPeers.allFilled, eliminates: [], peers: [] },
-      };
+      });
     }
 
-    return {
+    return withEyeball({
       level: 2,
       title: 'Candidates',
       lines: [
@@ -595,7 +875,7 @@ export function hint(grid, solution, row, col, level = 0) {
       strategy: 'When multiple candidates remain, you need a more advanced technique. Press H to see which one applies.',
       cell: { row, col },
       overlayCells: { strategy: genericPeers.allFilled, eliminates: genericPeers.allEmpty, peers: [] },
-    };
+    });
   }
 
   if (level === 3) {
@@ -607,7 +887,7 @@ export function hint(grid, solution, row, col, level = 0) {
     if (hs.found) {
       // Highlight: all filled cells in the decisive group (strategy), empty non-target cells (eliminates)
       const groupCells = _groupFilledCells(grid, hs.group, hs.groupNum, row, col);
-      return {
+      return withEyeball({
         level: 3,
         title: 'Hidden Single',
         lines: [
@@ -620,7 +900,7 @@ export function hint(grid, solution, row, col, level = 0) {
         strategy: `Hidden Single — a value has only one possible cell in a ${hs.group}. Even if the cell has multiple candidates, this value is "hidden" as the only option for its group.`,
         cell: { row, col },
         overlayCells: { strategy: groupCells.filled, eliminates: groupCells.empty, peers: [] },
-      };
+      });
     }
 
     // 2. Pointing Pair
@@ -628,7 +908,7 @@ export function hint(grid, solution, row, col, level = 0) {
     if (pp.found) {
       const cellList = pp.cells.map(c => `r${c.row}.c${c.col}`).join(', ');
       const elimList = pp.eliminates.map(c => `r${c.row}.c${c.col}`).join(', ');
-      return {
+      return withEyeball({
         level: 3,
         title: 'Pointing Pair',
         lines: [
@@ -642,7 +922,7 @@ export function hint(grid, solution, row, col, level = 0) {
         strategy: `Pointing Pair — when a candidate in a box is confined to one ${pp.lineType}, it can be eliminated from that ${pp.lineType} outside the box. The box "points" to where the value must go.`,
         cell: { row, col },
         overlayCells: { strategy: pp.cells, eliminates: pp.eliminates, peers: [] },
-      };
+      });
     }
 
     // 3. Naked Pair
@@ -650,7 +930,7 @@ export function hint(grid, solution, row, col, level = 0) {
     if (np.found) {
       const pairCells = np.pair.map(c => `r${c.row}.c${c.col}`).join(' and ');
       const elimList = np.eliminates.map(e => `r${e.row}.c${e.col} (remove ${e.values.join(',')})`).join(', ');
-      return {
+      return withEyeball({
         level: 3,
         title: 'Naked Pair',
         lines: [
@@ -662,7 +942,7 @@ export function hint(grid, solution, row, col, level = 0) {
         strategy: `Naked Pair — when two cells in a group share the same two candidates, those values are locked. Other cells in the group can eliminate both values.`,
         cell: { row, col },
         overlayCells: { strategy: np.pair, eliminates: np.eliminates.map(e => ({ row: e.row, col: e.col })), peers: [] },
-      };
+      });
     }
 
     // 4. X-Wing
@@ -671,7 +951,7 @@ export function hint(grid, solution, row, col, level = 0) {
       // The 4 corners of the X-Wing rectangle
       const corners = [];
       for (const r of xw.rows) for (const c of xw.cols) corners.push({ row: r, col: c });
-      return {
+      return withEyeball({
         level: 3,
         title: 'X-Wing',
         lines: [
@@ -684,7 +964,7 @@ export function hint(grid, solution, row, col, level = 0) {
         strategy: `X-Wing — when a candidate appears in exactly 2 cells in 2 rows, and those cells align in the same 2 columns, the candidate is eliminated from those columns in other rows. The four cells form an "X" pattern.`,
         cell: { row, col },
         overlayCells: { strategy: corners, eliminates: xw.eliminates, peers: [] },
-      };
+      });
     }
 
     // 5. Box/Line Reduction
@@ -692,7 +972,7 @@ export function hint(grid, solution, row, col, level = 0) {
     if (blr.found) {
       const cellList = blr.cells.map(c => `r${c.row}.c${c.col}`).join(', ');
       const elimList = blr.eliminates.map(c => `r${c.row}.c${c.col}`).join(', ');
-      return {
+      return withEyeball({
         level: 3,
         title: 'Box/Line Reduction',
         lines: [
@@ -705,13 +985,13 @@ export function hint(grid, solution, row, col, level = 0) {
         strategy: `Box/Line Reduction — when a candidate in a ${blr.lineType} is confined to one box, it can be eliminated from that box outside the ${blr.lineType}. The reverse of Pointing Pair: the line "reduces" the box.`,
         cell: { row, col },
         overlayCells: { strategy: blr.cells, eliminates: blr.eliminates, peers: [] },
-      };
+      });
     }
 
     // 6. Swordfish
     const sf = findSwordfish(grid, row, col);
     if (sf.found) {
-      return {
+      return withEyeball({
         level: 3,
         title: 'Swordfish',
         lines: [
@@ -724,11 +1004,11 @@ export function hint(grid, solution, row, col, level = 0) {
         strategy: `Swordfish — the 3-row extension of X-Wing. When a candidate appears in 2-3 cells across 3 rows, and those cells span exactly 3 columns, the candidate is eliminated from those columns in all other rows.`,
         cell: { row, col },
         overlayCells: { strategy: sf.cells, eliminates: sf.eliminates, peers: [] },
-      };
+      });
     }
 
     // No advanced strategy found — teach backtracking as last resort
-    return {
+    return withEyeball({
       level: 3,
       title: 'Advanced Reasoning',
       lines: [
@@ -742,19 +1022,19 @@ export function hint(grid, solution, row, col, level = 0) {
       strategy: 'Backtracking — pick a candidate, trace its consequences. If any peer ends up with zero candidates, that value is impossible here. This is the "last resort" algorithm — slow but always works.',
       cell: { row, col },
       overlayCells: { strategy: [], eliminates: [], peers: genericPeers.allEmpty },
-    };
+    });
   }
 
   // Hint 4+: Full answer with reasoning chain
   const chain = buildReasoningChain(grid, row, col, answer, cands);
-  return {
+  return withEyeball({
     level: 4,
     title: 'Solution',
     lines: chain,
     strategy: 'Full reasoning chain — each step follows from Sudoku constraints.',
     cell: { row, col },
     overlayCells: { strategy: genericPeers.allFilled, eliminates: [], peers: [] },
-  };
+  });
 }
 
 /**

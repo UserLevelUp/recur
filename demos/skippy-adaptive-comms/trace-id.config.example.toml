@@ -1,0 +1,6 @@
+[traits.trace_id]
+enabled = true
+producer_keywords = "publish,prefer,recommend"
+consumer_keywords = "subscribe,select,follow"
+trigger_keywords = "trigger,activate,approve,caution,celebrate"
+notes = "Skippy adaptive comms demo: use publish/subscribe/trigger on plain-text protocol files."

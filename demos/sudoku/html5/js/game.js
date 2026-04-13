@@ -12,7 +12,7 @@
 import { loadPuzzle, buildMask, buildGrid, cellId } from './puzzle.js';
 import { Grid } from './grid.js';
 import { CascadePanel } from './cascade.js';
-import { explainConflicts, hint as getHint, candidates } from './solver.js';
+import { explainConflicts, hint as getHint, candidates, eyeballOrder } from './solver.js';
 
 const DATA_DIR = 'data/easy-001';
 
@@ -96,6 +96,35 @@ async function init() {
   };
   updateStats();
 
+  const renderSelectedCellInfo = (row, col) => {
+    const cands = candidates(grid, row, col);
+    if (cands.length === 0) return;
+    panel.renderCellInfo(row, col, cands, eyeballOrder(grid, row, col));
+  };
+
+  const applyEyeballOverlay = (eyeball, row, col) => {
+    gridUI.clearHighlights();
+
+    if (!eyeball || !eyeball.items || eyeball.items.length === 0) {
+      gridUI.highlightCrosshatch(row, col);
+      return;
+    }
+
+    const primary = eyeball.items[0];
+    gridUI.highlightCrosshatch(primary.row, primary.col);
+    gridUI.highlightStrategy(eyeball.items.map(item => ({ row: item.row, col: item.col })));
+  };
+
+  const clearHintCycle = (row, col) => {
+    const id = cellId(row, col);
+    hintLevels.delete(id);
+    lastHintData = null;
+    labelCascade?.classList.remove('panel-label-active');
+    gridUI.clearHighlights();
+    gridUI.highlightCrosshatch(row, col);
+    renderSelectedCellInfo(row, col);
+  };
+
   // Auto-fill pencil marks — only on explicit request (it's cheating!)
   const autoFillPencilMarks = () => {
     const candidateMap = new Map();
@@ -117,11 +146,9 @@ async function init() {
     labelCascade?.classList.remove('panel-label-active');
     // Show candidates in panel when selecting an empty cell
     const id = cellId(row, col);
+    hintLevels.delete(id);
     if (remaining.has(id) && !wrongCells.has(id)) {
-      const cands = candidates(grid, row, col);
-      if (cands.length > 0) {
-        panel.renderCellInfo(row, col, cands);
-      }
+      renderSelectedCellInfo(row, col);
     }
   };
 
@@ -300,17 +327,29 @@ async function init() {
 
     if (!remaining.has(id)) return;
 
-    // Progressive: each H press increments the hint level
-    const currentLevel = hintLevels.get(id) ?? 0;
-    const hintData = getHint(grid, solution, row, col, currentLevel);
-    hintLevels.set(id, Math.min(currentLevel + 1, 4));
+    const currentLevel = hintLevels.get(id) ?? -1;
 
-    panel.renderHint(hintData);
-    lastHintData = hintData;
-    labelCascade?.classList.add('panel-label-active');
+    if (currentLevel === -1) {
+      const eyeball = eyeballOrder(grid, row, col);
+      labelCascade?.classList.add('panel-label-active');
+      panel.renderCellInfo(row, col, candidates(grid, row, col), eyeball);
+      applyEyeballOverlay(eyeball, row, col);
+      hintLevels.set(id, 0);
+      lastHintData = null;
+      return;
+    }
 
-    // Always show overlay on the grid when a hint is displayed
-    applyHintOverlay(hintData);
+    if (currentLevel <= 4) {
+      const hintData = getHint(grid, solution, row, col, currentLevel);
+      hintLevels.set(id, currentLevel + 1);
+      panel.renderHint(hintData);
+      lastHintData = hintData;
+      labelCascade?.classList.add('panel-label-active');
+      applyHintOverlay(hintData);
+      return;
+    }
+
+    clearHintCycle(row, col);
   });
 
   /**
@@ -345,7 +384,8 @@ async function init() {
 
   // ── Cell info display (on CascadePanel) ────────────────────────
   // Monkey-patch a simple cell info renderer onto the panel
-  panel.renderCellInfo = function(row, col, cands) {
+  panel.renderCellInfo = function(row, col, cands, eyeball) {
+    return CascadePanel.prototype.renderCellInfo.call(this, row, col, cands, eyeball ?? eyeballOrder(grid, row, col));
     const id = `sudoku.r${row}.c${col}`;
     this.container.innerHTML = `
       <div class="panel-section panel-info">

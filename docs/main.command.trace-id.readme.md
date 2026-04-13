@@ -214,9 +214,23 @@ file and classifies lines by keyword proximity. This means it works equally on:
 
 - Source code (`.cs`, `.rs`, `.jl`, `.ts`)
 - Eventness files (`sudoku.flow.r3c5`, `sudoku.solution`)
+- Persona/protocol files (`skippy.case.separator.correction`)
 - Configuration files (`.toml`, `.json`, `.yaml`)
 - Documentation (`.md`)
 - Any file where identifiers appear as text
+
+## Adaptive Comms Demo Context
+
+The Skippy adaptive-comms demo uses plain `.txt` protocol files to encode:
+
+- active relationship phase
+- cue-specific case identifiers
+- `publish` lines for jab-family, boast, and lament recommendations
+- `subscribe` lines for downstream selections
+- `trigger` lines for tone activation
+
+That keeps the selection logic auditable in text while leaving final response
+synthesis with the LLM.
 
 ## Sudoku Demo Context
 

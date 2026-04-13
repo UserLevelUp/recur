@@ -1,77 +1,71 @@
 # Command Tests Progress Snapshot
 
 Status: `current`
-Date: 2026-04-06
+Date: 2026-04-09
 
-## Current Counts
+## Current Suite Truth
 
-- `trace-id`: `recur trace-id command (IMPROVEMENT8) |   88       3     91  1.2s`
-- `callees`: `recur callees command |   10      13      10     33  1.4s`
+- full Julia suite: `809 passed, 49 broken, 0 failed`
+- `trace-stats`: `94 passed, 0 failed` in isolation and inside the full suite
+- `trace-stats` is not the source of the earlier suite panic
+- the earlier live failures were stale Julia expectations plus one Sudoku fixture
+  drift
 
-## Trace-id Notes
+## What Actually Broke
 
-- Phase 4b now covers saved runs: `--save-run`, `--check-run`, `--reuse-if-fresh`
-- Phase 4b now also pins the current persistence contract as `latest`-only
-  (`manifest.toml` + `latest.json`, no `history/` directory yet)
-- Phase 4c now proves a transition-audit pattern on plain-text eventness files:
-  a saved run goes stale when rollback evidence appears, and a refreshed trace
-  captures both forward and backward transition evidence
-- Phase 5 `trace-id -> merge` now passes and retains `edge_type` through merge JSON
-- Remaining `Broken = 3` entries are the permanent `@test_skip` placeholders for
-  `trace`, `callers`, and `callees` edge-metadata composition
-- Eventness lane for saved-run polish: `docs/main.command.trace-id.run.todo.current.md`
-- Improvement close-out: `docs/main.improvement.9.trace-id.complete.md`
+- non-terminal Julia harness runs pipe stdout through `IOBuffer`, so `files` and
+  `tree` auto-switched to machine JSON output
+- older stdin/tree tests were still asserting terminal-text behavior:
+  blank output for no matches, line-text comparison, or a count footer
+- Sudoku Phase 4 still assumed `sudoku.r3.c5 = 7`, while the checked-in
+  `easy-001` fixture says `sudoku.r3.c5 = 4`
+- one transient Julia `EXCEPTION_ACCESS_VIOLATION` occurred around the full
+  suite, but it did not reproduce after the stale assertions were corrected
 
-## Future Coverage To Add
+## Fixes Landed On 2026-04-09
 
-- If saved runs gain timestamped history, add assertions for retained
-  `.recur/trace-id/runs/<name>/history/` artifacts and documented retention policy
-- If mirror or in-file eventness becomes canonical, add assertions that saved-run
-  status is derived or validated against that canonical layer rather than treated
-  as source truth by itself
+- `julia-tests/runtests.stdin.jl`
+  - empty/no-match stdin cases now parse `[]` as valid machine output
+  - filesystem-vs-stdin comparison now parses JSON arrays instead of raw lines
+- `julia-tests/runtests.tree.jl`
+  - `tree --count` in pipeline mode now validates machine JSON output instead
+    of a terminal-only footer
+- `julia-tests/runtests.demo.sudoku.phase4.jl`
+  - assertions now match the checked-in `easy-001` truth:
+    `sudoku.r3.c5 = 4`
+- `julia-tests/runtests.demo.sudoku.phase3.jl`
+  - saved-run coverage now proves per-cell `trace-id` run persistence and reuse
+    for the Sudoku generator path
+- `demos/sudoku/julia/Recur.jl` and `demos/sudoku/julia/Generator.jl`
+  - Sudoku now uses stable per-cell `--save-run` + `--reuse-if-fresh` flow
+    without rewriting unchanged files and breaking freshness
 
-## Callees Notes
+## Recurring Pattern
 
-- Re-ran `julia julia-tests/main.command.callees.test.jl` on 2026-04-06 and the
-  suite is currently failing outside this change scope
-- Failures are broad (`success` is false across basic search, scoped search,
-  count, and JSON paths), so the older passing snapshot should not be treated as
-  current branch truth
+This was not a command-lane regression. It was a test-harness
+expectation-drift pattern:
+
+- isolate the failing lane first
+- check whether the harness is capturing stdout in non-terminal mode
+- parse machine JSON before asserting on line-oriented text
+- treat checked-in demo fixtures as source truth before changing engine code
+- rerun the full suite after stale-expectation cleanup before blaming the last
+  command touched
+
+Durable rediscovery note:
+
+- `docs/main.command.tests.expectation-drift.recurring.md`
+
+Trace it directly:
+
+```powershell
+recur trace-id "tests.pattern.expectation.drift" --scope "main.command.tests.**" --ext .md --json -d docs/
+```
 
 ## Repro Commands
 
 ```powershell
-julia julia-tests/main.command.trace-id.test.jl
-julia julia-tests/main.command.callees.test.jl
-```
-
-## Merge View (docs + julia-tests)
-
-```text
-# recur merge .tmp/tree.docs.trace-id.json .tmp/tree.julia.trace-id.json --base "main.command.trace-id" --sep . --sep .
-main.command.trace.id
-```
-
-```text
-# recur merge .tmp/tree.docs.callees.json .tmp/tree.julia.callees.json --base "main.command.callees" --sep . --sep .
-main.command.callees
-├── readme.md
-├── stdin
-│   └── todo.md
-└── test.jl
-```
-
-## Snapshot Inputs
-
-```powershell
-recur tree "main.command.trace-id" -d docs --json > .tmp/tree.docs.trace-id.json
-recur tree "main.command.trace-id" -d julia-tests --json > .tmp/tree.julia.trace-id.json
-recur tree "main.command.callees" -d docs --json > .tmp/tree.docs.callees.json
-recur tree "main.command.callees" -d julia-tests --json > .tmp/tree.julia.callees.json
-```
-
-## Diff Next Checkpoint
-
-```powershell
-git diff -- docs/main.command.tests.progress.current.md
+julia julia-tests/main.command.trace-stats.test.jl
+julia julia-tests/runtests.jl
+recur trace-id "tests.pattern.expectation.drift" --scope "main.command.tests.**" --ext .md --json -d docs/
 ```

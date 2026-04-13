@@ -53,7 +53,7 @@ const P4_RECUR_JL     = joinpath(@__DIR__, "..", "demos", "sudoku", "julia", "Re
 
         # Spot-check known values from easy-001
         @test get(solution, "sudoku.r1.c1", 0) == 5
-        @test get(solution, "sudoku.r3.c5", 0) == 7
+        @test get(solution, "sudoku.r3.c5", 0) == 4
         @test get(solution, "sudoku.r9.c9", 0) == 9
         @test get(solution, "sudoku.r5.c5", 0) == 5
 
@@ -85,10 +85,10 @@ const P4_RECUR_JL     = joinpath(@__DIR__, "..", "demos", "sudoku", "julia", "Re
         include(ENGINE_JL_PATH)
         solution = Engine.load_solution(joinpath(P4_PUZZLE_DIR, "sudoku.solution.txt"))
 
-        # r3.c5 solution value is 7 — correct
-        @test Engine.is_valid_placement(solution, 3, 5, 7) == true
+        # r3.c5 solution value is 4 — correct
+        @test Engine.is_valid_placement(solution, 3, 5, 4) == true
         # Wrong value — not valid
-        @test Engine.is_valid_placement(solution, 3, 5, 4) == false
+        @test Engine.is_valid_placement(solution, 3, 5, 7) == false
         @test Engine.is_valid_placement(solution, 3, 5, 1) == false
 
         # r1.c1 solution value is 5 — correct
@@ -104,9 +104,9 @@ const P4_RECUR_JL     = joinpath(@__DIR__, "..", "demos", "sudoku", "julia", "Re
         mask = Set(["sudoku.r3.c5"])
         grid = Engine.make_grid(solution, mask)
 
-        # Candidates for the masked cell — solution-validated (only 7 is correct)
+        # Candidates for the masked cell — solution-validated (only 4 is correct)
         candidates = Engine.get_candidates(solution, grid, 3, 5)
-        @test 7 in candidates
+        @test 4 in candidates
         @test length(candidates) == 1   # only the solution value is always valid
 
         # Filled cell has no candidates (or returns empty)
@@ -128,7 +128,7 @@ const P4_RECUR_JL     = joinpath(@__DIR__, "..", "demos", "sudoku", "julia", "Re
         @test Engine.is_solved(partial_grid, solution) == false
 
         # Fill it in correctly — now solved
-        Engine.apply_placement!(partial_grid, 3, 5, 7)
+        Engine.apply_placement!(partial_grid, 3, 5, 4)
         @test Engine.is_solved(partial_grid, solution) == true
     end
 
@@ -145,8 +145,8 @@ const P4_RECUR_JL     = joinpath(@__DIR__, "..", "demos", "sudoku", "julia", "Re
         @test grid[3, 5] === nothing
 
         # Apply the correct placement
-        Engine.apply_placement!(grid, 3, 5, 7)
-        @test grid[3, 5] == 7
+        Engine.apply_placement!(grid, 3, 5, 4)
+        @test grid[3, 5] == 4
 
         # Generator writes flow event; Recur classifies it
         dir = mktempdir()
@@ -161,7 +161,7 @@ trigger_keywords = "trigger,register,solve"
 """)
             cp(joinpath(P4_PUZZLE_DIR, "sudoku.solution.txt"), joinpath(dir, "sudoku.solution.txt"))
 
-            Generator.write_flow_event(3, 5, 7, dir)
+            Generator.write_flow_event(3, 5, 4, dir)
             result = Recur.trace_id("sudoku.r3.c5"; dir=dir, scope="sudoku.**", ext=".txt")
 
             @test result !== nothing
@@ -222,13 +222,13 @@ consumer_keywords = "subscribe,bind,consume"
 trigger_keywords = "trigger,register,solve"
 """)
             cp(joinpath(P4_PUZZLE_DIR, "sudoku.solution.txt"), joinpath(dir, "sudoku.solution.txt"))
-            Generator.write_flow_event(3, 5, 7, dir)
+            Generator.write_flow_event(3, 5, 4, dir)
 
             result = Recur.trace_id("sudoku.r3.c5"; dir=dir, scope="sudoku.**", ext=".txt")
             @test result !== nothing
 
             if result !== nothing
-                output = Display.render_cascade("sudoku.r3.c5", 7, result)
+                output = Display.render_cascade("sudoku.r3.c5", 4, result)
                 @test !isempty(output)
                 # Shows the identifier
                 @test contains(output, "r3") || contains(output, "c5") || contains(output, "sudoku")

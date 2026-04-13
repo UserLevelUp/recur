@@ -38,6 +38,12 @@ Covered behaviors:
 5. forward and rollback eventness transitions can be re-traced after a stale run
    is refreshed
 
+Sudoku demo adoption now has a focused lane in:
+
+- `demos/sudoku/julia/Recur.jl`
+- `demos/sudoku/julia/Generator.jl`
+- `julia-tests/runtests.demo.sudoku.phase3.jl`
+
 Repro:
 
 ```powershell
@@ -50,8 +56,8 @@ julia julia-tests/main.command.trace-id.test.jl
    `.recur/trace-id/runs/<name>/history/` or remain `latest` only
 2. Decide whether freshness should stay metadata-based (`path` + `size` + `mtime`) or
    grow an optional content-hash mode
-3. Add one durable example showing how saved runs fit with eventness workflows in
-   `.recur/`
+3. Extend the durable Sudoku example into one short recurring walkthrough for
+   `.recur/` eventness workflows
 4. Decide whether future `.recur/eventness` snapshots should count `fresh` vs `stale`
    trace-id runs
 5. Decide whether saved runs remain reusable evidence only, or whether future

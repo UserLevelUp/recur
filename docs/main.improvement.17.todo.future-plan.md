@@ -29,6 +29,8 @@ Prepare a future-safe design for:
 - Token separators validated in `tree/files/merge` paths.
 - Flatten token parity is not complete yet.
 - Unflatten remains future work (Improvement 15 scope).
+- Future symbolic merge metadata must not break token-aware flat-record
+  pipelines; token parity and semantic metadata need to compose cleanly.
 
 ## Planned Phases
 
@@ -52,6 +54,8 @@ Prepare a future-safe design for:
 
 - Round-trip fixtures cover token separators and deep paths.
 - No silent path collapse under token-aware pipelines.
+- token-aware records remain compatible with future symbolic merge hints and
+  with `trace-id`-style semantic audit checks around the round-trip.
 
 ### Phase D/E
 

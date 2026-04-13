@@ -1,0 +1,4 @@
+skippy.relationship.playful.precise.current = active
+skippy.relationship.playful.precise.current publish skippy.tone.bite.sharp
+skippy.relationship.playful.precise.current publish skippy.tone.respect.visible
+skippy.relationship.playful.precise.current trigger skippy.trigger.tease

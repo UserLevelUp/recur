@@ -178,9 +178,93 @@ ${cellId} trigger solve</pre>
 
   // ── Hint (progressive) ───────────────────────────────────────────
 
+  renderCellInfo(row, col, cands, eyeball) {
+    const id = `sudoku.r${row}.c${col}`;
+    const countLine = cands.length === 1
+      ? 'Naked Single - only one value is still legal here.'
+      : `${cands.length} possible values remain.`;
+
+    this.container.innerHTML = `
+      <div class="panel-section panel-info">
+        <div class="cascade-header">
+          <span class="cascade-cell">${id}</span>
+          <span class="hint-level-label">Selected</span>
+        </div>
+        <div class="cascade-divider"></div>
+        <div class="hint-lines">
+          <div class="hint-line">Candidates: ${esc(cands.join(', '))}</div>
+          <div class="hint-line">${esc(countLine)}</div>
+        </div>
+        ${this._eyeballOrderBlock(eyeball)}
+        <div class="hint-tip">
+          Press <kbd>H</kbd> to light up the scan order, then keep pressing for deeper hints.
+        </div>
+      </div>
+    `;
+  }
+
+  _eyeballOrderBlock(eyeball) {
+    if (!eyeball || !eyeball.items || eyeball.items.length === 0) return '';
+
+    let summary = 'These are the cleanest places to scan before asking for a deeper hint.';
+    if (eyeball.selectedSummary?.rank && !eyeball.selectedInTop) {
+      summary = `Your selected cell currently ranks #${eyeball.selectedSummary.rank}. Scan the cleaner patterns first, then come back here.`;
+    } else if (eyeball.selectedInTop) {
+      summary = 'Your selected cell is already in the current best scan order. Stay with the pattern, not the answer.';
+    }
+
+    const steps = eyeball.items.map(item => `
+      <li class="eyeball-step ${item.selected ? 'eyeball-step-selected' : ''}">
+        <div class="eyeball-step-row">
+          <div class="eyeball-rank">${item.rank}</div>
+          <div class="eyeball-main">
+            <div class="eyeball-title-row">
+              <div class="eyeball-title">${esc(item.title)}</div>
+              ${item.selected ? '<span class="eyeball-selected-chip">Selected</span>' : ''}
+            </div>
+            <div class="eyeball-focus">${esc(item.focusLabel)}</div>
+            <div class="eyeball-preview">${esc(item.preview)}</div>
+          </div>
+          <details class="eyeball-bubble">
+            <summary class="eyeball-bubble-toggle" aria-label="Why this step matters">?</summary>
+            <div class="eyeball-bubble-body">
+              ${this._eyeballBubbleField('Why this first', item.whyThisFirst)}
+              ${this._eyeballBubbleField('What to notice', item.whatToNotice)}
+              ${this._eyeballBubbleField('Why not elsewhere', item.whyNotElsewhere)}
+              ${this._eyeballBubbleField('Next escalation', item.nextEscalation)}
+            </div>
+          </details>
+        </div>
+      </li>
+    `).join('');
+
+    return `
+      <div class="eyeball-order">
+        <div class="eyeball-order-header">
+          <div class="eyeball-order-title">Eyeball Order</div>
+          <div class="eyeball-order-subtitle">Train the scan, not the answer.</div>
+        </div>
+        <div class="eyeball-summary">${esc(summary)}</div>
+        <ol class="eyeball-steps">${steps}</ol>
+      </div>
+    `;
+  }
+
+  _eyeballBubbleField(label, text) {
+    return `
+      <div class="eyeball-bubble-field">
+        <div class="eyeball-bubble-label">${esc(label)}</div>
+        <div class="eyeball-bubble-text">${esc(text)}</div>
+      </div>
+    `;
+  }
+
   renderHint(hintData) {
-    const { level, title, lines, strategy, cell, overlayCells } = hintData;
+    const { level, title, lines, strategy, cell, overlayCells, eyeball } = hintData;
     const id = `sudoku.r${cell.row}.c${cell.col}`;
+    const hintTip = level >= 4
+      ? 'Press <kbd>H</kbd> again to clear hints and restart from Eyeball Order.'
+      : 'Press <kbd>H</kbd> again for the next level of detail.';
 
     const levelLabel = ['Nudge', 'Elimination', 'Candidates', 'Strategy', 'Answer'][level] ?? `Level ${level}`;
     const dots = [0,1,2,3,4].map(i =>
@@ -227,9 +311,10 @@ ${cellId} trigger solve</pre>
             <div class="hint-strategy-text">${esc(strategy)}</div>
           </div>
         ` : ''}
+        ${this._eyeballOrderBlock(eyeball)}
         ${overlayLegend}
         <div class="hint-tip">
-          Press <kbd>H</kbd> again for the next level of detail.
+          ${hintTip}
         </div>
       </div>
     `;

@@ -13,6 +13,25 @@ const RECUR_DIR: &str = ".recur";
 const CONFIG_FILE: &str = "config.toml";
 const CHECKPOINT_FILE: &str = "checkpoints.md";
 
+pub const DEFAULT_REVEAL_MODE: &str = "single-thread";
+pub const DEFAULT_REVEAL_ENTRY_SUFFIX: &str = ".recur.md";
+pub const DEFAULT_REVEAL_TRUST: &str = "config-first";
+pub const DEFAULT_REVEAL_MAX_THREADS: usize = 1;
+pub const DEFAULT_REVEAL_SKIP_PERSONA_IF_KNOWN: bool = true;
+pub const DEFAULT_REVEAL_ORDER_STEPS: &[&str] = &[
+    "persona",
+    "agent",
+    "agenda",
+    "goals.now",
+    "schedule.next",
+    "pull.first",
+    "pull.then",
+    "verify",
+    "tool.escape",
+    "do.not.disturb",
+    "ready.state",
+];
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LaneConfig {
     pub name: String,
@@ -37,6 +56,38 @@ pub struct StatusConfig {
 pub struct TraversalConfig {
     pub max_depth: Option<usize>,
     pub depth_guard: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RevealOrderConfig {
+    pub steps: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RevealMergeConfig {
+    pub default_role: Option<String>,
+    pub default_handoff: Option<String>,
+    pub default_touch: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RevealRankConfig {
+    pub prefer_current: Option<bool>,
+    pub prefer_trigger_event: Option<bool>,
+    pub prefer_recurring: Option<bool>,
+    pub prefer_complete: Option<bool>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RevealConfig {
+    pub mode: Option<String>,
+    pub entry_suffix: Option<String>,
+    pub trust: Option<String>,
+    pub max_threads: Option<usize>,
+    pub skip_persona_if_known: Option<bool>,
+    pub order: Option<RevealOrderConfig>,
+    pub merge: Option<RevealMergeConfig>,
+    pub rank: Option<RevealRankConfig>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -95,6 +146,7 @@ pub struct RecurConfig {
     pub checkpoint: Option<CheckpointConfig>,
     pub status: Option<StatusConfig>,
     pub traversal: Option<TraversalConfig>,
+    pub reveal: Option<RevealConfig>,
     pub traits: Option<TraitsConfig>,
 }
 
@@ -157,6 +209,7 @@ impl RecurConfig {
         let mut checkpoint = None;
         let mut status = None;
         let mut traversal = None;
+        let mut reveal = None;
         let mut traits = None;
 
         for (section, raw_value) in table {
@@ -173,6 +226,9 @@ impl RecurConfig {
                 }
                 "traversal" => {
                     traversal = Some(parse_traversal_section(section_table));
+                }
+                "reveal" => {
+                    reveal = Some(parse_reveal_section(section_table));
                 }
                 "traits" => {
                     traits = Some(parse_traits_section(section_table));
@@ -194,6 +250,7 @@ impl RecurConfig {
             checkpoint,
             status,
             traversal,
+            reveal,
             traits,
         })
     }
@@ -487,6 +544,85 @@ fn parse_traversal_section(table: &toml::value::Table) -> TraversalConfig {
     }
 }
 
+fn parse_reveal_order_section(table: &toml::value::Table) -> RevealOrderConfig {
+    RevealOrderConfig {
+        steps: table
+            .get("steps")
+            .and_then(|v| v.as_array())
+            .map(|items| {
+                items
+                    .iter()
+                    .filter_map(|item| item.as_str().map(|s| s.to_string()))
+                    .collect()
+            })
+            .unwrap_or_default(),
+    }
+}
+
+fn parse_reveal_merge_section(table: &toml::value::Table) -> RevealMergeConfig {
+    RevealMergeConfig {
+        default_role: table
+            .get("default_role")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        default_handoff: table
+            .get("default_handoff")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        default_touch: table
+            .get("default_touch")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+    }
+}
+
+fn parse_reveal_rank_section(table: &toml::value::Table) -> RevealRankConfig {
+    RevealRankConfig {
+        prefer_current: table.get("prefer_current").and_then(|v| v.as_bool()),
+        prefer_trigger_event: table
+            .get("prefer_trigger_event")
+            .and_then(|v| v.as_bool()),
+        prefer_recurring: table.get("prefer_recurring").and_then(|v| v.as_bool()),
+        prefer_complete: table.get("prefer_complete").and_then(|v| v.as_bool()),
+    }
+}
+
+fn parse_reveal_section(table: &toml::value::Table) -> RevealConfig {
+    RevealConfig {
+        mode: table
+            .get("mode")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        entry_suffix: table
+            .get("entry_suffix")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        trust: table
+            .get("trust")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string()),
+        max_threads: table
+            .get("max_threads")
+            .and_then(|v| v.as_integer())
+            .and_then(|v| usize::try_from(v).ok()),
+        skip_persona_if_known: table
+            .get("skip_persona_if_known")
+            .and_then(|v| v.as_bool()),
+        order: table
+            .get("order")
+            .and_then(|v| v.as_table())
+            .map(parse_reveal_order_section),
+        merge: table
+            .get("merge")
+            .and_then(|v| v.as_table())
+            .map(parse_reveal_merge_section),
+        rank: table
+            .get("rank")
+            .and_then(|v| v.as_table())
+            .map(parse_reveal_rank_section),
+    }
+}
+
 fn parse_trait_placeholder_section(table: &toml::value::Table) -> TraitPlaceholderConfig {
     TraitPlaceholderConfig {
         enabled: table.get("enabled").and_then(|v| v.as_bool()),
@@ -674,6 +810,33 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("current_suffix = \".current.md\"\n");
     content.push_str("todo_suffix = \".todo.md\"\n");
     content.push_str("complete_suffix = \".complete.md\"\n");
+    content.push_str("\n[reveal]\n");
+    content.push_str(&format!("mode = \"{}\"\n", DEFAULT_REVEAL_MODE));
+    content.push_str(&format!(
+        "entry_suffix = \"{}\"\n",
+        DEFAULT_REVEAL_ENTRY_SUFFIX
+    ));
+    content.push_str(&format!("trust = \"{}\"\n", DEFAULT_REVEAL_TRUST));
+    content.push_str(&format!("max_threads = {}\n", DEFAULT_REVEAL_MAX_THREADS));
+    content.push_str(&format!(
+        "skip_persona_if_known = {}\n",
+        DEFAULT_REVEAL_SKIP_PERSONA_IF_KNOWN
+    ));
+    content.push_str("\n[reveal.order]\n");
+    content.push_str("steps = [\n");
+    for step in DEFAULT_REVEAL_ORDER_STEPS {
+        content.push_str(&format!("  \"{}\",\n", step));
+    }
+    content.push_str("]\n");
+    content.push_str("\n[reveal.merge]\n");
+    content.push_str("default_role = \"additive\"\n");
+    content.push_str("default_handoff = \"verify passes and lane truth updated\"\n");
+    content.push_str("default_touch = \"declared-by-lane\"\n");
+    content.push_str("\n[reveal.rank]\n");
+    content.push_str("prefer_current = true\n");
+    content.push_str("prefer_trigger_event = true\n");
+    content.push_str("prefer_recurring = true\n");
+    content.push_str("prefer_complete = false\n");
     content.push_str("\n[traversal]\n");
     content.push_str("max_depth = 5\n");
     content.push_str("depth_guard = \"hard-fail\"\n");
@@ -851,6 +1014,23 @@ root_pattern = "**"
 [status]
 current_suffix = ".current.md"
 
+[reveal]
+mode = "single-thread"
+entry_suffix = ".recur.md"
+trust = "config-first"
+max_threads = 1
+skip_persona_if_known = true
+
+[reveal.order]
+steps = ["persona", "agent", "pull.first"]
+
+[reveal.merge]
+default_role = "additive"
+
+[reveal.rank]
+prefer_current = true
+prefer_complete = false
+
 [traversal]
 max_depth = 7
 depth_guard = "clamp"
@@ -891,6 +1071,7 @@ foo = "bar"
         assert!(config.checkpoint.is_some());
         assert!(config.status.is_some());
         assert!(config.traversal.is_some());
+        assert!(config.reveal.is_some());
         assert_eq!(config.traversal.as_ref().and_then(|t| t.max_depth), Some(7));
         assert_eq!(
             config
@@ -900,6 +1081,33 @@ foo = "bar"
             Some("clamp")
         );
         assert!(config.traits.is_some());
+        assert_eq!(
+            config
+                .reveal
+                .as_ref()
+                .and_then(|r| r.entry_suffix.as_deref()),
+            Some(".recur.md")
+        );
+        assert_eq!(
+            config
+                .reveal
+                .as_ref()
+                .and_then(|r| r.order.as_ref())
+                .map(|order| order.steps.clone()),
+            Some(vec![
+                "persona".to_string(),
+                "agent".to_string(),
+                "pull.first".to_string()
+            ])
+        );
+        assert_eq!(
+            config
+                .reveal
+                .as_ref()
+                .and_then(|r| r.rank.as_ref())
+                .and_then(|rank| rank.prefer_current),
+            Some(true)
+        );
         assert_eq!(
             config
                 .traits
@@ -994,6 +1202,7 @@ foo = "bar"
             checkpoint: None,
             status: None,
             traversal: None,
+            reveal: None,
             traits: None,
         };
 
@@ -1043,6 +1252,11 @@ foo = "bar"
         assert!(config_text.contains("[traversal]"));
         assert!(config_text.contains("max_depth = 5"));
         assert!(config_text.contains("depth_guard = \"hard-fail\""));
+        assert!(config_text.contains("[reveal]"));
+        assert!(config_text.contains("entry_suffix = \".recur.md\""));
+        assert!(config_text.contains("[reveal.order]"));
+        assert!(config_text.contains("\"pull.first\""));
+        assert!(config_text.contains("[reveal.rank]"));
         assert!(config_text.contains("[traits.content_search]"));
         assert!(config_text.contains("max_file_bytes = 1048576"));
         assert!(config_text.contains("skip_binary_files = true"));

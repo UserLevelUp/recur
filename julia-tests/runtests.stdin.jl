@@ -15,6 +15,10 @@ using Test
 # Include setup utilities
 include("runtests.setup.jl")
 
+function parse_json_string_array(output::String)
+    [String(item) for item in JSON3.read(output)]
+end
+
 @testset "recur --stdin flag" verbose = true begin
 
     @testset "stdin with files command" verbose = true begin
@@ -85,7 +89,7 @@ config.json"""
             log_command("stdin (empty) | recur files \"**\" --stdin", success)
 
             @test !success  # No matches should return exit code 1
-            @test isempty(strip(output))
+            @test parse_json_string_array(output) == String[]
         end
 
         @testset "stdin vs filesystem comparison" verbose = true begin
@@ -95,22 +99,21 @@ config.json"""
             success_fs, output_fs, _ = run_recur(["files", "UserService.**", "-d", TEST_DIR])
             
             # Get list of actual files from filesystem by running recur
-            recur_cmd = Cmd([RECUR_BIN, "files", "**", "-d", TEST_DIR])
-            files_output = read(recur_cmd, String)
-            files_list = split(strip(files_output), '\n')
+            success_all, files_output, _ = run_recur(["files", "**", "-d", TEST_DIR])
+            files_list = parse_json_string_array(files_output)
             input_files = join(files_list, "\n")
             
             # Get results from stdin with same pattern
             success_stdin, output_stdin, _ = run_recur_stdin(input_files, ["files", "UserService.**", "--stdin"])
             
-            log_command("Comparing filesystem vs stdin results", success_fs && success_stdin)
+            log_command("Comparing filesystem vs stdin results", success_fs && success_all && success_stdin)
             
             @test success_fs
+            @test success_all
             @test success_stdin
             
-            # Parse outputs (remove ./ prefix and ANSI codes)
-            lines_fs = Set(strip(replace(replace(line, r"\e\[[0-9;]*m" => ""), r"^\.[\\/]" => "")) for line in split(output_fs, "\n") if !isempty(strip(line)))
-            lines_stdin = Set(strip(replace(replace(line, r"\e\[[0-9;]*m" => ""), r"^\.[\\/]" => "")) for line in split(output_stdin, "\n") if !isempty(strip(line)))
+            lines_fs = Set(parse_json_string_array(output_fs))
+            lines_stdin = Set(parse_json_string_array(output_stdin))
             
             @test lines_fs == lines_stdin
         end
@@ -362,7 +365,7 @@ AlsoNoMatch.cs"""
 
             # No matches should return exit code 1 with no output
             @test !success
-            @test isempty(strip(output))
+            @test parse_json_string_array(output) == String[]
         end
 
         @testset "stdin with mixed valid/invalid paths" verbose = true begin

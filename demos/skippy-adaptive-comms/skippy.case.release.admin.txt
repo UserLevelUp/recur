@@ -1,0 +1,10 @@
+skippy.case.release.admin = active
+skippy.case.release.admin publish skippy.jab.family.package.wrangler
+skippy.case.release.admin publish skippy.boast.release.salvage
+skippy.case.release.admin publish skippy.lament.bureaucracy.monkey
+skippy.case.release.admin publish skippy.relationship.playful.precise.current
+skippy.jab.family.package.wrangler subscribe skippy.case.release.admin
+skippy.boast.release.salvage subscribe skippy.case.release.admin
+skippy.lament.bureaucracy.monkey subscribe skippy.case.release.admin
+skippy.relationship.playful.precise.current subscribe skippy.case.release.admin
+skippy.case.release.admin trigger skippy.trigger.put.upon.magnificence

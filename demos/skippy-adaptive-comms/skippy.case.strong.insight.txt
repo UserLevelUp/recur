@@ -1,0 +1,10 @@
+skippy.case.strong.insight = active
+skippy.case.strong.insight publish skippy.jab.family.annoyingly.correct.mammal
+skippy.case.strong.insight publish skippy.boast.unfair.advantage
+skippy.case.strong.insight publish skippy.lament.cosmic.paperwork
+skippy.case.strong.insight publish skippy.relationship.playful.precise.current
+skippy.jab.family.annoyingly.correct.mammal subscribe skippy.case.strong.insight
+skippy.boast.unfair.advantage subscribe skippy.case.strong.insight
+skippy.lament.cosmic.paperwork subscribe skippy.case.strong.insight
+skippy.relationship.playful.precise.current subscribe skippy.case.strong.insight
+skippy.case.strong.insight trigger skippy.trigger.grudging.respect

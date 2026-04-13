@@ -117,6 +117,14 @@ function solution_to_pairs(grid::Matrix{Int})
     return pairs
 end
 
+"""Write `content` only when the file is missing or has changed."""
+function write_text_if_changed(path::String, content::String)::String
+    if !isfile(path) || read(path, String) != content
+        write(path, content)
+    end
+    return path
+end
+
 """
     write_solution_file(grid::Matrix{Int}, dir::String) -> String
 
@@ -129,8 +137,7 @@ function write_solution_file(grid::Matrix{Int}, dir::String)::String
         push!(lines, "$(cell_id(r, c)) = $(grid[r, c])")
     end
     path = joinpath(dir, "sudoku.solution.txt")
-    write(path, join(lines, "\n") * "\n")
-    return path
+    return write_text_if_changed(path, join(lines, "\n") * "\n")
 end
 
 """
@@ -139,7 +146,12 @@ end
 Full pipeline: generate random solution → write flow events → run recur → write JSON.
 Returns Dict with "solution" (81 pairs) and "cascades_path".
 """
-function generate_full_puzzle(output_dir::String, recur_module)
+function generate_full_puzzle(
+    output_dir::String,
+    recur_module;
+    save_run::Bool = true,
+    reuse_if_fresh::Bool = true,
+)
     grid = generate_solution()
     pairs = solution_to_pairs(grid)
 
@@ -148,7 +160,13 @@ function generate_full_puzzle(output_dir::String, recur_module)
     write_solution_file(grid, output_dir)
 
     # Generate all cascade data (calls recur 81 times)
-    cascades_path = generate_cascades(pairs, output_dir, recur_module)
+    cascades_path = generate_cascades(
+        pairs,
+        output_dir,
+        recur_module;
+        save_run = save_run,
+        reuse_if_fresh = reuse_if_fresh,
+    )
 
     return Dict(
         "solution" => pairs,
@@ -195,8 +213,7 @@ function write_flow_event(row::Int, col::Int, value::Int, dir::String)::String
 
     filename = "sudoku.flow.r$(row)c$(col).txt"
     filepath = joinpath(dir, filename)
-    write(filepath, join(lines, "\n") * "\n")
-    return filepath
+    return write_text_if_changed(filepath, join(lines, "\n") * "\n")
 end
 
 # ---------------------------------------------------------------------------
@@ -204,12 +221,20 @@ end
 # ---------------------------------------------------------------------------
 
 """
-    generate_cascade(row, col, value, dir, recur_module) -> Dict or nothing
+    generate_cascade(row, col, value, dir, recur_module; save_run, reuse_if_fresh) -> Dict or nothing
 
 Write flow event for (row, col, value), call recur trace-id, return
 a Dict with keys: cell, value, cascade (the trace-id JSON result).
 """
-function generate_cascade(row::Int, col::Int, value::Int, dir::String, recur_module)
+function generate_cascade(
+    row::Int,
+    col::Int,
+    value::Int,
+    dir::String,
+    recur_module;
+    save_run::Bool = true,
+    reuse_if_fresh::Bool = true,
+)
     write_flow_event(row, col, value, dir)
     id = cell_id(row, col)
 
@@ -218,6 +243,9 @@ function generate_cascade(row::Int, col::Int, value::Int, dir::String, recur_mod
         dir   = dir,
         scope = "sudoku.**",
         ext   = ".txt",
+        save_run = save_run,
+        reuse_if_fresh = reuse_if_fresh,
+        run_name = id,
     )
 
     cascade === nothing && return nothing
@@ -230,7 +258,7 @@ function generate_cascade(row::Int, col::Int, value::Int, dir::String, recur_mod
 end
 
 """
-    generate_cascades(solution, puzzle_dir, recur_module) -> String
+    generate_cascades(solution, puzzle_dir, recur_module; save_run, reuse_if_fresh) -> String
 
 Generate cascade JSON for each cell in `solution` and write
 `sudoku.cascades.json` to `puzzle_dir`. Returns the output path.
@@ -238,7 +266,13 @@ Generate cascade JSON for each cell in `solution` and write
 `solution` is a vector of `(cell_id_string, value)` pairs,
 e.g. `[("sudoku.r1.c1", 5), ("sudoku.r3.c5", 7)]`.
 """
-function generate_cascades(solution, puzzle_dir::String, recur_module)::String
+function generate_cascades(
+    solution,
+    puzzle_dir::String,
+    recur_module;
+    save_run::Bool = true,
+    reuse_if_fresh::Bool = true,
+)::String
     cascades = []
 
     for (id_str, value) in solution
@@ -247,7 +281,15 @@ function generate_cascades(solution, puzzle_dir::String, recur_module)::String
         row = parse(Int, m[1])
         col = parse(Int, m[2])
 
-        entry = generate_cascade(row, col, value, puzzle_dir, recur_module)
+        entry = generate_cascade(
+            row,
+            col,
+            value,
+            puzzle_dir,
+            recur_module;
+            save_run = save_run,
+            reuse_if_fresh = reuse_if_fresh,
+        )
         entry !== nothing && push!(cascades, entry)
     end
 

@@ -708,6 +708,185 @@ main {
 }
 
 /* ── Overlay legend (in hint panel) ────────────────────────────────── */
+.eyeball-order {
+  margin-top: 0.7rem;
+  border: 1px solid #2e2e4e;
+  border-radius: 6px;
+  background: #101a30;
+  padding: 0.65rem;
+}
+
+.eyeball-order-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.35rem;
+}
+
+.eyeball-order-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #a0c4ff;
+  font-weight: 700;
+}
+
+.eyeball-order-subtitle {
+  font-size: 0.68rem;
+  color: #6f7f98;
+}
+
+.eyeball-summary {
+  font-size: 0.74rem;
+  color: #c4ceda;
+  line-height: 1.45;
+  margin-bottom: 0.5rem;
+}
+
+.eyeball-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.eyeball-step {
+  border: 1px solid #223150;
+  border-radius: 6px;
+  background: #0d1527;
+  padding: 0.5rem;
+}
+
+.eyeball-step-selected {
+  border-color: #ffd080;
+  box-shadow: 0 0 0 1px #5a4318 inset;
+}
+
+.eyeball-step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.eyeball-rank {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #a0c4ff;
+  color: #12213c;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.eyeball-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.eyeball-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.eyeball-title {
+  font-size: 0.82rem;
+  color: #ffd080;
+  font-weight: 600;
+}
+
+.eyeball-selected-chip {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a0c4ff;
+  background: #0a1a2a;
+  border: 1px solid #1a3a5a;
+  border-radius: 999px;
+  padding: 0.1rem 0.35rem;
+}
+
+.eyeball-focus {
+  margin-top: 0.16rem;
+  font-size: 0.72rem;
+  color: #a0c4ff;
+  font-family: monospace;
+}
+
+.eyeball-preview {
+  margin-top: 0.18rem;
+  font-size: 0.74rem;
+  color: #c0c0c0;
+  line-height: 1.45;
+}
+
+.eyeball-bubble {
+  flex-shrink: 0;
+}
+
+.eyeball-bubble-toggle {
+  list-style: none;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  border: 1px solid #5a4720;
+  background: #2a2010;
+  color: #ffd080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+
+.eyeball-bubble-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.eyeball-bubble[open] .eyeball-bubble-toggle {
+  background: #3b2910;
+}
+
+.eyeball-bubble-body {
+  margin-top: 0.45rem;
+  border: 1px solid #2e2e4e;
+  border-radius: 6px;
+  background: #18243c;
+  padding: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.eyeball-bubble-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+}
+
+.eyeball-bubble-label {
+  font-size: 0.63rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7c8aa5;
+}
+
+.eyeball-bubble-text {
+  font-size: 0.74rem;
+  color: #d7dde7;
+  line-height: 1.45;
+}
+
 .overlay-legend {
   margin-top: 0.6rem;
   border: 1px solid #2e2e4e;

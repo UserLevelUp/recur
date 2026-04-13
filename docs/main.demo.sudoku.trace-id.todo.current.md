@@ -31,9 +31,24 @@ formal lore file until that idea is settled.
 ### Next Action With Current Lore
 
 1. Keep the browser runtime recur-free
-2. Teach `Generator.jl` / `Recur.jl` to use `--save-run` and `--reuse-if-fresh`
+2. Keep stable per-cell saved runs in `Generator.jl` / `Recur.jl` using
+   `--save-run`, `--reuse-if-fresh`, and deterministic run names
 3. Continue treating `sudoku.cascades.json` as the browser-facing generated cascade artifact
 4. Only regenerate cascades when the puzzle package eventness actually changed
+
+### Saved-Run Adoption Landed (2026-04-09)
+
+What now works in this lane:
+
+- `Recur.jl` passes through `--save-run`, `--reuse-if-fresh`, and
+  `--run-name`
+- `Recur.jl` prefers the repo-local `target/release-safe/` binary before PATH
+- `Generator.jl` derives one stable run name per cell, for example
+  `sudoku.r3.c5`
+- unchanged solution and flow files are not rewritten, so metadata freshness can
+  stay fresh
+- `julia-tests/runtests.demo.sudoku.phase3.jl` now proves manifest creation and
+  cached JSON reuse for a stable cell run
 
 ## Phase 1 Complete (2026-03-13)
 
@@ -69,6 +84,17 @@ Suite total: 644 passed.
 **Key insight captured:** Traditional solvers recurse in memory. This externalizes the
 stack into files — the cascade JSON is the stack trace, queryable by any consumer.
 The reasoning recurs in the file hierarchy. The tool is called `recur`.
+
+### Phase 3 Refresh (2026-04-09)
+
+`julia-tests/runtests.demo.sudoku.phase3.jl` now passes `53/53`.
+
+Additional proof added:
+
+- saved runs persist under `.recur/trace-id/runs/sudoku.r{R}.c{C}/`
+- cached `latest.json` is reused when the same flow event files stay fresh
+- the Generator/Recur boundary now exercises saved-run reuse instead of only
+  raw recomputation
 
 ## Phase 4 Complete (2026-03-13)
 
@@ -116,11 +142,28 @@ Status: `in-progress` (core game working, polishing)
   1. `Generator.generate_solution()` — random valid 9x9 grid via backtracking
   2. `Generator.write_solution_file()` + `write_flow_event()` for all 81 cells
   3. `Recur.trace_id()` × 81 — subprocess calls to `recur trace-id --json`
+     with stable per-cell saved runs and reuse when fresh
   4. Writes `sudoku.cascades.json` — browser reloads with new puzzle
 - **Win detection** — banner + panel message when all cells correctly placed
 - **serve.jl** — local dev server with static files + `/api/generate` endpoint
   - Loads Generator.jl + Recur.jl at startup (one-time cost)
   - Julia is sandboxed: only predefined API endpoints exposed, no user code execution
+
+### Active Teaching Cursor
+
+The next teaching-focused HTML5 work is tracked separately in:
+
+- `docs/main.demo.sudoku.eyeball-order.todo.current.md`
+
+That lane is about scan order, pattern recognition, and explanation bubbles,
+not about giving the player the answer outright.
+
+First slice landed on 2026-04-09:
+
+- `solver.js` now exposes a global `eyeballOrder(...)` ranking
+- `cascade.js` now renders ranked scan targets plus a clickable `?` teaching bubble
+- `game.js` now feeds the ordered scan guidance into selected-cell and hint flow
+- `H` now cycles through eyeball overlay, progressive hint levels, then back to no-hint
 
 ### Files Implemented
 
@@ -506,7 +549,7 @@ The game engine (Julia or JS) owns all Sudoku logic:
 3. **Accept input** — human picks cell + value
 4. **Validate** — check against solution (engine knows the rules)
 5. **Write move event** — write `sudoku.flow.r{R}c{C}` with proper keywords
-6. **Call recur or reuse saved run** — `recur trace-id "sudoku.r{R}.c{C}" --scope "sudoku.**" --json --reuse-if-fresh --run-name "sudoku.r{R}.c{C}"`
+6. **Call recur or reuse saved run** — `recur trace-id "sudoku.r{R}.c{C}" --scope "sudoku.**" --json --save-run --reuse-if-fresh --run-name "sudoku.r{R}.c{C}"`
 7. **Render cascade / lore** — parse JSON, display define/produce/consume/trigger in UI
 8. **Propagate** — update candidate lists, detect naked singles, write next events
 9. **Hint** — switch to easier mask, call `recur files --stdin` with new mask
@@ -793,6 +836,7 @@ demos/sudoku/
       sudoku.merge.json        # Unified row/col/box view (from recur merge)
 
 docs/
+  main.demo.sudoku.eyeball-order.todo.current.md  # active HTML5 teaching lane
   main.demo.sudoku.trace-id.todo.md          # Persistent tracking
   main.demo.sudoku.trace-id.todo.current.md  # (this file)
 ```

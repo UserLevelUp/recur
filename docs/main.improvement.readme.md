@@ -1,19 +1,90 @@
 # Improvement Status Index
 
-This branch makes improvement status visible in `recur tree "main"`.
+This note keeps improvement posture visible in the `main.improvement.*` tree.
 
-Naming:
-- `main.improvement.<n>.complete.md` = completed improvement
-- `main.improvement.<n>.todo.md` = active TODO
-- `main.improvement.<n>.todo.future-plan.md` = TODO planned for future
-- `main.improvement.<n>.<topic>.todo.current.md` = active cursor (single current focus)
+## Naming
 
-Current status:
-- Complete: `1`, `2`, `3`, `4`, `5`
-- TODO now: `6`, `6.dogfooding`
-- TODO future plan: `7`, `8`, `9`, `14`, `15`, `16`, `17`
-- Current cursor: `6.dogfooding.todo.current`
+- `main.improvement.<n>.complete.md` = completed improvement record
+- `main.improvement.<n>.todo.future-plan.md` = future-plan / parked improvement
+- `main.improvement.<n>.<topic>.todo.current.md` = active focused cursor
+- `main.improvement.<n>.<topic>.complete.md` = completed sub-lane under an improvement
+- `main.improvement.<n>.<topic>.readme.core.md` = concept or core reference without by-itself implying active state
 
-Notes:
-- `main.improvement.15.todo.future-plan.md` is long-distance backlog only (parked, not active).
-- `main.improvement.16` and `main.improvement.17` are future-plan posture only.
+## Current Snapshot (2026-04-13)
+
+### Complete
+
+- `1`
+- `2`
+- `3`
+- `4`
+- `5`
+- `6`
+
+### Mostly Complete, With Residual Backlog Or Phase History
+
+- `7`
+  phase 1, phase 2, and phase 3 all have `complete` records; a parked
+  `todo.future-plan` residue still exists
+- `9`
+  the `trace-id` sub-lane is complete, while broader future-plan residue remains
+
+### Future Plan / Parked
+
+- `8`
+- `14`
+- `15`
+- `17`
+- `18`
+- `19`
+- `20`
+- `21`
+- `22`
+
+### Root-Doc Future Vision, Not Yet Fully Mirrored Into `docs/main.improvement.*`
+
+- `12`
+- `13`
+- `16`
+
+## Active Cursors Right Now
+
+The improvement tree itself is mostly calm right now.
+The active work is showing up more in command and demo lanes than in broad
+improvement-number `todo.current` files.
+
+Useful current adjacent lanes:
+
+- `docs/main.command.tests.progress.current.md`
+- `docs/main.command.trace-id.run.todo.current.md`
+- `docs/main.demo.skippy.trace-id.todo.current.md`
+- `docs/main.demo.sudoku.trace-id.todo.current.md`
+- `docs/main.demo.sudoku.eyeball-order.todo.current.md`
+
+## Why This Exists
+
+We already do use eventness to show whether an improvement is complete or not.
+
+The gap was that some newer proposal-style improvements lived mainly as
+`README.CORE.IMPROVEMENT*.md` files at repo root, which made the `docs/`
+improvement tree under-report them.
+
+This index keeps the high-level truth easy to scan, while future-plan bridge
+notes make the proposal improvements visible in `recur files "main.improvement.**" -d docs/`.
+
+## Discovery
+
+```powershell
+recur files "main.improvement.**" -d docs/
+recur tree "main.improvement" -d docs/
+recur files "README.CORE.IMPROVEMENT**" -d ./
+recur files "**.current" -d docs/
+```
+
+## Related
+
+- `README.CORE.IMPROVEMENT19.md`
+- `README.CORE.IMPROVEMENT20.md`
+- `README.CORE.IMPROVEMENT21.md`
+- `README.CORE.IMPROVEMENT22.md`
+- `docs/main.improvement.delivery-loop.recurring.md`

@@ -1,5 +1,5 @@
 """
-Recur.jl — thin Julia wrapper around recur subprocess calls.
+Recur.jl - thin Julia wrapper around recur subprocess calls.
 
 recur does not know what Sudoku is. This module knows how to call
 recur and parse its JSON output. The game engine uses these results
@@ -10,11 +10,28 @@ module Recur
 
 using JSON3
 
-# Locate recur binary: ENV override → PATH fallback
-const RECUR_BIN = get(ENV, "RECUR_BIN", "recur")
+function default_recur_bin()
+    env_bin = get(ENV, "RECUR_BIN", nothing)
+    env_bin !== nothing && return env_bin
+
+    profile = get(ENV, "RECUR_PROFILE", "release-safe")
+    repo_bin = normpath(
+        joinpath(
+            @__DIR__,
+            "..", "..", "..",
+            "target",
+            profile,
+            "recur" * (Sys.iswindows() ? ".exe" : ""),
+        ),
+    )
+    return isfile(repo_bin) ? repo_bin : "recur"
+end
+
+# Locate recur binary: ENV override -> repo-local build -> PATH fallback.
+const RECUR_BIN = default_recur_bin()
 
 """
-    trace_id(identifier; dir, scope, ext, depth) -> NamedTuple
+    trace_id(identifier; dir, scope, ext, depth, save_run, reuse_if_fresh, run_name) -> NamedTuple
 
 Call `recur trace-id` on the given identifier and return parsed JSON.
 Returns a NamedTuple with fields: identifier, define, produce, consume, trigger, request.
@@ -26,7 +43,11 @@ function trace_id(
     scope::String = "sudoku.**",
     ext::String = ".txt",
     depth::Int = 2,
+    save_run::Bool = false,
+    reuse_if_fresh::Bool = false,
+    run_name::Union{Nothing,String} = nothing,
 )
+    resolved_run_name = isnothing(run_name) && (save_run || reuse_if_fresh) ? identifier : run_name
     args = [
         RECUR_BIN, "trace-id", identifier,
         "--scope", scope,
@@ -36,14 +57,17 @@ function trace_id(
         "-d", dir,
     ]
 
+    save_run && push!(args, "--save-run")
+    reuse_if_fresh && push!(args, "--reuse-if-fresh")
+    !isnothing(resolved_run_name) && append!(args, ["--run-name", resolved_run_name])
+
     out = IOBuffer()
     err = IOBuffer()
-    success = true
 
     try
         run(pipeline(`$args`, stdout=out, stderr=err))
     catch e
-        isa(e, ProcessFailedException) && (success = false)
+        isa(e, ProcessFailedException) || rethrow()
     end
 
     output = String(take!(out))
