@@ -1,14 +1,14 @@
 # main.improvement.21.recur
 
-recur.gift = a folder is a stronger lane; recur lane is the pure command — not --agent
-persona = recur expert thinking about lane-scoped directory hierarchy
-agent = clarify the doctrine before opening a build lane
-agenda = recur lane command scaffolds named lanes from root .recur/config.toml doctrine; naming the lane an agent is the user's concern, not recur's
-goals.now = define the recur lane command shape and the [lanes] config section
-schedule.next = doctrine -> recur lane command shape -> [lanes] config -> phase 1 slice -> tests -> verify
-pull.first = recur files "main.improvement.21.**" -d docs/
-pull.then = recur reveal main.improvement.22
-verify = recur reveal main.improvement.21
+recur.gift = contract tests written and passing coordination layer — implement recur lane next
+persona = recur expert implementing the recur lane command
+agent = make the 21 failing lane tests go green; do not expand scope
+agenda = recur lane <name> scaffolds a named sub-root with .recur/config.toml and <name>.recur.md capsule; recur init adds [lanes] section; recur lane lists known lanes
+goals.now = implement main_command_lane_impl.rs and wire into main.rs; add [lanes] to render_config_toml
+schedule.next = main_command_lane_impl.rs -> wire main.rs -> render_config_toml -> cargo build -> julia tests green
+pull.first = recur files "main.command.lane.**" -d docs/
+pull.then = recur files "main.improvement.21.**" -d docs/
+verify = cargo build --profile release-safe && julia julia-tests/main.command.lane.test.jl
 tool.escape = recur tree "main" -d docs/ --sep . --sep _ --show-sep
-do.not.disturb = do not put agent concepts into recur's surface; recur knows lanes not agents; the toml names the role
-ready.state = I know the command is recur lane, the toml declares intent, and recur stays pure
+do.not.disturb = do not add agent concepts to recur surface; do not implement config inheritance or merge coordination yet
+ready.state = I know the exact files to create, the tests to pass, and the scope boundary
