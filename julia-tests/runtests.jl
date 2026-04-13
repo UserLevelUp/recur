@@ -58,6 +58,7 @@ try
         include("main.command.init.test.jl")     # Init command: config generation, analyze mode, lane collision dedupe
         include("main.command.reveal.test.jl")   # IMPROVEMENT22 - lane-local reveal helpers
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
+        include("main.lane.coordination.trace-id.test.jl")  # IMPROVEMENT21+22 - trace-id as lane handoff contract
 
         # TODO: Add more test modules as they are implemented
         include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
