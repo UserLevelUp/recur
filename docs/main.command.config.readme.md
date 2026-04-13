@@ -14,6 +14,7 @@ recur related "main.command.config.trait" -d docs/ --sep .
 
 main.command.config.trait - list/get/set trait parameters in `.recur/config.toml`
 main.command.config.init - initialize `.recur/` directory with full default config
+main.command.config.reveal - open lane-local `*.recur.md` reveal capsules using `.recur/config.toml`
 
 ## trait
 
@@ -36,14 +37,20 @@ Current trait sections:
 ## init
 
 `recur init` scaffolds the `.recur/` directory with:
-- `config.toml` - full default config including all `[traits.*]` sections
+- `config.toml` - full default config including lane sections, `[reveal]`, and `[traits.*]`
 - Ready for `recur trait set` customization per project
 - Deduplicated lane section names when different directories normalize to the same key
+
+`recur reveal` uses the `[reveal]` section to decide:
+- which suffix counts as a reveal capsule (default: `.recur.md`)
+- which ordered fields should be shown first
+- whether persona can be skipped when already known
 
 ## References
 
 - `docs/main.command.trait.readme.md`
 - `docs/main.command.init.readme.md`
+- `docs/main.command.reveal.readme.md`
 - `docs/main.command.init.lane-name-collision.complete.md`
 - `docs/main.command.map.readme.md`
 - `julia-tests/main.command.init.test.jl`

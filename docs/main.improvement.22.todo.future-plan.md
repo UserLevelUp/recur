@@ -9,9 +9,13 @@ Keep the reveal-doctrine idea visible in eventness so the lane-local gift /
 
 ## Current Posture
 
-- proposal only
+- first shippable slice landed:
+  - `[reveal]` defaults now scaffold through `recur init`
+  - `recur reveal` can list and open lane-local `*.recur.md` files
+  - repo dogfoods reveal capsules in active lanes
+- broader doctrine remains future-plan
 - treat the root proposal as the longform design note
-- do not open a build-now lane from this file alone
+- do not treat this one landed slice as the whole reveal doctrine
 
 ## What This Improvement Is About
 
@@ -31,6 +35,8 @@ recur find "reveal doctrine" --scope "main.improvement.22.**" -d docs/ -i
 ## Related
 
 - `README.CORE.IMPROVEMENT22.md`
+- `docs/main.command.reveal.readme.md`
+- `docs/main.improvement.22.recur.md`
 - `docs/main.improvement.14.todo.future-plan.md`
 - `docs/main.improvement.delivery-loop.recurring.md`
 - `docs/main.recur.expert.recurring.md`

@@ -15,6 +15,7 @@ recur init
 Creates:
 - `.recur/config.toml` with detected lanes (for example `src/`, `docs/`, `julia-tests/`)
 - `.recur/checkpoints.md` (if missing)
+- default `[reveal]` sections for lane-local `*.recur.md` ignition capsules
 - all default `[traits.*]` sections used by `recur trait`
 
 Generated lane names are normalized to lowercase kebab-case section names.

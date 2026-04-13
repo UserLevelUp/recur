@@ -25,6 +25,7 @@ mod main_command_flatten_yaml;
 mod main_command_id_impl;
 mod main_command_init_impl;
 mod main_command_merge_impl;
+mod main_command_reveal_impl;
 mod main_command_related_impl;
 mod main_command_stats_impl;
 mod main_command_stats_stdin;
@@ -42,7 +43,7 @@ mod main_command_tree_impl;
 )]
 #[command(version)]
 #[command(
-    after_help = "A quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help"
+    after_help = "A quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help\n  recur reveal --help"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -570,6 +571,21 @@ enum Commands {
         force: bool,
     },
 
+    /// Reveal lane-local rehydration capsules (`*.recur.md`)
+    ///
+    /// Examples:
+    ///   recur reveal
+    ///   recur reveal main.command.trace-id
+    ///   recur reveal skippy -d .recur
+    Reveal {
+        /// Lane name or query (for example: main.command.trace-id)
+        lane: Option<String>,
+
+        /// Starting directory or project root
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+    },
+
     /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
@@ -1015,6 +1031,8 @@ fn main() {
             analyze,
             force,
         } => main_command_init_impl::execute(dir, analyze, force, cli.json),
+
+        Commands::Reveal { lane, dir } => main_command_reveal_impl::execute(lane, dir, cli.json),
 
         Commands::Flatten {
             file,

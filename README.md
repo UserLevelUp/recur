@@ -132,6 +132,7 @@ recur stats "ServiceName" -l 1
 - **Identifier flow tracing** (`recur trace-id` for define/produce/consume/trigger lanes)
 - **Hierarchy statistics** with depth analysis and pagination
 - **Project-aware config** via `.recur/config.toml` (`recur init`, `recur init --analyze`)
+- **Lane rehydration helpers** via `recur reveal` and `*.recur.md` ignition capsules
 - **Trait config management** via `recur trait` (list/get/set trait keys in `.recur/config.toml`)
 - **Structured flattening** (`recur flatten`) for XML/JSON/TOML/YAML/CSV to `path = value` records
 - **Cross-domain gap analysis** — verify completeness across representations
@@ -186,6 +187,20 @@ recur init
 recur files "main_command_**" -d src/ --count   # No --sep needed when .recur/config.toml maps src/ => _
 recur init --analyze                             # Re-check lane/separator drift after refactors
 ```
+
+### `recur reveal` - open lane-local rehydration capsules
+`recur reveal` discovers and opens `*.recur.md` files that act as short
+lane-local ignition capsules.
+
+```bash
+recur reveal
+recur reveal main.command.trace-id
+recur reveal skippy
+recur reveal main.improvement.22 --json
+```
+
+`recur init` now scaffolds a default `[reveal]` section in `.recur/config.toml`
+with an ordered field list for reveal output.
 
 
 ### `recur trace-id` - trace hierarchical identifier flow

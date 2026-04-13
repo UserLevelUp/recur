@@ -78,6 +78,7 @@ main.command.compose.flatten = hierarchy collapse: squash nested structure to a 
 
 main.command.config.trait = trait config: list/get/set trait parameters in .recur/config.toml
 main.command.config.init = project scaffold: initialize .recur/ directory with full config
+main.command.config.reveal = lane rehydration: open one configured *.recur.md capsule
 
 ---
 
