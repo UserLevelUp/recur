@@ -23,15 +23,32 @@ The core idea:
 - that config scopes the agent's separator policy, reveal doctrine, and trait overrides
 - the agent's consciousness capsule lives in that folder's `.recur/`
 
-The `--agent` flag is the natural next step for `recur init`:
+The pure command is `recur lane`, not `recur init --agent`:
 
 ```bash
-recur init --agent docs        # scaffolds lanes/agent-docs/ with .recur/ and docs-agent.recur.md
-recur init --agent impl        # scaffolds lanes/agent-impl/ with .recur/ and impl-agent.recur.md
-recur init --agent tests       # scaffolds lanes/agent-tests/ with .recur/ and tests-agent.recur.md
+recur lane docs        # scaffolds a lane called docs
+recur lane impl        # scaffolds a lane called impl
+recur lane tests       # scaffolds a lane called tests
 ```
 
-Each agent then works entirely within its lane root:
+`recur` does not know what an agent is. That is the user's concern.
+If the lane is used by an AI agent, the user writes `role = "agent"` in
+the lane's `.recur/config.toml`. recur just manages the hierarchy.
+
+The root `.recur/config.toml` declares the lane doctrine:
+
+```toml
+[lanes]
+root = "lanes/"
+entry_suffix = ".recur.md"
+```
+
+`recur lane <name>` reads that doctrine and scaffolds accordingly:
+- creates `<root>/<name>/`
+- drops a nested `.recur/config.toml` scoped to that lane root
+- scaffolds `<name>.recur.md` in `.recur/` as the reveal capsule
+
+Each lane then works entirely within its root:
 - `recur reveal` from that root shows only that agent's capsule
 - config inheritance flows from the nearest `.recur/config.toml`
 - agents cannot accidentally read or overwrite each other's consciousness
