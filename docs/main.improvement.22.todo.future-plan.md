@@ -49,6 +49,28 @@ Together they enable:
 
 The `.recur/` vault is the endgame. `docs/*.recur.md` is the bootstrap.
 
+## trace-id is the Handoff Contract
+
+The verification mechanism between lanes is not a new primitive — it is
+`trace-id` applied at lane scope.
+
+A lane's work produces eventness files. Those files carry publish/subscribe/
+trigger relationships to other lanes. Before merge is allowed, `trace-id`
+verifies the cascade is complete: all subscribers satisfied, all triggers
+resolved.
+
+The reveal capsule already speaks this language:
+
+```toml
+default_handoff = "verify passes and lane truth updated"
+default_touch   = "declared-by-lane"
+```
+
+That is trace-id vocabulary in reveal clothing. An agent that wandered out
+of its declared scope shows up as a subscription with no matching publisher
+in the expected lane. No separate improvement needed — the tools are already
+there, aimed at a higher scope level.
+
 ## Related
 
 - `README.CORE.IMPROVEMENT22.md`
