@@ -32,11 +32,30 @@ recur files "README.CORE.IMPROVEMENT22" -d ./
 recur find "reveal doctrine" --scope "main.improvement.22.**" -d docs/ -i
 ```
 
+## Multi-Agent Coordination Goal
+
+Improvements 21 and 22 are the joint foundation for multi-agent coordination:
+
+- **Improvement 21** (directory projection / namespace mapping) gives each agent
+  a physically scoped lane — a directory that projects into a logical namespace
+- **Improvement 22** (reveal doctrine) gives each lane a consciousness capsule —
+  a `*.recur.md` gift in `.recur/` that carries persona, agenda, and pull-point
+
+Together they enable:
+- agents working in separate physical lanes without stepping on each other
+- each agent knowing its own context without reading the whole repo
+- coordinated merge, build, test, iterate, commit, and push across lanes
+- `.recur/` as the vault — lane-local trade context that need not be public
+
+The `.recur/` vault is the endgame. `docs/*.recur.md` is the bootstrap.
+
 ## Related
 
 - `README.CORE.IMPROVEMENT22.md`
+- `README.CORE.IMPROVEMENT21.md`
 - `docs/main.command.reveal.readme.md`
 - `docs/main.improvement.22.recur.md`
+- `docs/main.improvement.21.todo.future-plan.md`
 - `docs/main.improvement.14.todo.future-plan.md`
 - `docs/main.improvement.delivery-loop.recurring.md`
 - `docs/main.recur.expert.recurring.md`
