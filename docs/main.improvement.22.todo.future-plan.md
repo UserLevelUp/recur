@@ -9,13 +9,18 @@ Keep the reveal-doctrine idea visible in eventness so the lane-local gift /
 
 ## Current Posture
 
-- first shippable slice landed:
-  - `[reveal]` defaults now scaffold through `recur init`
-  - `recur reveal` can list and open lane-local `*.recur.md` files
+- phase 1 shipped:
+  - `[reveal]` defaults scaffold through `recur init`
+  - `recur reveal` lists and opens lane-local `*.recur.md` files
   - repo dogfoods reveal capsules in active lanes
+- phase 2 next slice: `current_thread` field in `[reveal]`
+  - `recur reveal` with no args opens the configured thread directly
+  - falls back to listing all capsules when `current_thread` is absent
+  - `recur init` scaffolds the field blank; user sets it when ready
+  - delight state: `recur reveal` alone is enough to resume any session
 - broader doctrine remains future-plan
 - treat the root proposal as the longform design note
-- do not treat this one landed slice as the whole reveal doctrine
+- do not treat these landed slices as the whole reveal doctrine
 
 ## What This Improvement Is About
 
