@@ -10,5 +10,5 @@ pull.first = recur files "main.command.lane.**" -d docs/
 pull.then = recur files "main.improvement.21.**" -d docs/
 verify = cargo build --profile release-safe && julia julia-tests/main.command.lane.test.jl
 tool.escape = recur tree "main" -d docs/ --sep . --sep _ --show-sep
-do.not.disturb = do not add agent concepts to recur surface; do not implement config inheritance or merge coordination yet
+do.not.disturb = do not add agent concepts to recur surface; do not implement config inheritance or merge coordination yet; do not ship directory-to-prefix projection mechanics or per-lane separator override in phase 1 — those are phase 2 (see addendum in docs/main.improvement.21.todo.future-plan.md for doctrine-aligned framing; prior "layer 1 / layer 3" vocabulary is superseded)
 ready.state = I know the exact files to create, the tests to pass, and the scope boundary

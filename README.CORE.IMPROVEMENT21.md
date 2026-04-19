@@ -348,3 +348,152 @@ That is increasingly common in real repos.
 
 This would let recur reason more naturally about the actual shape of a project
 instead of making users manually restate directory meaning in separate names.
+
+
+APPENDIX A: DIRECTORY AS SEPARATOR (REFRAME 2026-04-18)
+-------------------------------------------------------
+!! SUPERSEDED BY APPENDIX B (ADDENDUM 2026-04-18) — SEE BELOW !!
+
+This framing was my first reframe attempt. It treats directory as a
+first-class separator token and invents a "three layers" doctrine. Both
+moves contradict the eventness whitepaper (Section 5.3 canonical definitions
+and Section 9 three-phase cycle). Left intact below as part of the correction
+arc. Read APPENDIX B for the doctrine-aligned framing.
+
+Joe's reframe, added while the `recur lane` command is actively being built
+(contract tests: 11 pass, 15 fail, 6 error as of commit 7993d54).
+
+The original proposal framed directory projection as its own mapping layer
+with a separate `.recur/map.toml` config shape. The reframe collapses this
+into a cleaner three-layer doctrine that reuses existing separator policy:
+
+1. DIRECTORY IS A SEPARATOR
+   Folder traversal projects into the hierarchy namespace the same way `.`,
+   `-`, `_`, and `:` do today. `/` is just another separator token, composable
+   with all the others via `--sep`. The projection from
+   `lanes/docs/main.x` to `lanes.docs.main.x` is not a special new feature —
+   it is the existing separator engine given `/` as an additional separator.
+
+2. DIRECTORY IS A LANE FENCE
+   A folder that owns a `.recur/config.toml` is a scoped sub-root. Reveal,
+   traits, and separator policy are local to that lane. This is the
+   scaffolding doctrine the `recur lane` command implements. The lane
+   boundary is physical (directory), not naming-based (prefix).
+
+3. SEPARATOR PER LANE IS CONFIGURABLE
+   The lane's own config declares which separator(s) apply within it
+   (`.`, `_`, `-`, `/`, or multi). A lane can override the root's separator
+   policy. `--sep /` treats folder crossings as explicit separator tokens;
+   without it, directory projection remains implicit.
+
+WHY THE REFRAME
+---------------
+The original framing invited a second config file (`map.toml`) and a second
+projection engine. The three-layer doctrine uses one engine — the existing
+separator/scope machinery — and gives directory traversal first-class status
+inside it. Fewer moving parts, same projection capability.
+
+This also clarifies the relationship between the two existing `lanes` config
+concepts that were starting to collide:
+
+- `[lanes.<dir>]` (existing)        — separator inference per directory
+- `[lanes]` root / entry_suffix     — lane scaffolding doctrine (improvement 21 phase 1)
+
+Under the reframe, these are two faces of one lane doctrine: the lane's
+config governs both its scope fence AND its separator projection. Distinct
+TOML blocks remain, but they sit under one conceptual umbrella.
+
+RELATIONSHIP TO ACTIVE WORK
+---------------------------
+The `recur lane` command (phase 1) currently scopes on directory as a lane
+fence. Directory-as-separator projection (layer 1) is the natural phase 2
+extension — the scaffolding lands first, the projection lands second. No
+scope expansion is required for the 21-failing-tests lane to go green; the
+reframe is primarily design guidance that keeps phase 2 from drifting.
+
+See `docs/main.improvement.21.todo.future-plan.md` for the shorter in-tree
+version of this framing and the link back to `recur lane` implementation.
+
+
+APPENDIX B: DOCTRINE-ALIGNED ADDENDUM (2026-04-18)
+--------------------------------------------------
+This addendum supersedes APPENDIX A above. Kept as a separate section so
+the correction arc stays tractable — you can see where the framing was and
+where it is now without losing the derivation record.
+
+WHAT WAS WRONG IN APPENDIX A
+----------------------------
+1. "Directory is a separator" — wrong. Directories extend the PREFIX toward
+   the interesting regime level. They are not tokens in the separator engine
+   sense. Prefix/baseline/suffix is the canonical ontology, not separator-ism.
+2. "Three layers" doctrine — wrong. The whitepaper already has a three-phase
+   doctrine (Expand → Discover → Collapse, Section 9). Inventing a parallel
+   three-layer scheme competed with canon instead of slotting under it.
+3. "--sep / as first-class token" — over-promoted. This is mechanics sitting
+   under the real doctrine, not a new doctrine.
+
+DOCTRINE (QUOTED FROM docs/eventness_explained_whitepaper.docx)
+---------------------------------------------------------------
+Section 5.3 canonical definitions:
+
+- Prefix   = context / regime / scope (selects which operators are active)
+- Baseline = reference state (instance / version)
+- Suffix   = operator / rule / dynamics (the behavior attached)
+
+Section 3.1 canonical intuition — Sun / Earth / Moon:
+
+- sun[.eventness][.ext]            — rare interesting events
+- sun.earth[.eventness][.ext]      — more interesting
+- sun.earth.moon[.eventness][.ext] — the level recur is FOR
+
+"Most of the time, most systems are boring. The interesting moments are
+rare, localized, and precisely the moments where fixed-rate sampling is
+least adequate." (Section 1.1)
+
+Section 9 three phases — the actual cycle:
+
+- Expand   — prefix.base.suffix[.expanding.eventness][.ext]
+             markers: .todo, .priority, .probe, .drift, .spike, persona
+- Discover — recur tree / recur find / recur scope surface what expansion made visible
+- Collapse — prefix.base.suffix[.collapsing.eventness][.ext]
+             markers: .resolved, .merged, .deprecated, .promoted, .frozen
+
+Eventness markers attach to FILES, not directories. The file system is the
+event log. Directories are path extension toward the leaf where tracking
+happens.
+
+REFRAME OF IMPROVEMENT 21 (DOCTRINE-ALIGNED)
+--------------------------------------------
+Improvement 21 is "Directory as Prefix Extension + Lane Root":
+
+- A directory extends the prefix of any file it contains. It carries you
+  up to the regime level where eventness becomes trackable.
+- A lane is a prefix-fence marked by `.recur/config.toml`. The fence says
+  "recur's eventness tracking is scoped from here; shallower is just prefix."
+- Eventness lives on the files inside the lane, never on the directory itself.
+
+Phase 1 — `recur lane` command (active build): scaffolds the prefix-fence.
+That is the entire phase 1 scope. 21 failing tests pending.
+
+Phase 2 — explicit directory-to-prefix projection mechanics (e.g., `--sep /`
+as a composable separator token). This is useful implementation detail, not
+a competing doctrine. It sits under prefix/baseline/suffix, not beside it.
+
+CONFIG COLLISION NOTE (UNCHANGED FROM APPENDIX A)
+-------------------------------------------------
+The two `lanes`-adjacent TOML blocks remain distinct:
+
+- `[lanes.<dir>]` (existing)        — separator inference per directory
+- `[lanes]` root / entry_suffix     — lane scaffolding doctrine (improvement 21 phase 1)
+
+These are two faces of one lane doctrine: where the prefix-fence sits AND
+how the lane's files project into prefix strings.
+
+WHY THE CORRECTION ARC IS PRESERVED
+-----------------------------------
+The whitepaper itself (Section 10) documents "independent re-derivation" as
+part of the intellectual trail. The same culture applies here: the
+wrong-then-right correction is visible doctrine evolution, not embarrassing
+history. Future readers can see what was proposed, what was corrected, and
+why — which makes the canon stickier than if the correction were silently
+overwritten.
