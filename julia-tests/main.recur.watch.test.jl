@@ -74,6 +74,17 @@ function wait_for_watch_start(handle::WatchHandle; timeout_seconds::Float64=2.0)
     return :timeout
 end
 
+function wait_for_watch_ready(handle::WatchHandle; timeout_seconds::Float64=4.0)
+    deadline = time() + timeout_seconds
+    while time() < deadline
+        stderr_text = isfile(handle.stderr_path) ? read(handle.stderr_path, String) : ""
+        occursin("recur watch: ready", stderr_text) && return true
+        process_exited(handle.process) && return false
+        sleep(0.05)
+    end
+    return false
+end
+
 function wait_for_output_line(handle::WatchHandle; timeout_seconds::Float64=WATCH_TIMEOUT_SECONDS)
     deadline = time() + timeout_seconds
     while time() < deadline
@@ -169,6 +180,9 @@ end
             state = wait_for_watch_start(handle)
             assert_no_timeout(state, "Timed out waiting for recur watch JSON mode startup")
             @test state == :running
+
+            wait_for_watch_ready(handle) ||
+                error("Timed out waiting for recur watch readiness signal")
 
             write(joinpath(root, "lane.status.current.md"), "STATE: active\n")
             line, stderr_text = wait_for_output_line(handle)

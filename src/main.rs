@@ -34,6 +34,7 @@ mod main_command_trace_impl;
 mod main_command_trace_stats_impl;
 mod main_command_trait_impl;
 mod main_command_tree_impl;
+mod main_command_watch_impl;
 
 #[derive(Parser)]
 #[command(name = "recur")]
@@ -586,6 +587,30 @@ enum Commands {
         dir: PathBuf,
     },
 
+    /// Watch vault or project files for matching hierarchical events
+    ///
+    /// Examples:
+    ///   recur watch --filter "**.current.md"
+    ///   recur watch --filter "**.status.current" --dir .recur --format json
+    ///   recur watch --filter "**.current.md" --poll-framing 5
+    Watch {
+        /// Hierarchical pattern to subscribe to
+        #[arg(long, value_name = "PATTERN")]
+        filter: String,
+
+        /// Root directory to watch
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// Output format: oneline or json
+        #[arg(long, default_value = "oneline", value_name = "FORMAT")]
+        format: String,
+
+        /// Poll interval in integer seconds; omit for filesystem-event streaming mode
+        #[arg(long, value_name = "SECONDS", allow_hyphen_values = true)]
+        poll_framing: Option<String>,
+    },
+
     /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
@@ -1033,6 +1058,18 @@ fn main() {
         } => main_command_init_impl::execute(dir, analyze, force, cli.json),
 
         Commands::Reveal { lane, dir } => main_command_reveal_impl::execute(lane, dir, cli.json),
+
+        Commands::Watch {
+            filter,
+            dir,
+            format,
+            poll_framing,
+        } => {
+            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
+            let separator = command_separators.last().copied().unwrap_or('.');
+
+            main_command_watch_impl::execute(filter, dir, format, poll_framing, separator)
+        }
 
         Commands::Flatten {
             file,

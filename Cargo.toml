@@ -39,6 +39,7 @@ rayon = "1.8"
 # File walking
 walkdir = "2.4"
 ignore = "0.4"  # .gitignore support
+notify = "6.1"
 
 # Terminal output
 termcolor = "1.4"
