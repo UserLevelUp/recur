@@ -70,6 +70,7 @@ try
         include("runtests.demo.sudoku.jl")           # Demo: Sudoku + trace-id Phase 1+2 (file protocol + Recur.jl)
         include("runtests.demo.sudoku.phase3.jl")    # Demo: Sudoku Phase 3 (Generator.jl — flow files + cascades)
         include("runtests.demo.sudoku.phase4.jl")    # Demo: Sudoku Phase 4 (Engine.jl + Display.jl + Game.jl)
+        include("main.demo.sudoku.watch.test.jl")    # Lane L cross-loop demo regression wrapper
         # include("runtests.gaps.jl")        # Needs feature implementation
 
     end
