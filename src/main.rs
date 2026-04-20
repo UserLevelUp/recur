@@ -25,6 +25,7 @@ mod main_command_flatten_yaml;
 mod main_command_id_impl;
 mod main_command_init_impl;
 mod main_command_merge_impl;
+mod main_command_psyche_impl;
 mod main_command_reveal_impl;
 mod main_command_related_impl;
 mod main_command_stats_impl;
@@ -586,6 +587,27 @@ enum Commands {
         dir: PathBuf,
     },
 
+    /// Inspect `.recur` agent vault structure for missing or inconsistent files
+    ///
+    /// Examples:
+    ///   recur psyche
+    ///   recur psyche --dir .
+    ///   recur psyche --format json
+    ///   recur psyche --filter orphan-status
+    Psyche {
+        /// Project root or directory containing `.recur/`
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+
+        /// Output format: text or json
+        #[arg(long, default_value = "text", value_name = "FORMAT")]
+        format: String,
+
+        /// Filter findings by kind (for example: orphan-status)
+        #[arg(long, value_name = "KIND")]
+        filter: Option<String>,
+    },
+
     /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
@@ -1033,6 +1055,12 @@ fn main() {
         } => main_command_init_impl::execute(dir, analyze, force, cli.json),
 
         Commands::Reveal { lane, dir } => main_command_reveal_impl::execute(lane, dir, cli.json),
+
+        Commands::Psyche {
+            dir,
+            format,
+            filter,
+        } => main_command_psyche_impl::execute(dir, format, filter),
 
         Commands::Flatten {
             file,
