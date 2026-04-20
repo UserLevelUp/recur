@@ -1,7 +1,7 @@
 """
-run_watch_demo.jl - Cross-loop demo for `recur watch`.
+run_watch_demo.jl - Cross-loop demo for `recur-watch`.
 
-Runs two `recur watch` subprocesses over a shared table directory:
+Runs two `recur-watch` subprocesses over a shared table directory:
 - server watch subscribes to `move.**.current.md`
 - player watch subscribes to `result.**.current.md`
 
@@ -14,7 +14,7 @@ const SCRIPT_DIR = @__DIR__
 const DEMO_DIR = normpath(joinpath(SCRIPT_DIR, ".."))
 const PROJECT_ROOT = normpath(joinpath(SCRIPT_DIR, "..", "..", ".."))
 const TABLE_DIR = joinpath(DEMO_DIR, "table")
-const RECUR_BIN = normpath(joinpath(PROJECT_ROOT, "target", "release-safe", "recur.exe"))
+const RECUR_WATCH_BIN = normpath(joinpath(PROJECT_ROOT, "target", "release-safe", "recur-watch.exe"))
 const READY_TOKEN = "recur watch: ready"
 const POLL_INTERVAL_SECONDS = 0.05
 const READY_TIMEOUT_SECONDS = 4.0
@@ -35,7 +35,7 @@ mutable struct WatchHandle
 end
 
 function ensure_binary()
-    isfile(RECUR_BIN) || error("Missing recur binary at $(RECUR_BIN)")
+    isfile(RECUR_WATCH_BIN) || error("Missing recur-watch binary at $(RECUR_WATCH_BIN)")
 end
 
 function reset_table_dir!()
@@ -50,7 +50,7 @@ function spawn_watch(name::String, filter::String)
     stderr_io = open(stderr_path, "w")
 
     cmd = Cmd(
-        Cmd([RECUR_BIN, "watch", "--filter", filter, "--dir", TABLE_DIR, "--format", "json"]);
+        Cmd([RECUR_WATCH_BIN, "--filter", filter, "--dir", TABLE_DIR, "--format", "json"]);
         dir=PROJECT_ROOT,
     )
     process = run(pipeline(cmd, stdout=stdout_io, stderr=stderr_io); wait=false)

@@ -2,13 +2,17 @@
 Tests for recur watch command
 =============================
 
-Executable specification for the future `recur watch` subcommand.
-These tests are expected to fail until the command is implemented.
+Executable specification for the `recur-watch` binary boundary.
+The behavioral contract remains identical to the former subcommand.
 """
 
 include("runtests.setup.jl")
 
-const RECUR_WATCH_BIN = RECUR_BIN
+const RECUR_WATCH_BIN = get(
+    ENV,
+    "RECUR_WATCH_BIN",
+    joinpath(@__DIR__, "..", "target", RECUR_PROFILE, "recur-watch" * (Sys.iswindows() ? ".exe" : "")),
+)
 const WATCH_TIMEOUT_SECONDS = 8.0
 
 mutable struct WatchHandle
@@ -21,7 +25,7 @@ repo_root() = normpath(joinpath(@__DIR__, ".."))
 
 function run_recur_raw(args::Vector{String})
     display_cmd = join(map(arg -> contains(arg, ' ') ? "\"$arg\"" : arg, args), " ")
-    println("  -> recur $display_cmd")
+    println("  -> recur-watch $display_cmd")
 
     cmd = Cmd(`$RECUR_WATCH_BIN $args`, dir=repo_root())
     out = IOBuffer()
@@ -43,7 +47,7 @@ end
 
 function spawn_watch(args::Vector{String})
     display_cmd = join(map(arg -> contains(arg, ' ') ? "\"$arg\"" : arg, args), " ")
-    println("  -> recur $display_cmd")
+    println("  -> recur-watch $display_cmd")
 
     stdout_path = tempname()
     stderr_path = tempname()
@@ -126,7 +130,7 @@ end
     log_section("Testing: recur watch command")
 
     @testset "watch help prints usage" begin
-        success, output, error_output = run_recur_raw(["watch", "--help"])
+        success, output, error_output = run_recur_raw(["--help"])
         help_text = output * error_output
 
         @test success
@@ -137,7 +141,7 @@ end
     end
 
     @testset "watch with no args exits with usage error" begin
-        success, _, error_output = run_recur_raw(["watch"])
+        success, _, error_output = run_recur_raw(String[])
         error_text = lowercase(error_output)
 
         @test !success
@@ -146,7 +150,7 @@ end
 
     @testset "watch filter accepts recur pattern language" begin
         root = mktempdir()
-        handle = spawn_watch(["watch", "--filter", "**.current.md", "--dir", root])
+        handle = spawn_watch(["--filter", "**.current.md", "--dir", root])
 
         try
             state = wait_for_watch_start(handle)
@@ -164,7 +168,7 @@ end
     @testset "watch dir honors scope and rejects missing path" begin
         missing_dir = joinpath(mktempdir(), "does-not-exist")
         success, _, error_output = run_recur_raw([
-            "watch", "--filter", "**.current.md", "--dir", missing_dir
+            "--filter", "**.current.md", "--dir", missing_dir
         ])
         error_text = lowercase(error_output)
 
@@ -174,7 +178,7 @@ end
 
     @testset "watch json format emits parseable event objects" begin
         root = mktempdir()
-        handle = spawn_watch(["watch", "--filter", "**.current.md", "--dir", root, "--format", "json"])
+        handle = spawn_watch(["--filter", "**.current.md", "--dir", root, "--format", "json"])
 
         try
             state = wait_for_watch_start(handle)
@@ -201,7 +205,7 @@ end
     @testset "watch poll framing accepts integer seconds and rejects unit suffix" begin
         root = mktempdir()
         handle = spawn_watch([
-            "watch", "--filter", "**.current.md", "--dir", root, "--poll-framing", "1"
+            "--filter", "**.current.md", "--dir", root, "--poll-framing", "1"
         ])
 
         try
@@ -214,7 +218,7 @@ end
         end
 
         success, _, error_output = run_recur_raw([
-            "watch", "--filter", "**.current.md", "--poll-framing", "5s"
+            "--filter", "**.current.md", "--poll-framing", "5s"
         ])
         error_text = lowercase(error_output)
 
@@ -224,7 +228,7 @@ end
 
     @testset "watch poll framing rejects zero interval" begin
         success, _, error_output = run_recur_raw([
-            "watch", "--filter", "**.current.md", "--poll-framing", "0"
+            "--filter", "**.current.md", "--poll-framing", "0"
         ])
         error_text = lowercase(error_output)
 
@@ -234,7 +238,7 @@ end
 
     @testset "watch poll framing rejects negative interval" begin
         success, _, error_output = run_recur_raw([
-            "watch", "--filter", "**.current.md", "--poll-framing", "-1"
+            "--filter", "**.current.md", "--poll-framing", "-1"
         ])
         error_text = lowercase(error_output)
 
