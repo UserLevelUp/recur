@@ -39,6 +39,19 @@ function write_test_file(path::String, content::String)
     write(path, content)
 end
 
+function set_test_file_mtime(path::String, unix_seconds::Real)
+    timestamp = floor(Int, unix_seconds)
+    escaped_path = replace(path, "'" => "''")
+
+    if Sys.iswindows()
+        ps_command =
+            "\$path = '$escaped_path'; \$mtime = [DateTimeOffset]::FromUnixTimeSeconds($timestamp).UtcDateTime; [System.IO.File]::SetLastWriteTimeUtc(\$path, \$mtime)"
+        run(`powershell -NoProfile -Command $ps_command`)
+    else
+        error("set_test_file_mtime is currently implemented only for Windows test hosts")
+    end
+end
+
 @testset "recur psyche command" begin
     log_section("Testing: recur psyche command")
 
@@ -146,6 +159,150 @@ end
                 @test haskey(finding, :path) || haskey(finding, "path")
                 @test haskey(finding, :kind) || haskey(finding, "kind")
             end
+        finally
+            rm(root; recursive=true, force=true)
+        end
+    end
+
+    @testset "psyche detects stale current files with stale-seconds threshold" begin
+        root = mktempdir()
+
+        try
+            vault_dir = joinpath(root, ".recur", "stale-agent")
+            status_path = joinpath(vault_dir, "stale-agent.status.current.md")
+            work_path = joinpath(vault_dir, "stale-agent.work.current.md")
+            write_test_file(status_path, "STATE: active\n")
+            write_test_file(work_path, "# stale-agent.work.current\n")
+            write_test_file(joinpath(vault_dir, "stale-agent.recur.md"), "# stale-agent.recur\n")
+            set_test_file_mtime(work_path, time() - 3600)
+
+            success, output, error_output = run_recur_raw([
+                "psyche", "--dir", root, "--stale-seconds", "60"
+            ])
+            combined = lowercase(output * error_output)
+
+            @test !success
+            @test occursin("stale-current", combined) ||
+                  occursin("stale-agent", combined) ||
+                  occursin("stale-agent.work.current.md", combined)
+            @test !occursin("unexpected argument", combined)
+        finally
+            rm(root; recursive=true, force=true)
+        end
+    end
+
+    @testset "psyche detects missing last-run after thrust" begin
+        root = mktempdir()
+
+        try
+            vault_dir = joinpath(root, ".recur", "thrust-agent")
+            write_test_file(
+                joinpath(vault_dir, "thrust-agent.status.current.md"),
+                "STATE: stopped-awaiting-merge\n",
+            )
+            write_test_file(
+                joinpath(vault_dir, "thrust-agent.work.current.md"),
+                "# thrust-agent.work.current\n",
+            )
+            write_test_file(
+                joinpath(vault_dir, "thrust-agent.recur.md"),
+                "# thrust-agent.recur\n",
+            )
+
+            success, output, error_output = run_recur_raw(["psyche", "--dir", root])
+            combined = lowercase(output * error_output)
+
+            @test !success
+            @test occursin("missing-last-run-after-thrust", combined) ||
+                  occursin("last-run", combined) ||
+                  occursin("thrust-agent", combined)
+            @test occursin("thrust-agent.status.current.md", combined) ||
+                  occursin("stopped-awaiting-merge", combined)
+        finally
+            rm(root; recursive=true, force=true)
+        end
+    end
+
+    @testset "psyche detects orphan work without status file" begin
+        root = mktempdir()
+
+        try
+            vault_dir = joinpath(root, ".recur", "orphan-worker")
+            write_test_file(
+                joinpath(vault_dir, "orphan-worker.work.current.md"),
+                "# orphan-worker.work.current\n",
+            )
+            write_test_file(
+                joinpath(vault_dir, "orphan-worker.recur.md"),
+                "# orphan-worker.recur\n",
+            )
+
+            success, output, error_output = run_recur_raw(["psyche", "--dir", root])
+            combined = lowercase(output * error_output)
+
+            @test !success
+            @test occursin("orphan-work", combined) ||
+                  occursin("orphan-worker", combined) ||
+                  occursin("orphan-worker.work.current.md", combined)
+            @test occursin("work", combined)
+        finally
+            rm(root; recursive=true, force=true)
+        end
+    end
+
+    @testset "psyche filter json isolates one v2 finding kind" begin
+        root = mktempdir()
+
+        try
+            orphan_dir = joinpath(root, ".recur", "orphan-json")
+            write_test_file(
+                joinpath(orphan_dir, "orphan-json.work.current.md"),
+                "# orphan-json.work.current\n",
+            )
+            write_test_file(
+                joinpath(orphan_dir, "orphan-json.recur.md"),
+                "# orphan-json.recur\n",
+            )
+
+            thrust_dir = joinpath(root, ".recur", "thrust-json")
+            write_test_file(
+                joinpath(thrust_dir, "thrust-json.status.current.md"),
+                "STATE: stopped-awaiting-merge\n",
+            )
+            write_test_file(
+                joinpath(thrust_dir, "thrust-json.work.current.md"),
+                "# thrust-json.work.current\n",
+            )
+            write_test_file(
+                joinpath(thrust_dir, "thrust-json.recur.md"),
+                "# thrust-json.recur\n",
+            )
+
+            success, output, _ = run_recur_raw([
+                "psyche", "--dir", root, "--filter", "orphan-work", "--format", "json"
+            ])
+            parsed = try
+                JSON3.read(output)
+            catch
+                nothing
+            end
+
+            findings = if parsed === nothing
+                Any[]
+            elseif parsed isa AbstractVector
+                collect(parsed)
+            else
+                Any[parsed]
+            end
+            kinds = String[
+                haskey(finding, :kind) ? String(finding[:kind]) : String(finding["kind"])
+                for finding in findings
+            ]
+
+            @test !success
+            @test parsed !== nothing
+            @test length(findings) >= 1
+            @test length(kinds) >= 1 && all(==("orphan-work"), kinds)
         finally
             rm(root; recursive=true, force=true)
         end
