@@ -384,6 +384,22 @@ recur trace-stats --scope "**" --depth 8 --depth-guard clamp
 git diff --name-only | recur trace-stats --scope "**" --stdin --sort-by risk
 ```
 
+### `recur watch` — subscribe to hierarchical file-event patterns within a directory
+```bash
+recur watch --filter "recur.**" -d .
+recur watch --filter "core.engine.**" --format json
+recur watch --filter "test.**" --poll-framing 5
+recur watch --filter "src.**" -d . --poll-framing 10 --format json
+```
+
+### `recur psyche` — inspect `.recur` vault for missing or inconsistent state
+```bash
+recur psyche
+recur psyche --format json
+recur psyche --filter orphan-status
+recur psyche -d . --json
+```
+
 ## Advanced Composability
 
 **Hold my beer...** 🍺 These examples showcase the full power of Unix pipe composition with multi-source merging, cross-separator unification, and provenance tracking.
