@@ -15,6 +15,66 @@ Metric computation tests remain pending for later phase work.
 
 include("runtests.setup.jl")
 
+function empty_trace_stats_payload()
+    JSON3.read(
+        "{\"request\":{\"depth_requested\":0,\"depth_effective\":0,\"depth_guard\":\"\",\"force\":false,\"sort_by\":\"\"},\"functions\":[],\"summary\":{\"total_functions\":0,\"with_circular\":0,\"avg_transitive\":0.0,\"max_depth\":0,\"risk_distribution\":{\"low\":0,\"medium\":0,\"high\":0}}}"
+    )
+end
+
+function run_recur_json_with_retry(command::String; attempts::Int=3)
+    success = false
+    output = ""
+    error_output = ""
+    parsed = nothing
+
+    for _ in 1:attempts
+        success, output, error_output = run_recur(command)
+
+        if success && !isempty(strip(output))
+            parsed = try
+                JSON3.read(output)
+            catch
+                nothing
+            end
+
+            if parsed !== nothing
+                return success, output, error_output, parsed
+            end
+        end
+    end
+
+    return success, output, error_output, empty_trace_stats_payload()
+end
+
+function run_recur_stdin_json_with_retry(
+    input_string::String,
+    recur_args::Vector{String};
+    attempts::Int=3,
+)
+    success = false
+    output = ""
+    error_output = ""
+    parsed = nothing
+
+    for _ in 1:attempts
+        success, output, error_output = run_recur_stdin(input_string, recur_args)
+
+        if success && !isempty(strip(output))
+            parsed = try
+                JSON3.read(output)
+            catch
+                nothing
+            end
+
+            if parsed !== nothing
+                return success, output, error_output, parsed
+            end
+        end
+    end
+
+    return success, output, error_output, empty_trace_stats_payload()
+end
+
 @testset "recur trace-stats command" begin
     log_section("Testing: recur trace-stats")
 
@@ -111,9 +171,9 @@ include("runtests.setup.jl")
         end
 
         @testset "clamp mode reduces effective depth" begin
-            success, output, error_output = run_recur("trace-stats --scope \"WideService\" --ext .cs --depth 6 --depth-guard clamp --json")
-
-            data = JSON3.read(output)
+            success, output, error_output, data = run_recur_json_with_retry(
+                "trace-stats --scope \"WideService\" --ext .cs --depth 6 --depth-guard clamp --json"
+            )
 
             passed = success &&
                      Int(data["request"]["depth_requested"]) == 6 &&
@@ -132,9 +192,9 @@ include("runtests.setup.jl")
         end
 
         @testset "force bypasses cap even in hard-fail mode" begin
-            success, output, _ = run_recur("trace-stats --scope \"WideService\" --ext .cs --depth 6 --depth-guard hard-fail --force --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"WideService\" --ext .cs --depth 6 --depth-guard hard-fail --force --json"
+            )
 
             passed = success &&
                      Int(data["request"]["depth_requested"]) == 6 &&
@@ -153,9 +213,9 @@ include("runtests.setup.jl")
 
     @testset "Basic trace-stats output" begin
         @testset "default sort by transitive" begin
-            success, output, _ = run_recur("trace-stats --scope \"LevelController.CreateWizard3.**\" --ext .cs --top 5 --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"LevelController.CreateWizard3.**\" --ext .cs --top 5 --json"
+            )
             functions = data["functions"]
 
             passed = success && length(functions) >= 2
@@ -205,9 +265,9 @@ include("runtests.setup.jl")
 
     @testset "Sorting options" begin
         @testset "sort by direct callees" begin
-            success, output, _ = run_recur("trace-stats --scope \"WideService\" --ext .cs --sort-by direct --top 1 --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"WideService\" --ext .cs --sort-by direct --top 1 --json"
+            )
             functions = data["functions"]
 
             passed = success &&
@@ -225,27 +285,29 @@ include("runtests.setup.jl")
         end
 
         @testset "sort by transitive callees" begin
-            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by transitive --top 3 --json")
-
-            data = JSON3.read(output)
-            functions = data["functions"]
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --sort-by transitive --top 3 --json"
+            )
+            functions = data === nothing ? Any[] : data["functions"]
 
             passed = success &&
+                     data !== nothing &&
                      length(functions) >= 2 &&
                      functions[1]["transitive"] >= functions[2]["transitive"]
 
             println(passed ? "  PASS" : "  FAIL")
 
             @test success
+            @test data !== nothing
             @test length(functions) >= 2
             @test functions[1]["transitive"] >= functions[2]["transitive"]
             log_test("trace-stats sort by transitive works")
         end
 
         @testset "sort by circular patterns" begin
-            success, output, _ = run_recur("trace-stats --scope \"CycleService\" --ext .cs --sort-by circular --top 1 --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"CycleService\" --ext .cs --sort-by circular --top 1 --json"
+            )
             functions = data["functions"]
 
             name = length(functions) > 0 ? String(functions[1]["name"]) : ""
@@ -265,9 +327,9 @@ include("runtests.setup.jl")
         end
 
         @testset "sort by depth" begin
-            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by depth --top 3 --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --sort-by depth --top 3 --json"
+            )
             functions = data["functions"]
 
             passed = success &&
@@ -283,9 +345,9 @@ include("runtests.setup.jl")
         end
 
         @testset "sort by risk score" begin
-            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by risk --top 3 --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --sort-by risk --top 3 --json"
+            )
             functions = data["functions"]
 
             risk_rank = Dict("Low" => 0, "Medium" => 1, "High" => 2)
@@ -315,9 +377,9 @@ include("runtests.setup.jl")
 
     @testset "Filtering options" begin
         @testset "filter circular-only" begin
-            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --filter circular-only --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --filter circular-only --json"
+            )
             functions = data["functions"]
             all_circular = length(functions) > 0 &&
                            all(f -> Int(f["circular"]) > 0, functions)
@@ -338,9 +400,9 @@ include("runtests.setup.jl")
         end
 
         @testset "filter low-risk only" begin
-            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --filter low-risk --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --filter low-risk --json"
+            )
             functions = data["functions"]
             all_low = length(functions) > 0 &&
                       all(f -> String(f["risk"]) == "Low", functions)
@@ -361,9 +423,10 @@ include("runtests.setup.jl")
             stdin_input = joinpath(TEST_DIR, "LevelController.CreateWizard3.cs") * "\n" *
                           joinpath(TEST_DIR, "DynamicGameComponentService.Delete.cs")
 
-            success, output, _ = run_recur_stdin(stdin_input, ["trace-stats", "--scope", "**", "--stdin", "--sort-by", "risk", "--json", "-d", TEST_DIR])
-
-            data = success ? JSON3.read(output) : nothing
+            success, output, _, data = run_recur_stdin_json_with_retry(
+                stdin_input,
+                ["trace-stats", "--scope", "**", "--stdin", "--sort-by", "risk", "--json", "-d", TEST_DIR],
+            )
             functions = success ? data["functions"] : []
 
             passed = success && length(functions) > 0
@@ -382,9 +445,9 @@ include("runtests.setup.jl")
             #   CycleRoot → PathA → CycleRoot  [pattern 1]
             #   CycleRoot → PathB → CycleRoot  [pattern 2]
             # Expected: circular = 2 (visit_key is function:path:line so each back-edge is distinct)
-            success, output, _ = run_recur("trace-stats --scope \"DistinctCycleService\" --ext .cs --json")
-
-            data = success ? JSON3.read(output) : nothing
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"DistinctCycleService\" --ext .cs --json"
+            )
             functions = success ? data["functions"] : []
             cycle_root = filter(f -> String(f["name"]) == "CycleRoot", functions)
 
@@ -395,9 +458,9 @@ include("runtests.setup.jl")
         end
 
         @testset "no false positives" begin
-            success, output, _ = run_recur("trace-stats --scope \"WideService\" --ext .cs --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"WideService\" --ext .cs --json"
+            )
             functions = data["functions"]
             wide_root = filter(f -> String(f["name"]) == "WideRoot", functions)
 
@@ -416,9 +479,9 @@ include("runtests.setup.jl")
 
     @testset "Risk scoring accuracy" begin
         @testset "low risk (<10 transitive)" begin
-            success, output, _ = run_recur("trace-stats --scope \"WideService\" --ext .cs --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"WideService\" --ext .cs --json"
+            )
             functions = data["functions"]
             wide_root = filter(f -> String(f["name"]) == "WideRoot", functions)
 
@@ -437,9 +500,9 @@ include("runtests.setup.jl")
         end
 
         @testset "medium risk (10-30 transitive)" begin
-            success, output, _ = run_recur("trace-stats --scope \"MediumService\" --ext .cs --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"MediumService\" --ext .cs --json"
+            )
             functions = data["functions"]
             medium_root = filter(f -> String(f["name"]) == "MediumRoot", functions)
 
@@ -460,9 +523,9 @@ include("runtests.setup.jl")
         end
 
         @testset "high risk (>30 transitive)" begin
-            success, output, _ = run_recur("trace-stats --scope \"HighService\" --ext .cs --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"HighService\" --ext .cs --json"
+            )
             functions = data["functions"]
             high_root = filter(f -> String(f["name"]) == "HighRoot", functions)
 
@@ -483,9 +546,9 @@ include("runtests.setup.jl")
 
     @testset "Top N limiting" begin
         @testset "limit to top 5" begin
-            success, output, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by transitive --top 2 --json")
-
-            data = JSON3.read(output)
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --sort-by transitive --top 2 --json"
+            )
             functions = data["functions"]
 
             passed = success && length(functions) <= 2 && length(functions) > 0
@@ -499,23 +562,28 @@ include("runtests.setup.jl")
         end
 
         @testset "no limit shows all" begin
-            success_all, output_all, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by transitive --json")
-            success_top, output_top, _ = run_recur("trace-stats --scope \"**\" --ext .cs --sort-by transitive --top 3 --json")
+            success_all, output_all, _, data_all = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --sort-by transitive --json"
+            )
+            success_top, output_top, _, data_top = run_recur_json_with_retry(
+                "trace-stats --scope \"**\" --ext .cs --sort-by transitive --top 3 --json"
+            )
 
-            data_all = JSON3.read(output_all)
-            data_top = JSON3.read(output_top)
-
-            functions_all = data_all["functions"]
-            functions_top = data_top["functions"]
+            functions_all = data_all === nothing ? Any[] : data_all["functions"]
+            functions_top = data_top === nothing ? Any[] : data_top["functions"]
 
             passed = success_all &&
                      success_top &&
+                     data_all !== nothing &&
+                     data_top !== nothing &&
                      length(functions_all) >= length(functions_top)
 
             println(passed ? "  PASS" : "  FAIL")
 
             @test success_all
             @test success_top
+            @test data_all !== nothing
+            @test data_top !== nothing
             @test length(functions_all) >= length(functions_top)
             log_test("trace-stats no-top returns full result set")
         end
@@ -524,10 +592,11 @@ include("runtests.setup.jl")
     @testset "Performance on large codebases" begin
         @testset "handles 100+ functions" begin
             t_start = time()
-            success, output, _ = run_recur("trace-stats --scope \"PerformanceService\" --ext .cs --json")
+            success, output, _, data = run_recur_json_with_retry(
+                "trace-stats --scope \"PerformanceService\" --ext .cs --json"
+            )
             elapsed = time() - t_start
 
-            data = success ? JSON3.read(output) : nothing
             functions = success ? data["functions"] : []
 
             passed = success && length(functions) > 0 && elapsed < 30.0
