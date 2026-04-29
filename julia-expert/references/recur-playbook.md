@@ -82,6 +82,11 @@ persona tuning, `.recur/.psyche/` is the preferred feedback sub-vault, and
 `*.psyche.*.md` eventness files are the feedback medium.
 Humans, agents, and meta-agents can all read those files and use them to revise
 the active `recur reveal` persona without contaminating project artifacts.
+Future psyche writes should go through `recur psyche`, not ad hoc file edits:
+no args lists personas, `recur psyche <persona>` lists that persona's psyche
+entries, and explicit save/collapse operations maintain the eventness files.
+Psyche is opt-in through the persona: if the reveal capsule or playbook does
+not declare psyche commands, do not update psyche for that persona.
 
 ## Skim-Then-Explore Rule
 

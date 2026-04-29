@@ -307,6 +307,39 @@ The command should discover existing psyche files for the named persona, show
 which ones are still interesting, and give the LLM enough context to author new
 ones when a fresh surprise, lesson, mismatch, or rewrite opportunity appears.
 
+The command should own psyche writes.
+Humans and LLMs should not casually write psyche files by hand as the normal
+path; they should ask `recur psyche` to retrieve the right psyche context and
+ask `recur psyche` to save or update the psyche eventness record.
+That keeps the `.recur/.psyche/` layout consistent and makes psyche behavior
+discoverable instead of folklore.
+
+The basic interaction should mirror `recur reveal`:
+```text
+recur psyche                       # list personas with psyche feedback
+recur psyche skippy                # list Skippy psyche entries
+recur psyche skippy --show feedback.current
+recur psyche skippy --save feedback.current --from <file>
+recur psyche skippy --collapse feedback.current --to recurring
+```
+
+No-argument `recur psyche` lists the personas currently represented under
+`.recur/.psyche/`.
+Selecting a persona lists that persona's psyche eventness files, grouped by
+state and interest.
+The LLM then uses those retrieved psyche entries as suggestions for improving
+the persona: what to keep, what to revise in the reveal capsule, what to make
+recurring, and what to collapse because it is no longer interesting.
+
+Psyche updates are opt-in through the persona.
+If a persona declares psyche commands in its reveal capsule or playbook, the
+human or LLM may run those commands during the session and update psyche via
+the command surface.
+If the persona does not declare a psyche practice, nothing writes psyche files
+for it and psyche never updates by accident.
+This keeps psyche from becoming hidden surveillance or ambient self-editing;
+it is a named part of a persona's operating contract.
+
 The LLM builds the psyche files; recur supplies the discovery surface and the
 naming discipline.
 That keeps the mechanism pure:
