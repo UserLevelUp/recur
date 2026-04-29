@@ -29,7 +29,11 @@ Thumbs.db
 # Output files
 *.err
 .claude/settings.local.json
-.recur/
+**/.recur/
+!/.recur/
+/.recur/*
+!/.recur/.psyche/
+!/.recur/.psyche/**
 
 nul
 

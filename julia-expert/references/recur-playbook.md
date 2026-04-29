@@ -61,6 +61,28 @@ Canonical theory references:
 - `docs/eventness_explained_whitepaper.docx`
 - `README.CORE.EVENTNESS.md`
 
+## Psyche Note
+
+`recur psyche` has two different meanings that must not be collapsed during
+cold start.
+
+- Current CLI behavior is narrow: it only reports the structural vault checks
+  that are implemented today.
+- The richer psyche model is concept-phase design in `README.CORE.IMPROVEMENT23.md`:
+  eventness as the feedback channel between declared persona expectations,
+  observed usage, user surprise/frustration, and future reveal-capsule rewrites.
+
+Do not over-claim current behavior.
+Empty `recur psyche` output does not prove the persona is healthy or the vault
+is globally clean; it only means no currently implemented psyche check emitted a
+finding.
+
+For the design-phase model, think: `.recur/` is the protected sandbox for
+persona tuning, `.recur/.psyche/` is the preferred feedback sub-vault, and
+`*.psyche.*.md` eventness files are the feedback medium.
+Humans, agents, and meta-agents can all read those files and use them to revise
+the active `recur reveal` persona without contaminating project artifacts.
+
 ## Skim-Then-Explore Rule
 
 Before deep work in an unfamiliar subsystem, spend 5 minutes finding existing guidance and then explore organically:
