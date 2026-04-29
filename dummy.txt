@@ -1,0 +1,27 @@
+# Dummy Manifest
+A throwaway artifact for pub/sub drill rounds 1–5.
+
+## Status
+- Round 1: header + intro landed
+- Round 2: status list being added
+
+## Example command
+
+```bash
+recur find "drill" --scope "dummy.**"
+```
+
+## Feature status
+
+| Feature | State |
+|---------|-------|
+| pub/sub pattern | validating |
+| per-invocation halt | validating |
+| multi-round queue | validating |
+
+## Wrap
+
+Drill complete — 5 rounds of pub/sub dialogue exchanged across
+separate invocations. See `dummy.log` for the per-round audit
+trail.
+

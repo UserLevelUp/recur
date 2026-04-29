@@ -1,0 +1,6 @@
+[2026-04-21T07:29:23Z] dummy-1 monkey: wrote header + intro to dummy.txt (2 lines)
+[2026-04-21T07:32:24Z] dummy-2 monkey: appended ## Status section with 2 bullets
+[2026-04-21T07:34:45Z] dummy-3 monkey: appended ## Example command with bash fence
+[2026-04-21T07:35:33Z] dummy-4 monkey: appended ## Feature status table (3 rows)
+[2026-04-21T07:36:34Z] dummy-5 monkey: appended ## Wrap footer — drill complete
+

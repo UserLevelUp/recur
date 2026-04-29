@@ -116,6 +116,9 @@ recur id "config.database.*" -C 1
 
 # Analyze hierarchy statistics by depth (with listing at depth level)
 recur stats "ServiceName" -l 1
+
+# Subscribe to file-event patterns within a directory
+recur watch --filter "src.**"
 ```
 
 ## Features
@@ -134,6 +137,8 @@ recur stats "ServiceName" -l 1
 - **Project-aware config** via `.recur/config.toml` (`recur init`, `recur init --analyze`)
 - **Lane rehydration helpers** via `recur reveal` and `*.recur.md` ignition capsules
 - **Trait config management** via `recur trait` (list/get/set trait keys in `.recur/config.toml`)
+- **Vault integrity inspection** via `recur psyche` (passive observer for missing/inconsistent state)
+- **Hierarchical file-event subscription** via `recur watch` (FS-event streaming or polled modes)
 - **Structured flattening** (`recur flatten`) for XML/JSON/TOML/YAML/CSV to `path = value` records
 - **Cross-domain gap analysis** — verify completeness across representations
 - **Multiple output formats** (human-friendly terminal output, plus JSON for tooling)
