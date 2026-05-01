@@ -34,7 +34,7 @@ Version eventness should stay easy to find:
 5. In the nuspec, keep `<id>recur</id>` and `<title>Recur</title>`
 6. Bump `<version>` in the nuspec to `X.Y.Z`
 7. Recheck the nuspec feature list against `recur --help` and `recur-git --help`
-8. Review `choco/tools/VERIFICATION.txt` if installation or verification steps changed
+8. Run `choco pack` and inspect the `.nupkg` file list; do not include `tools/VERIFICATION.txt` unless the package starts embedding binaries that require verification
 9. Create or update the version eventness doc for that branch
 
 ## Discovery
@@ -52,7 +52,8 @@ cat choco/recur.nuspec
 ## Files Usually Touched
 
 - `choco/recur.nuspec`
-- `choco/tools/VERIFICATION.txt`
+- `choco/tools/chocolateyInstall.ps1`
+- `choco/tools/chocolateyUninstall.ps1`
 - `VERSION`
 - `Cargo.toml`
 - `README.md`

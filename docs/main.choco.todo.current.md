@@ -23,7 +23,7 @@ Update Chocolatey metadata whenever:
 - A command description changes
 - Tags should be updated to reflect new capabilities
 - `recur-git` adds or removes commands that should be mentioned
-- `choco/tools/VERIFICATION.txt` needs different verification steps
+- The packed `.nupkg` file list needs to be checked before Chocolatey submission
 
 ## When Creating a New Version
 
@@ -53,7 +53,8 @@ cat Cargo.toml
 ## Files to Update
 
 - `choco/recur.nuspec` - package id, title, version, description, command list, tags
-- `choco/tools/VERIFICATION.txt` - if verification steps change
+- `choco/tools/chocolateyInstall.ps1` - install behavior and release asset download
+- `choco/tools/chocolateyUninstall.ps1` - uninstall behavior
 - `VERSION` - repo version marker
 - `Cargo.toml` - crate version
 - `README.md` - displayed version

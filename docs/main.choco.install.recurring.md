@@ -17,7 +17,7 @@ This is the interesting recurring install eventness for the package lane.
 - Lowercase applies to the package `<id>`; keep the display `<title>` in title case
 - Bump nuspec `<version>` to the release version
 - Keep nuspec description and commands aligned with `recur --help`
-- Review `choco/tools/VERIFICATION.txt` if install or verification steps changed
+- Inspect the packed `.nupkg` contents; do not include `tools/VERIFICATION.txt` unless the package starts embedding binaries that require verification
 - Create or update the matching version doc under `docs/main.version.a.X.Y.Z.*.md`
 
 ## Suggested Flow
@@ -28,8 +28,9 @@ This is the interesting recurring install eventness for the package lane.
 4. Recheck the nuspec command list against `recur --help` and `recur-git --help`
 5. Build or collect the release artifact that Chocolatey will install
 6. Review install and uninstall scripts in `choco/tools/`
-7. Test the install or upgrade path you care about
-8. Update the version eventness record for what actually shipped
+7. Run `choco pack` and inspect the `.nupkg` file list before submission
+8. Test the install or upgrade path you care about
+9. Update the version eventness record for what actually shipped
 
 ## Discovery
 
