@@ -2,12 +2,16 @@
 <package>
   <metadata>
     <id>recur</id>
-    <version>0.2.5</version>
+    <version>0.2.6</version>
     <title>Recur</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
-    <summary>Recursive, hierarchy-aware search for modern codebases</summary>
-    <description><![CDATA[**recur** is a command-line tool for working with hierarchically named code: files, modules, and identifiers that encode structure using dot-separated or custom naming conventions.
+    <summary>Turns folders into traceable hierarchy maps</summary>
+    <description><![CDATA[**recur** is a CLI tool that turns any folder into a self-describing provenance graph. Perfect for devs who want traceability without databases.
+
+Use it to make code, notes, reports, and generated artifacts easier to search as a structured system instead of a flat pile of files.
+
+**recur** is a command-line tool for working with hierarchically named code: files, modules, and identifiers that encode structure using dot-separated or custom naming conventions.
 
 While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy — so you can search, navigate, and analyze related code as a structured system.
 
