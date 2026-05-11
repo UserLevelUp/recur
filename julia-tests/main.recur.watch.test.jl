@@ -165,6 +165,42 @@ end
         end
     end
 
+    @testset "watch id writes ACK state inspectable by recur watch" begin
+        root = mktempdir()
+        handle = spawn_watch([
+            "--id", "docs-monkey",
+            "--filter", "**.current.md",
+            "--dir", root,
+            "--poll-framing", "1",
+        ])
+
+        try
+            state = wait_for_watch_start(handle)
+            assert_no_timeout(state, "Timed out waiting for recur-watch ACK state startup")
+            @test state == :running
+            wait_for_watch_ready(handle) ||
+                error("Timed out waiting for recur-watch readiness signal")
+
+            status_path = joinpath(root, ".recur", "watch", "recur-watch.docs-monkey.status.current.md")
+            @test isfile(status_path)
+
+            status_text = read(status_path, String)
+            @test contains(status_text, "state = \"active\"")
+            @test contains(status_text, "ack = \"accepted\"")
+            @test contains(status_text, "filter = \"**.current.md\"")
+            @test contains(status_text, "mode = \"poll\"")
+
+            success, output, _ = run_recur(["watch", "status", "docs-monkey", "-d", root])
+            @test success
+            @test contains(output, "docs-monkey")
+            @test contains(output, "active")
+            @test contains(output, "accepted")
+        finally
+            stop_watch!(handle)
+            rm(root; recursive=true, force=true)
+        end
+    end
+
     @testset "watch dir honors scope and rejects missing path" begin
         missing_dir = joinpath(mktempdir(), "does-not-exist")
         success, _, error_output = run_recur_raw([
@@ -224,6 +260,39 @@ end
 
         @test !success
         @test contains(error_text, "poll-framing") || contains(error_text, "invalid")
+    end
+
+    @testset "watch id writes NAK state for rejected requests" begin
+        root = mktempdir()
+        try
+            success, _, error_output = run_recur_raw([
+                "--id", "docs-monkey",
+                "--filter", "**.current.md",
+                "--dir", root,
+                "--poll-framing", "5s",
+            ])
+            error_text = lowercase(error_output)
+
+            @test !success
+            @test contains(error_text, "poll-framing") || contains(error_text, "invalid")
+
+            status_path = joinpath(root, ".recur", "watch", "recur-watch.docs-monkey.status.current.md")
+            @test isfile(status_path)
+
+            status_text = read(status_path, String)
+            @test contains(status_text, "state = \"stopped\"")
+            @test contains(status_text, "ack = \"rejected\"")
+            @test contains(status_text, "nak_reason = ")
+            @test contains(status_text, "5s")
+
+            success, output, _ = run_recur(["watch", "status", "docs-monkey", "-d", root])
+            @test success
+            @test contains(output, "docs-monkey")
+            @test contains(output, "stopped")
+            @test contains(output, "rejected")
+        finally
+            rm(root; recursive=true, force=true)
+        end
     end
 
     @testset "watch poll framing rejects zero interval" begin

@@ -18,6 +18,10 @@ mod main_command_watch_impl;
 )]
 #[command(version)]
 struct Cli {
+    /// Watch runtime id used for .recur/watch status records
+    #[arg(long, value_name = "ID")]
+    id: Option<String>,
+
     /// Hierarchical pattern to subscribe to
     #[arg(long, value_name = "PATTERN")]
     filter: String,
@@ -63,6 +67,7 @@ fn main() {
     let separator = command_separators.last().copied().unwrap_or('.');
 
     let result = main_command_watch_impl::execute(
+        cli.id,
         cli.filter,
         cli.dir,
         cli.format,

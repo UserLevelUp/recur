@@ -5,7 +5,9 @@
 use anyhow::Context;
 use notify::{recommended_watcher, Event, EventKind, RecursiveMode, Watcher};
 use recur::parser::{HierarchicalName, HierarchyPattern};
+use recur::project_config;
 use serde::Serialize;
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fs;
 use std::io::{self, Write};
@@ -15,6 +17,10 @@ use std::thread;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use walkdir::WalkDir;
 
+const WATCH_STATE_DIR: &str = ".recur/watch";
+const STATUS_PREFIX: &str = "recur-watch.";
+const STATUS_SUFFIX: &str = ".status.current.md";
+
 enum WatchFormat {
     Oneline,
     Json,
@@ -22,9 +28,28 @@ enum WatchFormat {
 
 struct WatchConfig {
     filter: HierarchyPattern,
+    filter_raw: String,
     dir: PathBuf,
     format: WatchFormat,
+    format_raw: String,
     poll_framing: Option<u64>,
+    poll_framing_raw: Option<String>,
+    mode: &'static str,
+    state_writer: Option<WatchStateWriter>,
+    runtime: RefCell<WatchRuntime>,
+}
+
+#[derive(Default)]
+struct WatchRuntime {
+    events_seen: u64,
+    filtered_out: u64,
+    last_event_at: Option<String>,
+}
+
+struct WatchStateWriter {
+    id: String,
+    path: PathBuf,
+    started_at: String,
 }
 
 #[derive(Serialize)]
@@ -34,30 +59,86 @@ struct WatchEventRecord<'a> {
 }
 
 pub fn execute(
+    watch_id: Option<String>,
     filter: String,
     dir: PathBuf,
     format: String,
     poll_framing: Option<String>,
     separator: char,
 ) -> anyhow::Result<()> {
-    let filter = HierarchyPattern::parse_with_separator(&filter, separator)
-        .with_context(|| "failed to parse watch filter pattern")?;
+    let state_writer = watch_id
+        .as_ref()
+        .map(|id| WatchStateWriter::new(id.clone(), &dir));
+    let result = execute_inner(
+        filter.clone(),
+        dir.clone(),
+        format.clone(),
+        poll_framing.clone(),
+        separator,
+        state_writer,
+    );
 
+    if let Err(error) = &result {
+        if let Some(writer) = WatchStateWriter::from_id_for_rejection(&watch_id, &dir) {
+            let request = WatchStateRequest {
+                filter: &filter,
+                dir: &dir,
+                format: &format,
+                poll_framing: poll_framing.as_deref(),
+                mode: mode_for_poll_framing(poll_framing.as_deref()),
+            };
+            let _ = writer.write_rejected(&request, &error.to_string());
+        }
+    }
+
+    result
+}
+
+fn execute_inner(
+    filter: String,
+    dir: PathBuf,
+    format: String,
+    poll_framing: Option<String>,
+    separator: char,
+    state_writer: Option<WatchStateWriter>,
+) -> anyhow::Result<()> {
+    let parsed_filter = HierarchyPattern::parse_with_separator(&filter, separator)
+        .with_context(|| "failed to parse watch filter pattern")?;
     let format = parse_format(&format)?;
+    let poll_framing_raw = poll_framing.clone();
     let poll_framing = parse_poll_framing(poll_framing)?;
+    let mode = if poll_framing.is_some() {
+        "poll"
+    } else {
+        "stream"
+    };
     let config = WatchConfig {
-        filter,
+        filter: parsed_filter,
+        filter_raw: filter,
         dir,
+        format_raw: format_to_text(&format).to_string(),
         format,
         poll_framing,
+        poll_framing_raw,
+        mode,
+        state_writer,
+        runtime: RefCell::new(WatchRuntime::default()),
     };
 
     validate_dir(&config.dir)?;
+    write_active_state(&config)?;
 
     if let Some(seconds) = config.poll_framing {
         run_poll_loop(&config, seconds)
     } else {
         run_stream_loop(&config)
+    }
+}
+
+fn format_to_text(format: &WatchFormat) -> &'static str {
+    match format {
+        WatchFormat::Oneline => "oneline",
+        WatchFormat::Json => "json",
     }
 }
 
@@ -111,7 +192,10 @@ fn run_stream_loop(config: &WatchConfig) -> anyhow::Result<()> {
     })?;
 
     watcher.watch(&config.dir, RecursiveMode::Recursive)?;
-    eprintln!("recur watch: ready (stream mode, dir={})", config.dir.display());
+    eprintln!(
+        "recur watch: ready (stream mode, dir={})",
+        config.dir.display()
+    );
 
     loop {
         match rx.recv() {
@@ -168,6 +252,8 @@ fn emit_notify_event(config: &WatchConfig, event: Event) -> anyhow::Result<()> {
     for path in event.paths {
         if matches_filter(&path, &config.filter) {
             emit_event(config, &path, event_type)?;
+        } else {
+            record_filtered(config)?;
         }
     }
 
@@ -243,5 +329,172 @@ fn emit_event(config: &WatchConfig, path: &Path, event_type: &'static str) -> an
     }
 
     handle.flush()?;
+    record_event_seen(config)?;
     Ok(())
+}
+
+fn record_event_seen(config: &WatchConfig) -> anyhow::Result<()> {
+    {
+        let mut runtime = config.runtime.borrow_mut();
+        runtime.events_seen += 1;
+        runtime.last_event_at = Some(now_stamp());
+    }
+
+    write_active_state(config)
+}
+
+fn record_filtered(config: &WatchConfig) -> anyhow::Result<()> {
+    {
+        let mut runtime = config.runtime.borrow_mut();
+        runtime.filtered_out += 1;
+    }
+
+    write_active_state(config)
+}
+
+fn write_active_state(config: &WatchConfig) -> anyhow::Result<()> {
+    let Some(writer) = &config.state_writer else {
+        return Ok(());
+    };
+
+    let runtime = config.runtime.borrow();
+    let request = WatchStateRequest {
+        filter: &config.filter_raw,
+        dir: &config.dir,
+        format: &config.format_raw,
+        poll_framing: config.poll_framing_raw.as_deref(),
+        mode: config.mode,
+    };
+
+    writer.write_active(&request, &runtime)
+}
+
+struct WatchStateRequest<'a> {
+    filter: &'a str,
+    dir: &'a Path,
+    format: &'a str,
+    poll_framing: Option<&'a str>,
+    mode: &'a str,
+}
+
+impl WatchStateWriter {
+    fn new(id: String, dir: &Path) -> Self {
+        let root = resolve_state_root(dir);
+        let safe_id = sanitize_watch_id(&id);
+        let path = root
+            .join(WATCH_STATE_DIR)
+            .join(format!("{STATUS_PREFIX}{safe_id}{STATUS_SUFFIX}"));
+
+        Self {
+            id: safe_id,
+            path,
+            started_at: now_stamp(),
+        }
+    }
+
+    fn from_id_for_rejection(id: &Option<String>, dir: &Path) -> Option<Self> {
+        id.as_ref().map(|id| Self::new(id.clone(), dir))
+    }
+
+    fn write_active(
+        &self,
+        request: &WatchStateRequest<'_>,
+        runtime: &WatchRuntime,
+    ) -> anyhow::Result<()> {
+        self.write_state("active", "accepted", "", request, runtime)
+    }
+
+    fn write_rejected(&self, request: &WatchStateRequest<'_>, reason: &str) -> anyhow::Result<()> {
+        self.write_state(
+            "stopped",
+            "rejected",
+            reason,
+            request,
+            &WatchRuntime::default(),
+        )
+    }
+
+    fn write_state(
+        &self,
+        state: &str,
+        ack: &str,
+        nak_reason: &str,
+        request: &WatchStateRequest<'_>,
+        runtime: &WatchRuntime,
+    ) -> anyhow::Result<()> {
+        if let Some(parent) = self.path.parent() {
+            fs::create_dir_all(parent)
+                .with_context(|| format!("failed to create '{}'", parent.display()))?;
+        }
+
+        let poll_framing = request.poll_framing.unwrap_or("");
+        let last_event_at = runtime.last_event_at.as_deref().unwrap_or("");
+        let body = format!(
+            "id = \"{}\"\nstate = \"{}\"\nack = \"{}\"\nnak_reason = \"{}\"\nfilter = \"{}\"\ndir = \"{}\"\nmode = \"{}\"\npoll_framing = \"{}\"\nformat = \"{}\"\npid = \"{}\"\nstarted_at = \"{}\"\nlast_event_at = \"{}\"\nevents_seen = \"{}\"\nfiltered_out = \"{}\"\n",
+            escape_value(&self.id),
+            escape_value(state),
+            escape_value(ack),
+            escape_value(nak_reason),
+            escape_value(request.filter),
+            escape_value(&request.dir.display().to_string()),
+            escape_value(request.mode),
+            escape_value(poll_framing),
+            escape_value(request.format),
+            std::process::id(),
+            escape_value(&self.started_at),
+            escape_value(last_event_at),
+            runtime.events_seen,
+            runtime.filtered_out,
+        );
+
+        fs::write(&self.path, body)
+            .with_context(|| format!("failed to write '{}'", self.path.display()))
+    }
+}
+
+fn resolve_state_root(dir: &Path) -> PathBuf {
+    if dir.join(".recur").exists() {
+        return dir.to_path_buf();
+    }
+
+    if let Ok(Some(config)) = project_config::load_nearest(dir) {
+        return config.project_root;
+    }
+
+    if dir.is_dir() {
+        return dir.to_path_buf();
+    }
+
+    dir.parent()
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| PathBuf::from("."))
+}
+
+fn sanitize_watch_id(id: &str) -> String {
+    id.chars()
+        .map(|ch| match ch {
+            '/' | '\\' | ':' | '*' | '?' | '"' | '<' | '>' | '|' => '-',
+            _ => ch,
+        })
+        .collect()
+}
+
+fn escape_value(value: &str) -> String {
+    value.replace('\\', "\\\\").replace('"', "\\\"")
+}
+
+fn now_stamp() -> String {
+    let seconds = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+    format!("unix:{seconds}")
+}
+
+fn mode_for_poll_framing(poll_framing: Option<&str>) -> &'static str {
+    if poll_framing.is_some() {
+        "poll"
+    } else {
+        "stream"
+    }
 }

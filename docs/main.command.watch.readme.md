@@ -27,6 +27,13 @@ recur watch status docs-monkey --json
 recur watch explain
 ```
 
+The active runner writes state when launched with `--id`:
+
+```powershell
+recur-watch --id docs-monkey --filter "monkey.**" -d .recur/docs-monkey --poll-framing 5
+recur watch status docs-monkey
+```
+
 ## State Files
 
 `recur watch` reads files shaped like:
@@ -78,6 +85,10 @@ Watcher records carry both ACK and NAK information.
 
 This lets `recur watch` answer both "what is running?" and "what failed to
 arm?"
+
+The runner should write accepted state before entering the loop and rejected
+state when it understands a request but refuses to arm it, such as invalid
+poll framing.
 
 ## Related
 
