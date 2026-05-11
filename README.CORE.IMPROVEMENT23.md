@@ -573,3 +573,123 @@ deliverables.  Tracked as eventness TODO at
 rediscover the idea via `recur files "**.todo.current"` without it
 evaporating into the next shiny.
 
+ADDENDUM — restore `recur watch` as watcher-state query (added 2026-05-11)
+-------------------------------------------------------------------------
+The 2026-04-19 extraction to `recur-watch` was correct for the active
+subscription loop:
+
+- it keeps long-running async behavior out of the synchronous `recur` binary
+- it avoids Windows rebuild friction from a held-open `recur.exe`
+- it makes the operational runner explicit
+
+But that extraction left a naming gap.
+The original `recur watch` surface was the natural place to ask watcher
+questions inside the pure recur query model.
+
+The repaired boundary should be:
+
+```text
+recur-watch  = active subscription runner; blocks, polls/streams, emits events
+recur watch  = pure watcher-state query; reads eventness, reports, filters, exits
+```
+
+In other words, `recur-watch` performs the watch.
+`recur watch` explains what watches exist, what they are watching, and what
+their current observed state is.
+
+Proposed future surface:
+
+```text
+recur watch
+recur watch list
+recur watch list --filter "monkey.**"
+recur watch status <watch-id>
+recur watch status <watch-id> --json
+recur watch explain
+```
+
+This surface must stay synchronous.
+It must not arm a filesystem listener.
+It must not run an infinite loop.
+It should read watcher eventness and exit like the rest of core `recur`.
+
+For `recur watch` to have something concrete to inspect, `recur-watch` should
+eventually write lightweight runtime state under a recur-visible lane, for
+example:
+
+```text
+.recur/watch/recur-watch.<id>.status.current.md
+.recur/watch/recur-watch.<id>.last-run.current.md
+.recur/watch/recur-watch.<id>.events.current.jsonl
+```
+
+Useful state fields:
+
+```text
+id = docs-monkey
+state = active | stale | stopped | unknown
+ack = accepted | rejected | partial
+nak_reason = ""
+filter = monkey.**
+dir = .recur/docs-monkey
+mode = poll | stream
+poll_framing = 5
+format = oneline | json | art
+pid = 12345
+started_at = 2026-05-11T00:00:00Z
+last_event_at = 2026-05-11T00:00:12Z
+events_seen = 12
+filtered_out = 43
+```
+
+ACK/NAK rule:
+
+Every watcher state record should carry both sides of the handshake.
+A pure success still records an ACK: what was accepted, which filter is active,
+which directory is in scope, and which mode is running.
+A rejection records a NAK plus the understood request and the reason it was
+not armed.
+
+This matters because `recur watch` is an inspection command.
+It should be able to answer not only "what is running?" but also "what failed
+to arm, and what did the runner think it was being asked to do?"
+
+Example rejected state:
+
+```text
+id = docs-monkey
+state = stopped
+ack = rejected
+nak_reason = "invalid --poll-framing value '5s': expected integer seconds"
+filter = monkey.**
+dir = .recur/docs-monkey
+mode = poll
+poll_framing = 5s
+started_at = 2026-05-11T00:00:00Z
+last_event_at = ""
+events_seen = 0
+```
+
+Filtering should use the same hierarchy-aware pattern language as the rest of
+recur:
+
+```text
+recur watch list --filter "**.active"
+recur watch list --filter "docs-monkey.**"
+recur watch list --filter "**.stale"
+```
+
+This preserves the purity split:
+
+- core `recur` remains query/reveal/inspect/explain
+- `recur-watch` remains the process-lifetime subscription actor
+- watcher state becomes eventness, so it can be queried, filtered, traced, and
+  eventually inspected by `recur psyche`
+
+Release note:
+for v0.2.8, the shipped active watcher may remain `recur-watch`.
+If `recur watch` is not implemented before release, README and package text
+must not show it as the active subscription command.
+Instead, describe it as a planned pure inspection surface, or omit it until
+the query command exists.
+

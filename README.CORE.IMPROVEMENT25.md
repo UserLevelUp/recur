@@ -535,3 +535,31 @@ The design rule is consistent with Improvements 23 and 24:
 
 The vault already encodes role and topology.
 `recur reveal` makes the vault admit it out loud.
+
+ADDENDUM — companion runners and pure reveal/query surfaces (added 2026-05-11)
+------------------------------------------------------------------------------
+Improvement 25 compared `recur reveal` to `recur watch` using the original
+Improvement 23 naming.
+
+The later watcher extraction clarifies the broader command doctrine:
+
+```text
+recur <topic>  = pure query / inspection / explanation
+recur-<topic>  = opinionated runner / writer / async actor
+```
+
+Examples:
+
+```text
+recur reveal   = inspect lane topology and rehydration capsules
+recur watch    = inspect watcher state and ACK/NAK eventness
+recur git      = inspect git workflow state and checkpoint records
+
+recur-watch    = run the active filesystem subscription loop
+recur-git      = perform git-aware checkpoint operations
+```
+
+This keeps `recur reveal` aligned with the same purity rule:
+read the vault, explain what it means, and exit.
+Opinionated actors may create state, but core `recur` should remain the tool
+that can inspect any reasonable hierarchy those actors leave behind.

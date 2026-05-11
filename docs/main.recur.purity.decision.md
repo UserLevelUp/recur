@@ -44,6 +44,123 @@ recur-git checkpoint --append-parallel
 
 **Focus:** Git-aware workflows, lane tracking, checkpoint snapshots.
 
+### Companion Actors + Pure Query Surfaces
+
+The same split applies beyond git.
+
+Core `recur` should stay pure:
+
+- read hierarchies
+- merge configured hierarchy lanes
+- inspect eventness
+- explain state
+- query status and history
+- exit
+
+Opinionated companion binaries may do narrower operational work:
+
+- `recur-git` performs git-aware checkpoint operations
+- `recur-watch` performs long-running watch/subscription loops
+- future companions may perform versioning, tracing, approval proposals, or
+  other implementation-specific workflows
+
+The companion performs the action.
+Core `recur` inspects the eventness left behind by that action.
+
+This gives each command family a clean pair:
+
+```text
+recur <topic>        = pure query / inspection / explanation
+recur-<topic>        = opinionated runner / writer / async actor
+```
+
+Examples:
+
+```text
+recur watch          = inspect watcher state, list active/stale watches, explain filters
+recur-watch          = run the active subscription loop
+
+recur git            = inspect git workflow state, checkpoint history, lane ACK/NAK records
+recur-git            = perform git-aware checkpoint operations
+
+recur version        = inspect version policy, manifests, history, diffs
+recur-version        = save snapshots, update manifests, enforce write policy
+
+recur trace          = inspect technical call/flow relationships already present
+recur-trace          = future lineage/provenance actor if responsibility tracing
+                       needs an opinionated writer
+```
+
+This preserves recur's ability to utilize any reasonable hierarchy without
+absorbing every workflow engine into the core binary.
+
+## ACK/NAK Eventness Rule
+
+When a companion actor performs an operation, it should leave a small
+machine-readable state record that core `recur` can inspect.
+
+That record should include both ACK and NAK information:
+
+- ACK: what request was accepted, what scope/filter/policy was used, and what
+  state is now active
+- NAK: what request was understood, why it was rejected or partial, and what
+  the caller can inspect next
+
+This is not only for `recur-watch`.
+The same handshake pattern should apply to any companion that performs
+narrow, opinionated work.
+
+Example watcher state:
+
+```text
+id = docs-monkey
+state = active
+ack = accepted
+nak_reason = ""
+filter = monkey.**
+dir = .recur/docs-monkey
+mode = poll
+poll_framing = 5
+```
+
+Example rejected versioning state:
+
+```text
+id = care.subject.routine
+state = stopped
+ack = rejected
+nak_reason = "operator required for proposed -> approved promotion"
+subject = care.subject.routine
+requested_transition = proposed -> approved
+```
+
+Example git checkpoint state:
+
+```text
+id = checkpoint.2026-05-11.001
+state = complete
+ack = accepted
+nak_reason = ""
+branch = a.0.2.8
+head = c73d6f3
+dirty = false
+lanes = main.choco.todo.current, main.command.tests.progress.current
+```
+
+The state may live in eventness files, and stable summary/config values may
+also be reflected in `.recur/config.toml` when they are useful to query across
+sessions.  The TOML file should store durable policy or latest-known summary,
+not bulky logs.  Detailed histories belong in eventness files where recur can
+tree, find, trace, and collapse them.
+
+The point is that core `recur` can remain pure while still answering:
+
+- what happened?
+- what was accepted?
+- what was rejected?
+- which hierarchy, filter, policy, or subject did the actor use?
+- what should the human or agent inspect next?
+
 ## Implementation Status
 
 ✅ **Already separated!**

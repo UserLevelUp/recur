@@ -443,3 +443,32 @@ The design rule is clear:
 The coordinator's value is concentrated in two moments, not diffused across
 many.
 The machine does the rest.
+
+ADDENDUM — watch runner/query split (added 2026-05-11)
+------------------------------------------------------
+Improvement 24 was written while Improvement 23 still named the active
+subscription primitive as `recur watch`.
+
+The implementation later extracted the blocking subscription loop into
+`recur-watch` for category hygiene and Windows process-lifecycle reasons.
+That extraction preserves the Improvement 24 composition, but changes the
+surface boundary:
+
+```text
+recur-watch  = active subscription runner used by sealed cycles
+recur watch  = future pure query surface for watcher state, ACK/NAK, filters,
+               runtimes, stale watches, and rejected watch requests
+```
+
+So the sealed-cycle doctrine should now read:
+
+- `recur spin` or a coordinator uses `recur-watch` when it needs an active
+  process-lifetime subscription.
+- `recur watch` should inspect the watcher eventness left by those runners and
+  exit.
+- Every runner should leave ACK/NAK state so a coordinator can tell what was
+  accepted, what was rejected, and why.
+
+The core Improvement 24 idea remains unchanged:
+the coordinator loads the cycle, the machine runs, and the evidence pack is
+judged after the seal opens.
