@@ -35,6 +35,7 @@ mod main_command_trace_impl;
 mod main_command_trace_stats_impl;
 mod main_command_trait_impl;
 mod main_command_tree_impl;
+mod main_command_watch_query_impl;
 
 #[derive(Parser)]
 #[command(name = "recur")]
@@ -608,6 +609,22 @@ enum Commands {
         filter: Option<String>,
     },
 
+    /// Inspect watcher state written by `recur-watch`
+    ///
+    /// Examples:
+    ///   recur watch
+    ///   recur watch list --filter "**.active"
+    ///   recur watch status docs-monkey
+    ///   recur watch explain
+    Watch {
+        #[command(subcommand)]
+        command: Option<main_command_watch_query_impl::WatchQuerySubcommand>,
+
+        /// Project root or directory containing `.recur/`
+        #[arg(short = 'd', long, default_value = ".", global = true)]
+        dir: PathBuf,
+    },
+
     /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
@@ -1061,6 +1078,10 @@ fn main() {
             format,
             filter,
         } => main_command_psyche_impl::execute(dir, format, filter),
+
+        Commands::Watch { command, dir } => {
+            main_command_watch_query_impl::execute(command, dir, cli.json)
+        }
 
         Commands::Flatten {
             file,
