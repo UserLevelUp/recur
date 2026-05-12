@@ -17,8 +17,13 @@ $packageArgs = @{
 
 Install-ChocolateyZipPackage @packageArgs
 
-# Add shim for recur-git as well if it exists in the zip
+# Add shims for companion binaries if they exist in the zip
 $recurGit = Join-Path $installDir 'recur-git.exe'
 if (Test-Path $recurGit) {
     Install-BinFile -Name 'recur-git' -Path $recurGit
+}
+
+$recurWatch = Join-Path $installDir 'recur-watch.exe'
+if (Test-Path $recurWatch) {
+    Install-BinFile -Name 'recur-watch' -Path $recurWatch
 }

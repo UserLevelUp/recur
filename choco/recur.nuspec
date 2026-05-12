@@ -6,10 +6,14 @@
     <title>Recur</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
-    <summary>Hierarchy-aware code search for modern codebases</summary>
-    <description><![CDATA[**recur** is a command-line tool for searching hierarchically named code: files, modules, and identifiers whose names encode structure using dot-separated or custom conventions.
+    <summary>Trace hierarchy deltas across code, docs, and workflow state</summary>
+    <description><![CDATA[**recur** helps developers find deltas in hierarchical structures without standing up a database. The 0.2.5 package line made meaningful file names practical for comparing related work; 0.2.6 clarified folders as traceable hierarchy maps; 0.2.7 emphasized traceability across structure, state, and related work.
 
-While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy - so you can search, navigate, and analyze related code as a structured system.
+Version 0.2.8 carries that curve into a broader eventness workflow: reveal capsules for resuming context, psyche/status inspection, trace-id and trace-stats analysis, flatten/merge composition, and a pure `recur watch` query surface that inspects watcher state written by the companion `recur-watch` runner.
+
+At its core, **recur** is a command-line tool for working with hierarchically named code, docs, generated artifacts, and identifiers whose names encode structure using dot-separated or custom conventions.
+
+While tools like `grep` and `ripgrep` excel at fast text matching, they treat results as flat lists. `recur` complements them by understanding hierarchy, so you can search, navigate, compare, and analyze related work as a structured system.
 
 ## Features
 - Hierarchy-aware pattern matching with `*` and `**` wildcards
@@ -18,11 +22,16 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - Unix pipe composability - stdin mode for pure pipe workflows
 - Scoped text search within a hierarchy (grep-like, but structure-aware)
 - Tree visualization using Unicode box-drawing characters
-- Optional recur-git companion binary for checkpoint workflows (when included in release zip)
+- Reveal capsules for context recovery and lane-local handoff
+- Watcher-state queries through pure `recur watch`
+- Optional companion binaries for active workflow runners (`recur-git`, `recur-watch`, when included in release zip)
 - JSON output for tooling integration
 
 ## Commands
 - `recur init` - initialize or analyze `.recur/config.toml`
+- `recur reveal` - surface lane-local `*.recur.md` context capsules
+- `recur psyche` - inspect project eventness/status documents
+- `recur watch` - list, filter, and explain active watcher state
 - `recur files` - find files by hierarchical pattern
 - `recur find` - search text within a hierarchy scope
 - `recur tree` - visualize hierarchy as a tree
@@ -39,6 +48,7 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur trace-id` - trace a hierarchical identifier through files; classify as define/produce/consume/trigger
 - `recur trace-stats` - call-graph metrics: direct, transitive, circular, depth, risk
 - `recur-git checkpoint` - capture parallel-lane git/todo checkpoints
+- `recur-watch` - run the active watch/subscription loop and write ACK/NAK status records
 
 Named as a quiet tribute to Dennis M. Ritchie's early work on recursive program structure.
 ]]></description>
