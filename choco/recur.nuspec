@@ -6,10 +6,10 @@
     <title>Recur</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
-    <summary>Turns folders into traceable hierarchy maps</summary>
-    <description><![CDATA[**recur** is a CLI tool that turns any folder into a self-describing provenance graph. Perfect for devs who want traceability without databases.
+    <summary>Find deltas in hierarchical file structures</summary>
+    <description><![CDATA[**recur** is a CLI tool for finding structure and change in hierarchically named files. The 0.2.5 line established the practical base: use meaningful file names to navigate related work, compare sibling areas, and spot deltas without needing a database.
 
-Use it to make code, notes, reports, and generated artifacts easier to search as a structured system instead of a flat pile of files.
+Version 0.2.6 sharpens that package story around traceable hierarchy maps. Ordinary folders can become searchable maps of code, notes, reports, and generated artifacts, making it easier to see what changed and where related work lives.
 
 **recur** is a command-line tool for working with hierarchically named code: files, modules, and identifiers that encode structure using dot-separated or custom naming conventions.
 
