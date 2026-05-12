@@ -6,10 +6,10 @@
     <title>Recur</title>
     <authors>User Level Up Contributors</authors>
     <owners>userlevelup</owners>
-    <summary>Traceability for files without a database</summary>
-    <description><![CDATA[**recur** helps developers turn ordinary folders into searchable provenance graphs: structure, state, and related work become visible directly from meaningful file names.
+    <summary>Trace hierarchy deltas without a database</summary>
+    <description><![CDATA[**recur** helps developers find deltas in hierarchical structures without standing up a database. Building on the 0.2.5 package line and the 0.2.6 hierarchy-map framing, 0.2.7 emphasizes traceability: structure, state, and related work become visible directly from meaningful file names.
 
-It is built for teams and solo devs who want traceability, context recovery, and hierarchy-aware navigation without standing up a database or changing their editor workflow.
+It is built for teams and solo devs who want context recovery, hierarchy-aware navigation, and a lightweight way to see what changed between related files or work lanes without changing their editor workflow.
 
 **recur** is a command-line tool for working with hierarchically named code: files, modules, and identifiers that encode structure using dot-separated or custom naming conventions.
 
