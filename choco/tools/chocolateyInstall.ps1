@@ -1,24 +1,15 @@
 $ErrorActionPreference = 'Stop'
 
-$packageName = 'recur'
-$version = $env:chocolateyPackageVersion
+$toolsDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
-$url64 = "https://github.com/userlevelup/recur/releases/download/v${version}/recur-v${version}-x86_64-pc-windows-msvc.zip"
-
-$installDir = "$(Split-Path -Parent $MyInvocation.MyCommand.Definition)"
-
-$packageArgs = @{
-    packageName    = $packageName
-    unzipLocation  = $installDir
-    url64bit       = $url64
-    checksumType64 = 'sha256'
-    checksum64     = '%CHECKSUM64%'
+$recur = Join-Path $toolsDir 'recur.exe'
+if (!(Test-Path $recur)) {
+    throw "Expected recur.exe in package tools directory."
 }
 
-Install-ChocolateyZipPackage @packageArgs
+Install-BinFile -Name 'recur' -Path $recur
 
-# Add shim for recur-git as well if it exists in the zip
-$recurGit = Join-Path $installDir 'recur-git.exe'
+$recurGit = Join-Path $toolsDir 'recur-git.exe'
 if (Test-Path $recurGit) {
     Install-BinFile -Name 'recur-git' -Path $recurGit
 }

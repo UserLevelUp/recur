@@ -1,19 +1,18 @@
 VERIFICATION
 
-To verify the package contents:
+This package embeds recur.exe and recur-git.exe built from source.
 
-1. Download the binary directly from the GitHub release:
-   https://github.com/userlevelup/recur/releases
+Package version:
+   0.2.6
 
-2. Compare the SHA256 checksum of the downloaded zip with the
-   checksum embedded in chocolateyInstall.ps1.
+Source code:
+   https://github.com/userlevelup/recur/tree/a.0.2.6
 
-3. You can also build from source:
-   git clone https://github.com/userlevelup/recur
-   cd recur
-   cargo build --release --locked
+Build command:
+   cargo build --profile release-safe --locked --bin recur --bin recur-git
 
-The source code is available at:
-   https://github.com/userlevelup/recur
+Embedded binary SHA256 checksums:
+   recur.exe     99CFEECB5066C187EFF94F2D0CB2F77771F959C627B659DD4B037883F43175C7
+   recur-git.exe 79E2093C7478562ADA09467C85D2C565F4388584F368E2FB2BCEE1142E0E21F4
 
-Licensed under MIT.
+The source code is licensed under MIT.
