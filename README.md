@@ -1,6 +1,6 @@
 <div align="center">
   <h1>recur</h1>
-  <div class="version">v0.2.5</div>
+  <div class="version">v0.2.7</div>
   <p>
     <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
     <a href="https://www.rust-lang.org/"><img alt="Rust 1.70+" src="https://img.shields.io/badge/rust-1.70%2B-blue.svg"></a>
