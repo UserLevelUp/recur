@@ -18,6 +18,18 @@ pub enum WarpSubcommand {
         /// Lane prefix such as demo.project.good
         lane: String,
     },
+
+    /// Explain the evidence and residuals behind a lane verdict
+    Explain {
+        /// Lane prefix such as demo.project.good
+        lane: String,
+    },
+
+    /// Suggest the next read-only management action for a lane
+    Next {
+        /// Lane prefix such as demo.project.good
+        lane: String,
+    },
 }
 
 #[derive(Clone)]
@@ -81,12 +93,29 @@ struct WarpStatusOutput {
     next_actions: Vec<WarpNextAction>,
 }
 
+#[derive(Serialize)]
+struct WarpNextOutput {
+    schema: &'static str,
+    lane: String,
+    verdict: String,
+    objective: f64,
+    next_actions: Vec<WarpNextAction>,
+}
+
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
         WarpSubcommand::Status { lane } => {
             let output = status(&root, &lane)?;
             emit(&output, json)
+        }
+        WarpSubcommand::Explain { lane } => {
+            let output = status(&root, &lane)?;
+            emit_explain(&output, json)
+        }
+        WarpSubcommand::Next { lane } => {
+            let output = status(&root, &lane)?;
+            emit_next(&output, json)
         }
     }
 }
@@ -391,6 +420,66 @@ fn emit(output: &WarpStatusOutput, json: bool) -> anyhow::Result<()> {
         println!("  residuals:");
         for residual in &output.residuals {
             println!("    - {} ({})", residual.name, residual.weight);
+        }
+    }
+    Ok(())
+}
+
+fn emit_explain(output: &WarpStatusOutput, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+        return Ok(());
+    }
+    println!("Warp explanation for {}", output.lane);
+    println!("  verdict: {}", output.verdict);
+    println!("  objective: {}", output.objective);
+    println!("  evidence:");
+    for signal in &output.signals {
+        println!("    + {} ({})", signal.name, signal.weight);
+        for path in &signal.evidence {
+            println!("      - {}", path);
+        }
+    }
+    if output.residuals.is_empty() {
+        println!("  residuals: none");
+    } else {
+        println!("  residuals:");
+        for residual in &output.residuals {
+            println!("    - {} ({})", residual.name, residual.weight);
+            for path in &residual.evidence {
+                println!("      - {}", path);
+            }
+        }
+    }
+    Ok(())
+}
+
+fn emit_next(output: &WarpStatusOutput, json: bool) -> anyhow::Result<()> {
+    let next = WarpNextOutput {
+        schema: "warp-next-v1",
+        lane: output.lane.clone(),
+        verdict: output.verdict.clone(),
+        objective: output.objective,
+        next_actions: output
+            .next_actions
+            .iter()
+            .map(|action| WarpNextAction {
+                kind: action.kind.clone(),
+                lane: action.lane.clone(),
+                reason: action.reason.clone(),
+            })
+            .collect(),
+    };
+    if json {
+        println!("{}", serde_json::to_string_pretty(&next)?);
+        return Ok(());
+    }
+    println!("Warp next for {}", next.lane);
+    if next.next_actions.is_empty() {
+        println!("  no action suggested");
+    } else {
+        for action in &next.next_actions {
+            println!("  - {}: {}", action.kind, action.reason);
         }
     }
     Ok(())

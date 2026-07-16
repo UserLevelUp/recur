@@ -38,6 +38,22 @@ end
             action_kinds = String[item["kind"] for item in actual["next_actions"]]
             @test residual_names == String[item for item in expected["residuals"]]
             @test action_kinds == String[item for item in expected["next_actions"]]
+
+            success, explain_output, _ = run_recur([
+                "warp", "explain", lane, "-d", root, "--json",
+            ])
+            @test success
+            explained = JSON3.read(explain_output)
+            @test String(explained["schema"]) == "warp-status-v1"
+            @test String(explained["verdict"]) == String(expected["verdict"])
+
+            success, next_output, _ = run_recur([
+                "warp", "next", lane, "-d", root, "--json",
+            ])
+            @test success
+            next = JSON3.read(next_output)
+            @test String(next["schema"]) == "warp-next-v1"
+            @test String[next["kind"] for next in next["next_actions"]] == action_kinds
         end
     end
 end

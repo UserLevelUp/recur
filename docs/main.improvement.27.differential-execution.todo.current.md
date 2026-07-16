@@ -65,3 +65,11 @@ E4 = status fixtures exist but no query composes their evidence
 Δ  = read-only lane scan, state grouping, role counts, residual pressure, verdict
 E5 = recur warp status emits a fixture-backed warp-status-v1 report
 ```
+
+## Slice 6 target
+
+```text
+E5 = status exposes a verdict but requires consumers to interpret it manually
+Δ  = evidence explanation plus a narrow suggested-action packet
+E6 = explain and next remain pure projections over the same status report
+```

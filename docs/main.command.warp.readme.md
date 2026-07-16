@@ -11,6 +11,8 @@ anything.
 ```powershell
 recur warp status demo.project.good -d julia-tests/fixtures/warp-status-v1/optimum
 recur warp status demo.project.needs -d julia-tests/fixtures/warp-status-v1/sub-optimum --json
+recur warp explain demo.project.needs -d julia-tests/fixtures/warp-status-v1/sub-optimum
+recur warp next demo.project.needs -d julia-tests/fixtures/warp-status-v1/sub-optimum --json
 ```
 
 The `warp-status-v1` response contains concrete files, suffix and state-group
@@ -24,3 +26,7 @@ groups with `[warp.suffixes]` in `.recur/config.toml`.
 
 The command treats a `blocker` or `operator approval` marker as an external
 blocker and reports it rather than attempting to resolve it.
+
+`recur warp explain` renders the same status evidence with signals and residual
+paths. `recur warp next` emits only the suggested actions. Both are read-only;
+their suggestions are not commands to execute and do not start `recur-warp`.
