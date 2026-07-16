@@ -1,0 +1,11 @@
+{
+  "schema": "warp-status-v1",
+  "fixture": "config-override",
+  "lane": "demo.project.custom",
+  "verdict": "optimum",
+  "objective": 0.0,
+  "state_groups": {"active": 0, "complete": 1, "interesting": 0, "blocked": 0, "other": 0},
+  "trace_id_roles": {"define": 1, "consume": 1, "produce": 1, "trigger": 1},
+  "residuals": [],
+  "next_actions": []
+}

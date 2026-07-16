@@ -49,3 +49,11 @@ E2 = cached trace evidence can be interpreted ambiguously
 Δ  = explicit retention, freshness, and consumer-trust policy
 E3 = only fresh saved runs may supply derived evidence to a later warp query
 ```
+
+## Slice 4 target
+
+```text
+E3 = warp has a concept but no executable evidence envelope
+Δ  = frozen JSON fields plus synthetic optimum/sub-optimum/blocked cases
+E4 = scorer implementation can be judged against stable, domain-neutral fixtures
+```

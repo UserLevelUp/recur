@@ -1,0 +1,11 @@
+{
+  "schema": "warp-status-v1",
+  "fixture": "blocked",
+  "lane": "demo.project.blocked",
+  "verdict": "blocked",
+  "objective": 5.0,
+  "state_groups": {"active": 1, "complete": 0, "interesting": 0, "blocked": 1, "other": 0},
+  "trace_id_roles": {"define": 0, "consume": 0, "produce": 0, "trigger": 0},
+  "residuals": ["external-blocker"],
+  "next_actions": ["await-approval"]
+}

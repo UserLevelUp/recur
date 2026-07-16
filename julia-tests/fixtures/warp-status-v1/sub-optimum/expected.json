@@ -1,0 +1,11 @@
+{
+  "schema": "warp-status-v1",
+  "fixture": "sub-optimum",
+  "lane": "demo.project.needs",
+  "verdict": "sub_optimum",
+  "objective": 2.0,
+  "state_groups": {"active": 1, "complete": 0, "interesting": 1, "blocked": 0, "other": 0},
+  "trace_id_roles": {"define": 0, "consume": 0, "produce": 0, "trigger": 0},
+  "residuals": ["missing-verification", "unresolved-interest"],
+  "next_actions": ["verify"]
+}
