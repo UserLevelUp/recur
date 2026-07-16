@@ -61,6 +61,7 @@ try
         include("main.command.version.test.jl")  # IMPROVEMENT26 - pure version query + recur-version writer
         include("main.command.capability.test.jl")  # IMPROVEMENT28 - capability-card query surface
         include("main.improvement.27.warp.contract.test.jl")  # IMPROVEMENT27 - frozen warp-status-v1 fixtures
+        include("main.command.warp.test.jl")  # IMPROVEMENT27 - read-only warp status
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lane.coordination.trace-id.test.jl")  # IMPROVEMENT21+22 - trace-id as lane handoff contract
         include("main.recur-git.checkpoint.lanes.test.jl")  # Checkpoint snapshot lane coverage for active agent vaults

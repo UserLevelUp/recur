@@ -38,6 +38,7 @@ mod main_command_trace_stats_impl;
 mod main_command_trait_impl;
 mod main_command_tree_impl;
 mod main_command_version_impl;
+mod main_command_warp_impl;
 mod main_command_watch_query_impl;
 
 #[derive(Parser)]
@@ -678,6 +679,19 @@ enum Commands {
         dir: PathBuf,
     },
 
+    /// Read-only eventness status and residual-pressure queries
+    ///
+    /// Examples:
+    ///   recur warp status main.improvement.27 --json
+    Warp {
+        #[command(subcommand)]
+        command: main_command_warp_impl::WarpSubcommand,
+
+        /// Project root or directory containing the lane evidence
+        #[arg(short = 'd', long, default_value = ".", global = true)]
+        dir: PathBuf,
+    },
+
     /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
@@ -1146,6 +1160,8 @@ fn main() {
         Commands::Capability { command, dir } => {
             main_command_capability_impl::execute(command, dir, cli.json)
         }
+
+        Commands::Warp { command, dir } => main_command_warp_impl::execute(command, dir, cli.json),
 
         Commands::Flatten {
             file,
