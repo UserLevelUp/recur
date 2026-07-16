@@ -24,10 +24,11 @@ mod main_command_flatten_xml;
 mod main_command_flatten_yaml;
 mod main_command_id_impl;
 mod main_command_init_impl;
+mod main_command_lane_impl;
 mod main_command_merge_impl;
 mod main_command_psyche_impl;
-mod main_command_reveal_impl;
 mod main_command_related_impl;
+mod main_command_reveal_impl;
 mod main_command_stats_impl;
 mod main_command_stats_stdin;
 mod main_command_trace_id_impl;
@@ -573,6 +574,21 @@ enum Commands {
         force: bool,
     },
 
+    /// Scaffold or list named lane sub-roots
+    ///
+    /// Examples:
+    ///   recur lane docs
+    ///   recur lane impl
+    ///   recur lane
+    Lane {
+        /// Lane name to scaffold; omit to list known lanes
+        name: Option<String>,
+
+        /// Project root directory
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+    },
+
     /// Reveal lane-local rehydration capsules (`*.recur.md`)
     ///
     /// Examples:
@@ -607,6 +623,10 @@ enum Commands {
         /// Filter findings by kind (for example: orphan-status)
         #[arg(long, value_name = "KIND")]
         filter: Option<String>,
+
+        /// Report current work files older than this many seconds
+        #[arg(long, value_name = "SECONDS")]
+        stale_seconds: Option<u64>,
     },
 
     /// Inspect watcher state written by `recur-watch`
@@ -1071,13 +1091,16 @@ fn main() {
             force,
         } => main_command_init_impl::execute(dir, analyze, force, cli.json),
 
+        Commands::Lane { name, dir } => main_command_lane_impl::execute(name, dir, cli.json),
+
         Commands::Reveal { lane, dir } => main_command_reveal_impl::execute(lane, dir, cli.json),
 
         Commands::Psyche {
             dir,
             format,
             filter,
-        } => main_command_psyche_impl::execute(dir, format, filter),
+            stale_seconds,
+        } => main_command_psyche_impl::execute(dir, format, filter, stale_seconds),
 
         Commands::Watch { command, dir } => {
             main_command_watch_query_impl::execute(command, dir, cli.json)

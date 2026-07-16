@@ -579,9 +579,7 @@ fn parse_reveal_merge_section(table: &toml::value::Table) -> RevealMergeConfig {
 fn parse_reveal_rank_section(table: &toml::value::Table) -> RevealRankConfig {
     RevealRankConfig {
         prefer_current: table.get("prefer_current").and_then(|v| v.as_bool()),
-        prefer_trigger_event: table
-            .get("prefer_trigger_event")
-            .and_then(|v| v.as_bool()),
+        prefer_trigger_event: table.get("prefer_trigger_event").and_then(|v| v.as_bool()),
         prefer_recurring: table.get("prefer_recurring").and_then(|v| v.as_bool()),
         prefer_complete: table.get("prefer_complete").and_then(|v| v.as_bool()),
     }
@@ -605,9 +603,7 @@ fn parse_reveal_section(table: &toml::value::Table) -> RevealConfig {
             .get("max_threads")
             .and_then(|v| v.as_integer())
             .and_then(|v| usize::try_from(v).ok()),
-        skip_persona_if_known: table
-            .get("skip_persona_if_known")
-            .and_then(|v| v.as_bool()),
+        skip_persona_if_known: table.get("skip_persona_if_known").and_then(|v| v.as_bool()),
         order: table
             .get("order")
             .and_then(|v| v.as_table())
@@ -810,6 +806,9 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("current_suffix = \".current.md\"\n");
     content.push_str("todo_suffix = \".todo.md\"\n");
     content.push_str("complete_suffix = \".complete.md\"\n");
+    content.push_str("\n[lanes]\n");
+    content.push_str("root = \"lanes/\"\n");
+    content.push_str("entry_suffix = \".recur.md\"\n");
     content.push_str("\n[reveal]\n");
     content.push_str(&format!("mode = \"{}\"\n", DEFAULT_REVEAL_MODE));
     content.push_str(&format!(
