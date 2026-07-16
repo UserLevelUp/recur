@@ -10,7 +10,7 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 - `main.improvement.<n>.<topic>.complete.md` = completed sub-lane under an improvement
 - `main.improvement.<n>.<topic>.readme.core.md` = concept or core reference without by-itself implying active state
 
-## Current Snapshot (2026-04-13)
+## Current Snapshot (2026-05-23)
 
 ### Complete
 
@@ -28,6 +28,8 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
   `todo.future-plan` residue still exists
 - `9`
   the `trace-id` sub-lane is complete, while broader future-plan residue remains
+- `28`
+  seed capability-card query surface is complete; future card authoring remains optional
 
 ### Future Plan / Parked
 
@@ -40,6 +42,10 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 - `20`
 - `21`
 - `22`
+- `25`
+- `26`
+- `27`
+- `29`
 
 ### Root-Doc Future Vision, Not Yet Fully Mirrored Into `docs/main.improvement.*`
 
@@ -57,6 +63,7 @@ Useful current adjacent lanes:
 
 - `docs/main.command.tests.progress.current.md`
 - `docs/main.command.trace-id.run.todo.current.md`
+- `docs/main.improvement.pre27and28.todo.current.md`
 - `docs/main.demo.skippy.trace-id.todo.current.md`
 - `docs/main.demo.sudoku.trace-id.todo.current.md`
 - `docs/main.demo.sudoku.eyeball-order.todo.current.md`
@@ -87,4 +94,9 @@ recur files "**.current" -d docs/
 - `README.CORE.IMPROVEMENT20.md`
 - `README.CORE.IMPROVEMENT21.md`
 - `README.CORE.IMPROVEMENT22.md`
+- `README.CORE.IMPROVEMENT25.md`
+- `README.CORE.IMPROVEMENT26.md`
+- `README.CORE.IMPROVEMENT27.md`
+- `README.CORE.IMPROVEMENT28.md`
+- `README.CORE.IMPROVEMENT29.md`
 - `docs/main.improvement.delivery-loop.recurring.md`

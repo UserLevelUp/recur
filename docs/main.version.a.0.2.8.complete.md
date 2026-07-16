@@ -27,6 +27,12 @@ main.version.a.0.2.8.command.trace_stats
   - Sorting, filtering, top-N, table/json/csv output
   - Traversal budget policy via `[traits.traversal_budget]` in config
 
+main.version.a.0.2.8.command.version
+  - `recur version` pure query surface: status, manifest, policy, schema, query, explain
+  - `recur-version` companion binary: next, save
+  - Save writes preserved snapshots, updates manifests, and records ACK/NAK status under `.recur/version/`
+  - Query history answers state-transition questions from config-defined CSV identity/state fields
+
 ### Fixes
 
 main.version.a.0.2.8.fix.release_safe_stack_overflow
@@ -49,6 +55,10 @@ main.version.a.0.2.8.docs.trace_id_readme
   - `docs/main.command.trace-id.readme.md` — full command reference
   - Includes: role table, all flags, JSON shape, trait config, pipeline, Sudoku context
 
+main.version.a.0.2.8.docs.version_readme
+  - `docs/main.command.version.readme.md` — pure/companion version-eventness reference
+  - Captures current artifact, manifest, snapshot, and config shapes
+
 main.version.a.0.2.8.docs.sudoku_demo
   - `docs/main.demo.sudoku.trace-id.todo.current.md` — full Sudoku demo planning doc
   - `docs/main.demo.sudoku.trace-id.todo.md` — persistent tracking
@@ -65,6 +75,9 @@ main.version.a.0.2.8.tests.trace_stats_phase3
 main.version.a.0.2.8.tests.trace_id
   - Phase 3b: edge_type field assertions (8 new passing tests)
   - Phase 3b was @test_broken, now active @test after Rust implementation landed
+
+main.version.a.0.2.8.tests.version
+  - `julia-tests/main.command.version.test.jl` covers pure status/policy/schema/query and `recur-version` ACK/NAK save behavior
 
 ## Test Baseline at Release
 
@@ -103,3 +116,4 @@ recur children "main.command.trace" -d docs/ --sep .
 - `docs/main.improvement.8.trace-id.todo.current.md` — trace-id improvement context
 - `docs/main.command.trace-id.edge-type.todo.current.md` — edge_type lane (Layer 1 complete)
 - `docs/main.command.trace-stats.circular-distinct.todo.current.md` — circular distinct (complete)
+- `docs/main.command.version.readme.md` — version-eventness command reference

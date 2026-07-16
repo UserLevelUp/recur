@@ -27,3 +27,8 @@ $recurWatch = Join-Path $installDir 'recur-watch.exe'
 if (Test-Path $recurWatch) {
     Install-BinFile -Name 'recur-watch' -Path $recurWatch
 }
+
+$recurVersion = Join-Path $installDir 'recur-version.exe'
+if (Test-Path $recurVersion) {
+    Install-BinFile -Name 'recur-version' -Path $recurVersion
+}

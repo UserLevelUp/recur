@@ -21,6 +21,22 @@ cargo install recur
 
 Prepare the repo so crates.io publication is straightforward and repeatable.
 
+## Readiness Check 2026-05-23
+
+Package-content verification exposed and fixed one release blocker:
+
+- `cargo package --allow-dirty --list` originally included local scratch/build
+  folders such as `.tmp/` and `target2/`, producing a very large crate archive.
+- `Cargo.toml` now excludes scratch folders, generated release archives, local
+  temp fixtures, and cached demo output from crates.io packaging.
+- Current package list: `442` files.
+- Current package size: `2.7MiB` unpacked, `906.5KiB` compressed.
+- `cargo package --allow-dirty` verifies successfully when using a separate
+  `CARGO_TARGET_DIR`; the normal `target/debug/recur-watch.exe` can be locked
+  by active local watcher processes on Windows.
+
+Publication and fresh install verification are still intentionally open.
+
 ## Checklist
 
 1. Verify crate metadata in `Cargo.toml`

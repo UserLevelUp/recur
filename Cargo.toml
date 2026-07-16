@@ -12,6 +12,26 @@ readme = "README.md"
 keywords = ["search", "grep", "recursive", "hierarchy", "cli"]
 categories = ["command-line-utilities", "development-tools", "filesystem"]
 rust-version = "1.70"
+exclude = [
+    ".claude/**",
+    ".tmp/**",
+    ".vscode/**",
+    "target2/**",
+    "csrcrecurchocotools/**",
+    "tmp_*/**",
+    "test-quick/**",
+    "test_quick/**",
+    "test_stdin/**",
+    "test_id_probe/**",
+    "demos/ascii-drinks/.demo3-cache/**",
+    "choco/*.nupkg",
+    "recur-v*.zip",
+    "Cargo.toml.orig",
+    "dummy.*",
+    "merged-view.txt",
+    "nul",
+    "test.json",
+]
 
 [lib]
 name = "recur"

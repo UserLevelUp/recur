@@ -84,9 +84,9 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
         .as_ref()
         .map(|config| config.project_root.clone())
         .unwrap_or(requested_root);
-    let policy = EffectiveRevealPolicy::from_config(loaded.as_ref().and_then(|config| {
-        config.reveal.as_ref()
-    }));
+    let policy = EffectiveRevealPolicy::from_config(
+        loaded.as_ref().and_then(|config| config.reveal.as_ref()),
+    );
     let entries = discover_reveal_entries(&root, &policy.entry_suffix)?;
 
     match lane {
@@ -109,7 +109,9 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
                 };
                 print_show_output(&output, json)?;
             }
-            RevealSelection::Ambiguous(matches) => print_ambiguous_matches(&root, &query, &matches, json)?,
+            RevealSelection::Ambiguous(matches) => {
+                print_ambiguous_matches(&root, &query, &matches, json)?
+            }
             RevealSelection::Missing => print_missing_match(&root, &query, &entries, json)?,
         },
         None => {
@@ -229,7 +231,11 @@ fn normalize_relative_path(path: &Path) -> String {
     path.to_string_lossy().replace('\\', "/")
 }
 
-fn select_reveal_entry(entries: &[RevealEntry], query: &str, entry_suffix: &str) -> RevealSelection {
+fn select_reveal_entry(
+    entries: &[RevealEntry],
+    query: &str,
+    entry_suffix: &str,
+) -> RevealSelection {
     let normalized = normalize_query(query, entry_suffix);
 
     let exact_matches: Vec<RevealEntry> = entries
@@ -325,7 +331,10 @@ fn strip_matching_quotes(value: &str) -> String {
     value.to_string()
 }
 
-fn arrange_fields(fields: &[RevealField], order_steps: &[String]) -> (Vec<RevealField>, Vec<RevealField>) {
+fn arrange_fields(
+    fields: &[RevealField],
+    order_steps: &[String],
+) -> (Vec<RevealField>, Vec<RevealField>) {
     let mut ordered = Vec::new();
     let mut seen = HashSet::new();
 
@@ -407,7 +416,12 @@ fn print_show_output(output: &RevealShowOutput, json: bool) -> Result<()> {
     Ok(())
 }
 
-fn print_ambiguous_matches(root: &Path, query: &str, matches: &[RevealEntry], json: bool) -> Result<()> {
+fn print_ambiguous_matches(
+    root: &Path,
+    query: &str,
+    matches: &[RevealEntry],
+    json: bool,
+) -> Result<()> {
     let payload = RevealListOutput {
         root: root.display().to_string(),
         entry_suffix: DEFAULT_REVEAL_ENTRY_SUFFIX.to_string(),
@@ -442,7 +456,12 @@ fn print_ambiguous_matches(root: &Path, query: &str, matches: &[RevealEntry], js
     Ok(())
 }
 
-fn print_missing_match(root: &Path, query: &str, entries: &[RevealEntry], json: bool) -> Result<()> {
+fn print_missing_match(
+    root: &Path,
+    query: &str,
+    entries: &[RevealEntry],
+    json: bool,
+) -> Result<()> {
     let payload = RevealListOutput {
         root: root.display().to_string(),
         entry_suffix: DEFAULT_REVEAL_ENTRY_SUFFIX.to_string(),

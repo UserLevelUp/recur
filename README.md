@@ -49,10 +49,12 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
 
 ## Installation
 
-**What you get:** Two binaries for a complete toolset:
+**What you get:** Companion binaries for a complete toolset:
 - **`recur`** - Core hierarchy tool (pure, no Git dependencies)
 - **`recur-git`** - Git workflow extension (checkpoint tracking, dogfooding)
   - recur-git depends on existing git binaries to already be installed
+- **`recur-watch`** - Active watcher/subscription runner that writes watcher status
+- **`recur-version`** - Artifact snapshot/manifest writer for version-eventness lanes
 ### From Cargo (crates.io)
 ```bash
 cargo install recur
@@ -64,7 +66,7 @@ cargo build --profile release-safe --locked
 cargo install --path . --profile release-safe --locked --force --offline
 ```
 
-Both binaries will be installed to Cargo's bin folder. If `recur` is not found, add it to PATH:
+The binaries will be installed to Cargo's bin folder. If `recur` is not found, add it to PATH:
 - Windows: `%USERPROFILE%\.cargo\bin`
 - macOS/Linux: `~/.cargo/bin`
 
@@ -118,7 +120,13 @@ recur id "config.database.*" -C 1
 recur stats "ServiceName" -l 1
 
 # Subscribe to file-event patterns within a directory
-recur watch --filter "src.**"
+recur-watch --filter "src.**"
+
+# Inspect active watcher state without starting a watcher
+recur watch list
+
+# Query artifact version history and policy
+recur version status care.subject.routine
 ```
 
 ## Features
@@ -138,7 +146,8 @@ recur watch --filter "src.**"
 - **Lane rehydration helpers** via `recur reveal` and `*.recur.md` ignition capsules
 - **Trait config management** via `recur trait` (list/get/set trait keys in `.recur/config.toml`)
 - **Vault integrity inspection** via `recur psyche` (passive observer for missing/inconsistent state)
-- **Hierarchical file-event subscription** via `recur watch` (FS-event streaming or polled modes)
+- **Watcher-state inspection** via `recur watch`, with active subscriptions handled by `recur-watch`
+- **Artifact version history** via `recur version`, with snapshot saves handled by `recur-version`
 - **Structured flattening** (`recur flatten`) for XML/JSON/TOML/YAML/CSV to `path = value` records
 - **Cross-domain gap analysis** — verify completeness across representations
 - **Multiple output formats** (human-friendly terminal output, plus JSON for tooling)
@@ -226,6 +235,21 @@ recur trait get traversal_budget.max_depth
 recur trait set traversal_budget.max_depth 3
 recur trait set traversal_budget.depth_guard clamp
 recur trait set trace_id.producer_keywords "\"publish,send,emit,enqueue\""
+```
+
+### `recur version` - inspect artifact version lanes
+`recur version` is the pure query surface for artifact version policy,
+manifests, and preserved history. `recur-version` is the companion writer that
+saves snapshots and updates manifests.
+
+```bash
+recur version status care.subject.routine
+recur version policy care.subject.routine
+recur version schema care.subject.routine
+recur version query care.subject.routine --question "when did item-a become discontinued"
+
+recur-version next care.subject.routine.proposed.current.csv
+recur-version save care.subject.routine.proposed.current.csv --slug item-a-discontinued
 ```
 
 ### `recur files` — find files by hierarchical pattern
@@ -389,12 +413,14 @@ recur trace-stats --scope "**" --depth 8 --depth-guard clamp
 git diff --name-only | recur trace-stats --scope "**" --stdin --sort-by risk
 ```
 
-### `recur watch` — subscribe to hierarchical file-event patterns within a directory
+### `recur watch` / `recur-watch` — inspect and run watcher lanes
 ```bash
-recur watch --filter "recur.**" -d .
-recur watch --filter "core.engine.**" --format json
-recur watch --filter "test.**" --poll-framing 5
-recur watch --filter "src.**" -d . --poll-framing 10 --format json
+recur watch list
+recur watch list --filter "**.active"
+recur watch status docs-monkey
+recur watch explain
+
+recur-watch --id docs-monkey --filter "src.**" -d . --poll-framing 10 --format json
 ```
 
 ### `recur psyche` — inspect `.recur` vault for missing or inconsistent state
