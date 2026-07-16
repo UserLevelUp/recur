@@ -1,0 +1,4 @@
+[warp.suffixes]
+complete = ["verified"]
+interesting = ["needs-review"]
+blocked = ["awaiting"]
