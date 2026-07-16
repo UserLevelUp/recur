@@ -22,6 +22,8 @@ Warp now has a shipped, read-only core query surface:
 recur warp status <lane> --json
 recur warp explain <lane> --json
 recur warp next <lane> --json
+recur warp collapse-plan <lane> --json
+recur warp config --json
 ```
 
 The supporting implementation and future companion plan live in:
@@ -34,8 +36,9 @@ The supporting implementation and future companion plan live in:
 
 The core commands only inspect scoped eventness evidence. They may count files,
 classify trace-id roles, load scoring config, return a verdict, explain its
-evidence, and suggest next actions. They must not rename files, delete files,
-collapse eventness, stage commits, approve transitions, or start watchers.
+evidence, suggest next actions, and partition evidence into a collapse plan.
+They must not rename files, delete files, collapse eventness, stage commits,
+approve transitions, or start watchers.
 
 Use today:
 

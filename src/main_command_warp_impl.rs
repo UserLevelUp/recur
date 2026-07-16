@@ -30,6 +30,15 @@ pub enum WarpSubcommand {
         /// Lane prefix such as demo.project.good
         lane: String,
     },
+
+    /// Classify one lane's evidence as collapsible, interesting, blocked, or active
+    CollapsePlan {
+        /// Lane prefix such as demo.project.good
+        lane: String,
+    },
+
+    /// Show the active read-only Warp suffix policy
+    Config,
 }
 
 #[derive(Clone)]
@@ -39,7 +48,7 @@ struct SuffixPolicy {
     blocked: Vec<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct WarpFile {
     path: String,
     state: String,
@@ -102,6 +111,29 @@ struct WarpNextOutput {
     next_actions: Vec<WarpNextAction>,
 }
 
+#[derive(Serialize)]
+struct WarpCollapsePlanOutput {
+    schema: &'static str,
+    lane: String,
+    scope: String,
+    verdict: String,
+    objective: f64,
+    collapse_known: Vec<WarpFile>,
+    preserve_interesting: Vec<WarpFile>,
+    blockers: Vec<WarpFile>,
+    ambiguous: Vec<WarpFile>,
+}
+
+#[derive(Serialize)]
+struct WarpConfigOutput {
+    schema: &'static str,
+    root: String,
+    active_suffixes: Vec<String>,
+    complete_suffixes: Vec<String>,
+    interesting_suffixes: Vec<String>,
+    blocked_suffixes: Vec<String>,
+}
+
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
@@ -117,7 +149,64 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
             let output = status(&root, &lane)?;
             emit_next(&output, json)
         }
+        WarpSubcommand::CollapsePlan { lane } => {
+            let output = collapse_plan(&root, &lane)?;
+            emit_collapse_plan(&output, json)
+        }
+        WarpSubcommand::Config => {
+            let output = config(&root)?;
+            emit_config(&output, json)
+        }
     }
+}
+
+fn collapse_plan(root: &Path, lane: &str) -> anyhow::Result<WarpCollapsePlanOutput> {
+    let status = status(root, lane)?;
+    let policy = load_suffix_policy(root)?;
+    let mut collapse_known = Vec::new();
+    let mut preserve_interesting = Vec::new();
+    let mut blockers = Vec::new();
+    let mut ambiguous = Vec::new();
+
+    for file in &status.files {
+        let absolute = root.join(&file.path);
+        let text = fs::read_to_string(&absolute)
+            .with_context(|| format!("failed to read '{}'", absolute.display()))?;
+        let group = group_for_state(&file.state, &policy);
+        if group == "blocked" || file_contains_blocker(&text) {
+            blockers.push(file.clone());
+        } else if group == "complete" {
+            collapse_known.push(file.clone());
+        } else if group == "interesting" {
+            preserve_interesting.push(file.clone());
+        } else {
+            ambiguous.push(file.clone());
+        }
+    }
+
+    Ok(WarpCollapsePlanOutput {
+        schema: "warp-collapse-plan-v1",
+        lane: status.lane,
+        scope: status.scope,
+        verdict: status.verdict,
+        objective: status.objective,
+        collapse_known,
+        preserve_interesting,
+        blockers,
+        ambiguous,
+    })
+}
+
+fn config(root: &Path) -> anyhow::Result<WarpConfigOutput> {
+    let policy = load_suffix_policy(root)?;
+    Ok(WarpConfigOutput {
+        schema: "warp-config-v1",
+        root: root.display().to_string(),
+        active_suffixes: vec!["current".to_string()],
+        complete_suffixes: policy.complete,
+        interesting_suffixes: policy.interesting,
+        blocked_suffixes: policy.blocked,
+    })
 }
 
 fn resolve_root(dir: PathBuf) -> anyhow::Result<PathBuf> {
@@ -482,5 +571,35 @@ fn emit_next(output: &WarpStatusOutput, json: bool) -> anyhow::Result<()> {
             println!("  - {}: {}", action.kind, action.reason);
         }
     }
+    Ok(())
+}
+
+fn emit_collapse_plan(output: &WarpCollapsePlanOutput, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+        return Ok(());
+    }
+    println!("Warp collapse plan for {}", output.lane);
+    println!("  verdict: {}", output.verdict);
+    println!("  collapse known: {}", output.collapse_known.len());
+    println!(
+        "  preserve interesting: {}",
+        output.preserve_interesting.len()
+    );
+    println!("  blockers: {}", output.blockers.len());
+    println!("  ambiguous: {}", output.ambiguous.len());
+    Ok(())
+}
+
+fn emit_config(output: &WarpConfigOutput, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+        return Ok(());
+    }
+    println!("Warp config for {}", output.root);
+    println!("  active: {}", output.active_suffixes.join(", "));
+    println!("  complete: {}", output.complete_suffixes.join(", "));
+    println!("  interesting: {}", output.interesting_suffixes.join(", "));
+    println!("  blocked: {}", output.blocked_suffixes.join(", "));
     Ok(())
 }

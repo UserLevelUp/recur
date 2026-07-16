@@ -13,6 +13,8 @@ recur warp status demo.project.good -d julia-tests/fixtures/warp-status-v1/optim
 recur warp status demo.project.needs -d julia-tests/fixtures/warp-status-v1/sub-optimum --json
 recur warp explain demo.project.needs -d julia-tests/fixtures/warp-status-v1/sub-optimum
 recur warp next demo.project.needs -d julia-tests/fixtures/warp-status-v1/sub-optimum --json
+recur warp collapse-plan demo.project.needs -d julia-tests/fixtures/warp-status-v1/sub-optimum --json
+recur warp config -d julia-tests/fixtures/warp-status-v1/config-override --json
 ```
 
 The `warp-status-v1` response contains concrete files, suffix and state-group
@@ -30,3 +32,13 @@ blocker and reports it rather than attempting to resolve it.
 `recur warp explain` renders the same status evidence with signals and residual
 paths. `recur warp next` emits only the suggested actions. Both are read-only;
 their suggestions are not commands to execute and do not start `recur-warp`.
+
+`recur warp collapse-plan` is a read-only partition of the same lane evidence:
+complete/verified files are `collapse_known`, interesting files remain
+`preserve_interesting`, blocked files or blocker-marked files are `blockers`,
+and active current files remain `ambiguous`. It does not rename or collapse any
+file. `recur warp config` reports the active suffix mapping used by every Warp
+projection, including defaults when no project policy exists.
+
+The dot-separated fixture strategy and full read-only command matrix are in
+`main.command.warp.test-structure`.
