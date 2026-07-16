@@ -31,3 +31,13 @@ query contract has proven useful.
 `main.improvement.21.phase1.complete` records the lane/Psyche delta and its
 full-suite receipt. The next residual is generic governance evidence rather
 than warp scoring.
+
+## Slice 2 target
+
+```text
+E1 = governance semantics are described but not yet a committed generic fixture
+Δ  = config-defined artifact policy, history queries, preserved snapshots, and
+     explicit ACK/NAK receipts
+E2 = a domain-neutral version-eventness contract with pure-query and companion
+     writer boundaries
+```

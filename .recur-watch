@@ -1,0 +1,26 @@
+# .recur-watch
+
+Purpose: describe the watcher capability split between the read-only core query
+surface and the active watcher runner.
+
+What it offers today:
+
+- `recur watch` reads watcher ACK/NAK state under `.recur/watch/` and exits.
+- `recur-watch` is the active runner that can observe eventness files.
+- `recur capability explain watch` can show this card before an operator uses
+  either surface.
+
+Current boundary:
+
+- Core `recur watch` is query-only.
+- Active watching belongs to the companion runner.
+- Capability cards are project knowledge; they do not start processes.
+
+Trace-id lines:
+
+```text
+defines: recur.watch.capability live filesystem eventness stream and watcher-state query surface
+consumes: main.improvement.28 recur capability-card query surface for root .recur-* files
+produces: recur.watch.readiness shared card describing query runner and state-file boundaries
+triggers: recur.capability.doctor verify watch capability card presence
+```

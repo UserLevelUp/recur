@@ -1,0 +1,26 @@
+# .recur-git
+
+Purpose: make git branch, head, worktree, checkpoint, and push state visible as
+part of recur lane truth.
+
+What it offers today:
+
+- `recur-git` can snapshot git state into lane eventness.
+- Recur workflows can treat dirty worktrees, commits, and pushes as evidence.
+- `recur capability explain git` can show this card before git state is folded
+  into a lane decision.
+
+Current boundary:
+
+- Git evidence is local project state, not a replacement for git itself.
+- Capability cards explain the surface; they do not stage, commit, reset, or
+  push.
+
+Trace-id lines:
+
+```text
+defines: recur.git.capability git branch head worktree diff commit and push evidence for lane truth
+consumes: main.improvement.28 recur capability-card query surface for root .recur-* files
+produces: recur.git.readiness shared card describing git evidence boundaries
+triggers: recur.capability.doctor verify git capability card presence
+```

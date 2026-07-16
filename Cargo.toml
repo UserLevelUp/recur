@@ -29,6 +29,10 @@ path = "src/recur_git_main.rs"
 name = "recur-watch"
 path = "src/recur_watch_main.rs"
 
+[[bin]]
+name = "recur-version"
+path = "src/recur_version_main.rs"
+
 [dependencies]
 # Error handling
 thiserror = "1.0"

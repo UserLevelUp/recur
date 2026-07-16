@@ -15,6 +15,7 @@ recur related "main.command.config.trait" -d docs/ --sep .
 main.command.config.trait - list/get/set trait parameters in `.recur/config.toml`
 main.command.config.init - initialize `.recur/` directory with full default config
 main.command.config.reveal - open lane-local `*.recur.md` reveal capsules using `.recur/config.toml`
+main.command.config.version - expose artifact version policy/schema from `.recur/config.toml`
 
 ## trait
 
@@ -46,15 +47,22 @@ Current trait sections:
 - which ordered fields should be shown first
 - whether persona can be skipped when already known
 
+`recur version policy` and `recur version schema` read `[artifact."<subject>"]`
+sections to expose project-specific versioning semantics without hardcoding a
+domain into recur.
+
 ## References
 
 - `docs/main.command.trait.readme.md`
 - `docs/main.command.init.readme.md`
 - `docs/main.command.reveal.readme.md`
+- `docs/main.command.version.readme.md`
 - `docs/main.command.init.lane-name-collision.complete.md`
 - `docs/main.command.map.readme.md`
 - `julia-tests/main.command.init.test.jl`
 - `julia-tests/main.command.trait.test.jl`
+- `julia-tests/main.command.version.test.jl`
 - `src/main_command_init_impl.rs`
 - `src/main_command_trait_impl.rs`
+- `src/main_command_version_impl.rs`
 - `src/trait/trace_id.rs`

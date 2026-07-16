@@ -79,6 +79,7 @@ main.command.compose.flatten = hierarchy collapse: squash nested structure to a 
 main.command.config.trait = trait config: list/get/set trait parameters in .recur/config.toml
 main.command.config.init = project scaffold: initialize .recur/ directory with full config
 main.command.config.reveal = lane rehydration: open one configured *.recur.md capsule
+main.command.config.version = artifact version policy/schema/status query
 
 ---
 
@@ -96,6 +97,7 @@ main.command.discover.files publish recur.pipe.json
 main.command.discover.find publish recur.pipe.json
 main.command.discover.stats publish recur.pipe.json
 main.command.discover.id publish recur.pipe.json
+main.command.config.version publish recur.pipe.json
 
 main.command.compose.merge subscribe recur.pipe.json
 main.command.compose.flatten subscribe recur.pipe.json

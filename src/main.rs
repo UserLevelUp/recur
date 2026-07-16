@@ -12,6 +12,7 @@ use std::process;
 
 mod main_command_callees_impl;
 mod main_command_callers_impl;
+mod main_command_capability_impl;
 mod main_command_children_impl;
 mod main_command_files_impl;
 mod main_command_files_stdin;
@@ -36,6 +37,7 @@ mod main_command_trace_impl;
 mod main_command_trace_stats_impl;
 mod main_command_trait_impl;
 mod main_command_tree_impl;
+mod main_command_version_impl;
 mod main_command_watch_query_impl;
 
 #[derive(Parser)]
@@ -46,7 +48,7 @@ mod main_command_watch_query_impl;
 )]
 #[command(version)]
 #[command(
-    after_help = "A quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help\n  recur reveal --help"
+    after_help = "A quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help\n  recur reveal --help\n  recur capability --help\n  recur version --help"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -645,6 +647,37 @@ enum Commands {
         dir: PathBuf,
     },
 
+    /// Inspect artifact version policy, manifests, and preserved history
+    ///
+    /// Examples:
+    ///   recur version status care.subject.routine
+    ///   recur version policy care.subject.routine
+    ///   recur version schema care.subject.routine
+    ///   recur version query care.subject.routine --question "when did item-a become discontinued"
+    Version {
+        #[command(subcommand)]
+        command: main_command_version_impl::VersionQuerySubcommand,
+
+        /// Project root or directory containing `.recur/`
+        #[arg(short = 'd', long, default_value = ".", global = true)]
+        dir: PathBuf,
+    },
+
+    /// Inspect root `.recur-*` capability cards
+    ///
+    /// Examples:
+    ///   recur capability list
+    ///   recur capability explain warp
+    ///   recur capability doctor
+    Capability {
+        #[command(subcommand)]
+        command: Option<main_command_capability_impl::CapabilitySubcommand>,
+
+        /// Project root or directory containing root `.recur-*` cards
+        #[arg(short = 'd', long, default_value = ".", global = true)]
+        dir: PathBuf,
+    },
+
     /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
@@ -1104,6 +1137,14 @@ fn main() {
 
         Commands::Watch { command, dir } => {
             main_command_watch_query_impl::execute(command, dir, cli.json)
+        }
+
+        Commands::Version { command, dir } => {
+            main_command_version_impl::execute(command, dir, cli.json)
+        }
+
+        Commands::Capability { command, dir } => {
+            main_command_capability_impl::execute(command, dir, cli.json)
         }
 
         Commands::Flatten {

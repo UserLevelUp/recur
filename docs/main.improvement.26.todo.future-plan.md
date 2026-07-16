@@ -46,6 +46,18 @@ specific domain. `.recur/config.toml` should declare artifact semantics and
 persona exposure rules, and `recur version` / `recur-trace` should surface those
 rules to revealable personas during versioning and lineage work.
 
+## 0.2.8 Slice
+
+The first shipped slice now covers:
+
+- `recur version status`, `manifest`, `policy`, `schema`, `query`, `explain`
+- `recur-version next`
+- `recur-version save`
+- ACK/NAK status records under `.recur/version/`
+- fixture tests in `julia-tests/main.command.version.test.jl`
+
+The broader governance criteria below remain future work.
+
 ## Test Todo
 
 Add synthetic fixture tests that cover the full Improvement 26 criteria:

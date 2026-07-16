@@ -1,0 +1,77 @@
+# .recur-warp
+
+Purpose: name the desired completed eventness reality first, then compare the
+current lane evidence against it.
+
+Warp is the convergence idea: move from primitive setup toward a future
+supersystem state by keeping the target, the intermediate semi-states, and the
+remaining residual gaps visible.
+
+Warp also treats a scoped eventness surface such as `prefix.base.suffix.*` as a
+membrane through time. It can ask what that membrane looks like now, in a day,
+in a month, in a year, or across a decade, using only bounded evidence from the
+workspace.
+
+Warp epics and milestones let an expert name what should be complete, what
+should still be pending, what remains research, and what is blocked at each
+horizon. Long-term epochs can group many epics or milestones.
+
+Warp is currently a proposed capability, not a shipped `recur warp` command.
+The implementation plan lives in:
+
+- README.CORE.IMPROVEMENT27.md
+- docs/main.improvement.27.todo.future-plan.md
+- docs/main.improvement.27.recur-ready.todo.future-plan.md
+- docs/main.improvement.27.contract.warp-status-v1.todo.future-plan.md
+- docs/main.improvement.27.command-boundary.todo.future-plan.md
+
+Use today:
+
+```powershell
+recur tree "main.improvement.27" -d docs/
+recur files "main.improvement.27.**.todo.future-plan" -d docs/
+recur trace-id "recur.warp.status" --scope "main.improvement.27.**" --dir docs --ext md
+```
+
+Future core shape:
+
+```text
+recur warp status <lane> --json
+```
+
+That core command should be read-only. It may count files, classify trace-id
+roles, load scoring config, produce a verdict, and suggest next actions. It
+must not rename files, delete files, collapse eventness, stage commits, approve
+transitions, or start watchers.
+
+Useful future domains include synthetic schematics, voltage expectation checks,
+robotics capability envelopes, subsystem interface alignment, and production-run
+conformance. The command should expose evidence and residuals; it should not
+invent specifications, certify safety, or replace qualified engineering review.
+
+Future companion shape:
+
+```text
+recur-warp
+```
+
+Reserve the companion name for possible approval-gated automation after the
+read-only status contract is boring, tested, and useful.
+
+Trace-id lines:
+
+```text
+defines: recur.warp.capability ideal-state lane steering and eventness optimality surface
+defines: recur.warp.status future read-only lane verdict command returning optimum sub_optimum or blocked
+defines: recur.warp.future.state.convergence comparison between current primitive setup intermediate semi-states and intended supersystem eventness target
+defines: recur.warp.temporal.frame.projection bounded day month year decade projection over an eventness membrane
+defines: recur.warp.eventness.membrane scoped prefix base suffix surface whose future semi-states are compared across frames
+defines: recur.warp.eventness.epic expert-authored horizon target complete pending and research milestone frame
+defines: recur.warp.long.term.epoch long-horizon grouping of multiple warp epics or milestones
+defines: recur.warp.cross.domain.pattern reusable eventness structure shared across repeatable tech stacks prototypes and inventions
+consumes: main.improvement.27 recur warp and project-control command proposal for eventness optimality scoring
+consumes: main.improvement.28 recur capability-card query surface for root .recur-* files
+produces: recur.warp.readiness shared capability-card summary for future implementation without public command exposure
+triggers: main.improvement.27.contract.warp-status-v1 stabilize JSON status contract before code returns
+triggers: main.improvement.27.command-boundary keep core query and companion automation separated
+```

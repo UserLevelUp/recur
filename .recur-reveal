@@ -1,0 +1,43 @@
+# .recur-reveal
+
+Purpose: describe the reveal capability for lane-local role, agenda, constraint,
+and handoff rehydration from files.
+
+What it offers today:
+
+- `recur reveal` lists reveal capsules.
+- `recur reveal <lane>` prints the selected lane-local capsule.
+- Reveal helps operators and agents regain context from files instead of model
+  memory.
+- `recur capability explain reveal` can show this card before using the reveal
+  surface.
+
+Future improvement:
+
+- Core `recur reveal` should remain pure: list reveal capsules, show one
+  capsule, print context, exit.
+- `recur-reveal` should be the executable that owns the `next` command.
+- `recur-reveal next` should reveal the next coherent packet of attention:
+  persona, north-star, active index, read-now set, excluded paused lanes, first
+  pull, verification, and trusted receipts.
+- Optional command execution should stay behind explicit `recur-reveal next`
+  flags such as `--run verify --confirm`, with ACK/NAK state written under
+  `.recur/reveal/`.
+
+Current boundary:
+
+- Reveal reads project files and prints context.
+- It does not impersonate a role, execute commands, edit files, or approve
+  actions.
+
+Trace-id lines:
+
+```text
+defines: recur.reveal.capability file-backed persona role constraint and handoff rehydration
+defines: recur.reveal.core-boundary core reveal stays pure capsule listing and showing
+defines: recur-reveal.next future executable command for next orientation packet and confirmation-gated pull or verify execution
+consumes: main.improvement.28 recur capability-card query surface for root .recur-* files
+consumes: main.improvement.29 reveal-next orientation packet and recur-reveal companion proposal
+produces: recur.reveal.readiness shared card describing reveal context boundaries
+triggers: recur.capability.doctor verify reveal capability card presence
+```

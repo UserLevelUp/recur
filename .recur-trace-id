@@ -1,0 +1,26 @@
+# .recur-trace-id
+
+Purpose: describe the trace-id capability for finding define, consume, produce,
+and trigger role evidence for dotted identifiers.
+
+What it offers today:
+
+- `recur trace-id <id> --scope <scope>` classifies role evidence in files.
+- Role evidence helps lanes explain why a concept exists, what it depends on,
+  what it emits, and what it should trigger next.
+- `recur capability explain trace-id` can show this card before role evidence is
+  used by a larger command such as future warp.
+
+Current boundary:
+
+- Trace-id reads and classifies evidence.
+- It does not decide project status by itself.
+
+Trace-id lines:
+
+```text
+defines: recur.trace-id.capability role-classified flow evidence for dotted eventness identifiers
+consumes: main.improvement.28 recur capability-card query surface for root .recur-* files
+produces: recur.trace-id.readiness shared card describing role evidence boundaries
+triggers: recur.capability.doctor verify trace-id capability card presence
+```

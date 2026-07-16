@@ -6,6 +6,34 @@ Status: Proposal / future direction
 Author: Captured from a 2026-05-03 design proposal
   (Joe Bishop / Skippy coordinator - private-routine governance pattern)
 
+0.2.8 IMPLEMENTATION ADDENDUM
+-----------------------------
+The first `recur-version` / `recur version` slice is implemented on branch
+`a.0.2.8`.
+
+Implemented:
+
+- `recur version status <subject>` reads current artifacts, manifests, latest
+  version, next version, and configured policy presence.
+- `recur version manifest <subject>` prints the manifest for a subject.
+- `recur version policy <subject>` exposes `[artifact."<subject>"]` versioning
+  policy from `.recur/config.toml`.
+- `recur version schema <subject>` exposes configured identity, tracked, state,
+  note, and state-word fields.
+- `recur version query <subject> --question <question>` answers a first
+  evidence-backed CSV history question using configured identity/state fields.
+- `recur-version next <artifact>` reports the next letter-number version token.
+- `recur-version save <artifact> --slug <slug>` preserves the current artifact,
+  updates the manifest, and writes ACK/NAK status under `.recur/version/`.
+
+Deferred:
+
+- `recur-version promote`
+- `recur-version manifest update`
+- `recur version diff`, `history`, and `explain`
+- full ambiguity/high-risk confirmation flows
+- `recur-trace`
+
 INTENT
 ------
 Keep `recur` hierarchically pure while adding companion tooling that can notice
