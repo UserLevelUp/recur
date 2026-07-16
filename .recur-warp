@@ -16,14 +16,26 @@ Warp epics and milestones let an expert name what should be complete, what
 should still be pending, what remains research, and what is blocked at each
 horizon. Long-term epochs can group many epics or milestones.
 
-Warp is currently a proposed capability, not a shipped `recur warp` command.
-The implementation plan lives in:
+Warp now has a shipped, read-only core query surface:
+
+```text
+recur warp status <lane> --json
+recur warp explain <lane> --json
+recur warp next <lane> --json
+```
+
+The supporting implementation and future companion plan live in:
 
 - README.CORE.IMPROVEMENT27.md
 - docs/main.improvement.27.todo.future-plan.md
 - docs/main.improvement.27.recur-ready.todo.future-plan.md
 - docs/main.improvement.27.contract.warp-status-v1.todo.future-plan.md
 - docs/main.improvement.27.command-boundary.todo.future-plan.md
+
+The core commands only inspect scoped eventness evidence. They may count files,
+classify trace-id roles, load scoring config, return a verdict, explain its
+evidence, and suggest next actions. They must not rename files, delete files,
+collapse eventness, stage commits, approve transitions, or start watchers.
 
 Use today:
 
@@ -32,17 +44,6 @@ recur tree "main.improvement.27" -d docs/
 recur files "main.improvement.27.**.todo.future-plan" -d docs/
 recur trace-id "recur.warp.status" --scope "main.improvement.27.**" --dir docs --ext md
 ```
-
-Future core shape:
-
-```text
-recur warp status <lane> --json
-```
-
-That core command should be read-only. It may count files, classify trace-id
-roles, load scoring config, produce a verdict, and suggest next actions. It
-must not rename files, delete files, collapse eventness, stage commits, approve
-transitions, or start watchers.
 
 Useful future domains include synthetic schematics, voltage expectation checks,
 robotics capability envelopes, subsystem interface alignment, and production-run
@@ -57,6 +58,12 @@ recur-warp
 
 Reserve the companion name for possible approval-gated automation after the
 read-only status contract is boring, tested, and useful.
+
+The name is intentionally not an executable today. Any future `recur-warp`
+must require a declared bounded action and explicit `--confirm`; it must emit
+a durable `.recur/warp/recur-warp.<id>.status.current.md` ACK or NAK receipt
+with before/after evidence references. It must not interpret `next` advice as
+authorization, execute arbitrary commands, or silently start a watcher.
 
 Trace-id lines:
 

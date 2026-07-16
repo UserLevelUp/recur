@@ -73,3 +73,15 @@ E5 = status exposes a verdict but requires consumers to interpret it manually
 Δ  = evidence explanation plus a narrow suggested-action packet
 E6 = explain and next remain pure projections over the same status report
 ```
+
+## Slice 7 target
+
+```text
+E6 = core can describe and advise, but its future actor boundary is implicit
+Δ  = explicit consent, bounded-action, and durable ACK/NAK receipt contract
+E7 = recur-warp stays reserved until a requested writer can prove its outcome
+```
+
+The companion boundary is documented in
+`main.command.warp.companion.todo.future-plan`; no `recur-warp` executable is
+introduced by this slice.
