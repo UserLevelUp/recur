@@ -41,3 +41,11 @@ E1 = governance semantics are described but not yet a committed generic fixture
 E2 = a domain-neutral version-eventness contract with pure-query and companion
      writer boundaries
 ```
+
+## Slice 3 target
+
+```text
+E2 = cached trace evidence can be interpreted ambiguously
+Δ  = explicit retention, freshness, and consumer-trust policy
+E3 = only fresh saved runs may supply derived evidence to a later warp query
+```

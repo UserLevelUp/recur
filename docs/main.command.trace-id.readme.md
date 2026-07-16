@@ -165,6 +165,18 @@ Freshness is based on:
 This keeps the feature inside recur's metadata boundary: it stores the discovered
 trace result and freshness signals, not duplicated source files.
 
+## Evidence Policy
+
+Saved runs are reusable derived evidence, not canonical eventness. The stable
+policy is `latest` only and metadata freshness only (query shape, config text,
+and scoped path/size/modified-time records). Timestamped history and content
+hashing are deferred rather than implied by the current flags.
+
+A consumer such as a future `recur warp` may use a run only when
+`--check-run` reports `fresh`. A `stale` or `missing` run is a visible residual:
+the consumer must request a live trace or report the evidence gap, never score
+the cached payload as current truth.
+
 Examples:
 
 ```bash
