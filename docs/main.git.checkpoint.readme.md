@@ -24,7 +24,33 @@ recur-git checkpoint --snapshot --run-tests --run-julia-tests
 
 # 3) Emit checkpoint entry to stdout
 recur-git checkpoint --emit-parallel --checkpoint-id ck-children-01
+
+# 4) Record a verified behavior as immutable test eventness
+recur-git test-receipt main.command.tree.wildcard-current --julia-file julia-tests/main.command.tree.wildcard-current.test.jl
 ```
+
+## Test Eventness Receipts
+
+`recur-git test-receipt` is a bounded writer. It requires a clean worktree and
+a committed `HEAD`, then runs exactly one selected target:
+
+```bash
+recur-git test-receipt <test-id> --cargo
+recur-git test-receipt <test-id> --julia-full
+recur-git test-receipt <test-id> --julia-file julia-tests/runtests.tree.jl
+```
+
+It writes an immutable local receipt under `.recur/tests/`:
+
+```text
+main.command.tree.wildcard-current.test.<head>.passed.complete.md
+main.command.tree.wildcard-current.test.<head>.failed.strange.md
+```
+
+The receipt names the test identity, tested Git head, exact command, exit code,
+and timestamp. `checkpoint --snapshot` and appended parallel checkpoints list
+both passed and failed test receipts, making behavior changes visible between
+Git snapshots without adding generated run evidence to source history.
 
 ## Commit Convention
 

@@ -60,6 +60,13 @@ recur-git checkpoint --append-parallel --checkpoint-id ck-children-01 -f docs/ma
 - Appends to parallel history logs (`--file` or `[checkpoint].file`)
 - Optionally runs cargo tests and julia tests
 
+### Test Receipt Command
+
+Runs one bounded Cargo or Julia target against a clean committed worktree and
+writes an immutable eventness result under `.recur/tests/`. Passing targets
+produce `.passed.complete.md`; failing targets produce `.failed.strange.md`
+before the command exits nonzero. Checkpoints include both receipt groups.
+
 ## Build Configuration
 
 Defined in [Cargo.toml](Cargo.toml):

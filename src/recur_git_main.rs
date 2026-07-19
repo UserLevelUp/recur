@@ -39,6 +39,7 @@ struct LaneQuery {
 
 #[derive(Debug, Clone)]
 struct CheckpointSettings {
+    project_root: PathBuf,
     lanes: Vec<LaneQuery>,
     root_pattern: String,
     current_suffix: String,
@@ -52,6 +53,12 @@ struct LaneState {
     separator: char,
     tree_scope: String,
     current_files: Vec<PathBuf>,
+}
+
+#[derive(Debug, Clone, Default)]
+struct TestReceiptState {
+    passed: Vec<PathBuf>,
+    failed: Vec<PathBuf>,
 }
 
 #[derive(Subcommand)]
@@ -95,6 +102,29 @@ enum Commands {
         #[arg(long, value_name = "CHAR", default_value = "_")]
         src_sep: String,
     },
+
+    /// Run one bounded test target and write an immutable eventness receipt
+    ///
+    /// Examples:
+    ///   recur-git test-receipt main.command.tree.wildcard-current --julia-file julia-tests/runtests.tree.jl
+    ///   recur-git test-receipt main.release.cargo --cargo
+    ///   recur-git test-receipt main.release.full-suite --julia-full
+    TestReceipt {
+        /// Dot-separated behavior identifier, such as main.command.tree.wildcard-current
+        test_id: String,
+
+        /// Run `cargo test --quiet`
+        #[arg(long)]
+        cargo: bool,
+
+        /// Run `julia julia-tests/runtests.jl`
+        #[arg(long)]
+        julia_full: bool,
+
+        /// Run one Julia test file relative to the project root
+        #[arg(long, value_name = "PATH")]
+        julia_file: Option<PathBuf>,
+    },
 }
 
 fn main() {
@@ -123,6 +153,12 @@ fn main() {
                 run_julia_tests,
             )
         }
+        Commands::TestReceipt {
+            test_id,
+            cargo,
+            julia_full,
+            julia_file,
+        } => execute_test_receipt(test_id, cargo, julia_full, julia_file),
     };
 
     if let Err(e) = result {
@@ -143,10 +179,11 @@ fn execute_checkpoint(
 ) -> anyhow::Result<()> {
     let settings = resolve_checkpoint_settings(src_separator)?;
     let lane_states = collect_lane_states(&settings)?;
+    let test_receipts = collect_test_receipts(&settings.project_root)?;
     let git_state = collect_git_state();
 
     if snapshot {
-        print_snapshot(&git_state, &lane_states);
+        print_snapshot(&git_state, &lane_states, &test_receipts);
     }
 
     if run_tests {
@@ -159,7 +196,7 @@ fn execute_checkpoint(
 
     if emit_parallel || append_parallel {
         let checkpoint_id = checkpoint_id.unwrap_or_else(default_checkpoint_id);
-        let entry = build_parallel_entry(&checkpoint_id, &git_state, &lane_states);
+        let entry = build_parallel_entry(&checkpoint_id, &git_state, &lane_states, &test_receipts);
 
         if emit_parallel {
             println!("{}", entry);
@@ -228,6 +265,7 @@ fn resolve_checkpoint_settings(src_separator: char) -> anyhow::Result<Checkpoint
 
     let Some(config) = config else {
         return Ok(CheckpointSettings {
+            project_root: cwd.clone(),
             lanes: default_lane_queries(&cwd, src_separator),
             root_pattern: DEFAULT_CHECKPOINT_ROOT_PATTERN.to_string(),
             current_suffix: DEFAULT_CURRENT_SUFFIX.to_string(),
@@ -278,10 +316,19 @@ fn resolve_checkpoint_settings(src_separator: char) -> anyhow::Result<Checkpoint
         });
 
     Ok(CheckpointSettings {
+        project_root: config.project_root.clone(),
         lanes,
         root_pattern,
         current_suffix,
         default_log_path,
+    })
+}
+
+fn collect_test_receipts(project_root: &Path) -> anyhow::Result<TestReceiptState> {
+    let root = project_root.join(".recur").join("tests");
+    Ok(TestReceiptState {
+        passed: find_files_by_pattern(&root, "**.passed.complete", '.')?,
+        failed: find_files_by_pattern(&root, "**.failed.strange", '.')?,
     })
 }
 
@@ -398,7 +445,7 @@ fn find_files_by_pattern(
     Ok(files)
 }
 
-fn print_snapshot(git: &GitState, lane_states: &[LaneState]) {
+fn print_snapshot(git: &GitState, lane_states: &[LaneState], test_receipts: &TestReceiptState) {
     println!("\n== Checkpoint Snapshot ==");
     println!("git.branch: {}", git.branch);
     println!("git.head: {}", git.head);
@@ -410,6 +457,14 @@ fn print_snapshot(git: &GitState, lane_states: &[LaneState]) {
             format_paths(&lane.current_files)
         );
     }
+    println!(
+        "lane.state.tests.passed: {}",
+        format_paths(&test_receipts.passed)
+    );
+    println!(
+        "lane.state.tests.failed: {}",
+        format_paths(&test_receipts.failed)
+    );
     for lane in lane_states {
         println!("lane.separator.{}: {}", lane.name, lane.separator);
     }
@@ -423,7 +478,12 @@ fn default_checkpoint_id() -> String {
     format!("ck-{}", epoch)
 }
 
-fn build_parallel_entry(checkpoint_id: &str, git: &GitState, lane_states: &[LaneState]) -> String {
+fn build_parallel_entry(
+    checkpoint_id: &str,
+    git: &GitState,
+    lane_states: &[LaneState],
+    test_receipts: &TestReceiptState,
+) -> String {
     let epoch = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default()
@@ -441,6 +501,15 @@ fn build_parallel_entry(checkpoint_id: &str, git: &GitState, lane_states: &[Lane
             format_paths(&lane.current_files)
         ));
     }
+
+    lines.push(format!(
+        "- lane.state.tests.passed: {}",
+        format_paths(&test_receipts.passed)
+    ));
+    lines.push(format!(
+        "- lane.state.tests.failed: {}",
+        format_paths(&test_receipts.failed)
+    ));
 
     lines.push(format!("- lane.git.branch: {}", git.branch));
     lines.push(format!("- lane.git.head: {}", git.head));
@@ -512,6 +581,179 @@ fn run_julia_tests_full() -> anyhow::Result<()> {
     Ok(())
 }
 
+fn execute_test_receipt(
+    raw_test_id: String,
+    cargo: bool,
+    julia_full: bool,
+    julia_file: Option<PathBuf>,
+) -> anyhow::Result<()> {
+    let test_id = validate_test_id(&raw_test_id)?;
+    let project_root = resolve_project_root()?;
+    require_clean_worktree(&project_root)?;
+    let tested_head = git_head(&project_root)?;
+    let (program, args, command_text) =
+        resolve_test_command(&project_root, cargo, julia_full, julia_file)?;
+
+    println!("Running test receipt {} at {}", test_id, tested_head);
+    println!("  command: {}", command_text);
+    let output = Command::new(&program)
+        .args(&args)
+        .current_dir(&project_root)
+        .output()
+        .with_context(|| format!("failed to execute test command '{}'", command_text))?;
+
+    print!("{}", String::from_utf8_lossy(&output.stdout));
+    eprint!("{}", String::from_utf8_lossy(&output.stderr));
+
+    let state = if output.status.success() {
+        "passed.complete"
+    } else {
+        "failed.strange"
+    };
+    let receipt_path = write_test_receipt(
+        &project_root,
+        &test_id,
+        &tested_head,
+        state,
+        &command_text,
+        output.status.code(),
+    )?;
+    println!("Wrote test receipt {}", receipt_path.display());
+
+    if !output.status.success() {
+        anyhow::bail!("test command failed; recorded {}", receipt_path.display());
+    }
+    Ok(())
+}
+
+fn resolve_project_root() -> anyhow::Result<PathBuf> {
+    let cwd = std::env::current_dir().context("Failed to resolve current working directory")?;
+    Ok(project_config::load_nearest(&cwd)
+        .context("Failed to load .recur/config.toml")?
+        .map(|config| config.project_root)
+        .unwrap_or(cwd))
+}
+
+fn validate_test_id(raw: &str) -> anyhow::Result<String> {
+    let value = raw.trim();
+    if value.is_empty()
+        || !value.chars().all(|character| {
+            character.is_ascii_alphanumeric() || matches!(character, '.' | '_' | '-')
+        })
+    {
+        anyhow::bail!("test id must contain only letters, digits, '.', '_', or '-'");
+    }
+    Ok(value.to_string())
+}
+
+fn require_clean_worktree(project_root: &Path) -> anyhow::Result<()> {
+    let output = Command::new("git")
+        .args(["status", "--short"])
+        .current_dir(project_root)
+        .output()
+        .context("failed to inspect git worktree")?;
+    if !output.status.success() {
+        anyhow::bail!("could not inspect git worktree");
+    }
+    if !String::from_utf8_lossy(&output.stdout).trim().is_empty() {
+        anyhow::bail!("test receipts require a clean worktree so tested_head is exact");
+    }
+    Ok(())
+}
+
+fn git_head(project_root: &Path) -> anyhow::Result<String> {
+    let output = Command::new("git")
+        .args(["rev-parse", "--short=12", "HEAD"])
+        .current_dir(project_root)
+        .output()
+        .context("failed to resolve git HEAD")?;
+    if !output.status.success() {
+        anyhow::bail!("test receipts require a Git commit at HEAD");
+    }
+    Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+}
+
+fn resolve_test_command(
+    project_root: &Path,
+    cargo: bool,
+    julia_full: bool,
+    julia_file: Option<PathBuf>,
+) -> anyhow::Result<(String, Vec<String>, String)> {
+    let selected = usize::from(cargo) + usize::from(julia_full) + usize::from(julia_file.is_some());
+    if selected != 1 {
+        anyhow::bail!("select exactly one of --cargo, --julia-full, or --julia-file");
+    }
+    if cargo {
+        return Ok((
+            "cargo".to_string(),
+            vec!["test".to_string(), "--quiet".to_string()],
+            "cargo test --quiet".to_string(),
+        ));
+    }
+    if julia_full {
+        return Ok((
+            "julia".to_string(),
+            vec!["julia-tests/runtests.jl".to_string()],
+            "julia julia-tests/runtests.jl".to_string(),
+        ));
+    }
+
+    let file = julia_file.expect("selected above");
+    let resolved = if file.is_absolute() {
+        file
+    } else {
+        project_root.join(file)
+    };
+    if !resolved.is_file() || resolved.extension().and_then(|value| value.to_str()) != Some("jl") {
+        anyhow::bail!("--julia-file must name an existing .jl file under the project root");
+    }
+    let display = resolved
+        .strip_prefix(project_root)
+        .unwrap_or(&resolved)
+        .to_string_lossy()
+        .replace('\\', "/");
+    Ok((
+        "julia".to_string(),
+        vec![display.clone()],
+        format!("julia {display}"),
+    ))
+}
+
+fn write_test_receipt(
+    project_root: &Path,
+    test_id: &str,
+    tested_head: &str,
+    state: &str,
+    command: &str,
+    exit_code: Option<i32>,
+) -> anyhow::Result<PathBuf> {
+    let directory = project_root.join(".recur").join("tests");
+    fs::create_dir_all(&directory)
+        .with_context(|| format!("failed to create {}", directory.display()))?;
+    let path = directory.join(format!("{test_id}.test.{tested_head}.{state}.md"));
+    if path.exists() {
+        anyhow::bail!("test receipt already exists: {}", path.display());
+    }
+    let epoch = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs();
+    let body = format!(
+        "# Test receipt\n\n\
+test.id: {test_id}\n\
+test.state: {state}\n\
+test.tested-head: {tested_head}\n\
+test.command: {command}\n\
+test.exit-code: {}\n\
+test.recorded-at: unix:{epoch}\n\n\
+defines: recur.git.test.receipt immutable eventness result for one bounded test target at one Git head\n\
+produces: {test_id}.test.{tested_head}.{state} queryable test eventness evidence\n",
+        exit_code.map(|code| code.to_string()).unwrap_or_else(|| "signal".to_string())
+    );
+    fs::write(&path, body).with_context(|| format!("failed to write {}", path.display()))?;
+    Ok(path)
+}
+
 fn format_paths(paths: &[PathBuf]) -> String {
     if paths.is_empty() {
         "none".to_string()
@@ -555,9 +797,10 @@ mod tests {
             tree_scope: "main_command_**".to_string(),
             current_files: Vec::new(),
         }];
-        let entry = build_parallel_entry("ck-test", &git, &lanes);
+        let entry = build_parallel_entry("ck-test", &git, &lanes, &TestReceiptState::default());
         assert!(entry.contains("### ck-test"));
         assert!(entry.contains("lane.separator.src: _"));
+        assert!(entry.contains("lane.state.tests.passed: none"));
     }
 
     #[test]

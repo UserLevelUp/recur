@@ -44,6 +44,7 @@ try
         include("main.command.files.test.jl")
         include("main.command.find.test.jl")
         include("main.command.tree.test.jl")
+        include("main.command.tree.wildcard-current.test.jl")  # standalone tree wildcard receipt target
         include("main.command.related.test.jl")
         include("main.command.children.test.jl")
         include("main.command.id.test.jl")
@@ -66,6 +67,7 @@ try
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lane.coordination.trace-id.test.jl")  # IMPROVEMENT21+22 - trace-id as lane handoff contract
         include("main.recur-git.checkpoint.lanes.test.jl")  # Checkpoint snapshot lane coverage for active agent vaults
+        include("main.recur-git.test-receipt.test.jl")  # Immutable passed/failed test-event receipts
         include("main.recur.watch.test.jl")  # IMPROVEMENT23 - recur watch pub/sub subscription contract (expected red)
         include("main.recur.psyche.test.jl")  # IMPROVEMENT23 - recur psyche v1 red-first spec lock
 
