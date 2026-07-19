@@ -127,7 +127,9 @@ pub fn execute_with_separators(
         normalized_files.clone()
     };
 
-    let tree = HierarchyTree::from_paths_with_separator(base, &tree_files, tree_separator);
+    let normalized_base = normalize_pattern_for_separator(&base, tree_separator);
+    let tree_base = tree_base_for_pattern(&normalized_base, tree_separator);
+    let tree = HierarchyTree::from_paths_with_separator(tree_base, &tree_files, tree_separator);
 
     if json {
         println!("{}", tree.to_json());
@@ -200,6 +202,24 @@ fn normalize_pattern_for_separator(pattern: &str, target_separator: char) -> Str
     normalized
 }
 
+/// Return the literal hierarchy prefix that can safely anchor a rendered tree.
+///
+/// `tree main` is a base query and therefore keeps `main` as its root. A full
+/// wildcard query such as `main.**.current.**` still has `main` as a useful
+/// root, but the wildcard expression itself cannot be used as a literal prefix
+/// by `HierarchyTree`.
+fn tree_base_for_pattern(pattern: &str, separator: char) -> String {
+    let prefix: Vec<&str> = pattern
+        .split(separator)
+        .take_while(|part| !part.contains('*'))
+        .collect();
+    if prefix.is_empty() {
+        pattern.to_string()
+    } else {
+        prefix.join(&separator.to_string())
+    }
+}
+
 fn execute_single_separator(
     base: String,
     dir: PathBuf,
@@ -247,7 +267,8 @@ fn execute_single_separator(
         process::exit(1);
     }
 
-    let tree = HierarchyTree::from_paths_with_separator(base, &files, separator);
+    let tree_base = tree_base_for_pattern(&base, separator);
+    let tree = HierarchyTree::from_paths_with_separator(tree_base, &files, separator);
 
     if json {
         println!("{}", tree.to_json());
@@ -264,6 +285,17 @@ fn execute_single_separator(
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::tree_base_for_pattern;
+
+    #[test]
+    fn tree_base_for_pattern_stops_before_a_wildcard_segment() {
+        assert_eq!(tree_base_for_pattern("main.**.current.**", '.'), "main");
+        assert_eq!(tree_base_for_pattern("main.command", '.'), "main.command");
+    }
 }
 
 /// Normalize a file path's separator to a different character
