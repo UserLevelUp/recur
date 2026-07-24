@@ -1,0 +1,143 @@
+recur 0.1 class AlgorithmLab
+
+header {
+  scope gcd {
+    i(a) := (left: Int, right: Int)
+    o(b) := (value: Int)
+    f : i(a) -> o(b) ~ "Euclid greatest common divisor" by gcd.euclid
+  }
+
+  scope bubble {
+    i(a) := (values: List<Int>)
+    o(b) := (values: List<Int>)
+    f : i(a) -> o(b) ~ "Bubble sort" by sort.bubble
+  }
+
+  scope merge {
+    i(b) := bubble.o(b)
+    o(c) := (values: List<Int>)
+    f : i(b) -> o(c) ~ "Recursive merge sort" by sort.merge
+  }
+
+  scope primes {
+    i(a) := (limit: Int)
+    o(b) := (values: List<Int>)
+    f : i(a) -> o(b) ~ "Sieve of Eratosthenes" by prime.sieve
+  }
+
+  scope pyramid {
+    i(a) := (rows: Int, glyph: Text)
+    o(b) := (lines: List<Text>)
+    f : i(a) -> o(b) ~ "Centered text pyramid" by pyramid.centered
+  }
+}
+
+body {
+  gcd sync     : i(a) -> f(a) -> o(b)
+  bubble sync  : i(a) -> f(a) -> o(b)
+  merge sync   : i(b) -> f(b) -> o(c)
+  primes sync  : i(a) -> f(a) -> o(b)
+  pyramid sync : i(a) -> f(a) -> o(b)
+
+  all async : [gcd, bubble, merge, primes, pyramid] -> await -> o(results)
+
+  share bubble.o(b) -> merge.i(b)
+
+  expand gcd.f {
+    while a.right != 0 {
+      a := (left: a.right, right: a.left % a.right)
+    }
+    emit b(value: abs(a.left))
+  }
+
+  expand bubble.f {
+    values := copy(a.values)
+    for end from len(values) - 1 down_to 1 {
+      swapped := false
+      for index from 0 to end - 1 {
+        if values[index] > values[index + 1] {
+          swap values[index], values[index + 1]
+          swapped := true
+        }
+      }
+      if not swapped { break }
+    }
+    emit b(values: values)
+  }
+
+  expand merge.f {
+    if len(b.values) <= 1 {
+      emit c(values: b.values)
+    }
+    middle := len(b.values) / 2
+    left := f(b(values: b.values before middle))
+    right := f(b(values: b.values from middle))
+    emit c(values: merge_in_order(left.values, right.values))
+  }
+
+  expand primes.f {
+    possible := flags(0 through a.limit, true)
+    possible[0] := false
+    possible[1] := false
+    for candidate from 2 while candidate * candidate <= a.limit {
+      if possible[candidate] {
+        mark multiples(candidate * candidate, candidate, false)
+      }
+    }
+    emit b(values: indexes_where(possible, true))
+  }
+
+  expand pyramid.f {
+    lines := []
+    for row from 1 to a.rows {
+      padding := repeat(" ", a.rows - row)
+      marks := repeat(a.glyph, (2 * row) - 1)
+      append lines, padding + marks
+    }
+    emit b(lines: lines)
+  }
+}
+
+footer {
+  expose gcd, bubble, merge, primes, pyramid, all
+
+  event gcd {
+    consume demo.algorithm.gcd.input
+    trigger demo.algorithm.gcd.run
+    produce demo.algorithm.gcd.output
+    state demo.algorithm.gcd.complete
+  }
+  warp gcd : E0(demo.algorithm.gcd.todo.current) -> dE(gcd.f) -> Ef(demo.algorithm.gcd.complete)
+
+  event bubble {
+    consume demo.algorithm.bubble.input
+    trigger demo.algorithm.bubble.run
+    produce demo.algorithm.bubble.output
+    state demo.algorithm.bubble.complete
+  }
+  warp bubble : E0(demo.algorithm.bubble.todo.current) -> dE(bubble.f) -> Ef(demo.algorithm.bubble.complete)
+
+  event merge {
+    consume demo.algorithm.merge.input
+    trigger demo.algorithm.merge.run
+    produce demo.algorithm.merge.output
+    state demo.algorithm.merge.complete
+  }
+  warp merge : E0(demo.algorithm.merge.todo.current) -> dE(merge.f) -> Ef(demo.algorithm.merge.complete)
+
+  event primes {
+    consume demo.algorithm.primes.input
+    trigger demo.algorithm.primes.run
+    produce demo.algorithm.primes.output
+    state demo.algorithm.primes.complete
+  }
+  warp primes : E0(demo.algorithm.primes.todo.current) -> dE(primes.f) -> Ef(demo.algorithm.primes.complete)
+
+  event pyramid {
+    consume demo.algorithm.pyramid.input
+    trigger demo.algorithm.pyramid.run
+    produce demo.algorithm.pyramid.output
+    state demo.algorithm.pyramid.complete
+  }
+  warp pyramid : E0(demo.algorithm.pyramid.todo.current) -> dE(pyramid.f) -> Ef(demo.algorithm.pyramid.complete)
+}

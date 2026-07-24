@@ -1,0 +1,518 @@
+# Improvement 30 design fixture.
+# This is proposed Recur Lang 0.2 coordination syntax. The current Julia 0.1
+# algorithm parser does not execute this file.
+
+recur 0.2 coordination SkippyWorkshop
+
+header {
+  root ".recur/runs/{run_id}"
+
+  contract ChangeRequest {
+    run_id: RunId
+    objective: Text
+    specification: List<Ref>
+    acceptance: List<Criterion>
+    branch: BranchRef
+    attempt_limit: Int
+  }
+
+  contract WorkOrder {
+    run_id: RunId
+    round_id: RoundId
+    lane: LaneId
+    objective: Text
+    context: List<Ref>
+    allow_read: List<PathPattern>
+    allow_write: List<PathPattern>
+    allowed_tools: List<ToolId>
+    acceptance: List<Criterion>
+    depends_on: List<ReceiptRef>
+    reply_to: FileRef
+    source_hash: Hash
+    idempotency_key: Text
+  }
+
+  contract ToolReceipt {
+    tool: ToolId
+    command_ref: CommandRef
+    exit_code: Int
+    result: Ack
+    artifact_hash: Hash?
+    summary: Text
+  }
+
+  contract WorkReceipt {
+    run_id: RunId
+    round_id: RoundId
+    lane: LaneId
+    instruction_ref: FileRef
+    instruction_hash: Hash
+    verdict: Verdict
+    artifacts: List<ArtifactRef>
+    commits: List<CommitRef>
+    files_changed: List<Path>
+    tool_receipts: List<ToolReceipt>
+    questions: List<Question>
+    unresolved: List<Issue>
+    started_at: Timestamp
+    completed_at: Timestamp
+  }
+
+  contract Candidate {
+    run_id: RunId
+    branch: BranchRef
+    commits: List<CommitRef>
+    receipts: List<ReceiptRef>
+    verification: Ack
+    unresolved: List<Issue>
+  }
+
+  contract LaneCell {
+    lane: LaneId
+    persona: Text
+    host: Text?
+    mode: LaneMode
+    block: SymbolRef?
+    state: EventState
+    round_id: RoundId?
+    attempt: Int
+    watcher_state: WatchState
+    watcher_ack: Ack
+    dependency_ready: Bool
+    evidence: List<ReceiptRef>
+    blocked_by: List<Ref>
+    last_event_at: Timestamp?
+  }
+
+  contract CoordinationReport {
+    run_id: RunId
+    source_hash: Hash
+    phase: PhaseId
+    cells: List<LaneCell>
+    orchestration_sound: Bool
+    circular_ref: Bool
+    circular_refs: List<Cycle>
+    wait_deadlock: Bool
+    unreachable_lanes: List<LaneId>
+    conflicting_write_scopes: List<ScopeConflict>
+    required_evidence_complete: Bool
+    spec_escape: Bool
+    merge_ready: Bool
+  }
+
+  coordinator skippy {
+    allow read  ["**"]
+    allow write [".recur/runs/{run_id}/lanes/**/coord.**"]
+    deny tools  ["dotnet", "npm", "cargo", "git"]
+
+    scope plan {
+      i(a) := ChangeRequest
+      o(b) := DispatchSet<WorkOrder>
+      f : i(a) -> o(b) ~ "Partition the change into bounded lane orders"
+    }
+
+    scope decide {
+      i(a) := join(
+        csharp_monkey.o(b),
+        web_monkey.o(b),
+        test_bird.o(b),
+        review_bird.o(b),
+        git_monkey.o(b)
+      )
+      o(b) := Candidate
+      f : i(a) -> o(b) ~ "Accept or NAK the integrated candidate"
+    }
+  }
+
+  lane csharp_monkey {
+    persona monkey
+    i(a) := project skippy.plan.o(b).orders["csharp_monkey"]
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "Implement the bounded C# and MVC slice"
+
+    allow read  ["src/Api/**", "src/Web/**", "tests/**", "docs/**"]
+    allow write ["src/Api/**", "src/Web/**/*.cs", "src/Web/**/*.cshtml"]
+    allow tools ["editor", "recur", "recur-watch", "dotnet"]
+    require receipt ["dotnet.format", "dotnet.test"]
+  }
+
+  lane web_monkey {
+    persona monkey
+    i(a) := project skippy.plan.o(b).orders["web_monkey"]
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "Implement the bounded Angular or React slice"
+
+    allow read  ["src/Web/**", "tests/Web/**", "docs/**"]
+    allow write ["src/Web/ClientApp/**"]
+    allow tools ["editor", "recur", "recur-watch", "npm"]
+    require receipt ["npm.lint", "npm.test", "npm.build"]
+  }
+
+  lane test_bird {
+    persona bird-brain
+    i(a) := project skippy.plan.o(b).orders["test_bird"]
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "Create adversarial and acceptance tests"
+
+    allow read  ["src/**", "tests/**", "docs/**"]
+    allow write ["tests/**"]
+    allow tools ["editor", "recur", "recur-watch", "dotnet", "npm"]
+    require receipt ["focused.tests"]
+  }
+
+  lane review_bird {
+    persona bird-brain
+    i(a) := join(
+      project skippy.plan.o(b).orders["review_bird"],
+      csharp_monkey.o(b),
+      web_monkey.o(b),
+      test_bird.o(b)
+    )
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "Attempt to falsify the combined implementation"
+
+    allow read  ["src/**", "tests/**", "docs/**", ".recur/runs/{run_id}/**"]
+    allow write []
+    allow tools ["recur", "recur-watch", "diff", "dotnet", "npm"]
+    require receipt ["integration.tests", "spec.review"]
+  }
+
+  lane git_monkey {
+    persona monkey
+    i(a) := join(
+      project skippy.plan.o(b).orders["git_monkey"],
+      review_bird.o(b)
+    )
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "Integrate accepted lane commits on the task branch"
+
+    allow read  ["**"]
+    allow write []
+    allow effects ["git.cherry-pick.lane-commits", "git.commit.task-branch"]
+    allow tools ["recur", "recur-watch", "recur-git", "git"]
+    require receipt ["git.integration", "branch.tests"]
+  }
+}
+
+body {
+  # Level 0: the ordinary compact view.
+  solution async :
+    i(a)
+    -> skippy.plan(a)
+    -> fork [csharp_monkey(a), web_monkey(a), test_bird(a)]
+    -> await [csharp_monkey.o(b), web_monkey.o(b), test_bird.o(b)]
+    -> review_bird(a)
+    -> await review_bird.o(b)
+    -> git_monkey(a)
+    -> await git_monkey.o(b)
+    -> skippy.decide(a)
+    -> o(b)
+
+  # Level 0A: a generated grid view over the same graph and Eventness.
+  grid solution by phase {
+    columns [watch, implement, verify, integrate]
+
+    row csharp_monkey : watch -> work -> receipt
+    row web_monkey    : watch -> work -> receipt
+    row test_bird     : watch -> work -> receipt
+    row review_bird   : watch -> await implementation -> verify
+    row git_monkey    : watch -> await review -> integrate
+
+    cell show [
+      lane,
+      host,
+      block,
+      mode,
+      state,
+      round_id,
+      attempt,
+      watcher_ack,
+      dependency_ready,
+      evidence,
+      blocked_by,
+      last_event_at
+    ]
+
+    source [
+      contracts,
+      watcher_state,
+      work_orders,
+      receipts,
+      eventness
+    ]
+
+    snapshot "recur lang grid solution"
+    live "recur-lang coordinate main.lang.skippy-watch-coordination.recur --view grid"
+    collapse solution.coordination.current -> solution.coordination.complete
+  }
+
+  # The only permitted feedback cycle is explicit and bounded.
+  feedback repair {
+    from review_bird.o(b) where verdict == rejected
+    through skippy.plan(a)
+    to affected lanes
+    until review_bird.o(b).verdict == accepted
+    limit ChangeRequest.attempt_limit
+  }
+
+  # Level 1: every worker uses this reusable watch/work state machine.
+  machine worker(lane) {
+    state watching initial
+    state claimed
+    state working
+    state awaiting_guidance
+    state produced
+    state stopped final
+
+    watching
+      -- coord.instruction.created where unseen(idempotency_key) -->
+      claimed {
+        validate instruction_hash
+        validate source_hash
+        emit worker.{lane}.{round_id}.ack.current
+      }
+
+    claimed
+      -- contract.accepted -->
+      working
+
+    claimed
+      -- contract.rejected -->
+      awaiting_guidance {
+        emit worker.{lane}.{round_id}.question.current
+      }
+
+    working
+      -- tools.complete -->
+      produced {
+        validate files_changed within allow_write
+        validate required tool_receipts
+        emit worker.{lane}.{round_id}.receipt.current
+      }
+
+    working
+      -- blocked -->
+      awaiting_guidance {
+        emit worker.{lane}.{round_id}.question.current
+      }
+
+    awaiting_guidance
+      -- coord.instruction.created where new(round_id) -->
+      claimed
+
+    produced
+      -- receipt.published -->
+      watching
+
+    watching
+      -- coord.session.complete -->
+      stopped
+
+    produced
+      -- coord.session.complete -->
+      stopped
+
+    any
+      -- duplicate(idempotency_key) -->
+      same {
+        emit worker.{lane}.{round_id}.duplicate.ignored
+      }
+  }
+
+  use worker(csharp_monkey)
+  use worker(web_monkey)
+  use worker(test_bird)
+  use worker(review_bird)
+  use worker(git_monkey)
+
+  # Level 2: coordinator state is separate from watcher process state.
+  machine skippy {
+    state planning initial
+    state dispatching
+    state waiting
+    state reviewing
+    state integrating
+    state blocked
+    state complete final
+
+    planning
+      -- plan.produced -->
+      dispatching {
+        publish one immutable coord instruction per ready lane
+      }
+
+    dispatching
+      -- all required watcher ACK states active -->
+      waiting
+
+    waiting
+      -- worker.question.current -->
+      dispatching {
+        publish a new round id; never overwrite a closed round
+      }
+
+    waiting
+      -- implementation receipts accepted -->
+      reviewing {
+        publish review_bird instruction
+      }
+
+    reviewing
+      -- review accepted -->
+      integrating {
+        publish git_monkey instruction
+      }
+
+    reviewing
+      -- review rejected and attempts remain -->
+      dispatching
+
+    reviewing
+      -- review rejected and attempt limit reached -->
+      blocked
+
+    integrating
+      -- integration receipt accepted -->
+      complete {
+        publish coord.{lane}.session.complete to every lane
+      }
+  }
+
+  # Level 3: expanded worker behavior. recur-watch stays armed while the
+  # lane controller is working; notifications may queue and are deduplicated.
+  expand worker.f {
+    instruction := read(a.instruction_ref)
+    assert hash(instruction) == a.instruction_hash
+    assert instruction.lane == current_lane
+    assert instruction.idempotency_key not in completed_keys
+
+    context := project(instruction.context, instruction.allow_read)
+    result := intelligence.solve(
+      objective: instruction.objective,
+      context: context,
+      tools: instruction.allowed_tools,
+      acceptance: instruction.acceptance
+    )
+
+    changed := result.files_changed
+    assert every(changed, matches_any(instruction.allow_write))
+
+    emit b(
+      instruction_ref: a.instruction_ref,
+      instruction_hash: hash(instruction),
+      verdict: result.verdict,
+      artifacts: result.artifacts,
+      commits: result.commits,
+      files_changed: changed,
+      tool_receipts: result.tool_receipts,
+      questions: result.questions,
+      unresolved: result.unresolved
+    )
+  }
+}
+
+footer {
+  # recur-watch is the active blocking subscriber. Core `recur watch` only
+  # reads these watchers' status records and exits.
+  watcher skippy {
+    command recur-watch
+      --id skippy
+      --filter "worker.**.current.md"
+      --dir ".recur/runs/{run_id}"
+      --format json
+      --poll-framing 2
+    ready recur watch status skippy --json
+  }
+
+  watcher csharp_monkey {
+    command recur-watch
+      --id csharp-monkey
+      --filter "coord.**"
+      --dir ".recur/runs/{run_id}/lanes/csharp_monkey"
+      --format json
+      --poll-framing 2
+    ready recur watch status csharp-monkey --json
+  }
+
+  watcher web_monkey {
+    command recur-watch
+      --id web-monkey
+      --filter "coord.**"
+      --dir ".recur/runs/{run_id}/lanes/web_monkey"
+      --format json
+      --poll-framing 2
+    ready recur watch status web-monkey --json
+  }
+
+  watcher test_bird {
+    command recur-watch
+      --id test-bird
+      --filter "coord.**"
+      --dir ".recur/runs/{run_id}/lanes/test_bird"
+      --format json
+      --poll-framing 2
+    ready recur watch status test-bird --json
+  }
+
+  watcher review_bird {
+    command recur-watch
+      --id review-bird
+      --filter "coord.**"
+      --dir ".recur/runs/{run_id}/lanes/review_bird"
+      --format json
+      --poll-framing 2
+    ready recur watch status review-bird --json
+  }
+
+  watcher git_monkey {
+    command recur-watch
+      --id git-monkey
+      --filter "coord.**"
+      --dir ".recur/runs/{run_id}/lanes/git_monkey"
+      --format json
+      --poll-framing 2
+    ready recur watch status git-monkey --json
+  }
+
+  channel coordinator_to_worker {
+    publisher skippy
+    prefix "coord."
+    immutable true
+    atomic_publish true
+  }
+
+  channel worker_to_coordinator {
+    publisher [csharp_monkey, web_monkey, test_bird, review_bird, git_monkey]
+    prefix "worker."
+    immutable true
+    atomic_publish true
+  }
+
+  check contract_identity
+  check circular_ref
+  check wait_deadlock
+  check unreachable_lane
+  check conflicting_write_scope
+  check self_subscription
+  check required_receipts
+  report CoordinationReport
+
+  event solution {
+    consume solution.change.request.current
+    trigger solution.skippy.plan
+    produce solution.candidate
+    state solution.merge-ready
+  }
+
+  event master_report {
+    consume solution.coordination.event
+    trigger solution.grid.refresh
+    produce solution.coordination.current
+    state solution.coordination.complete
+  }
+
+  warp solution :
+    E0(solution.change.request.current)
+    -> dE(solution)
+    -> Ef(solution.merge-ready)
+}

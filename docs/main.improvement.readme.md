@@ -10,7 +10,7 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 - `main.improvement.<n>.<topic>.complete.md` = completed sub-lane under an improvement
 - `main.improvement.<n>.<topic>.readme.core.md` = concept or core reference without by-itself implying active state
 
-## Current Snapshot (2026-05-23)
+## Current Snapshot (2026-07-24)
 
 ### Complete
 
@@ -30,6 +30,13 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
   the `trace-id` sub-lane is complete, while broader future-plan residue remains
 - `28`
   seed capability-card query surface is complete; future card authoring remains optional
+
+### Active / Building
+
+- `30`
+  the broader Recur Lang proposal remains incremental; the living master work
+  report has an active focused cursor at
+  `docs/main.improvement.30.live-grid.todo.current.md`
 
 ### Future Plan / Parked
 
@@ -55,14 +62,15 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 
 ## Active Cursors Right Now
 
-The improvement tree itself is mostly calm right now.
-The active work is showing up more in command and demo lanes than in broad
-improvement-number `todo.current` files.
+The improvement tree has one explicit active Improvement 30 sub-lane. Other
+active work continues to appear in command and demo lanes rather than broad
+improvement-number cursors.
 
 Useful current adjacent lanes:
 
 - `docs/main.command.tests.progress.current.md`
 - `docs/main.command.trace-id.run.todo.current.md`
+- `docs/main.improvement.30.live-grid.todo.current.md`
 - `docs/main.improvement.pre27and28.todo.current.md`
 - `docs/main.demo.skippy.trace-id.todo.current.md`
 - `docs/main.demo.sudoku.trace-id.todo.current.md`
@@ -99,4 +107,5 @@ recur files "**.current" -d docs/
 - `README.CORE.IMPROVEMENT27.md`
 - `README.CORE.IMPROVEMENT28.md`
 - `README.CORE.IMPROVEMENT29.md`
+- `README.CORE.IMPROVEMENT30.md`
 - `docs/main.improvement.delivery-loop.recurring.md`

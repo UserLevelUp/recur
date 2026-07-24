@@ -17,6 +17,46 @@ files) and classifies every occurrence into one of four roles:
 recur does not know what the identifier means. It sees keywords near the
 identifier and classifies the line. The vocabulary is configurable via traits.
 
+## Boundary With Recur Lang
+
+`recur trace-id`, `recur lang`, and `recur-lang` answer different questions:
+
+| Surface | Primary question |
+|---|---|
+| `recur trace-id` | Where does this identifier appear, and which relationships were declared near it? |
+| `recur lang` | Is this formal coordination program valid, and what does it mean? |
+| `recur-lang` | How should a valid coordination program advance through its lanes? |
+
+`trace-id` is an open-world, language-independent repository scan. It can
+connect a durable identifier across Markdown, Rust, C#, Julia, tests, receipts,
+and Eventness without parsing those artifacts as one programming language. A
+missing occurrence is not automatically an error because other relationships
+may exist outside the selected directory, scope, or extensions.
+
+Recur Lang is a closed-world coordination model. Its parser knows about exact
+`i(...)` and `o(...)` contract identities, blocks, lanes, joins, waits, bounded
+feedback, write scopes, and required receipts. A missing producer, incompatible
+input, invalid join, undeclared feedback edge, or absent required receipt can
+therefore invalidate the model.
+
+For example:
+
+```text
+defines: game.pathing.route A-star route contract
+consumes: game.pathing.route enemy movement lane
+produces: game.pathing.route.receipt accepted pathing verification
+triggers: game.pathing.route coordinator releases integration lane
+```
+
+`recur trace-id "game.pathing.route"` can find that lineage across the project,
+but it does not decide whether the route contract matches a lane input or
+whether the lanes can deadlock. The proposed `recur lang` surface performs
+those formal checks. Recur Lang artifacts should publish stable trace IDs so
+`trace-id` can discover their lineage outside the parsed coordination model.
+
+`recur trace-id` is implemented today. `recur lang` and `recur-lang` remain
+Improvement 30 design and prototype surfaces.
+
 ## Usage
 
 ```bash
@@ -279,5 +319,6 @@ recur does not know it is playing Sudoku.
 - `src/main_command_trace_id_impl.rs` — implementation
 - `src/trait/trace_id.rs` — trait policy resolver
 - `docs/main.command.trait.readme.md` — trait configuration
+- `docs/main.command.lang.readme.md` — proposed formal coordination query
 - `docs/main.command.trace-id.edge-type.complete.md` — edge_type field record
 - `docs/main.demo.sudoku.trace-id.todo.current.md` — Sudoku demo context

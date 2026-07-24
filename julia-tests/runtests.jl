@@ -65,6 +65,7 @@ try
         include("main.command.warp.test.jl")  # IMPROVEMENT27 - read-only warp status
         include("main.command.warp.structure.test.jl")  # IMPROVEMENT27 - lane boundaries, collapse plan, and config
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
+        include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
         include("main.lane.coordination.trace-id.test.jl")  # IMPROVEMENT21+22 - trace-id as lane handoff contract
         include("main.recur-git.checkpoint.lanes.test.jl")  # Checkpoint snapshot lane coverage for active agent vaults
         include("main.recur-git.test-receipt.test.jl")  # Immutable passed/failed test-event receipts

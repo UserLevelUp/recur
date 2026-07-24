@@ -154,6 +154,49 @@ Typical outcomes:
 
 ---
 
+## Scoped Completion and Subsystem Integration
+
+Eventness belongs to the stable subject named by its prefix and base. Interest
+and completion do not automatically propagate from a child subject to a parent
+subject.
+
+For a Recur Lang subsystem, these are distinct facts:
+
+```text
+game.pathing.implementation.complete
+game.pathing.verification.accepted
+game.pathing.integration.ready
+game.gameplay.pathing.integration.accepted
+```
+
+Their intended meanings are:
+
+- `implementation.complete`: the child produced its declared artifacts;
+- `verification.accepted`: the child's required evidence was accepted;
+- `integration.ready`: the child published an accepted public contract and
+  receipt for a parent to consume;
+- `integration.accepted`: a particular parent accepted that exact child
+  contract into its own coordination boundary.
+
+Child completion never implies parent completion. A pathing subsystem can be
+complete and integration-ready while gameplay is still working, blocked, or
+has rejected the pathing result.
+
+The readiness record should identify the public contract version or content
+hash. A parent acceptance record should identify the same value. If the child
+boundary changes, the earlier parent acceptance is stale and must not silently
+apply to the new boundary.
+
+These suffixes are an Improvement 30 policy proposal, not automatically
+recognized core states. Register any adopted multi-segment suffixes in the
+suffix policy map before depending on parsing, ranking, or transition checks.
+The general Eventness rule is stable: observe and rank each subject at its own
+scope, then connect child and parent facts with explicit evidence.
+The formal subsystem contract and composition rules are proposed in
+`README.CORE.IMPROVEMENT30.md`.
+
+---
+
 ## Eventness Score
 
 Eventness is a ranking score for "what should get attention now."
@@ -301,3 +344,6 @@ Keep this lightweight:
 ## One-Line Summary
 
 Prefix and base tell you where work lives; suffix tells you why it is interesting now.
+
+For composed systems, child readiness and parent acceptance remain separate,
+explicit Eventness facts.
