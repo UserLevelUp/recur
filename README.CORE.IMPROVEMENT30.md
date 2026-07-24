@@ -614,6 +614,12 @@ flow, Eventness edges, `E0 -> dE -> Ef`, source hash, source spans, and stable
 `RLIR001` through `RLIR011` diagnostics. The remaining coordination IR forms
 above are intentionally still open.
 
+The second sub-slice freezes the first concurrent boundary as
+`recur-lang-concurrent-ir-v1`: named message contracts, projected coordinator
+ports, lane input/output messages and policies, the initial fork, ordered
+typed awaits, downstream consumers, reachability, and stable `RCIR001` through
+`RCIR010` diagnostics. It is a read-only communication graph, not a scheduler.
+
 ### Slice 2: Static graph report
 
 - Build dependency and wait graphs from the canonical IR.

@@ -1,6 +1,7 @@
 # Improvement 30 Watch Coordination Contract v0
 
-Status: `todo.future-plan` (formal design fixture; not implemented language)
+Status: `todo.future-plan` (Level 0/1 read-only concurrent IR implemented;
+watch/runtime coordination not implemented)
 Date: 2026-07-24
 Source: `demos/main.lang/main.lang.skippy-watch-coordination.recur`
 
@@ -24,6 +25,10 @@ and receipts make those duplicate or delayed notifications safe to process.
 
 Normative terms `MUST`, `MUST NOT`, `SHOULD`, and `MAY` describe the intended
 contract. The current Julia `main.lang` parser does not yet accept this syntax.
+The Rust `recur-lang-concurrent-ir-v1` parser now accepts only named contracts,
+coordinator output ports, lane message/policy declarations, and the compact
+fork/await flow. It performs no scheduling, watching, receipt acceptance, or
+state-machine execution.
 
 ## Level 0: Compact Process
 

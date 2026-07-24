@@ -360,20 +360,20 @@ pub fn parse_warp_ir(
 }
 
 #[derive(Debug)]
-struct NamedBlock<'a> {
-    name: String,
-    body: &'a str,
-    body_start: usize,
-    span: SourceSpan,
+pub(crate) struct NamedBlock<'a> {
+    pub(crate) name: String,
+    pub(crate) body: &'a str,
+    pub(crate) body_start: usize,
+    pub(crate) span: SourceSpan,
 }
 
 impl NamedBlock<'_> {
-    fn child_span(&self, source: &str, start: usize, end: usize) -> SourceSpan {
+    pub(crate) fn child_span(&self, source: &str, start: usize, end: usize) -> SourceSpan {
         span_for(source, self.body_start + start, self.body_start + end)
     }
 }
 
-fn find_named_blocks<'a>(
+pub(crate) fn find_named_blocks<'a>(
     source: &'a str,
     keyword: &str,
     diagnostic_code: &'static str,
@@ -604,7 +604,7 @@ fn without_whitespace(value: &str) -> String {
         .collect()
 }
 
-fn stable_source_hash(bytes: &[u8]) -> String {
+pub(crate) fn stable_source_hash(bytes: &[u8]) -> String {
     const OFFSET: u64 = 0xcbf29ce484222325;
     const PRIME: u64 = 0x100000001b3;
     let hash = bytes.iter().fold(OFFSET, |value, byte| {
@@ -613,7 +613,7 @@ fn stable_source_hash(bytes: &[u8]) -> String {
     format!("fnv1a64:{hash:016x}")
 }
 
-fn span_for(source: &str, start_byte: usize, end_byte: usize) -> SourceSpan {
+pub(crate) fn span_for(source: &str, start_byte: usize, end_byte: usize) -> SourceSpan {
     let start_line = 1 + source.as_bytes()[..start_byte]
         .iter()
         .filter(|byte| **byte == b'\n')

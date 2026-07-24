@@ -169,8 +169,9 @@ currently resolves to a trusted Julia intrinsic. Bodies under `expand` are
 readable language proposals rather than compiled code.
 
 `main.lang.skippy-watch-coordination.recur` is a 0.2 design fixture rather than
-accepted 0.1 parser input. It demonstrates the Improvement 30 direction:
-coordinator and worker contracts, watch/work state machines, external tool
-receipts, bounded feedback, and generated orchestration reports. Its formal
-companion is
+accepted Julia 0.1 parser input. Rust `recur-lang-concurrent-ir-v1` now parses
+its named contracts, coordinator output ports, lanes, policies, fork, and
+ordered awaits as a read-only communication graph. Watchers, state machines,
+external receipt handling, bounded feedback, and generated orchestration
+reports remain design targets. Its formal companion is
 `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`.
