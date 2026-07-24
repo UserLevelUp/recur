@@ -1,6 +1,6 @@
 # Improvement 30: Warp IR v1
 
-Status: `todo.current`
+Status: `contract.complete`
 Parent: `README.CORE.IMPROVEMENT30.md`
 Slice: `1 / Freeze the coordination IR`
 Date: 2026-07-24
@@ -16,13 +16,14 @@ E0(main.improvement.30.warp-ir.todo.current)
 This lifecycle is advanced manually. No command is trusted to declare the
 slice complete.
 
-## Current Eventness
+## Starting Eventness (E0)
 
-The first `recur-lang warp` increment parses a useful bounded contract, but its
-model is implicit inside `src/recur_lang_main.rs`. Plan rendering, receipt
-validation, and mutation therefore depend directly on private parser details.
-There is no versioned IR schema, source-span contract, or stable diagnostic
-code surface for later pure queries and coordinator projections to share.
+The first `recur-lang warp` increment parsed a useful bounded contract, but its
+model was implicit inside `src/recur_lang_main.rs`. Plan rendering, receipt
+validation, and mutation therefore depended directly on private parser
+details. There was no versioned IR schema, source-span contract, or stable
+diagnostic code surface for later pure queries and coordinator projections to
+share.
 
 ## Goldilocks dE
 
@@ -181,17 +182,48 @@ ir_schema = "recur-lang-warp-ir-v1"
 The source hash binds evidence to exact bytes; the IR schema binds it to the
 model that interpreted those bytes.
 
-## Manual Completion Rule
+## Completion Evidence
 
-After code, contract tests, documentation, and regressions agree, rename this
-artifact to:
+Implementation commit:
 
 ```text
-docs/main.improvement.30.warp-ir.contract.complete.md
+55f85f1 feat(recur-lang): freeze warp IR v1
 ```
 
-The completed record must preserve the final schema, diagnostic list, test
-evidence, commit, and remaining limitations.
+Verification:
+
+```text
+cargo test --locked
+  153 passed
+  0 failed
+  7 documentation tests ignored
+
+julia --startup-file=no julia-tests/main.lang.test.jl
+  816 passed
+  0 failed
+
+cargo clippy --locked --lib --bin recur-lang
+  no diagnostics in recur_lang_ir or recur_lang_main
+```
+
+Live fixture checks:
+
+```text
+AlgorithmLab.gcd   -> recur-lang-warp-ir-v1 plan accepted
+AlgorithmLab.merge -> canonical merge.i(b) alias resolved through bubble.o(b)
+unknown IR receipt -> NAK; E0 artifact preserved
+```
+
+Manual Eventness transition:
+
+```text
+E0(main.improvement.30.warp-ir.todo.current)
+  -> dE(55f85f1 plus passing contract and regression evidence)
+  -> Ef(main.improvement.30.warp-ir.contract.complete)
+```
+
+No automatic Warp command declared this completion. The artifact was renamed
+only after its acceptance criteria and regression evidence were inspected.
 
 ## Discovery
 
