@@ -684,6 +684,8 @@ cargo run --profile release-safe --bin recur -- tree "main" -d src
 cargo install --path . --profile release-safe --locked --force --offline
 ```
 
+**2nd to last line may need to be ran in a new powershell instance.** 
+
 ## License
 
 MIT — permissive, simple, and broadly compatible.
