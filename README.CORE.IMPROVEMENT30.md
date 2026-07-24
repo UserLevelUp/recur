@@ -2,7 +2,7 @@ RECUR IMPROVEMENT 30
 Recur Lang Coordination Contracts
 =================================
 Date: July 24, 2026
-Status: Proposal / active incremental direction
+Status: Active incremental implementation / IR foundation in progress
 Author: Captured from Recur Lang and multi-intelligence orchestration design
 
 INTENT
@@ -28,6 +28,110 @@ where:
 This improvement is deliberately incremental. Recur Lang should grow only
 when a real Recur, Eventness, software-development, or orchestration problem
 needs the next capability.
+
+CURRENT IMPLEMENTATION CHECKPOINT
+---------------------------------
+
+Improvement 30 now has two manually completed, versioned IR boundaries:
+
+1. `recur-lang-warp-ir-v1` freezes one exact Recur Lang 0.1 Warp, including
+   canonical contracts, flow, Eventness, source hash, spans, and stable
+   `RLIR001` through `RLIR011` diagnostics.
+2. `recur-lang-concurrent-ir-v1` freezes the read-only Level 0/1 communication
+   graph from the 0.2 Skippy coordination fixture: contracts, coordinator
+   ports, lanes, policies, typed messages, fork, ordered awaits, downstream
+   consumers, reachability, and `RCIR001` through `RCIR010` diagnostics.
+
+Their accepted Eventness artifacts are:
+
+```text
+main.improvement.30.warp-ir.contract.complete
+main.improvement.30.concurrent-ir.contract.complete
+```
+
+The first contract is consumed by the receipt-backed `recur-lang warp`
+companion. The second is deliberately read-only. It proves that independently
+useful lanes have exact communication boundaries, but it does not schedule a
+worker, publish a WorkOrder, watch a channel, accept a lane receipt, or execute
+a state machine.
+
+The next bounded implementation slice is the static graph report. It should
+derive dependency and wait graphs from the frozen concurrent IR, then report
+cycles, unreachable lanes, missing joins, and source-hash freshness. This comes
+before broader queries, the grid snapshot, or a live coordinator because those
+surfaces must project one validated graph rather than reimplement graph
+semantics independently.
+
+`main.improvement.30.live-grid.todo.current` remains the product-direction
+cursor: it records the control-room view we are working toward and why it is
+valuable. The static graph report is the immediate implementation prerequisite
+for that view. Product cursor and next code slice are therefore related but not
+the same state.
+
+### Rediscovered Eventness hierarchy
+
+This is the current docs-side hierarchy, not a projection of runtime state:
+
+```text
+main.improvement.30
+├── warp-ir.contract.complete
+│   └── recur.lang.warp.ir.v1
+├── concurrent-ir.contract.complete
+│   └── recur.lang.concurrent.ir.v1
+├── live-grid.todo.current
+│   └── recur.lang.grid.report.v0                 planned contract
+├── contract.watch-coordination-v0.todo.future-plan
+│   └── main.improvement.30.contract.watch-coordination-v0
+└── todo.future-plan
+    └── recur.lang.control-plane                   umbrella direction
+```
+
+The implementation dependency hierarchy is:
+
+```text
+WIR1 complete
+  -> CIR1 complete
+    -> SGR1 next
+      -> LANGQ pure queries
+        -> GRID0 pure snapshot
+          -> COORD live receipt-backed coordination
+            -> DOGFOOD one real Recur Rust change
+```
+
+Static knowledge flows left to right. A later actor or view may consume an
+earlier contract, but it must not silently broaden or redefine that contract.
+
+### Symbol and identity rules
+
+Short symbols make diagrams readable; canonical identities remain durable:
+
+| Short symbol | Canonical semantic identity | Durable schema or Eventness identity | State |
+|---|---|---|---|
+| `I30` | `main.improvement.30` | `README.CORE.IMPROVEMENT30.md` | active umbrella |
+| `WIR1` | `recur.lang.warp.ir.v1` | `recur-lang-warp-ir-v1` / `main.improvement.30.warp-ir.contract.complete` | complete |
+| `CIR1` | `recur.lang.concurrent.ir.v1` | `recur-lang-concurrent-ir-v1` / `main.improvement.30.concurrent-ir.contract.complete` | complete |
+| `SGR1` | `recur.lang.static.graph.report.v1` | `main.improvement.30.static-graph` | next; schema not frozen |
+| `LANGQ` | `recur.lang.query.surface` | `recur lang ...` | planned pure projection |
+| `GRID0` | `recur.lang.grid.report.v0` | `main.improvement.30.live-grid.todo.current` | product cursor; contract not frozen |
+| `COORD` | `recur-lang.coordinator` | `recur-lang coordinate ...` | planned actor |
+| `DOGFOOD` | `main.improvement.30.dogfooding` | one bounded Recur Rust coordination run | planned validation |
+
+The short symbols above are local notation, not serialized identifiers. Future
+rows are provisional until their focused slice freezes a schema. New artifacts
+follow these naming layers:
+
+```text
+Eventness file identity   main.improvement.30.<slice>.<state>
+semantic trace identity   recur.lang.<capability>[.<version>]
+wire schema identity      recur-lang-<capability>-v<N>
+pure command              recur lang <query>
+stateful companion        recur-lang <action>
+```
+
+An Eventness filename answers where a slice is in its lifecycle. A semantic
+trace identity answers what concept crosses files. A wire schema answers which
+serialized contract a consumer received. They may point to the same work, but
+they are not interchangeable names.
 
 PRODUCT BOUNDARY
 ----------------
@@ -590,6 +694,22 @@ contracts should be frozen only when a focused test slice is opened.
 IMPLEMENTATION SLICES
 ---------------------
 
+The slice number describes dependency order, not permission to activate every
+later behavior. Each slice opens one bounded Eventness artifact, freezes its
+contract, verifies it, and only then moves that artifact to a completed state.
+
+| Slice | Symbol | Roadmap state | Reason for position |
+|---|---|---|---|
+| 0 | `I30` seed | complete | Preserve the proposal, fixtures, and product boundary before implementation. |
+| 1a | `WIR1` | complete | Give Warp one canonical, receipt-bound model before adding more syntax. |
+| 1b | `CIR1` | complete | Make lane communication exact before analyzing or scheduling it. |
+| 2 | `SGR1` | next | Derive soundness facts once from `CIR1` for every later consumer. |
+| 3 | `LANGQ` | planned | Expose pure views only after their model and analysis are stable. |
+| 4 | `GRID0` | current product cursor; implementation gated by 2–3 | Keep the visible coordination goal explicit without creating a second source of truth. |
+| 5 | `COORD` | Warp increment complete; multi-lane actor planned | Mutate state only through frozen schemas, external evidence, and ACK/NAK. |
+| 6 | `DOGFOOD` | planned | Validate usefulness on one real repository change after the boundaries exist. |
+| 7–8 | integration and IDE | future | Scale and presentation come after semantics and evidence. |
+
 ### Slice 0: Preserve the design and seed
 
 - Add Improvement 30 and its docs-side future-plan bridge.
@@ -612,21 +732,33 @@ The first Goldilocks sub-slice freezes only the existing 0.1 Warp boundary as
 `recur-lang-warp-ir-v1`: exact local/canonical contracts, one function and
 flow, Eventness edges, `E0 -> dE -> Ef`, source hash, source spans, and stable
 `RLIR001` through `RLIR011` diagnostics. The remaining coordination IR forms
-above are intentionally still open.
+above are intentionally still open. Its manually completed contract is
+`docs/main.improvement.30.warp-ir.contract.complete.md`.
 
 The second sub-slice freezes the first concurrent boundary as
 `recur-lang-concurrent-ir-v1`: named message contracts, projected coordinator
 ports, lane input/output messages and policies, the initial fork, ordered
 typed awaits, downstream consumers, reachability, and stable `RCIR001` through
-`RCIR010` diagnostics. It is a read-only communication graph, not a scheduler.
+`RCIR010` diagnostics. Its manually completed contract is
+`docs/main.improvement.30.concurrent-ir.contract.complete.md`. It is a
+read-only communication graph, not a scheduler.
 
-### Slice 2: Static graph report
+Slice 1 is therefore foundationally useful but not globally complete. Systems,
+subsystems, imports, adapters, feedback, watcher topology, and the remaining
+0.2 syntax must still arrive through later bounded contracts.
+
+### Slice 2: Static graph report — next
 
 - Build dependency and wait graphs from the canonical IR.
 - Add cycle, unreachable-lane, missing-join, contract, and stale subsystem
   import checks.
 - Generate the first source-hashed coordination report.
 - Add Julia fixtures and focused tests for accepted and rejected graphs.
+
+`SGR1` is next because `CIR1` now provides stable typed nodes, edges, fork
+members, awaits, consumers, spans, and source hashes. The graph report should
+remain a deterministic read-only projection. It must not schedule lanes or
+advance Eventness.
 
 ### Slice 3: Pure `recur lang` queries
 
@@ -645,6 +777,11 @@ typed awaits, downstream consumers, reachability, and stable `RCIR001` through
   JSON behavior are stable.
 - Support drill-down from grid cell to lane, WorkOrder, receipt, and timeline.
 - Collapse `coordination.current` into a durable `coordination.complete` report.
+
+`GRID0` is the current product-direction cursor. Its first implementation pull
+remains a pure, deterministic snapshot. Live refresh waits until `SGR1` and the
+shared pure query projection exist, so the display cannot become an independent
+state store or soundness engine.
 
 ### Slice 5: Companion receipts and Eventness
 
@@ -726,14 +863,19 @@ defines: recur.lang.soundness-boundary orchestration soundness is internal while
 defines: recur.lang.master.work.report living block grid and completed audit report projected from canonical coordination Eventness
 defines: recur.lang.trace.boundary trace-id discovers open-world repository lineage while Recur Lang validates closed-world coordination semantics
 defines: recur.lang.subsystem.composition accepted child models contract into versioned blocks with separate parent integration Eventness
+defines: recur.lang.warp.ir.v1 versioned canonical Warp contract with source hash spans Eventness and stable diagnostics
+defines: recur.lang.concurrent.ir.v1 read-only typed lane message fork await and reachability contract
+defines: recur.lang.static.graph.report.v1 provisional next read-only dependency wait and soundness projection
 consumes: main.lang compact input function output contracts and canonical bundle aliases
 consumes: main.recur.purity.decision core recur pure query and companion actor split
 consumes: workflow.pattern.docs.tests.rust.verify.complete recurring docs tests Rust verification loop
+consumes: main.improvement.30.warp-ir.contract.complete accepted WIR1 foundation
+consumes: main.improvement.30.concurrent-ir.contract.complete accepted CIR1 foundation
 produces: recur.lang.coordination-report source-hashed cycles joins scopes evidence and Eventness status
 produces: recur.lang.formal-diagram canonical AST projection for humans and intelligences
 produces: main.improvement.30.live-grid active focused cursor for the living master work report
 triggers: main.improvement.30.contract future versioned coordination IR and JSON schema
-triggers: main.improvement.30.static-analysis future cycle reachability join and lane-scope report
+triggers: main.improvement.30.static-graph next cycle reachability join and wait report over CIR1
 triggers: main.improvement.30.dogfooding future Recur Rust algorithm validation lane
 ```
 
@@ -755,6 +897,8 @@ RELATED
 - `docs/main.lang.readme.md`
 - `docs/main.command.lang.readme.md`
 - `docs/main.command.trace-id.readme.md`
+- `docs/main.improvement.30.warp-ir.contract.complete.md`
+- `docs/main.improvement.30.concurrent-ir.contract.complete.md`
 - `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`
 - `docs/main.improvement.30.live-grid.todo.current.md`
 - `docs/main.recur.purity.decision.md`
