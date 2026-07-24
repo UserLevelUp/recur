@@ -1,6 +1,6 @@
 # Improvement 30: Concurrent IR v1
 
-Status: `todo.current`
+Status: `contract.complete`
 Parent: `README.CORE.IMPROVEMENT30.md`
 Slice: `1 / first concurrent coordination sub-slice`
 Date: 2026-07-24
@@ -170,6 +170,29 @@ Source spans and source hashing use the conventions frozen by
 
 Diagnostics serialize with `code`, human `message`, and optional `span`.
 Consumers branch on the code rather than parsing message text.
+
+## Completion Evidence
+
+- Implementation commit: `a68c7c4` (`feat(recur-lang): freeze concurrent IR v1`)
+- Focused concurrent-IR tests: `10 passed`
+- Full Rust suite: `163 passed`, `0 failed`
+- Julia `main.lang` suite: `816 passed`, `0 failed`
+- `cargo fmt --check`: passed
+- `git diff --check`: passed
+- `cargo clippy --locked --lib`: no diagnostics in
+  `recur_lang_concurrent_ir` or `recur_lang_ir`
+
+The manual lifecycle is complete:
+
+```text
+E0(main.improvement.30.concurrent-ir.todo.current)
+  -> dE(a68c7c4)
+  -> Ef(main.improvement.30.concurrent-ir.contract.complete)
+```
+
+This completion freezes a deterministic read-only communication graph. It
+does not claim watcher execution, scheduling, work-order publication, receipt
+acceptance, or automatic Warp.
 
 ## Discovery
 
