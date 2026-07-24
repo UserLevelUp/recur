@@ -115,6 +115,7 @@ shape:
 
 ```toml
 schema = "recur-lang-warp-receipt-v1"
+ir_schema = "recur-lang-warp-ir-v1"
 scope = "gcd"
 current = "demo.algorithm.gcd.todo.current"
 slice = "gcd.f"
@@ -207,6 +208,7 @@ attempt, and timestamps:
 
 ```text
 schema = "recur-lang-warp-status-v1"
+ir_schema = "recur-lang-warp-ir-v1"
 id = "gcd-001"
 language = "main.lang"
 source = "demos/main.lang/main.lang.algorithm-lab.recur"

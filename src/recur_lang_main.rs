@@ -2,6 +2,7 @@
 
 use anyhow::{anyhow, bail, Context, Result};
 use clap::{Args, Parser, Subcommand};
+use recur::recur_lang_ir::{parse_warp_ir, WARP_IR_SCHEMA};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
@@ -15,6 +16,7 @@ const WARP_STATUS_SCHEMA: &str = "recur-lang-warp-status-v1";
 #[derive(Debug, Clone, Serialize)]
 struct WarpPlan {
     schema: &'static str,
+    ir_schema: &'static str,
     source: String,
     source_hash: String,
     scope: String,
@@ -29,6 +31,7 @@ struct WarpPlan {
 #[derive(Debug, Clone, Serialize)]
 struct WarpOutcome {
     schema: &'static str,
+    ir_schema: &'static str,
     id: String,
     language: &'static str,
     state: String,
@@ -56,6 +59,7 @@ struct WarpOutcome {
 #[derive(Debug, Deserialize)]
 struct ExternalReceipt {
     schema: String,
+    ir_schema: String,
     scope: String,
     current: String,
     slice: String,
@@ -140,84 +144,20 @@ fn plan_warp(root: &Path, source: &Path, scope: &str) -> Result<WarpPlan> {
     if !source.is_file() {
         bail!("source '{}' is not a file", source.display());
     }
-    let source_bytes =
-        fs::read(&source).with_context(|| format!("failed to read '{}'", source.display()))?;
-    let source_text = String::from_utf8(source_bytes.clone())
-        .with_context(|| format!("source '{}' is not UTF-8", source.display()))?;
-
-    let scope_body = extract_named_block(&source_text, "scope", scope)?;
-    let function_pattern = Regex::new(
-        r#"(?m)^\s*([a-z])\s*:\s*i\(([a-z])\)\s*->\s*o\(([a-z])\)\s*~\s*"[^"]+"\s+by\s+[A-Za-z][A-Za-z0-9_.-]*\s*$"#,
-    )?;
-    let definitions: Vec<_> = function_pattern.captures_iter(scope_body).collect();
-    if definitions.len() != 1 {
-        bail!(
-            "scope '{scope}' must declare exactly one compact function; found {}",
-            definitions.len()
-        );
-    }
-    let function_symbol = &definitions[0][1];
-    let input_symbol = &definitions[0][2];
-    let output_symbol = &definitions[0][3];
-    let expected_slice = format!("{scope}.{function_symbol}");
-    let expected_flow =
-        format!("i({input_symbol}) -> {function_symbol}({input_symbol}) -> o({output_symbol})");
-    let flow_pattern = Regex::new(&format!(
-        r"(?m)^\s*{}\s+(sync|async)\s*:\s*(.+?)\s*$",
-        regex::escape(scope)
-    ))?;
-    let flows: Vec<_> = flow_pattern.captures_iter(&source_text).collect();
-    if flows.len() != 1 {
-        bail!(
-            "scope '{scope}' must declare exactly one compact body flow; found {}",
-            flows.len()
-        );
-    }
-    if without_whitespace(&flows[0][2]) != without_whitespace(&expected_flow) {
-        bail!(
-            "scope '{scope}' flow does not match its function contract; expected '{expected_flow}'"
-        );
-    }
-
-    let warp_pattern = Regex::new(&format!(
-        r"(?m)^\s*warp\s+{}\s*:\s*E0\(([A-Za-z0-9_.-]+)\)\s*->\s*dE\(([A-Za-z0-9_.-]+)\)\s*->\s*Ef\(([A-Za-z0-9_.-]+)\)\s*$",
-        regex::escape(scope)
-    ))?;
-    let warps: Vec<_> = warp_pattern.captures_iter(&source_text).collect();
-    if warps.len() != 1 {
-        bail!(
-            "scope '{scope}' must declare exactly one Warp; found {}",
-            warps.len()
-        );
-    }
-    let current = warps[0][1].to_string();
-    let slice = warps[0][2].to_string();
-    let desired = warps[0][3].to_string();
-    if slice != expected_slice {
-        bail!("scope '{scope}' Warp uses dE({slice}); expected dE({expected_slice})");
-    }
-    if current == desired {
-        bail!("scope '{scope}' Warp must change Eventness; E0 and Ef are both '{current}'");
-    }
-
-    let event_body = extract_named_block(&source_text, "event", scope)?;
-    let state_pattern = Regex::new(r"(?m)^\s*state\s+([A-Za-z0-9_.-]+)\s*$")?;
-    let declared_states: Vec<_> = state_pattern
-        .captures_iter(event_body)
-        .map(|captures| captures[1].to_string())
-        .collect();
-    if !declared_states.iter().any(|state| state == &desired) {
-        bail!("Ef({desired}) is not a declared state event for scope '{scope}'");
-    }
+    let source_text = fs::read_to_string(&source)
+        .with_context(|| format!("failed to read '{}'", source.display()))?;
+    let source_display = relative_display_path(&root, &source);
+    let ir = parse_warp_ir(&source_text, &source_display, scope).map_err(anyhow::Error::new)?;
 
     Ok(WarpPlan {
         schema: WARP_PLAN_SCHEMA,
-        source: relative_display_path(&root, &source),
-        source_hash: stable_source_hash(&source_bytes),
+        ir_schema: WARP_IR_SCHEMA,
+        source: ir.source,
+        source_hash: ir.source_hash,
         scope: scope.to_string(),
-        current,
-        slice,
-        desired,
+        current: ir.scope.warp.current,
+        slice: ir.scope.warp.slice,
+        desired: ir.scope.warp.desired,
         dry_run: true,
         confirmation_required: true,
         required_receipt_schema: WARP_RECEIPT_SCHEMA,
@@ -275,6 +215,7 @@ fn apply_warp(
     let status_receipt = status_relative_path(id);
     let mut outcome = WarpOutcome {
         schema: WARP_STATUS_SCHEMA,
+        ir_schema: WARP_IR_SCHEMA,
         id: id.to_string(),
         language: "main.lang",
         state: "complete".to_string(),
@@ -390,58 +331,6 @@ fn validate_identifier(label: &str, value: &str) -> Result<()> {
     Ok(())
 }
 
-fn extract_named_block<'a>(source: &'a str, keyword: &str, name: &str) -> Result<&'a str> {
-    let pattern = Regex::new(&format!(
-        r"(?m)\b{}\s+{}\s*\{{",
-        regex::escape(keyword),
-        regex::escape(name)
-    ))?;
-    let matches: Vec<_> = pattern.find_iter(source).collect();
-    if matches.len() != 1 {
-        bail!(
-            "{keyword} '{name}' must be declared exactly once; found {}",
-            matches.len()
-        );
-    }
-    let opening = source[matches[0].start()..matches[0].end()]
-        .rfind('{')
-        .map(|offset| matches[0].start() + offset)
-        .ok_or_else(|| anyhow!("{keyword} '{name}' has no opening brace"))?;
-    let bytes = source.as_bytes();
-    let mut depth = 0usize;
-    for index in opening..bytes.len() {
-        match bytes[index] {
-            b'{' => depth += 1,
-            b'}' => {
-                depth = depth
-                    .checked_sub(1)
-                    .ok_or_else(|| anyhow!("{keyword} '{name}' has unbalanced braces"))?;
-                if depth == 0 {
-                    return Ok(&source[(opening + 1)..index]);
-                }
-            }
-            _ => {}
-        }
-    }
-    bail!("{keyword} '{name}' has no closing brace")
-}
-
-fn stable_source_hash(bytes: &[u8]) -> String {
-    const OFFSET: u64 = 0xcbf29ce484222325;
-    const PRIME: u64 = 0x100000001b3;
-    let hash = bytes.iter().fold(OFFSET, |value, byte| {
-        (value ^ u64::from(*byte)).wrapping_mul(PRIME)
-    });
-    format!("fnv1a64:{hash:016x}")
-}
-
-fn without_whitespace(value: &str) -> String {
-    value
-        .chars()
-        .filter(|character| !character.is_whitespace())
-        .collect()
-}
-
 fn resolve_eventness_transition(
     root: &Path,
     eventness: &Path,
@@ -500,6 +389,7 @@ fn load_external_receipt(
         .with_context(|| format!("invalid external receipt '{}'", path.display()))?;
 
     require_receipt_field("schema", &receipt.schema, WARP_RECEIPT_SCHEMA)?;
+    require_receipt_field("ir_schema", &receipt.ir_schema, WARP_IR_SCHEMA)?;
     require_receipt_field("scope", &receipt.scope, &plan.scope)?;
     require_receipt_field("current", &receipt.current, &plan.current)?;
     require_receipt_field("slice", &receipt.slice, &plan.slice)?;
@@ -542,6 +432,7 @@ fn rejection_outcome(
 ) -> WarpOutcome {
     WarpOutcome {
         schema: WARP_STATUS_SCHEMA,
+        ir_schema: WARP_IR_SCHEMA,
         id: id.to_string(),
         language: "main.lang",
         state: "stopped".to_string(),
@@ -576,6 +467,7 @@ fn minimal_rejection(
 ) -> WarpOutcome {
     WarpOutcome {
         schema: WARP_STATUS_SCHEMA,
+        ir_schema: WARP_IR_SCHEMA,
         id: id.to_string(),
         language: "main.lang",
         state: "stopped".to_string(),
@@ -765,6 +657,7 @@ footer {
             format!(
                 concat!(
                     "schema = \"{}\"\n",
+                    "ir_schema = \"{}\"\n",
                     "scope = \"{}\"\n",
                     "current = \"{}\"\n",
                     "slice = \"{}\"\n",
@@ -776,6 +669,7 @@ footer {
                     "test_receipt = \"ci:test-42\"\n",
                 ),
                 WARP_RECEIPT_SCHEMA,
+                WARP_IR_SCHEMA,
                 plan.scope,
                 plan.current,
                 plan.slice,
@@ -794,6 +688,7 @@ footer {
         let plan = plan_warp(temp.path(), &source, "build").unwrap();
 
         assert_eq!(plan.schema, WARP_PLAN_SCHEMA);
+        assert_eq!(plan.ir_schema, WARP_IR_SCHEMA);
         assert_eq!(plan.current, "demo.build.todo.current");
         assert_eq!(plan.slice, "build.f");
         assert_eq!(plan.desired, "demo.build.complete");
@@ -834,6 +729,7 @@ footer {
         );
         let status_text = fs::read_to_string(status).unwrap();
         assert!(status_text.contains("schema = \"recur-lang-warp-status-v1\""));
+        assert!(status_text.contains("ir_schema = \"recur-lang-warp-ir-v1\""));
         assert!(status_text.contains("ack = \"accepted\""));
         assert!(status_text.contains("current = \"demo.build.todo.current\""));
         assert!(status_text.contains("desired = \"demo.build.complete\""));
@@ -866,6 +762,38 @@ footer {
         assert!(status_text.contains("ack = \"rejected\""));
         assert!(status_text.contains("state = \"stopped\""));
         assert!(status_text.contains("nak_reason = "));
+    }
+
+    #[test]
+    fn receipt_from_an_unknown_ir_schema_writes_nak_without_moving_eventness() {
+        let (temp, source, eventness) = fixture();
+        let plan = plan_warp(temp.path(), &source, "build").unwrap();
+        let receipt = temp.path().join("worker.receipt.md");
+        write_receipt(&receipt, &plan, &plan.source_hash, "accepted");
+        let incompatible = fs::read_to_string(&receipt)
+            .unwrap()
+            .replace(WARP_IR_SCHEMA, "recur-lang-warp-ir-v0");
+        fs::write(&receipt, incompatible).unwrap();
+
+        let error = apply_warp(
+            temp.path(),
+            &source,
+            "build",
+            &eventness,
+            &receipt,
+            "build-ir-mismatch",
+        )
+        .unwrap_err();
+
+        assert!(error.to_string().contains("ir_schema"));
+        assert!(eventness.exists());
+        assert!(!temp.path().join("demo.build.complete.md").exists());
+        let status = temp
+            .path()
+            .join(".recur/lang/recur-lang.build-ir-mismatch.status.current.md");
+        assert!(fs::read_to_string(status)
+            .unwrap()
+            .contains("ack = \"rejected\""));
     }
 
     #[test]

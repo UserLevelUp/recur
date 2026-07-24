@@ -608,6 +608,12 @@ IMPLEMENTATION SLICES
 - Decide canonical identity and explicit adapter behavior.
 - Define stable diagnostics before expanding execution behavior.
 
+The first Goldilocks sub-slice freezes only the existing 0.1 Warp boundary as
+`recur-lang-warp-ir-v1`: exact local/canonical contracts, one function and
+flow, Eventness edges, `E0 -> dE -> Ef`, source hash, source spans, and stable
+`RLIR001` through `RLIR011` diagnostics. The remaining coordination IR forms
+above are intentionally still open.
+
 ### Slice 2: Static graph report
 
 - Build dependency and wait graphs from the canonical IR.
