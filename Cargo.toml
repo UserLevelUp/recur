@@ -53,6 +53,10 @@ path = "src/recur_watch_main.rs"
 name = "recur-version"
 path = "src/recur_version_main.rs"
 
+[[bin]]
+name = "recur-lang"
+path = "src/recur_lang_main.rs"
+
 [dependencies]
 # Error handling
 thiserror = "1.0"

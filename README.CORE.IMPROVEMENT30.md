@@ -105,8 +105,10 @@ Recur Lang is a closed-world formal model. `recur lang` parses and explains
 the contracts, blocks, lanes, joins, waits, feedback limits, write scopes, and
 required evidence declared by a coordination program. Missing or incompatible
 parts inside that boundary can invalidate the program. `recur-lang` is the
-future stateful actor that advances a valid program and records ACK/NAK state;
-it does not broaden the static model implicitly.
+stateful actor that advances a valid program and records ACK/NAK state. Its
+first shipped action is one bounded, receipt-backed Warp transition; broader
+lane coordination remains incremental. The actor does not broaden the static
+model implicitly.
 
 The integration point is durable identity. Recur Lang contracts, blocks,
 lanes, work orders, and receipts publish stable trace IDs. `trace-id` then
@@ -564,8 +566,26 @@ recur-lang accept-receipt <receipt>
 recur-lang status <run>
 ```
 
-These are design shapes. Exact commands should be frozen only when a focused
-contract and test slice is opened.
+The first focused companion command is now frozen:
+
+```text
+recur-lang warp <source> <scope>
+recur-lang warp <source> <scope> \
+  --eventness <exact-E0-file> \
+  --receipt <external-receipt> \
+  --confirm
+```
+
+Without `--confirm`, `recur-lang warp` is a pure dry run that reports the
+declared `E0`, `dE`, `Ef`, source hash, and required receipt schema. A confirmed
+transition is deliberately narrow: it validates one root-contained E0
+artifact and one `recur-lang-warp-receipt-v1`, renames that artifact to the
+declared Ef identity, and writes one durable ACK or NAK status record. It does
+not execute the declared slice, invoke a target-language toolchain, infer
+approval from a plan, or mutate any other artifact.
+
+The remaining companion commands above are design shapes. Their exact
+contracts should be frozen only when a focused test slice is opened.
 
 IMPLEMENTATION SLICES
 ---------------------
@@ -621,6 +641,12 @@ IMPLEMENTATION SLICES
 - Validate required evidence and actual changed files against lane declarations.
 - Write ACK/NAK Eventness that core Recur can inspect.
 - Do not invoke arbitrary target-language toolchains.
+
+The first part of this slice is implemented as
+`recur-lang-warp-plan-v1`, `recur-lang-warp-receipt-v1`, and
+`recur-lang-warp-status-v1`. File receipts are accepted; standard input,
+lane write-scope validation, multi-lane coordination, and arbitrary 0.2
+coordination syntax remain future slices.
 
 ### Slice 6: Recur Rust dogfooding
 

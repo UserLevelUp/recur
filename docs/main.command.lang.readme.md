@@ -92,6 +92,48 @@ function, schedule a lane, update Eventness, or write an artifact.
 
 ## Proposed language-runner commands
 
+The shipped bounded Warp command is:
+
+```powershell
+recur-lang warp demos/main.lang/main.lang.algorithm-lab.recur gcd --json
+
+recur-lang warp <source> <scope> `
+  --dir <project-root> `
+  --eventness <exact-E0-file> `
+  --receipt <external-receipt> `
+  --confirm
+```
+
+The first form is always a dry run. It validates the scope's compact function,
+body flow, Warp, and final `state` event, then reports the exact transition and
+an FNV-1a content hash of the parsed source. The hash detects stale receipts;
+it is not a signature or a trust proof.
+
+The confirmed form accepts only an exact file path beneath `--dir`. Its file
+stem must equal the declared E0 identity. The external receipt must use this
+shape:
+
+```toml
+schema = "recur-lang-warp-receipt-v1"
+scope = "gcd"
+current = "demo.algorithm.gcd.todo.current"
+slice = "gcd.f"
+desired = "demo.algorithm.gcd.complete"
+source_hash = "fnv1a64:..."
+ack = "accepted"
+attempt = 1
+artifact = "commit:abc123"
+test_receipt = "ci:test-42"
+```
+
+After validation, `recur-lang` renames only that E0 artifact to the declared Ef
+name in the same directory. It then writes
+`.recur/lang/recur-lang.<id>.status.current.md` using
+`recur-lang-warp-status-v1`. A stale or rejected receipt writes NAK and leaves
+the E0 artifact unchanged.
+
+The broader runner commands remain proposed:
+
 ```powershell
 recur-lang coordinate demos/main.lang/main.lang.skippy-watch-coordination.recur
 recur-lang assign csharp-monkey
@@ -99,7 +141,7 @@ recur-lang accept-receipt .recur/runs/change-104/lanes/csharp_monkey/worker.csha
 recur-lang status change-104
 ```
 
-These are proposed Improvement 30 command shapes, not shipped commands.
+Those four commands are proposed Improvement 30 shapes, not shipped commands.
 
 The current Julia spike separately demonstrates parser and algorithm behavior:
 
@@ -131,6 +173,9 @@ or target-language runtime.
 
 ### `recur-lang`
 
+- plan and confirm one exact `E0 -> dE -> Ef` file transition;
+- require explicit confirmation and a source-hash-bound external receipt;
+- keep the action inside one declared project root and one named E0 artifact;
 - parse the coordination model and resolve exact contract references;
 - maintain synchronous and asynchronous lane state;
 - await filesystem Eventness and declared fan-in joins;
@@ -156,20 +201,34 @@ The companion should write small records beneath:
 .recur/lang/recur-lang.<id>.status.current.md
 ```
 
-Suggested initial shape:
+The shipped Warp status shape extends the suggested fields with schema,
+source hash, exact before/after evidence, external artifact/test references,
+attempt, and timestamps:
 
 ```text
-id = algorithm-lab
-language = main.lang
-source = demos/main.lang/main.lang.algorithm-lab.recur
-state = complete
-ack = accepted
+schema = "recur-lang-warp-status-v1"
+id = "gcd-001"
+language = "main.lang"
+source = "demos/main.lang/main.lang.algorithm-lab.recur"
+source_hash = "fnv1a64:..."
+state = "complete"
+ack = "accepted"
 nak_reason = ""
-warp = algorithm-lab
-lane = all
-slice = ""
-started_at = 2026-07-23T00:00:00Z
-completed_at = 2026-07-23T00:00:01Z
+scope = "gcd"
+warp = "gcd"
+lane = "gcd"
+current = "demo.algorithm.gcd.todo.current"
+slice = "gcd.f"
+desired = "demo.algorithm.gcd.complete"
+before_evidence = "docs/demo.algorithm.gcd.todo.current.md"
+after_evidence = "docs/demo.algorithm.gcd.complete.md"
+receipt = "receipts/gcd.001.md"
+artifact = "commit:abc123"
+test_receipt = "ci:test-42"
+attempt = 1
+started_at = "unix:1784899200"
+completed_at = "unix:1784899201"
+status_receipt = ".recur/lang/recur-lang.gcd-001.status.current.md"
 ```
 
 Rejected or partial runs use the same record:

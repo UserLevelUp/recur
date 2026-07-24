@@ -123,6 +123,31 @@ julia --startup-file=no demos/main.lang/main.lang.cli.jl run all
 
 Inspection and execution commands also accept `--json`.
 
+## Run the bounded `recur-lang` Warp companion
+
+Inspect the declared transition without changing any files:
+
+```powershell
+cargo run --locked --bin recur-lang -- `
+  warp demos/main.lang/main.lang.algorithm-lab.recur gcd --json
+```
+
+A confirmed transition additionally requires the exact current Eventness file
+and a `recur-lang-warp-receipt-v1` bound to the source hash from the dry run:
+
+```powershell
+cargo run --locked --bin recur-lang -- `
+  warp demos/main.lang/main.lang.algorithm-lab.recur gcd `
+  --eventness docs/demo.algorithm.gcd.todo.current.md `
+  --receipt receipts/gcd.001.md `
+  --confirm
+```
+
+The writer renames only the named E0 artifact to Ef and records the result
+beneath `.recur/lang/`. It does not execute `gcd.f`, Cargo, Julia, Git, or any
+other worker command. The external receipt is evidence supplied by a worker;
+its shape alone is not proof that the worker is trustworthy.
+
 ## Run the Julia tests
 
 ```powershell

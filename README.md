@@ -50,12 +50,16 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
 ## Installation
 
 **What you get:** Companion binaries for a complete toolset:
+
 - **`recur`** - Core hierarchy tool (pure, no Git dependencies)
 - **`recur-git`** - Git workflow extension (checkpoint tracking, dogfooding)
   - recur-git depends on existing git binaries to already be installed
+- **`recur-lang`** - Confirmation-gated, receipt-backed Recur Lang Warp companion
 - **`recur-watch`** - Active watcher/subscription runner that writes watcher status
 - **`recur-version`** - Artifact snapshot/manifest writer for version-eventness lanes
+
 ### From Cargo (crates.io)
+
 ```bash
 cargo install recur
 ```
@@ -251,6 +255,25 @@ recur version query care.subject.routine --question "when did item-a become disc
 recur-version next care.subject.routine.proposed.current.csv
 recur-version save care.subject.routine.proposed.current.csv --slug item-a-discontinued
 ```
+
+### `recur-lang warp` - advance one declared Eventness transition
+
+`recur-lang warp` defaults to a dry-run plan. A confirmed transition requires
+the exact E0 artifact and a source-hash-bound external receipt before renaming
+that one artifact to Ef and writing an ACK or NAK status record.
+
+```bash
+recur-lang warp demos/main.lang/main.lang.algorithm-lab.recur gcd --json
+
+recur-lang warp path/to/program.recur scope \
+  --eventness path/to/scope.todo.current.md \
+  --receipt path/to/worker.receipt.md \
+  --confirm
+```
+
+See [`README.CORE.IMPROVEMENT30.md`](README.CORE.IMPROVEMENT30.md) and
+[`docs/main.command.lang.readme.md`](docs/main.command.lang.readme.md) for the
+receipt and safety contract.
 
 ### `recur files` — find files by hierarchical pattern
 ```bash
