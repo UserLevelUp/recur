@@ -772,6 +772,13 @@ advance Eventness.
 Stale subsystem imports remain a later graph-report extension because `CIR1`
 does not yet model systems, imports, or versioned public boundaries.
 
+`demos/pathing/main.lang.pathing.recur` is a red-first language-conformance
+fixture for the broader destination: one-input broadcast, distinct parallel
+functions, dynamic per-power-node scatter, qualified outputs, local graph
+views, and deterministic joins. Its source-shape tests are active while its
+parser, graph, and execution contracts remain `@test_broken`. Those future
+contracts guide later slices without broadening the current CIR1-only `SGR1`.
+
 ### Slice 3: Pure `recur lang` queries
 
 - Add read-only show, expand, refs, lanes, diagram, grid, check, and report
@@ -920,5 +927,7 @@ RELATED
 - `docs/main.improvement.delivery-loop.recurring.md`
 - `demos/main.lang/main.lang.algorithm-lab.recur`
 - `demos/main.lang/main.lang.skippy-watch-coordination.recur`
+- `demos/pathing/main.lang.pathing.recur`
+- `julia-tests/main.lang.pathing.test.jl`
 - `demos/main.lang/main.lang.runtime.jl`
 - `julia-tests/main.lang.test.jl`

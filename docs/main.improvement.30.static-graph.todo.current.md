@@ -116,6 +116,18 @@ cycle and set comparisons use deterministic canonical ordering.
 - no WorkOrder publication or receipt acceptance;
 - no scheduler, coordinator loop, merge, or target-language execution.
 
+## Downstream Red-First Fixture
+
+`demos/pathing/main.lang.pathing.recur` and
+`julia-tests/main.lang.pathing.test.jl` preserve the larger graph-language
+destination: broadcast, explicit execution modes, dynamic scatter, qualified
+instances, local graph views, and deterministic path generation.
+
+The active source-shape tests protect that design. Its parser, graph, and
+execution assertions are `@test_broken` because those capabilities exceed
+`CIR1`. They do not expand this slice: `SGR1` still consumes the accepted
+concurrent IR and adds no new parser.
+
 ## Final-State Alignment
 
 The imagined final state remains achievable:

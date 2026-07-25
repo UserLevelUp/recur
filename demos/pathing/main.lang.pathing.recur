@@ -1,0 +1,261 @@
+# Pathing is a red-first Recur Lang design fixture.
+# The current 0.1 Julia parser and bounded 0.2 Rust concurrent parser do not
+# accept this full 0.3 graph syntax yet.
+
+recur 0.3 coordination PacPathGenerator
+
+header {
+  contract Tile {
+    x: Int
+    y: Int
+  }
+
+  contract Edge {
+    from: Tile
+    to: Tile
+  }
+
+  contract PowerNode {
+    id: Text
+    tile: Tile
+  }
+
+  contract Pellet {
+    tile: Tile
+    kind: Text
+  }
+
+  contract MapRequest {
+    width: Int
+    height: Int
+    seed: Int
+    power_count: Int
+    spawn: Tile
+  }
+
+  contract MazeGraph {
+    width: Int
+    height: Int
+    spawn: Tile
+    tiles: List<Tile>
+    corridors: List<Edge>
+  }
+
+  contract DistanceScores {
+    scores: Map<Tile,Int>
+  }
+
+  contract DeadEndScores {
+    scores: Map<Tile,Int>
+  }
+
+  contract SymmetryScores {
+    scores: Map<Tile,Int>
+  }
+
+  contract CoverageScores {
+    scores: Map<Tile,Int>
+  }
+
+  contract PowerPlan {
+    graph: MazeGraph
+    powers: List<PowerNode>
+    route_orders: List<RouteOrder>
+  }
+
+  contract RouteOrder {
+    graph: MazeGraph
+    origin: Tile
+    target: PowerNode
+  }
+
+  contract PowerPath {
+    power: PowerNode
+    tiles: List<Tile>
+  }
+
+  contract PelletPath {
+    power: PowerNode
+    path: List<Tile>
+    pellets: List<Pellet>
+  }
+
+  contract PacMap {
+    graph: MazeGraph
+    powers: List<PowerNode>
+    paths: List<PowerPath>
+    pellets: List<Pellet>
+  }
+
+  contract CheckReceipt {
+    check: Text
+    ack: Bool
+    detail: Text
+  }
+
+  contract VerifiedPacMap {
+    map: PacMap
+    checks: List<CheckReceipt>
+  }
+
+  scope topology {
+    i(a) := MapRequest
+    o(b) := MazeGraph
+    f : i(a) -> o(b) ~ "Carve a deterministic connected maze"
+  }
+
+  # One immutable MazeGraph is broadcast to four independent functions.
+
+  scope distance {
+    i(b) := topology.o(b)
+    o(c) := DistanceScores
+    f : i(b) -> o(c) ~ "Score distance from spawn"
+  }
+
+  scope dead_ends {
+    i(b) := topology.o(b)
+    o(d) := DeadEndScores
+    f : i(b) -> o(d) ~ "Score corridor endpoints"
+  }
+
+  scope symmetry {
+    i(b) := topology.o(b)
+    o(e) := SymmetryScores
+    f : i(b) -> o(e) ~ "Score rotational symmetry"
+  }
+
+  scope coverage {
+    i(b) := topology.o(b)
+    o(f) := CoverageScores
+    f : i(b) -> o(f) ~ "Score separation and board coverage"
+  }
+
+  scope powers {
+    i(g) := join(
+      topology.o(b),
+      distance.o(c),
+      dead_ends.o(d),
+      symmetry.o(e),
+      coverage.o(f)
+    )
+    o(h) := PowerPlan
+    f : i(g) -> o(h) ~ "Choose separated reachable power nodes"
+  }
+
+  # route and crumbs are reusable templates. Each power id qualifies a runtime
+  # invocation so route[power-1].o(j) cannot collide with route[power-2].o(j).
+
+  scope route {
+    i(i) := RouteOrder
+    o(j) := PowerPath
+    f : i(i) -> o(j) ~ "Find one shortest power-node path"
+  }
+
+  scope crumbs {
+    i(j) := route.o(j)
+    o(k) := PelletPath
+    f : i(j) -> o(k) ~ "Place breadcrumbs along one power-node path"
+  }
+
+  scope assemble {
+    i(l) := join(
+      topology.o(b),
+      powers.o(h),
+      route[*].o(j),
+      crumbs[*].o(k)
+    )
+    o(m) := PacMap
+    f : i(l) -> o(m) ~ "Merge paths and deduplicate pellets"
+  }
+
+  scope verify {
+    i(m) := assemble.o(m)
+    o(n) := VerifiedPacMap
+    f : i(m) -> o(n) ~ "Verify the generated Pac-Man path map"
+  }
+
+  graph solution async {
+    solution.i(a) -> topology.i(a) delivery sync
+
+    topology.o(b) -> fork [
+      distance.i(b),
+      dead_ends.i(b),
+      symmetry.i(b),
+      coverage.i(b)
+    ] dispatch parallel delivery async
+
+    await all [
+      distance.o(c),
+      dead_ends.o(d),
+      symmetry.o(e),
+      coverage.o(f)
+    ] -> powers.i(g)
+
+    powers.o(h).route_orders -> parallel each order {
+      order -> route[order.target.id].i(i)
+      route[order.target.id].o(j) -> crumbs[order.target.id].i(j)
+    } delivery async
+
+    await all crumbs[*].o(k) -> assemble.i(l)
+    assemble.o(m) -> verify.i(m) delivery sync
+    verify.o(n) -> solution.o(n) delivery sync
+  }
+}
+
+body {
+  bind topology.f  -> pathing.maze.seeded_depth_first
+  bind distance.f  -> pathing.score.spawn_distance
+  bind dead_ends.f -> pathing.score.dead_ends
+  bind symmetry.f  -> pathing.score.rotational_symmetry
+  bind coverage.f  -> pathing.score.coverage
+  bind powers.f    -> pathing.power.weighted_separated_selection
+  bind route.f     -> pathing.route.shortest_path
+  bind crumbs.f    -> pathing.pellet.path_interior
+  bind assemble.f  -> pathing.map.deduplicated_union
+  bind verify.f    -> pathing.map.verify
+
+  memo solution {
+    intent "Generate a connected Pac-Man-like path map from one seed"
+    concurrency "Score one graph in parallel, then route each power node in parallel"
+    determinism "Equal request and seed produce byte-equivalent normalized output"
+  }
+
+  memo crumbs.f {
+    exclude ["spawn tile", "power-node tiles"]
+    deduplicate "One normal pellet per tile even where power paths overlap"
+  }
+}
+
+footer {
+  check graph_connected
+  check no_dependency_cycles
+  check no_wait_cycles
+  check every_power_reachable
+  check power_nodes_are_separated
+  check every_path_is_contiguous
+  check every_pellet_is_on_a_corridor
+  check no_duplicate_pellets
+  check deterministic_for_seed
+
+  report static_graph
+  report local_graph for route
+  report generated_map
+
+  event solution {
+    consume demo.pathing.request
+    trigger demo.pathing.generate
+    produce demo.pathing.map
+    state demo.pathing.complete
+  }
+
+  warp solution:
+    E0(demo.pathing.todo.current)
+      -> dE(solution.graph)
+      -> Ef(demo.pathing.complete)
+}
+
+# defines: demo.pathing formal fan-out scatter join and path-generation fixture
+# defines: recur.lang.pathing.graph one-input multi-function and per-power-node parallel dataflow
+# consumes: recur.lang.concurrent.ir.v1 exact typed message and await conventions
+# produces: recur.lang.static.graph.report.v1 future graph and local-view acceptance fixture
+# triggers: demo.pathing.tests red-first Julia parser graph and execution contracts
