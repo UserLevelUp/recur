@@ -1,6 +1,6 @@
 # Improvement 30: Recur Lang Coordination Contracts
 
-Status: `todo.future-plan` (umbrella proposal; live-grid sub-lane is current)
+Status: `todo.future-plan` (umbrella proposal; static-graph sub-lane is current)
 Date: 2026-07-24
 
 ## Objective
@@ -21,11 +21,15 @@ and integration state easy to query and difficult to accidentally ignore.
 ## Canonical Proposal
 
 - `README.CORE.IMPROVEMENT30.md`
-- `docs/main.improvement.30.live-grid.todo.current.md`
+- `docs/main.improvement.30.static-graph.todo.current.md`
+- `docs/main.improvement.30.live-grid.todo.tracking.md`
 
 ## Current Posture
 
 - The Julia `main.lang` implementation is a language and algorithm spike.
+- `recur-lang-warp-ir-v1` is complete for one receipt-backed 0.1 Warp.
+- `recur-lang-concurrent-ir-v1` is complete for the read-only Level 0/1 lane,
+  message, fork, and await boundary in the 0.2 design fixture.
 - The source format demonstrates explicit input/output roles, exact shared
   contracts, compact/expanded functions, async lanes, Eventness, and Warp.
 - The canonical proposal now defines hierarchical subsystem contraction:
@@ -34,11 +38,11 @@ and integration state easy to query and difficult to accidentally ignore.
 - The Skippy watch-coordination fixture and formal v0 contract now capture the
   intended compact flow, watcher topology, lane state machine, work orders,
   receipts, joins, and bounded repair loop.
-- It does not yet provide production lane coordination, durable receipts,
-  target-language compilation, or static circular-reference reports.
-- The umbrella remains incremental. The living master work report is now an
-  active focused cursor so its schema and snapshot can be tackled without
-  activating every future Recur Lang capability.
+- It does not yet provide production lane coordination, durable multi-lane
+  receipts, target-language compilation, or static circular-reference reports.
+- The umbrella remains incremental. The static graph report is the active
+  focused cursor. The living master work report remains tracked as the product
+  destination without activating its snapshot or live view prematurely.
 
 ## Product Boundary
 
@@ -55,25 +59,36 @@ correctness.
 
 ## Active Focused Pull
 
-The current important update is:
+The single current implementation update is:
 
-- `docs/main.improvement.30.live-grid.todo.current.md`
+- `docs/main.improvement.30.static-graph.todo.current.md`
 
-Freeze the master-report cell/schema and pure snapshot before building a
-continuous display. The grid must reconstruct from durable Eventness and
-collapse into the completed audit report without becoming a second state store.
+Freeze `SGR1` as one deterministic, read-only dependency and wait report over
+the accepted concurrent IR. It must expose shared soundness facts without
+reparsing source, scheduling lanes, or advancing Eventness.
+
+The downstream product destination remains:
+
+- `docs/main.improvement.30.live-grid.todo.tracking.md`
+
+The grid returns to `todo.current` only after `SGR1` and the shared pure query
+projection exist.
 
 ## Foundational Static Pull
 
-Do not start with a compiler backend. When this improvement becomes active,
-the first focused contract should be:
+Do not start with a compiler backend or a coordinator loop. The active focused
+contract will:
 
-1. freeze a small versioned graph/diagnostic representation;
-2. detect accidental dependency and wait cycles;
-3. generate a source-hashed report;
-4. expose the result through a pure text and JSON query;
-5. validate one exact versioned subsystem import without executing it;
-6. prove it with focused Julia fixtures.
+1. consume `recur-lang-concurrent-ir-v1` without reparsing source;
+2. freeze a small versioned graph/report representation;
+3. detect dependency cycles, wait cycles, unreachable lanes, and unsatisfied
+   joins;
+4. generate a deterministic source-hashed JSON report;
+5. preserve exact nodes, messages, waits, and downstream consumers;
+6. prove accepted and rejected graphs with focused fixtures.
+
+Subsystem imports are not present in `CIR1` and remain a later bounded
+extension rather than being smuggled into this slice.
 
 An example requested footer:
 
@@ -125,7 +140,8 @@ recur files "main.command.lang.**" -d docs/
 - `docs/main.command.lang.readme.md`
 - `README.CORE.EVENTNESS.md`
 - `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`
-- `docs/main.improvement.30.live-grid.todo.current.md`
+- `docs/main.improvement.30.static-graph.todo.current.md`
+- `docs/main.improvement.30.live-grid.todo.tracking.md`
 - `docs/main.recur.purity.decision.md`
 - `docs/main.improvement.delivery-loop.recurring.md`
 - `demos/main.lang/main.lang.algorithm-lab.recur`
@@ -141,8 +157,8 @@ defines: recur-lang.coordinator companion lane state receipt validation and ACK/
 defines: recur.lang.subsystem.composition accepted child models contract into versioned blocks with separate parent integration Eventness
 consumes: README.CORE.IMPROVEMENT30 canonical Recur Lang coordination proposal
 consumes: main.recur.purity.decision core recur query and companion actor split
-produces: main.improvement.30.discovery Recur queries for the incremental capability and active live-grid cursor
+produces: main.improvement.30.discovery Recur queries for the active static-graph cursor and tracked live-grid destination
 triggers: main.improvement.30.contract future versioned coordination IR and JSON schema
-triggers: main.improvement.30.static-analysis future cycle reachability join and lane-scope report
+triggers: main.improvement.30.static-graph.todo.current cycle reachability join and wait report over CIR1
 triggers: main.improvement.30.dogfooding future Recur Rust algorithm validation lane
 ```

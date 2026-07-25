@@ -55,18 +55,25 @@ useful lanes have exact communication boundaries, but it does not schedule a
 worker, publish a WorkOrder, watch a channel, accept a lane receipt, or execute
 a state machine.
 
-The next bounded implementation slice is the static graph report. It should
+The current bounded implementation slice is the static graph report. It should
 derive dependency and wait graphs from the frozen concurrent IR, then report
-cycles, unreachable lanes, missing joins, and source-hash freshness. This comes
+cycles, unreachable lanes, missing joins, and source-hash binding. This comes
 before broader queries, the grid snapshot, or a live coordinator because those
 surfaces must project one validated graph rather than reimplement graph
 semantics independently.
 
-`main.improvement.30.live-grid.todo.current` remains the product-direction
-cursor: it records the control-room view we are working toward and why it is
-valuable. The static graph report is the immediate implementation prerequisite
-for that view. Product cursor and next code slice are therefore related but not
-the same state.
+`main.improvement.30.static-graph.todo.current` is now the single active
+implementation cursor. `main.improvement.30.live-grid.todo.tracking` preserves
+the control-room view we are working toward and why it is valuable without
+activating its implementation prematurely.
+
+The imagined final state is still on track, with one convergence gate now made
+explicit. `WIR1` and `CIR1` are sibling frozen contracts rather than one unified
+coordination AST. `SGR1` must consume `CIR1` directly and must not create a
+third parser. Before live coordination, a later focused contract must define
+how receipt-backed Warp Eventness and concurrent lane state compose under one
+source identity. Keeping that risk visible prevents the grid or coordinator
+from becoming a competing source of truth.
 
 ### Rediscovered Eventness hierarchy
 
@@ -78,7 +85,9 @@ main.improvement.30
 │   └── recur.lang.warp.ir.v1
 ├── concurrent-ir.contract.complete
 │   └── recur.lang.concurrent.ir.v1
-├── live-grid.todo.current
+├── static-graph.todo.current
+│   └── recur.lang.static.graph.report.v1         active contract freeze
+├── live-grid.todo.tracking
 │   └── recur.lang.grid.report.v0                 planned contract
 ├── contract.watch-coordination-v0.todo.future-plan
 │   └── main.improvement.30.contract.watch-coordination-v0
@@ -91,7 +100,7 @@ The implementation dependency hierarchy is:
 ```text
 WIR1 complete
   -> CIR1 complete
-    -> SGR1 next
+    -> SGR1 current
       -> LANGQ pure queries
         -> GRID0 pure snapshot
           -> COORD live receipt-backed coordination
@@ -110,9 +119,9 @@ Short symbols make diagrams readable; canonical identities remain durable:
 | `I30` | `main.improvement.30` | `README.CORE.IMPROVEMENT30.md` | active umbrella |
 | `WIR1` | `recur.lang.warp.ir.v1` | `recur-lang-warp-ir-v1` / `main.improvement.30.warp-ir.contract.complete` | complete |
 | `CIR1` | `recur.lang.concurrent.ir.v1` | `recur-lang-concurrent-ir-v1` / `main.improvement.30.concurrent-ir.contract.complete` | complete |
-| `SGR1` | `recur.lang.static.graph.report.v1` | `main.improvement.30.static-graph` | next; schema not frozen |
+| `SGR1` | `recur.lang.static.graph.report.v1` | `main.improvement.30.static-graph.todo.current` | current; schema not frozen |
 | `LANGQ` | `recur.lang.query.surface` | `recur lang ...` | planned pure projection |
-| `GRID0` | `recur.lang.grid.report.v0` | `main.improvement.30.live-grid.todo.current` | product cursor; contract not frozen |
+| `GRID0` | `recur.lang.grid.report.v0` | `main.improvement.30.live-grid.todo.tracking` | tracked product destination |
 | `COORD` | `recur-lang.coordinator` | `recur-lang coordinate ...` | planned actor |
 | `DOGFOOD` | `main.improvement.30.dogfooding` | one bounded Recur Rust coordination run | planned validation |
 
@@ -703,9 +712,9 @@ contract, verifies it, and only then moves that artifact to a completed state.
 | 0 | `I30` seed | complete | Preserve the proposal, fixtures, and product boundary before implementation. |
 | 1a | `WIR1` | complete | Give Warp one canonical, receipt-bound model before adding more syntax. |
 | 1b | `CIR1` | complete | Make lane communication exact before analyzing or scheduling it. |
-| 2 | `SGR1` | next | Derive soundness facts once from `CIR1` for every later consumer. |
+| 2 | `SGR1` | current | Derive soundness facts once from `CIR1` for every later consumer. |
 | 3 | `LANGQ` | planned | Expose pure views only after their model and analysis are stable. |
-| 4 | `GRID0` | current product cursor; implementation gated by 2–3 | Keep the visible coordination goal explicit without creating a second source of truth. |
+| 4 | `GRID0` | `todo.tracking`; implementation gated by 2–3 | Keep the visible coordination goal explicit without creating a second source of truth. |
 | 5 | `COORD` | Warp increment complete; multi-lane actor planned | Mutate state only through frozen schemas, external evidence, and ACK/NAK. |
 | 6 | `DOGFOOD` | planned | Validate usefulness on one real repository change after the boundaries exist. |
 | 7–8 | integration and IDE | future | Scale and presentation come after semantics and evidence. |
@@ -747,18 +756,21 @@ Slice 1 is therefore foundationally useful but not globally complete. Systems,
 subsystems, imports, adapters, feedback, watcher topology, and the remaining
 0.2 syntax must still arrive through later bounded contracts.
 
-### Slice 2: Static graph report — next
+### Slice 2: Static graph report — current
 
 - Build dependency and wait graphs from the canonical IR.
-- Add cycle, unreachable-lane, missing-join, contract, and stale subsystem
-  import checks.
+- Add dependency-cycle, wait-cycle, unreachable-lane, and unsatisfied-join
+  findings for the CIR1 boundary.
 - Generate the first source-hashed coordination report.
 - Add Julia fixtures and focused tests for accepted and rejected graphs.
 
-`SGR1` is next because `CIR1` now provides stable typed nodes, edges, fork
+`SGR1` is current because `CIR1` now provides stable typed nodes, edges, fork
 members, awaits, consumers, spans, and source hashes. The graph report should
 remain a deterministic read-only projection. It must not schedule lanes or
 advance Eventness.
+
+Stale subsystem imports remain a later graph-report extension because `CIR1`
+does not yet model systems, imports, or versioned public boundaries.
 
 ### Slice 3: Pure `recur lang` queries
 
@@ -778,10 +790,11 @@ advance Eventness.
 - Support drill-down from grid cell to lane, WorkOrder, receipt, and timeline.
 - Collapse `coordination.current` into a durable `coordination.complete` report.
 
-`GRID0` is the current product-direction cursor. Its first implementation pull
-remains a pure, deterministic snapshot. Live refresh waits until `SGR1` and the
-shared pure query projection exist, so the display cannot become an independent
-state store or soundness engine.
+`GRID0` is the tracked product destination. Its first implementation pull
+remains a pure, deterministic snapshot after it is promoted back to
+`todo.current`. Live refresh waits until `SGR1` and the shared pure query
+projection exist, so the display cannot become an independent state store or
+soundness engine.
 
 ### Slice 5: Companion receipts and Eventness
 
@@ -873,9 +886,10 @@ consumes: main.improvement.30.warp-ir.contract.complete accepted WIR1 foundation
 consumes: main.improvement.30.concurrent-ir.contract.complete accepted CIR1 foundation
 produces: recur.lang.coordination-report source-hashed cycles joins scopes evidence and Eventness status
 produces: recur.lang.formal-diagram canonical AST projection for humans and intelligences
-produces: main.improvement.30.live-grid active focused cursor for the living master work report
+produces: main.improvement.30.static-graph active SGR1 contract-freeze cursor
+produces: main.improvement.30.live-grid tracked destination for the living master work report
 triggers: main.improvement.30.contract future versioned coordination IR and JSON schema
-triggers: main.improvement.30.static-graph next cycle reachability join and wait report over CIR1
+triggers: main.improvement.30.static-graph.todo.current cycle reachability join and wait report over CIR1
 triggers: main.improvement.30.dogfooding future Recur Rust algorithm validation lane
 ```
 
@@ -899,8 +913,9 @@ RELATED
 - `docs/main.command.trace-id.readme.md`
 - `docs/main.improvement.30.warp-ir.contract.complete.md`
 - `docs/main.improvement.30.concurrent-ir.contract.complete.md`
+- `docs/main.improvement.30.static-graph.todo.current.md`
 - `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`
-- `docs/main.improvement.30.live-grid.todo.current.md`
+- `docs/main.improvement.30.live-grid.todo.tracking.md`
 - `docs/main.recur.purity.decision.md`
 - `docs/main.improvement.delivery-loop.recurring.md`
 - `demos/main.lang/main.lang.algorithm-lab.recur`
