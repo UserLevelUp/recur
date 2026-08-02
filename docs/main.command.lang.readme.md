@@ -6,17 +6,22 @@ Date: 2026-07-23
 `recur lang` is the pure query surface for Recur language sources, symbols,
 contracts, lanes, slices, Warps, and runtime Eventness.
 
-`recur-lang` is the companion coordination implementation. It parses
-coordination programs, maintains lane state, validates external receipts, and
-writes ACK/NAK state that core Recur can inspect. The current Julia algorithm
-interpreter remains a design spike rather than a requirement that the
-production companion compile arbitrary target languages.
+`recur-lang` is the stateful execution companion. After an explicit confirmed
+action, it performs the declared Recur Lang operation, advances the permitted
+state, and records durable ACK/NAK evidence. A human, AI, or coordinator may
+choose and authorize the next action, but `recur-lang` is the surface that does
+the approved language-level work rather than asking the pure query command to
+mutate state. The current Julia algorithm interpreter remains a design spike
+rather than a requirement that the production implementation compile arbitrary
+target languages.
 
 ## Core split
 
 ```text
 recur lang   = query, validate, expand, contract, trace, explain, exit
-recur-lang   = coordinate, await Eventness, validate receipts, write ACK/NAK
+recur-lang   = execute confirmed declared action, write state and ACK/NAK
+recur-watch  = subscribe to filesystem events and report watcher state
+coordinator LLM = choose and authorize eligible next work from durable facts
 ```
 
 This follows the repository-wide companion rule:
@@ -37,7 +42,8 @@ These surfaces complement one another rather than duplicate one another:
 |---|---|---|
 | `recur trace-id` | Where does an identifier appear, and which relationships were declared near it? | Open-world repository scan |
 | `recur lang` | Is this coordination program valid, and what does it mean? | Closed-world formal model |
-| `recur-lang` | How should this valid model advance through its lanes? | Stateful coordination actor |
+| `recur-lang` | Execute the confirmed declared action and record its outcome. | Stateful bounded actor |
+| coordinator LLM + `recur-watch` | Which declared action is eligible after a durable event? | External routing/authorization |
 
 `recur trace-id` remains language-independent. It finds identifier lineage
 across source, documentation, tests, Eventness, and receipts without needing
@@ -83,6 +89,9 @@ recur lang refs "game.pathing@1"
 recur lang lanes AlgorithmLab
 recur lang warps AlgorithmLab
 recur lang check demos/main.lang/main.lang.algorithm-lab.recur
+recur lang report demos/main.lang/main.lang.algorithm-lab.recur
+recur lang report demos/main.lang/main.lang.algorithm-lab.recur --symbol gcd.f
+recur lang report demos/main.lang/main.lang.algorithm-lab.recur --json
 recur lang status algorithm-lab
 recur lang explain algorithm-lab
 ```
@@ -90,16 +99,89 @@ recur lang explain algorithm-lab
 The query surface may parse and validate source, but it must not execute a
 function, schedule a lane, update Eventness, or write an artifact.
 
-## Proposed language-runner commands
+### Proposed `report` projection
 
-```powershell
-recur-lang coordinate demos/main.lang/main.lang.skippy-watch-coordination.recur
-recur-lang assign csharp-monkey
-recur-lang accept-receipt .recur/runs/change-104/lanes/csharp_monkey/worker.csharp-monkey.001.receipt.current.md
-recur-lang status change-104
+`recur lang report` should be the quick orientation view for a human or worker
+that did not author the source. It is derived from one canonical parsed model;
+it is not separately maintained documentation and does not invent a second
+interpretation of the program.
+
+For each selected source or symbol it should make the source's three layers
+legible:
+
+```text
+header  -> contracts, named ports, aliases, lane policies, and descriptions
+body    -> bindings, compact flows, forks, awaits, and reusable expansions
+footer  -> checks, reports, Eventness consume/trigger/produce/state, and Warps
 ```
 
-These are proposed Improvement 30 command shapes, not shipped commands.
+The compact text report should include:
+
+- source identity, language version, source hash, selected symbol, and span;
+- the familiar function description and implementation binding when declared;
+- exact input and output contracts, including aliases and canonical identities;
+- direct producers, consumers, fan-out, fan-in, and ordered wait gates;
+- the compact body flow and references to any expansion or bound worker;
+- requested footer checks and reports;
+- Eventness transition, current state, and receipt/status evidence when present;
+- unresolved references, static findings, and the smallest explanatory path to
+  each finding.
+
+`--symbol` narrows the same projection to one block while preserving its direct
+upstream and downstream references. `--json` serializes the same facts for an
+agent, editor, or renderer. It must not execute the declared function, infer a
+missing contract, or treat a description as evidence of implementation success.
+
+## Proposed language-runner commands
+
+The shipped bounded Warp command is:
+
+```powershell
+recur-lang warp demos/main.lang/main.lang.algorithm-lab.recur gcd --json
+
+recur-lang warp <source> <scope> `
+  --dir <project-root> `
+  --eventness <exact-E0-file> `
+  --receipt <external-receipt> `
+  --confirm
+```
+
+The first form is always a dry run. It validates the scope's compact function,
+body flow, Warp, and final `state` event, then reports the exact transition and
+an FNV-1a content hash of the parsed source. The hash detects stale receipts;
+it is not a signature or a trust proof.
+
+The confirmed form accepts only an exact file path beneath `--dir`. Its file
+stem must equal the declared E0 identity. The external receipt must use this
+shape:
+
+```toml
+schema = "recur-lang-warp-receipt-v1"
+ir_schema = "recur-lang-warp-ir-v1"
+scope = "gcd"
+current = "demo.algorithm.gcd.todo.current"
+slice = "gcd.f"
+desired = "demo.algorithm.gcd.complete"
+source_hash = "fnv1a64:..."
+ack = "accepted"
+attempt = 1
+artifact = "commit:abc123"
+test_receipt = "ci:test-42"
+```
+
+After validation, `recur-lang` renames only that E0 artifact to the declared Ef
+name in the same directory. It then writes
+`.recur/lang/recur-lang.<id>.status.current.md` using
+`recur-lang-warp-status-v1`. A stale or rejected receipt writes NAK and leaves
+the E0 artifact unchanged.
+
+`recur-lang warp --confirm` is the shipped stateful action. Later executor
+actions may run a declared lane or bounded flow, but each must have an exact
+source binding, allowed write scope, required evidence, and explicit
+confirmation. `recur-lang` must never become an implicit arbitrary shell or
+toolchain runner. A coordinator uses `recur-watch` wake-up events and pure
+`recur lang` projections to choose an eligible action, then invokes the
+appropriate confirmed `recur-lang` action.
 
 The current Julia spike separately demonstrates parser and algorithm behavior:
 
@@ -129,23 +211,21 @@ or target-language runtime.
 - explain ACK and NAK results;
 - exit without changing project state.
 
-### `recur-lang`
+### `recur-lang` executor and coordinator routing
 
-- parse the coordination model and resolve exact contract references;
-- maintain synchronous and asynchronous lane state;
-- await filesystem Eventness and declared fan-in joins;
-- validate changed-file lists and required external receipts;
-- publish child integration readiness and record each parent's acceptance as
-  separate Eventness facts;
-- emit consume, trigger, produce, and state events;
-- write coordination receipts and ACK/NAK Eventness;
-- enforce declared attempt, cancellation, and failure policy;
-- leave compilers, linters, test runners, and Git operations to explicitly
-  declared external workers.
+- `recur-lang` executes only the confirmed action declared by the validated
+  model, records its state transition and ACK/NAK, and rejects stale,
+  out-of-scope, or unsupported requests;
+- a coordinator LLM uses `recur-watch` wake-up events plus `recur lang` queries
+  to choose and authorize eligible next work;
+- target-language commands, compilers, linters, tests, Git operations, and
+  implementation remain explicit declared worker actions; a future executor
+  command may run one only under its frozen command, scope, and confirmation
+  contract.
 
-`recur-watch` may provide the blocking filesystem subscription used by a lane
-controller. Core `recur watch` only inspects watcher status. The formal
-watch/work protocol is captured in
+`recur-watch` provides the blocking filesystem subscription; it does not make
+coordination decisions. Core `recur watch` only inspects watcher status. The
+formal watch/work protocol is captured in
 `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`.
 
 ## Runtime state
@@ -156,20 +236,35 @@ The companion should write small records beneath:
 .recur/lang/recur-lang.<id>.status.current.md
 ```
 
-Suggested initial shape:
+The shipped Warp status shape extends the suggested fields with schema,
+source hash, exact before/after evidence, external artifact/test references,
+attempt, and timestamps:
 
 ```text
-id = algorithm-lab
-language = main.lang
-source = demos/main.lang/main.lang.algorithm-lab.recur
-state = complete
-ack = accepted
+schema = "recur-lang-warp-status-v1"
+ir_schema = "recur-lang-warp-ir-v1"
+id = "gcd-001"
+language = "main.lang"
+source = "demos/main.lang/main.lang.algorithm-lab.recur"
+source_hash = "fnv1a64:..."
+state = "complete"
+ack = "accepted"
 nak_reason = ""
-warp = algorithm-lab
-lane = all
-slice = ""
-started_at = 2026-07-23T00:00:00Z
-completed_at = 2026-07-23T00:00:01Z
+scope = "gcd"
+warp = "gcd"
+lane = "gcd"
+current = "demo.algorithm.gcd.todo.current"
+slice = "gcd.f"
+desired = "demo.algorithm.gcd.complete"
+before_evidence = "docs/demo.algorithm.gcd.todo.current.md"
+after_evidence = "docs/demo.algorithm.gcd.complete.md"
+receipt = "receipts/gcd.001.md"
+artifact = "commit:abc123"
+test_receipt = "ci:test-42"
+attempt = 1
+started_at = "unix:1784899200"
+completed_at = "unix:1784899201"
+status_receipt = ".recur/lang/recur-lang.gcd-001.status.current.md"
 ```
 
 Rejected or partial runs use the same record:

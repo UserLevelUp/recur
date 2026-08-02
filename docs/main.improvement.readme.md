@@ -7,6 +7,8 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 - `main.improvement.<n>.complete.md` = completed improvement record
 - `main.improvement.<n>.todo.future-plan.md` = future-plan / parked improvement
 - `main.improvement.<n>.<topic>.todo.current.md` = active focused cursor
+- `main.improvement.<n>.<topic>.todo.tracking.md` = preserved downstream
+  destination whose prerequisites are active elsewhere
 - `main.improvement.<n>.<topic>.complete.md` = completed sub-lane under an improvement
 - `main.improvement.<n>.<topic>.readme.core.md` = concept or core reference without by-itself implying active state
 
@@ -34,9 +36,11 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 ### Active / Building
 
 - `30`
-  the broader Recur Lang proposal remains incremental; the living master work
-  report has an active focused cursor at
-  `docs/main.improvement.30.live-grid.todo.current.md`
+  the broader Recur Lang proposal remains incremental; the static graph report
+  has the active focused cursor at
+  `docs/main.improvement.30.static-graph.todo.current.md`, while the living
+  master work report remains visible at
+  `docs/main.improvement.30.live-grid.todo.tracking.md`
 
 ### Future Plan / Parked
 
@@ -70,7 +74,7 @@ Useful current adjacent lanes:
 
 - `docs/main.command.tests.progress.current.md`
 - `docs/main.command.trace-id.run.todo.current.md`
-- `docs/main.improvement.30.live-grid.todo.current.md`
+- `docs/main.improvement.30.static-graph.todo.current.md`
 - `docs/main.improvement.pre27and28.todo.current.md`
 - `docs/main.demo.skippy.trace-id.todo.current.md`
 - `docs/main.demo.sudoku.trace-id.todo.current.md`

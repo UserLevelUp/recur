@@ -2,20 +2,36 @@ RECUR IMPROVEMENT 30
 Recur Lang Coordination Contracts
 =================================
 Date: July 24, 2026
-Status: Proposal / active incremental direction
+Status: Active incremental implementation / IR foundation in progress
 Author: Captured from Recur Lang and multi-intelligence orchestration design
+Definition: IR means Intermediate Representation.
 
 INTENT
 ------
-Add a small, language-independent coordination formalism to Recur so humans
-and multiple intelligences can divide software work into bounded lanes, join
-their results, and inspect whether the coordination logic is sound.
+Add a small, language-independent formalism to Recur so one human or
+intelligence can understand bounded work clearly, and multiple entities can
+optionally divide work into lanes, join results, and inspect whether the
+coordination logic is sound.
 
 The compact Recur Lang form is:
 
 ```text
 i(a) -> f(a) -> o(b)
 ```
+
+Read it literally from left to right as one small block function:
+
+```text
+exact input  ->  named function/work slice  ->  exact output
+   i(a)      ->            f(a)             ->    o(b)
+```
+
+The input comes first because it is what the block is allowed to receive. The
+function sits in the middle because it is the bounded transformation or work.
+The output comes last because it is the fact the next block may consume. A
+reader should be able to follow the characters with their eyes and understand
+the logical direction without expanding the block: **input, then function,
+then output**.
 
 where:
 
@@ -25,9 +41,191 @@ where:
 - a downstream `i(b)` may alias the same canonical contract as `o(b)`;
 - expansion and contraction are lossless views over one parsed model.
 
+### One input or a compact multi-input bundle
+
+A function may have one simple input, or one exact input bundle with several
+named sub-inputs. The visual flow still stays left-to-right: all required facts
+enter through an `i(...)` port before the function runs, and one `o(...)` port
+leaves after it completes.
+
+```text
+# One input
+i(a) := LevelRequest
+i(a) -> f(a) -> o(b)
+
+# Several inputs from different upstream blocks, collected into one input port
+i(c) := (
+  request: request_reader.o(b),
+  policy: policy_reader.o(d),
+  receipt: verifier.o(f)
+)
+i(c) -> f(c) -> o(g)
+```
+
+The three upstream outputs in the second example do not have to originate from
+one prior input or one prior function. They are explicit sub-inputs of one
+declared input representation, `i(c)`, so the function has one precise bundle
+to receive and the wiring diagram has one clearly labeled input port. A join or
+wait gate must make the required producers and readiness rule explicit before
+that bundle is released.
+
+Before declaring such a bundle valid, the analyzer expands every sub-input
+into a producer-to-sub-input edge and checks the expanded graph. If the
+function's output can reach any sub-input of its own input bundle, directly or
+through other blocks, that is a **sub-input cycle**. It is a blocking static
+finding: the report must name the receiving sub-input and show the shortest
+feedback path. A later bounded-feedback feature may define an explicit,
+terminating exception, but an ordinary input bundle never silently permits a
+cycle.
+
+Letters are compact local port names: `a` through `z`, then `aa` through `zz`,
+then `aaa` through `zzz`, and so on if a bounded scope genuinely needs them.
+Scopes should normally stay small enough that short names remain readable. The
+letter never carries meaning by itself: its full canonical identity includes
+the scope and role, such as `pathing.compare.i(c)` or
+`pathing.compare.o(g)`, preventing collisions when compact blocks are wired
+together or expanded.
+
 This improvement is deliberately incremental. Recur Lang should grow only
 when a real Recur, Eventness, software-development, or orchestration problem
 needs the next capability.
+
+QUICK ORIENTATION PURPOSE
+-------------------------
+Recur Lang is intentionally a quick, compact language for an AI, human, or
+other intelligence to sketch and inspect a semantic functional model before
+implementation detail buries the logical flow. Its abbreviations are a
+navigation aid, not cleverness for its own sake: a reader should be able to
+see the exact inputs, function, outputs, branches, joins, and evidence gates
+quickly, then expand only the part that needs adjustment.
+
+The practical loop is:
+
+```text
+compact semantic flow
+  -> validate contracts, dependencies, joins, and cycles
+  -> adjust the smallest affected flow or contract
+  -> re-check one non-circular model
+```
+
+The language must stay concise enough for rapid iteration while remaining
+precise enough that a change cannot silently introduce a circular dependency,
+an ambiguous join, or a mismatched contract. It helps coordination and
+understanding; it does not replace target-language implementations, tests, or
+external verification evidence.
+
+CURRENT IMPLEMENTATION CHECKPOINT
+---------------------------------
+
+Improvement 30 now has two manually completed, versioned IR boundaries:
+
+1. `recur-lang-warp-ir-v1` freezes one exact Recur Lang 0.1 Warp, including
+   canonical contracts, flow, Eventness, source hash, spans, and stable
+   `RLIR001` through `RLIR011` diagnostics.
+2. `recur-lang-concurrent-ir-v1` freezes the read-only Level 0/1 communication
+   graph from the 0.2 Skippy coordination fixture: contracts, coordinator
+   ports, lanes, policies, typed messages, fork, ordered awaits, downstream
+   consumers, reachability, and `RCIR001` through `RCIR010` diagnostics.
+
+Their accepted Eventness artifacts are:
+
+```text
+main.improvement.30.warp-ir.contract.complete
+main.improvement.30.concurrent-ir.contract.complete
+```
+
+The first contract is consumed by the receipt-backed `recur-lang warp`
+companion. The second is deliberately read-only. It proves that independently
+useful lanes have exact communication boundaries, but it does not schedule a
+worker, publish a WorkOrder, watch a channel, accept a lane receipt, or execute
+a state machine.
+
+The current bounded implementation slice is the static graph report. It should
+derive dependency and wait graphs from the frozen concurrent IR, then report
+cycles, unreachable lanes, missing joins, and source-hash binding. This comes
+before broader queries, the grid snapshot, or a live coordinator because those
+surfaces must project one validated graph rather than reimplement graph
+semantics independently.
+
+`main.improvement.30.static-graph.todo.current` is now the single active
+implementation cursor. `main.improvement.30.live-grid.todo.tracking` preserves
+the control-room view we are working toward and why it is valuable without
+activating its implementation prematurely.
+
+The imagined final state is still on track, with one convergence gate now made
+explicit. `WIR1` and `CIR1` are sibling frozen contracts rather than one unified
+coordination AST. `SGR1` must consume `CIR1` directly and must not create a
+third parser. Before live coordination, a later focused contract must define
+how receipt-backed Warp Eventness and concurrent lane state compose under one
+source identity. Keeping that risk visible prevents the grid or coordinator
+from becoming a competing source of truth.
+
+### Rediscovered Eventness hierarchy
+
+This is the current docs-side hierarchy, not a projection of runtime state:
+
+```text
+main.improvement.30
+├── warp-ir.contract.complete
+│   └── recur.lang.warp.ir.v1
+├── concurrent-ir.contract.complete
+│   └── recur.lang.concurrent.ir.v1
+├── static-graph.todo.current
+│   └── recur.lang.static.graph.report.v1         active contract freeze
+├── live-grid.todo.tracking
+│   └── recur.lang.grid.report.v0                 planned contract
+├── contract.watch-coordination-v0.todo.future-plan
+│   └── main.improvement.30.contract.watch-coordination-v0
+└── todo.future-plan
+    └── recur.lang.control-plane                   umbrella direction
+```
+
+The implementation dependency hierarchy is:
+
+```text
+WIR1 complete
+  -> CIR1 complete
+    -> SGR1 current
+      -> LANGQ pure queries
+        -> GRID0 pure snapshot
+          -> COORD live receipt-backed coordination
+            -> DOGFOOD one real Recur Rust change
+```
+
+Static knowledge flows left to right. A later actor or view may consume an
+earlier contract, but it must not silently broaden or redefine that contract.
+
+### Symbol and identity rules
+
+Short symbols make diagrams readable; canonical identities remain durable:
+
+| Short symbol | Canonical semantic identity | Durable schema or Eventness identity | State |
+|---|---|---|---|
+| `I30` | `main.improvement.30` | `README.CORE.IMPROVEMENT30.md` | active umbrella |
+| `WIR1` | `recur.lang.warp.ir.v1` | `recur-lang-warp-ir-v1` / `main.improvement.30.warp-ir.contract.complete` | complete |
+| `CIR1` | `recur.lang.concurrent.ir.v1` | `recur-lang-concurrent-ir-v1` / `main.improvement.30.concurrent-ir.contract.complete` | complete |
+| `SGR1` | `recur.lang.static.graph.report.v1` | `main.improvement.30.static-graph.todo.current` | current; schema not frozen |
+| `LANGQ` | `recur.lang.query.surface` | `recur lang ...` | planned pure projection |
+| `GRID0` | `recur.lang.grid.report.v0` | `main.improvement.30.live-grid.todo.tracking` | tracked product destination |
+| `COORD` | `recur.coordinator.llm` | coordinator LLM plus `recur-watch` | planned external actor |
+| `DOGFOOD` | `main.improvement.30.dogfooding` | one bounded Recur Rust coordination run | planned validation |
+
+The short symbols above are local notation, not serialized identifiers. Future
+rows are provisional until their focused slice freezes a schema. New artifacts
+follow these naming layers:
+
+```text
+Eventness file identity   main.improvement.30.<slice>.<state>
+semantic trace identity   recur.lang.<capability>[.<version>]
+wire schema identity      recur-lang-<capability>-v<N>
+pure command              recur lang <query>
+stateful companion        recur-lang <action>
+```
+
+An Eventness filename answers where a slice is in its lifecycle. A semantic
+trace identity answers what concept crosses files. A wire schema answers which
+serialized contract a consumer received. They may point to the same work, but
+they are not interchangeable names.
 
 PRODUCT BOUNDARY
 ----------------
@@ -36,7 +234,11 @@ linker, build system, CI service, or replacement for target-language tools.
 
 ```text
 recur lang   = pure query, diagram, static check, report, and explanation
-recur-lang   = coordination actor, lane state, receipt validation, ACK/NAK
+recur-lang   = confirmed stateful executor that performs declared language work
+               and records ACK/NAK evidence
+recur-watch  = filesystem subscription and watcher-state inspection
+coordinator LLM = external async decision-maker that interprets watch events,
+                  validates next-step eligibility, and authorizes work
 workers      = humans or intelligences that create C#, Rust, HTML, CSS,
                JavaScript, TypeScript, Angular, React, MVC, CSHTML, or
                other project artifacts
@@ -46,7 +248,10 @@ toolchains   = dotnet, npm, cargo, linters, test runners, browsers, CI, etc.
 The standalone Recur executables do not need access to every compiler or
 linker. External workers and toolchains perform implementation, compilation,
 testing, linting, packaging, and benchmarking. They return small structured
-receipts that Recur can inspect and coordinate.
+receipts that `recur lang` can inspect. When asynchronous coordination is
+needed, a coordinator LLM consumes those facts through `recur-watch`, decides
+the next declared action, and asks `recur-lang` to execute that confirmed
+action.
 
 Earlier Julia examples that interpret algorithm bodies, and exploratory ideas
 about emitting Rust, remain useful language-design experiments. They do not
@@ -79,10 +284,55 @@ The useful Recur-specific combination is:
 - language-independent coordination across a mixed software repository;
 - integration with Recur hierarchy, trace-id, Eventness, Warp, and reveal.
 
+The single-operator case is first-class. One person or one intelligence can use
+the same compact model to answer: what is this block for, what exact input does
+it consume, what does it produce, what references it, what evidence supports it,
+and what Eventness state is it in? No lane fork, watcher, coordinator, or second
+worker is required for that explanation.
+
 This reduces structural hallucination and coordination drift. It does not make
 arbitrary implementation claims true. An intelligence can still produce
 incorrect C# or Rust that fits a valid output shape, so independent tests and
 verification lanes remain necessary.
+
+### Requirements, specialization, and coordination cost
+
+Recur Lang should be easy for a human or intelligence to propose from a clear
+requirement, but exact enough for the resulting proposal to be checked before
+workers act. For example:
+
+```text
+"annotate the map, compare current and researched routes, score the result"
+  -> MapDraft -> annotate -> MapContract
+  -> MapContract -> [route_now, progression]
+  -> [RoutePlan, ProgressionPlan] -> compare -> score -> ScoreReceipt
+```
+
+The proposal is not authority. The canonical model must still establish exact
+contracts, producers, consumers, fork membership, await gates, write scopes,
+and evidence requirements. `SGR1` and later pure queries then expose missing
+producers, invalid joins, unreachable specialists, and accidental cycles before
+coordination begins.
+
+This makes specialization explicit and reviewable:
+
+```text
+annotator        -> RegionLabelMap
+path planner     -> RoutePlan
+technology model -> ProgressionPlan
+runner simulator -> VerifiedRun
+scorer           -> ScoreReceipt
+```
+
+The same boundary can represent a person, an intelligence, a target-language
+worker, or a deterministic algorithm. A specialist receives the smallest useful
+projected context plus stable references it may expand; it returns one declared
+output and evidence rather than repeating broad prose coordination.
+
+Coordination must remain proportional to the task. A small one-file repair may
+cost less with one worker and ordinary tests. Lanes, receipts, and durable
+Eventness earn their overhead when work is parallel, long-running, high-context,
+cross-language, review-heavy, or likely to require handoff and integration.
 
 TRACE-ID AND RECUR LANG
 -----------------------
@@ -92,7 +342,8 @@ The three related surfaces have deliberately separate responsibilities:
 |---|---|
 | `recur trace-id` | Where does this identifier appear, and which relationships were declared near it? |
 | `recur lang` | Is this formal coordination program valid, and what does it mean? |
-| `recur-lang` | How should a valid coordination program advance through its lanes? |
+| `recur-lang` | Execute one confirmed declared action and record its outcome. |
+| coordinator LLM + `recur-watch` | Which declared action is eligible after a durable event? |
 
 `recur trace-id` is an open-world, language-independent scanner. It can follow
 one stable identifier through specifications, Rust, C#, Julia, web files,
@@ -105,8 +356,10 @@ Recur Lang is a closed-world formal model. `recur lang` parses and explains
 the contracts, blocks, lanes, joins, waits, feedback limits, write scopes, and
 required evidence declared by a coordination program. Missing or incompatible
 parts inside that boundary can invalidate the program. `recur-lang` is the
-future stateful actor that advances a valid program and records ACK/NAK state;
-it does not broaden the static model implicitly.
+stateful actor that advances a valid program and records ACK/NAK state. Its
+first shipped action is one bounded, receipt-backed Warp transition; broader
+lane coordination remains incremental. The actor does not broaden the static
+model implicitly.
 
 The integration point is durable identity. Recur Lang contracts, blocks,
 lanes, work orders, and receipts publish stable trace IDs. `trace-id` then
@@ -186,6 +439,28 @@ The declared write scope is useful in two ways:
 Recur itself must not claim enforcement when it only performed after-the-fact
 validation.
 
+### Worker ownership and coordinator routing
+
+A worker owns one declared WorkOrder, not the surrounding coordination problem.
+Its role is to read the projected input, perform the bounded work, publish its
+declared output and evidence, and surface unresolved questions. It MUST NOT
+silently expand its assignment, self-approve its result, invent downstream
+dependencies, or redefine its completion policy.
+
+The coordinator LLM owns assignment and verification routing. After a durable
+worker receipt arrives, it releases the declared next step: an independent test
+or review lane when separation matters, or a later bounded verification command
+for the same worker when the declared policy permits it. In both cases,
+verification is a distinct Eventness fact and must cite its tests or other
+evidence.
+
+`recur-watch` is an asynchronous wake-up mechanism, not an intelligence and not
+proof of completion. A watcher event causes the coordinator LLM to reread the
+immutable WorkOrder and durable receipt, validate the declared state, and decide
+whether a next command is eligible. The worker's job remains the declared lane
+slice; the coordinator decides what follows. `recur lang` performs none of this
+waiting, scheduling, or routing.
+
 ### Fan-out, joins, and composition
 
 One input may feed one function or several independent lanes:
@@ -206,6 +481,49 @@ integration await [
 
 A contracted group may itself become a reusable symbol, but expanding it must
 show the exact lanes, contracts, waits, source locations, and evidence rules.
+
+### Semantic flow and merge laws
+
+The compact notation needs explicit laws wherever independent results are
+combined. These are future language and runtime contracts, not behavior that
+the current bounded `CIR1` parser already promises. The pathing fixture is the
+red-first proving ground, especially its `assemble` block that merges paths
+and deduplicates pellets.
+
+1. **Type closure.** Every edge and join member resolves to one exact declared
+   contract. A result of one composition may feed the next block only through
+   a compatible named port or explicit adapter.
+2. **Causality and non-circular flow.** A consumer cannot be released before
+   its declared producer and wait gate are satisfied. Dependency cycles and
+   wait cycles are static findings, not conditions to discover by hanging a
+   coordinator.
+3. **Associativity, when declared.** A normalized collection merge may define
+   `merge(merge(A, B), C) == merge(A, merge(B, C))`. The language must not
+   assume this for arbitrary functions or joins; the relevant operator must
+   explicitly declare or inherit the law.
+4. **Commutativity, when declared.** Independent asynchronous completions may
+   be readiness-order independent, while authored port order remains preserved
+   for explanation. A merge is commutative only when its normalized semantic
+   result is the same for `merge(A, B)` and `merge(B, A)`.
+5. **Idempotence and retries.** Repeating the same qualified result must not
+   change an idempotent aggregate: `merge(A, A) == merge(A)`. A duplicate key
+   with a different value is a stable conflict/NAK, never an implicit choice.
+6. **Identity and empty work.** Each collection operator must define its empty
+   identity and the meaning of a zero-item scatter or join. The implementation
+   may not improvise this behavior at runtime.
+7. **Determinism and cumulative growth.** Equal source, normalized input, and
+   declared seed produce byte-equivalent normalized results. Adding one valid,
+   non-conflicting qualified branch may extend a cumulative aggregate; it may
+   not erase or reorder unrelated facts.
+8. **Scatter/gather cardinality.** A dynamic scatter over `N` qualified work
+   orders must produce exactly the declared qualified outputs, and its gather
+   must account for each required result exactly once.
+
+Initial red-first tests should therefore prove associative grouping,
+completion-order-independent normalized output, idempotent retries, identity
+behavior for empty work, deterministic output, conflicting-key rejection, and
+exact scatter/gather cardinality. These laws belong in the canonical model and
+its tests before a coordinator relies on them.
 
 ### Subsystem contraction and parent integration
 
@@ -441,10 +759,11 @@ recur lang grid <solution-or-run>
 recur lang grid <solution-or-run> --json
 ```
 
-The companion may render the changing control-room view while coordinating:
+The coordinator LLM may keep the changing control-room view current while
+coordinating from `recur-watch` events:
 
 ```text
-recur-lang coordinate <source> --view grid
+coordinator LLM -> recur-watch events + recur lang grid <source>
 ```
 
 `recur-watch` supplies active filesystem notifications. Core `recur watch`
@@ -535,8 +854,11 @@ Possible lanes:
 
 The Julia implementation may act as a reference oracle or contract harness.
 The Rust worker or CI environment owns `cargo`, `rustc`, tests, and benchmarks.
-Recur Lang coordinates and validates the resulting evidence; it does not need
-the Rust compiler inside its executable.
+`recur lang` statically validates the declared model and inspects resulting
+evidence; the coordinator LLM handles asynchronous routing; `recur-lang`
+performs the confirmed declared action and records its outcome. It does not
+need to bundle the Rust compiler: target-language tool execution remains a
+separately declared and explicitly confirmed executor capability.
 
 COMMAND DIRECTION
 -----------------
@@ -554,21 +876,59 @@ recur lang report <source-or-run>
 recur lang refs <symbol>
 ```
 
-Proposed companion forms:
+When needed, a coordinator LLM uses `recur-watch` wake-up events and the pure
+forms above to route and authorize work. `recur-lang` then executes the exact
+confirmed action and records the state transition; `recur lang` never performs
+that mutation.
+
+The first focused synchronous receipt-confirmation command is:
 
 ```text
-recur-lang coordinate <source>
-recur-lang coordinate <source> --view grid
-recur-lang assign <lane>
-recur-lang accept-receipt <receipt>
-recur-lang status <run>
+recur-lang warp <source> <scope> --eventness <exact-E0-file> \
+  --receipt <external-receipt> --confirm
 ```
 
-These are design shapes. Exact commands should be frozen only when a focused
-contract and test slice is opened.
+The first focused companion command is now frozen:
+
+```text
+recur-lang warp <source> <scope>
+recur-lang warp <source> <scope> \
+  --eventness <exact-E0-file> \
+  --receipt <external-receipt> \
+  --confirm
+```
+
+Without `--confirm`, `recur-lang warp` is a pure dry run that reports the
+declared `E0`, `dE`, `Ef`, source hash, and required receipt schema. A confirmed
+transition is deliberately narrow: it validates one root-contained E0
+artifact and one `recur-lang-warp-receipt-v1`, renames that artifact to the
+declared Ef identity, and writes one durable ACK or NAK status record. It does
+not yet execute the declared slice or invoke a target-language toolchain. A
+future work-execution action must remain explicit, source-bound, scoped, and
+confirmation-gated; it may not infer approval from a plan or mutate unrelated
+artifacts.
+
+The remaining companion commands above are design shapes. Their exact
+contracts should be frozen only when a focused test slice is opened.
 
 IMPLEMENTATION SLICES
 ---------------------
+
+The slice number describes dependency order, not permission to activate every
+later behavior. Each slice opens one bounded Eventness artifact, freezes its
+contract, verifies it, and only then moves that artifact to a completed state.
+
+| Slice | Symbol | Roadmap state | Reason for position |
+|---|---|---|---|
+| 0 | `I30` seed | complete | Preserve the proposal, fixtures, and product boundary before implementation. |
+| 1a | `WIR1` | complete | Give Warp one canonical, receipt-bound model before adding more syntax. |
+| 1b | `CIR1` | complete | Make lane communication exact before analyzing or scheduling it. |
+| 2 | `SGR1` | current | Derive soundness facts once from `CIR1` for every later consumer. |
+| 3 | `LANGQ` | planned | Expose pure views only after their model and analysis are stable. |
+| 4 | `GRID0` | `todo.tracking`; implementation gated by 2–3 | Keep the visible coordination goal explicit without creating a second source of truth. |
+| 5 | `COORD` | Warp increment complete; multi-lane actor planned | Mutate state only through frozen schemas, external evidence, and ACK/NAK. |
+| 6 | `DOGFOOD` | planned | Validate usefulness on one real repository change after the boundaries exist. |
+| 7–8 | integration and IDE | future | Scale and presentation come after semantics and evidence. |
 
 ### Slice 0: Preserve the design and seed
 
@@ -588,13 +948,55 @@ IMPLEMENTATION SLICES
 - Decide canonical identity and explicit adapter behavior.
 - Define stable diagnostics before expanding execution behavior.
 
-### Slice 2: Static graph report
+The first Goldilocks sub-slice freezes only the existing 0.1 Warp boundary as
+`recur-lang-warp-ir-v1`: exact local/canonical contracts, one function and
+flow, Eventness edges, `E0 -> dE -> Ef`, source hash, source spans, and stable
+`RLIR001` through `RLIR011` diagnostics. The remaining coordination IR forms
+above are intentionally still open. Its manually completed contract is
+`docs/main.improvement.30.warp-ir.contract.complete.md`.
+
+The second sub-slice freezes the first concurrent boundary as
+`recur-lang-concurrent-ir-v1`: named message contracts, projected coordinator
+ports, lane input/output messages and policies, the initial fork, ordered
+typed awaits, downstream consumers, reachability, and stable `RCIR001` through
+`RCIR010` diagnostics. Its manually completed contract is
+`docs/main.improvement.30.concurrent-ir.contract.complete.md`. It is a
+read-only communication graph, not a scheduler.
+
+Slice 1 is therefore foundationally useful but not globally complete. Systems,
+subsystems, imports, adapters, feedback, watcher topology, and the remaining
+0.2 syntax must still arrive through later bounded contracts.
+
+### Slice 2: Static graph report — current
 
 - Build dependency and wait graphs from the canonical IR.
-- Add cycle, unreachable-lane, missing-join, contract, and stale subsystem
-  import checks.
+- Add dependency-cycle, wait-cycle, unreachable-lane, and unsatisfied-join
+  findings for the CIR1 boundary.
 - Generate the first source-hashed coordination report.
 - Add Julia fixtures and focused tests for accepted and rejected graphs.
+
+`SGR1` is current because `CIR1` now provides stable typed nodes, edges, fork
+members, awaits, consumers, spans, and source hashes. The graph report should
+remain a deterministic read-only projection. It must not schedule lanes or
+advance Eventness.
+
+Stale subsystem imports remain a later graph-report extension because `CIR1`
+does not yet model systems, imports, or versioned public boundaries.
+
+`demos/pathing/main.lang.pathing.recur` is a red-first language-conformance
+fixture for the broader destination: one-input broadcast, distinct parallel
+functions, dynamic per-power-node scatter, qualified outputs, local graph
+views, and deterministic joins. Its source-shape tests are active while its
+parser, graph, and execution contracts remain `@test_broken`. Those future
+contracts guide later slices without broadening the current CIR1-only `SGR1`.
+
+The fixture also now contains an executable Julia prototype with manifest-backed
+ASCII topology, terrain, current-route, and optimum-route layers aligned to a
+portable bitmap. It records capability negotiation at each selected terrain
+stage and validates glyph definitions, cell-to-image alignment, and deterministic
+route costs. This is downstream evidence for future contract and query design;
+it does not expand SGR1 beyond `ConcurrentIr` or make the `0.3` parser/runtime
+shipped behavior.
 
 ### Slice 3: Pure `recur lang` queries
 
@@ -602,6 +1004,11 @@ IMPLEMENTATION SLICES
   surfaces.
 - Preserve core Recur purity.
 - Make text and JSON projections agree.
+- Make `report` the fast orientation projection: explain header contracts and
+  descriptions, body bindings and flow, footer checks and Eventness, plus the
+  exact upstream/downstream references for a source or selected symbol.
+- Preserve one source-hashed IR interpretation so a human or intelligence can
+  resolve what is what without manually reconciling header, body, and footer.
 
 ### Slice 4: Living master work report
 
@@ -609,18 +1016,30 @@ IMPLEMENTATION SLICES
   dependency, evidence, attempt, watcher, and freshness fields.
 - Render `recur lang grid` as a pure snapshot from the canonical model.
 - Rebuild the same snapshot after process restart using only durable state.
-- Add a live `recur-lang coordinate --view grid` projection after snapshot and
-  JSON behavior are stable.
+- Let a coordinator LLM refresh a live grid only after snapshot and JSON
+  behavior are stable; the rendered data remains derived from durable state.
 - Support drill-down from grid cell to lane, WorkOrder, receipt, and timeline.
 - Collapse `coordination.current` into a durable `coordination.complete` report.
 
-### Slice 5: Companion receipts and Eventness
+`GRID0` is the tracked product destination. Its first implementation pull
+remains a pure, deterministic snapshot after it is promoted back to
+`todo.current`. Live refresh waits until `SGR1` and the shared pure query
+projection exist, so the display cannot become an independent state store or
+soundness engine.
 
-- Add the smallest useful `recur-lang` coordinator surface.
+### Slice 5: Receipt confirmation and Eventness
+
+- Add the smallest useful synchronous receipt-confirmation surface.
 - Accept versioned external receipts through files or standard input.
 - Validate required evidence and actual changed files against lane declarations.
 - Write ACK/NAK Eventness that core Recur can inspect.
 - Do not invoke arbitrary target-language toolchains.
+
+The first part of this slice is implemented as
+`recur-lang-warp-plan-v1`, `recur-lang-warp-receipt-v1`, and
+`recur-lang-warp-status-v1`. File receipts are accepted; standard input,
+lane write-scope validation, multi-lane coordination, and arbitrary 0.2
+coordination syntax remain future slices.
 
 ### Slice 6: Recur Rust dogfooding
 
@@ -683,19 +1102,28 @@ TRACE-ID LINES
 ```text
 defines: main.improvement.30 recur lang coordination contracts for bounded multi-intelligence lanes
 defines: recur.lang.control-plane language-independent static orchestration and progressive disclosure model
-defines: recur-lang.coordinator companion lane state receipt validation and ACK/NAK actor
+defines: recur.coordinator.llm external async actor using recur-watch wake-ups and recur lang projections
 defines: recur.lang.soundness-boundary orchestration soundness is internal while implementation correctness requires external evidence
 defines: recur.lang.master.work.report living block grid and completed audit report projected from canonical coordination Eventness
 defines: recur.lang.trace.boundary trace-id discovers open-world repository lineage while Recur Lang validates closed-world coordination semantics
 defines: recur.lang.subsystem.composition accepted child models contract into versioned blocks with separate parent integration Eventness
+defines: recur.lang.warp.ir.v1 versioned canonical Warp contract with source hash spans Eventness and stable diagnostics
+defines: recur.lang.concurrent.ir.v1 read-only typed lane message fork await and reachability contract
+defines: recur.lang.static.graph.report.v1 provisional next read-only dependency wait and soundness projection
+defines: recur.lang.requirements.translation bounded requirement-to-contract-and-graph proposal discipline
+defines: recur.lang.specialization.boundary projected context declared output and evidence for one specialist
+defines: recur.lang.coordination.proportionality coordination overhead must remain smaller than the work it coordinates
 consumes: main.lang compact input function output contracts and canonical bundle aliases
 consumes: main.recur.purity.decision core recur pure query and companion actor split
 consumes: workflow.pattern.docs.tests.rust.verify.complete recurring docs tests Rust verification loop
+consumes: main.improvement.30.warp-ir.contract.complete accepted WIR1 foundation
+consumes: main.improvement.30.concurrent-ir.contract.complete accepted CIR1 foundation
 produces: recur.lang.coordination-report source-hashed cycles joins scopes evidence and Eventness status
 produces: recur.lang.formal-diagram canonical AST projection for humans and intelligences
-produces: main.improvement.30.live-grid active focused cursor for the living master work report
+produces: main.improvement.30.static-graph active SGR1 contract-freeze cursor
+produces: main.improvement.30.live-grid tracked destination for the living master work report
 triggers: main.improvement.30.contract future versioned coordination IR and JSON schema
-triggers: main.improvement.30.static-analysis future cycle reachability join and lane-scope report
+triggers: main.improvement.30.static-graph.todo.current cycle reachability join and wait report over CIR1
 triggers: main.improvement.30.dogfooding future Recur Rust algorithm validation lane
 ```
 
@@ -717,11 +1145,16 @@ RELATED
 - `docs/main.lang.readme.md`
 - `docs/main.command.lang.readme.md`
 - `docs/main.command.trace-id.readme.md`
+- `docs/main.improvement.30.warp-ir.contract.complete.md`
+- `docs/main.improvement.30.concurrent-ir.contract.complete.md`
+- `docs/main.improvement.30.static-graph.todo.current.md`
 - `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`
-- `docs/main.improvement.30.live-grid.todo.current.md`
+- `docs/main.improvement.30.live-grid.todo.tracking.md`
 - `docs/main.recur.purity.decision.md`
 - `docs/main.improvement.delivery-loop.recurring.md`
 - `demos/main.lang/main.lang.algorithm-lab.recur`
 - `demos/main.lang/main.lang.skippy-watch-coordination.recur`
+- `demos/pathing/main.lang.pathing.recur`
+- `julia-tests/main.lang.pathing.test.jl`
 - `demos/main.lang/main.lang.runtime.jl`
 - `julia-tests/main.lang.test.jl`

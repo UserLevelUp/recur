@@ -174,6 +174,23 @@ When adding new features to `recur`:
 4. Run tests: `julia runtests.jl --verbose`
 5. Ensure all tests pass
 
+### Red-first language contracts
+
+`main.lang.pathing.test.jl` demonstrates the repository convention for syntax
+and runtime behavior that is intentionally specified before implementation:
+
+- active `@test` assertions freeze the source fixture;
+- `@test_broken` assertions freeze unsupported parser, graph, and execution
+  contracts;
+- an unexpected pass means the capability landed and the assertion should be
+  promoted to `@test`.
+
+Run it directly with:
+
+```bash
+julia --startup-file=no main.lang.pathing.test.jl
+```
+
 ## License
 
 MIT - Same as recur

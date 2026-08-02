@@ -168,7 +168,7 @@ end
         command_doc,
     )
     @test occursin(
-        "recur-lang   = coordinate, await Eventness, validate receipts, write ACK/NAK",
+        "recur-lang   = execute confirmed declared action, write state and ACK/NAK",
         command_doc,
     )
     @test occursin("Expansion and contraction", command_doc)
@@ -226,7 +226,7 @@ end
             @__DIR__,
             "..",
             "docs",
-            "main.improvement.30.live-grid.todo.current.md",
+            "main.improvement.30.live-grid.todo.tracking.md",
         ),
         String,
     )
@@ -254,8 +254,8 @@ end
         "Neither `recur` nor `recur-lang` needs to contain `dotnet`, Node, Cargo, Git,",
         specification,
     )
-    @test occursin("Status: `todo.current`", live_grid_cursor)
-    @test occursin("Priority: `important`", live_grid_cursor)
+    @test occursin("Status: `todo.tracking`", live_grid_cursor)
+    @test occursin("Priority: `important / tracked`", live_grid_cursor)
     @test occursin(
         "live grid == snapshot grid == completed report",
         live_grid_cursor,

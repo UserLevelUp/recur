@@ -45,7 +45,9 @@ recur-lang   = coordination actor, lane state, receipt validation, ACK/NAK
 runtime Eventness without executing code or writing state. The current Julia
 CLI interprets the algorithm fixture as a language-design spike. Production
 `recur-lang` does not need to bundle target-language compilers, linkers, or
-build systems.
+build systems. It is nevertheless the stateful companion: confirmed
+`recur-lang` actions do the declared language-level work and record the durable
+outcome, while `recur lang` only queries and verifies.
 
 See `docs/main.command.lang.readme.md` for the command contract.
 
@@ -123,6 +125,31 @@ julia --startup-file=no demos/main.lang/main.lang.cli.jl run all
 
 Inspection and execution commands also accept `--json`.
 
+## Run the bounded `recur-lang` Warp companion
+
+Inspect the declared transition without changing any files:
+
+```powershell
+cargo run --locked --bin recur-lang -- `
+  warp demos/main.lang/main.lang.algorithm-lab.recur gcd --json
+```
+
+A confirmed transition additionally requires the exact current Eventness file
+and a `recur-lang-warp-receipt-v1` bound to the source hash from the dry run:
+
+```powershell
+cargo run --locked --bin recur-lang -- `
+  warp demos/main.lang/main.lang.algorithm-lab.recur gcd `
+  --eventness docs/demo.algorithm.gcd.todo.current.md `
+  --receipt receipts/gcd.001.md `
+  --confirm
+```
+
+The writer renames only the named E0 artifact to Ef and records the result
+beneath `.recur/lang/`. It does not execute `gcd.f`, Cargo, Julia, Git, or any
+other worker command. The external receipt is evidence supplied by a worker;
+its shape alone is not proof that the worker is trustworthy.
+
 ## Run the Julia tests
 
 ```powershell
@@ -144,8 +171,9 @@ currently resolves to a trusted Julia intrinsic. Bodies under `expand` are
 readable language proposals rather than compiled code.
 
 `main.lang.skippy-watch-coordination.recur` is a 0.2 design fixture rather than
-accepted 0.1 parser input. It demonstrates the Improvement 30 direction:
-coordinator and worker contracts, watch/work state machines, external tool
-receipts, bounded feedback, and generated orchestration reports. Its formal
-companion is
+accepted Julia 0.1 parser input. Rust `recur-lang-concurrent-ir-v1` now parses
+its named contracts, coordinator output ports, lanes, policies, fork, and
+ordered awaits as a read-only communication graph. Watchers, state machines,
+external receipt handling, bounded feedback, and generated orchestration
+reports remain design targets. Its formal companion is
 `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`.

@@ -1,12 +1,13 @@
 # Improvement 30 Watch Coordination Contract v0
 
-Status: `todo.future-plan` (formal design fixture; not implemented language)
+Status: `todo.future-plan` (Level 0/1 read-only concurrent IR implemented;
+watch/runtime coordination not implemented)
 Date: 2026-07-24
 Source: `demos/main.lang/main.lang.skippy-watch-coordination.recur`
 
 ## Purpose
 
-Define a precise, progressively disclosed model for one coordinator and
+Define a precise, progressively disclosed model for one coordinator LLM and
 multiple long-lived intelligence lanes that communicate through filesystem
 Eventness and `recur-watch`.
 
@@ -14,7 +15,7 @@ This contract separates three things that are easy to blur together:
 
 ```text
 watcher process   = recur-watch remains subscribed and emits file events
-lane controller   = watching / working / awaiting-guidance state machine
+coordinator LLM   = watches events and owns the routing state machine
 intelligence      = human or LLM that performs one bounded work order
 ```
 
@@ -24,6 +25,11 @@ and receipts make those duplicate or delayed notifications safe to process.
 
 Normative terms `MUST`, `MUST NOT`, `SHOULD`, and `MAY` describe the intended
 contract. The current Julia `main.lang` parser does not yet accept this syntax.
+The Rust `recur-lang-concurrent-ir-v1` parser now accepts only named contracts,
+coordinator output ports, lane message/policy declarations, and the compact
+fork/await flow. It performs no scheduling, watching, receipt acceptance, or
+state-machine execution; those asynchronous responsibilities belong to the
+coordinator LLM using `recur-watch`.
 
 ## Level 0: Compact Process
 
@@ -93,15 +99,14 @@ recur lang grid solution
 recur lang grid solution --json
 ```
 
-The companion may keep the same projection alive:
+The coordinator LLM may keep the same projection alive using watcher events and
+pure language projections:
 
 ```powershell
-recur-lang coordinate `
-  demos/main.lang/main.lang.skippy-watch-coordination.recur `
-  --view grid
+recur-watch ... ; recur lang grid demos/main.lang/main.lang-skippy-watch-coordination.recur
 ```
 
-Restarting the companion MUST reconstruct an equivalent normalized JSON grid
+Restarting the coordinator view MUST reconstruct an equivalent normalized JSON grid
 from durable files. Watcher events wake the renderer, but the renderer rereads
 and validates those files before changing a cell.
 
@@ -125,6 +130,16 @@ Every lane MUST declare:
 - required evidence receipts;
 - dependencies on prior receipts;
 - a familiar description of its bounded work.
+
+The worker performs this declared WorkOrder and no unrequested coordination
+role. It publishes ACK, question, and receipt facts only in its worker namespace.
+It does not assign another lane, mark itself verified, manufacture an acceptance
+state, or release downstream work.
+
+The coordinator consumes the durable receipt and routes the declared verification
+step. That step may be an independent test/review lane or a later, separately
+declared verification command for the same worker. Either shape MUST publish
+separate verification evidence before integration or acceptance.
 
 `allow write` governs project artifacts. A footer `channel` separately grants
 the publisher permission to create only its declared protocol prefix inside
@@ -389,7 +404,7 @@ The worker environment runs those commands. It returns `ToolReceipt` records.
 Neither `recur` nor `recur-lang` needs to contain `dotnet`, Node, Cargo, Git,
 a browser, a compiler, or a linker.
 
-## Coordinator Semantics
+## Coordinator LLM Semantics
 
 Skippy MUST:
 
@@ -397,11 +412,13 @@ Skippy MUST:
 2. wait for watcher readiness;
 3. publish one immutable order per initially ready lane;
 4. wait asynchronously for ACK, question, and receipt events;
-5. answer questions with a new round rather than mutating a closed round;
-6. dispatch `review_bird` only after required implementation receipts exist;
-7. dispatch `git_monkey` only after review acceptance;
-8. produce either a merge-ready candidate or a bounded NAK report;
-9. publish a session-complete event to every lane.
+5. validate receipt content and declared evidence;
+6. route the declared verification command or verifier lane only after required
+  implementation receipts exist;
+7. dispatch `review_bird` only after required verification evidence exists;
+8. dispatch `git_monkey` only after review acceptance;
+9. produce either a merge-ready candidate or a bounded NAK report;
+10. publish a session-complete event to every lane.
 
 Skippy MUST NOT:
 
@@ -561,9 +578,9 @@ The first executable contract tests should cover:
 
 ```text
 recur lang   = inspect and statically check this program
-recur-lang   = coordinate declared lanes and validate file receipts
 recur-watch  = active blocking filesystem subscription
 recur watch  = pure watcher-state query
+coordinator LLM = await declared events, validate receipts, and route work
 workers      = perform implementation using external tools
 ```
 

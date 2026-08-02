@@ -1,7 +1,7 @@
 # Improvement 30: Living Master Work Report
 
-Status: `todo.current`
-Priority: `important`
+Status: `todo.tracking` (product destination; implementation prerequisites active)
+Priority: `important / tracked`
 Date: 2026-07-24
 Parent: `README.CORE.IMPROVEMENT30.md`
 Contract: `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`
@@ -26,16 +26,16 @@ git-monkey       git.i(a)             WATCH        -
 Overall          implementation       ACTIVE       merge-ready: false
 ```
 
-## Why This Is Current
+## Why This Is Tracked
 
 The grid turns contracts, parallel lanes, watcher state, WorkOrders, receipts,
 and Eventness into one immediately readable control-room view. It also provides
 the missing bridge between live coordination and a durable explanation of how
 the final branch or commit set was produced.
 
-This is important enough to track now, but it should be built in bounded
-slices. The continuous display must not become an independent dashboard state
-store.
+This remains important enough to track, but `SGR1` and the shared pure query
+projection come first. The continuous display must not become an independent
+dashboard state store or duplicate graph-soundness engine.
 
 ## Governing Invariant
 
@@ -140,7 +140,8 @@ validates durable state before changing a cell.
 ## Eventness Lifecycle
 
 ```text
-main.improvement.30.live-grid.todo.current
+main.improvement.30.live-grid.todo.tracking
+  -> main.improvement.30.live-grid.todo.current
   -> main.improvement.30.live-grid.contract.complete
   -> main.improvement.30.live-grid.snapshot.complete
   -> main.improvement.30.live-grid.live-view.complete
@@ -194,11 +195,21 @@ the grid continuously.
 - no process-local state that cannot be rebuilt;
 - no separate dashboard database.
 
-## Warp
+## Tracking Gate
+
+The next transition only promotes the grid into active implementation:
+
+```text
+E0(main.improvement.30.live-grid.todo.tracking)
+  -> dE(SGR1 complete and shared pure query projection available)
+  -> Ef(main.improvement.30.live-grid.todo.current)
+```
+
+After promotion, its bounded implementation Warp remains:
 
 ```text
 E0(main.improvement.30.live-grid.todo.current)
-  -> dE(grid-report-v0 contract and pure snapshot)
+  -> dE(freeze grid-report-v0 contract and pure snapshot)
   -> Ef(main.improvement.30.live-grid.contract.complete)
 ```
 
@@ -206,7 +217,7 @@ E0(main.improvement.30.live-grid.todo.current)
 
 ```powershell
 recur tree "main.improvement.30.live-grid" -d docs/
-recur files "main.improvement.30.**.todo.current" -d docs/
+recur files "main.improvement.30.**.todo.tracking" -d docs/
 recur files "main.lang.skippy-watch-coordination" -d demos/main.lang/
 recur trace-id "recur.lang.master.work.report" --scope "**" --ext ".md" -d .
 ```
@@ -214,12 +225,12 @@ recur trace-id "recur.lang.master.work.report" --scope "**" --ext ".md" -d .
 ## Trace-Id Lines
 
 ```text
-defines: main.improvement.30.live-grid current important lane for the living master work report
+defines: main.improvement.30.live-grid tracked product destination for the living master work report
 defines: recur.lang.master.work.report dynamic lane grid and durable completed coordination audit
 defines: recur.lang.grid.report.v0 future versioned snapshot and JSON contract
 consumes: main.improvement.30 Recur Lang coordination control-plane proposal
 consumes: main.improvement.30.contract.watch-coordination-v0 formal watch work receipt and join contract
 consumes: main.command.watch recur-watch active subscription and pure watcher state query
 produces: solution.coordination.current live report reconstructed from coordination Eventness
-triggers: main.improvement.30.live-grid.contract freeze grid-report-v0 before continuous rendering
+triggers: main.improvement.30.live-grid.todo.current after SGR1 and shared pure query prerequisites
 ```
