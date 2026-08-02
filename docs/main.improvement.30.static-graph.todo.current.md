@@ -128,6 +128,11 @@ execution assertions are `@test_broken` because those capabilities exceed
 `CIR1`. They do not expand this slice: `SGR1` still consumes the accepted
 concurrent IR and adds no new parser.
 
+The fixture's executable Julia prototype additionally demonstrates image-aligned
+ASCII map layers, terrain capability negotiation, and deterministic route-cost
+comparison. That evidence informs later contract and query work only. It is not
+an SGR1 input and must not cause this CIR1-only analyzer to parse `0.3` source.
+
 ## Final-State Alignment
 
 The imagined final state remains achievable:

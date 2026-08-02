@@ -1,0 +1,40 @@
+# Red-first invalid fixture: an input bundle must not hide feedback from a
+# scope's output back into one of its own named sub-inputs.
+
+recur 0.3 coordination SubInputCycle
+
+header {
+  contract LevelRequest {
+    id: Text
+  }
+
+  contract Level {
+    id: Text
+  }
+
+  scope load {
+    i(a) := LevelRequest
+    o(b) := Level
+    f : i(a) -> o(b) ~ "Load one level"
+  }
+
+  scope enrich {
+    i(c) := (
+      level: load.o(b),
+      previous: enrich.o(d)
+    )
+    o(d) := Level
+    f : i(c) -> o(d) ~ "Enrich one level"
+  }
+
+  graph solution sync {
+    solution.i(a) -> load.i(a) delivery sync
+    load.o(b) -> enrich.i(c).level delivery sync
+    enrich.o(d) -> solution.o(d) delivery sync
+  }
+}
+
+footer {
+  check no_sub_input_cycles
+  report static_graph
+}

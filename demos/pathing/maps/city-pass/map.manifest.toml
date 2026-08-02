@@ -1,0 +1,28 @@
+schema = "pathing-ascii-map-v1"
+map_id = "city-pass"
+width = 35
+height = 15
+image = "city-pass.ppm"
+image_width = 140
+image_height = 60
+
+[scale]
+pixels_per_cell_x = 4
+pixels_per_cell_y = 4
+
+[topology]
+"O" = "city or powerup"
+"." = "one lane"
+"+" = "crossing lanes"
+"=" = "two shared lanes"
+"E" = "three shared lanes"
+
+[terrain]
+"O" = "city or powerup location"
+"~" = "glide-gated ravine"
+"^" = "stepped terrain"
+
+[route]
+"O" = "city or powerup endpoint"
+"@" = "player"
+"*" = "selected route"

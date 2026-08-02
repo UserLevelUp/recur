@@ -45,7 +45,9 @@ recur-lang   = coordination actor, lane state, receipt validation, ACK/NAK
 runtime Eventness without executing code or writing state. The current Julia
 CLI interprets the algorithm fixture as a language-design spike. Production
 `recur-lang` does not need to bundle target-language compilers, linkers, or
-build systems.
+build systems. It is nevertheless the stateful companion: confirmed
+`recur-lang` actions do the declared language-level work and record the durable
+outcome, while `recur lang` only queries and verifies.
 
 See `docs/main.command.lang.readme.md` for the command contract.
 

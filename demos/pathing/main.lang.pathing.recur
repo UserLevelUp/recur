@@ -98,6 +98,150 @@ header {
     checks: List<CheckReceipt>
   }
 
+  contract MapImage {
+    id: Text
+    source: Text
+    width: Int
+    height: Int
+    source_hash: Text
+  }
+
+  contract RegionLabel {
+    id: Text
+    terrain: Text
+    baseline_difficulty: Text
+    required_capability: Text
+  }
+
+  contract TerrainTransition {
+    from_region: Text
+    to_region: Text
+    movement: Text
+    base_cost: Int
+    required_capability: Text
+  }
+
+  contract Technology {
+    id: Text
+    capability: Text
+    carrier: Text
+    research_cost: Int
+  }
+
+  contract RunnerProfile {
+    id: Text
+    innate_capabilities: List<Text>
+    equipped_capabilities: List<Text>
+  }
+
+  contract ScenarioDraft {
+    image: MapImage
+    regions: List<RegionLabel>
+    transitions: List<TerrainTransition>
+    runner: RunnerProfile
+    technologies: List<Technology>
+    research_budget: Int
+    start_region: Text
+    goal_region: Text
+  }
+
+  contract MapContract {
+    map_id: Text
+    source_hash: Text
+    regions: List<RegionLabel>
+    transitions: List<TerrainTransition>
+    start_region: Text
+    goal_region: Text
+    baseline_profile: Text
+  }
+
+  contract PlayableScenario {
+    map: MapContract
+    runner: RunnerProfile
+    technologies: List<Technology>
+    research_budget: Int
+  }
+
+  contract RoutePlan {
+    id: Text
+    regions: List<Text>
+    active_capabilities: List<Text>
+    travel_cost: Int
+    research_cost: Int
+    blocked: Bool
+  }
+
+  contract ProgressionPlan {
+    technology: Technology
+    carrier: Text
+    route: RoutePlan
+    total_cost: Int
+  }
+
+  contract RouteComparison {
+    route_now: RoutePlan
+    progression: ProgressionPlan
+    recommended: Text
+  }
+
+  contract ScoreReceipt {
+    map_hash: Text
+    selected_plan: Text
+    route_score: Int
+    research_score: Int
+    total_score: Int
+    next_map_unlocked: Bool
+  }
+
+  contract ProtoMapRequest {
+    width: Int
+    height: Int
+    research_cost: Int
+    player: Text
+  }
+
+  contract AsciiMapLayer {
+    name: Text
+    rows: List<Text>
+  }
+
+  contract MapLabelAnchor {
+    notation: Text
+    x: Int
+    y: Int
+    description: Text
+  }
+
+  contract TerrainRule {
+    terrain: Text
+    expression: Text
+    required_capability: Text
+    accessible_cost: Int
+  }
+
+  contract TerrainDecision {
+    x: Int
+    y: Int
+    terrain: Text
+    capability: Text
+    outcome: Text
+    cost: Int
+  }
+
+  contract LayeredProtoMap {
+    topology: AsciiMapLayer
+    terrain: AsciiMapLayer
+    current_route: AsciiMapLayer
+    optimum_route: AsciiMapLayer
+    labels: List<MapLabelAnchor>
+    terrain_rules: List<TerrainRule>
+    current_decisions: List<TerrainDecision>
+    optimum_decisions: List<TerrainDecision>
+    current_cost: Int
+    optimum_travel_cost: Int
+    research_cost: Int
+  }
+
   scope topology {
     i(a) := MapRequest
     o(b) := MazeGraph
@@ -174,6 +318,48 @@ header {
     f : i(m) -> o(n) ~ "Verify the generated Pac-Man path map"
   }
 
+  # The first tech-tree slice is deliberately tiny: creator validation freezes
+  # an image-derived map before current and researched routes are compared.
+
+  scope creator {
+    i(a) := ScenarioDraft
+    o(b) := PlayableScenario
+    f : i(a) -> o(b) ~ "Validate labels and publish one immutable playable map"
+  }
+
+  scope route_now {
+    i(b) := creator.o(b)
+    o(c) := RoutePlan
+    f : i(b) -> o(c) ~ "Find the best route with currently active capabilities"
+  }
+
+  scope progression {
+    i(b) := creator.o(b)
+    o(d) := ProgressionPlan
+    f : i(b) -> o(d) ~ "Research and equip one affordable movement technology"
+  }
+
+  scope compare {
+    i(e) := join(
+      route_now.o(c),
+      progression.o(d)
+    )
+    o(f) := RouteComparison
+    f : i(e) -> o(f) ~ "Choose travel now or invest in capability first"
+  }
+
+  scope score {
+    i(f) := compare.o(f)
+    o(g) := ScoreReceipt
+    f : i(f) -> o(g) ~ "Score the verified choice and decide the next-map unlock"
+  }
+
+  scope render_proto {
+    i(a) := ProtoMapRequest
+    o(b) := LayeredProtoMap
+    f : i(a) -> o(b) ~ "Generate topology terrain current and optimum ASCII map layers"
+  }
+
   graph solution async {
     solution.i(a) -> topology.i(a) delivery sync
 
@@ -200,6 +386,28 @@ header {
     assemble.o(m) -> verify.i(m) delivery sync
     verify.o(n) -> solution.o(n) delivery sync
   }
+
+  graph tech_tree_slice async {
+    tech_tree_slice.i(a) -> creator.i(a) delivery sync
+
+    creator.o(b) -> fork [
+      route_now.i(b),
+      progression.i(b)
+    ] dispatch parallel delivery async
+
+    await all [
+      route_now.o(c),
+      progression.o(d)
+    ] -> compare.i(e)
+
+    compare.o(f) -> score.i(f) delivery sync
+    score.o(g) -> tech_tree_slice.o(g) delivery sync
+  }
+
+  graph prototype_map sync {
+    prototype_map.i(a) -> render_proto.i(a) delivery sync
+    render_proto.o(b) -> prototype_map.o(b) delivery sync
+  }
 }
 
 body {
@@ -213,6 +421,12 @@ body {
   bind crumbs.f    -> pathing.pellet.path_interior
   bind assemble.f  -> pathing.map.deduplicated_union
   bind verify.f    -> pathing.map.verify
+  bind creator.f     -> pathing.creator.publish_validated_map
+  bind route_now.f   -> pathing.route.current_capabilities
+  bind progression.f -> pathing.tech.affordable_shoe_upgrade
+  bind compare.f     -> pathing.route.compare_current_and_progression
+  bind score.f       -> pathing.score.route_and_unlock
+  bind render_proto.f -> pathing.proto_map.generate
 
   memo solution {
     intent "Generate a connected Pac-Man-like path map from one seed"
@@ -224,11 +438,32 @@ body {
     exclude ["spawn tile", "power-node tiles"]
     deduplicate "One normal pellet per tile even where power paths overlap"
   }
+
+  memo tech_tree_slice {
+    fixture "Two routes, one glide-gated transition, and one shoe technology"
+    creator_gate "No route evaluation before labels and source hash are frozen"
+    route_now "The direct glide route is blocked for the baseline runner"
+    progression "Research and equip glide shoes within the available budget"
+    decision "The progression route has lower total cost than the open detour"
+    scoring "A source-bound score receipt gates the next map"
+    determinism "Equal draft, runner, budget, and seed produce the same receipt"
+  }
+
+  memo render_proto.f {
+    topology "O city or powerup; . one lane; + crossing; = two shared lanes; E three shared lanes"
+    labels "i(a) and i(b) are inputs; f(a) and f(b) are functions; o(c) is output"
+    terrain "~ requires glide; ^ costs extra unless negotiated by runner capability"
+    expression "terrain_cost(tile, runner) is blocked unless required capability is active"
+    negotiation "Each selected route records terrain capability outcome and cost by stage"
+    layers ["topology", "terrain", "current_route", "optimum_route"]
+    city_rule "Path discovery starts and ends at cities even when routes share intermediate tiles"
+  }
 }
 
 footer {
   check graph_connected
   check no_dependency_cycles
+  check no_sub_input_cycles
   check no_wait_cycles
   check every_power_reachable
   check power_nodes_are_separated
@@ -236,10 +471,23 @@ footer {
   check every_pellet_is_on_a_corridor
   check no_duplicate_pellets
   check deterministic_for_seed
+  check creator_map_is_valid
+  check map_contract_matches_image_hash
+  check researched_capability_is_equipped
+  check route_now_differs_from_progression_route
+  check score_receipt_matches_map_contract
+  check next_map_requires_verified_score
+  check proto_map_has_stable_dimensions
+  check proto_map_uses_declared_glyphs
+  check proto_map_routes_connect_cities
+  check optimum_route_respects_terrain_capability
 
   report static_graph
   report local_graph for route
   report generated_map
+  report tech_tree_route_comparison
+  report tech_tree_score_receipt
+  report layered_proto_map
 
   event solution {
     consume demo.pathing.request
@@ -252,6 +500,30 @@ footer {
     E0(demo.pathing.todo.current)
       -> dE(solution.graph)
       -> Ef(demo.pathing.complete)
+
+  event tech_tree_slice {
+    consume demo.pathing.tech.tree.scenario.draft
+    trigger demo.pathing.tech.tree.evaluate
+    produce demo.pathing.tech.tree.score.receipt
+    state demo.pathing.tech.tree.slice.complete
+  }
+
+  warp tech_tree_slice:
+    E0(demo.pathing.tech.tree.slice.todo.current)
+      -> dE(tech_tree_slice.graph)
+      -> Ef(demo.pathing.tech.tree.slice.complete)
+
+  event prototype_map {
+    consume demo.pathing.proto.map.request
+    trigger demo.pathing.proto.map.generate
+    produce demo.pathing.proto.map.layers
+    state demo.pathing.proto.map.complete
+  }
+
+  warp prototype_map:
+    E0(demo.pathing.proto.map.todo.current)
+      -> dE(prototype_map.graph)
+      -> Ef(demo.pathing.proto.map.complete)
 }
 
 # defines: demo.pathing formal fan-out scatter join and path-generation fixture
@@ -259,3 +531,7 @@ footer {
 # consumes: recur.lang.concurrent.ir.v1 exact typed message and await conventions
 # produces: recur.lang.static.graph.report.v1 future graph and local-view acceptance fixture
 # triggers: demo.pathing.tests red-first Julia parser graph and execution contracts
+# defines: demo.pathing.tech.tree first creator route progression score and unlock fixture
+# produces: demo.pathing.tech.tree.score.receipt source-bound first-slice result
+# defines: demo.pathing.proto.map deterministic layered ASCII topology terrain and route fixture
+# produces: demo.pathing.proto.map.layers executable Julia prototype map evidence

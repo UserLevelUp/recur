@@ -19,6 +19,14 @@ using .MainLang
 const PATHING_SOURCE_PATH =
     joinpath(@__DIR__, "..", "demos", "pathing", "main.lang.pathing.recur")
 const PATHING_SOURCE = read(PATHING_SOURCE_PATH, String)
+const SUB_INPUT_CYCLE_SOURCE_PATH = joinpath(
+    @__DIR__,
+    "..",
+    "demos",
+    "pathing",
+    "main.lang.subinput-cycle.invalid.recur",
+)
+const SUB_INPUT_CYCLE_SOURCE = read(SUB_INPUT_CYCLE_SOURCE_PATH, String)
 const PATHING_REQUEST = Dict{String,Any}(
     "width" => 15,
     "height" => 11,
@@ -178,6 +186,24 @@ catch error
     error
 end
 
+const SUB_INPUT_CYCLE_PARSE_RESULT = try
+    MainLang.parse_program(SUB_INPUT_CYCLE_SOURCE)
+catch error
+    error
+end
+
+function sub_input_cycle_is_reported()
+    SUB_INPUT_CYCLE_PARSE_RESULT isa MainLang.Program || return false
+    graph = maybe_call(:static_graph, SUB_INPUT_CYCLE_PARSE_RESULT, "solution")
+    findings = entries_at(graph, "findings")
+    return any(
+        finding ->
+            value_at(finding, "kind") == "sub_input_cycle" &&
+            value_at(finding, "sub_input") == "enrich.i(c).previous",
+        findings,
+    )
+end
+
 const PATHING_GRAPH =
     PATHING_PARSE_RESULT isa MainLang.Program ?
     maybe_call(:static_graph, PATHING_PARSE_RESULT, "solution") : nothing
@@ -270,6 +296,150 @@ const PATHING_RESULT_REPEAT =
     @test occursin("report local_graph for route", PATHING_SOURCE)
 end
 
+@testset "pathing source freezes the first tech-tree game slice" begin
+    @test all(
+        occursin("contract $name", PATHING_SOURCE) for name in (
+            "MapImage",
+            "RegionLabel",
+            "TerrainTransition",
+            "Technology",
+            "RunnerProfile",
+            "ScenarioDraft",
+            "MapContract",
+            "PlayableScenario",
+            "RoutePlan",
+            "ProgressionPlan",
+            "RouteComparison",
+            "ScoreReceipt",
+        )
+    )
+    @test all(
+        occursin("scope $name", PATHING_SOURCE) for name in (
+            "creator",
+            "route_now",
+            "progression",
+            "compare",
+            "score",
+        )
+    )
+
+    @test occurrence_count(
+        r"i\(b\)\s*:=\s*creator\.o\(b\)",
+        PATHING_SOURCE,
+    ) == 2
+    @test occursin("graph tech_tree_slice async", PATHING_SOURCE)
+    @test occursin(
+        "tech_tree_slice.i(a) -> creator.i(a) delivery sync",
+        PATHING_SOURCE,
+    )
+    @test occursin("creator.o(b) -> fork [", PATHING_SOURCE)
+    @test occursin("route_now.i(b)", PATHING_SOURCE)
+    @test occursin("progression.i(b)", PATHING_SOURCE)
+    @test occursin("route_now.o(c)", PATHING_SOURCE)
+    @test occursin("progression.o(d)", PATHING_SOURCE)
+    @test occursin("] -> compare.i(e)", PATHING_SOURCE)
+    @test occursin(
+        "score.o(g) -> tech_tree_slice.o(g) delivery sync",
+        PATHING_SOURCE,
+    )
+
+    @test occursin("memo tech_tree_slice", PATHING_SOURCE)
+    @test occursin(
+        "Two routes, one glide-gated transition, and one shoe technology",
+        PATHING_SOURCE,
+    )
+    @test occursin(
+        "Research and equip glide shoes within the available budget",
+        PATHING_SOURCE,
+    )
+    @test occursin(
+        "The progression route has lower total cost than the open detour",
+        PATHING_SOURCE,
+    )
+
+    @test occursin("check creator_map_is_valid", PATHING_SOURCE)
+    @test occursin("check researched_capability_is_equipped", PATHING_SOURCE)
+    @test occursin(
+        "check route_now_differs_from_progression_route",
+        PATHING_SOURCE,
+    )
+    @test occursin("check next_map_requires_verified_score", PATHING_SOURCE)
+    @test occursin("report tech_tree_route_comparison", PATHING_SOURCE)
+    @test occursin("report tech_tree_score_receipt", PATHING_SOURCE)
+    @test occursin("event tech_tree_slice", PATHING_SOURCE)
+    @test occursin(
+        "E0(demo.pathing.tech.tree.slice.todo.current)",
+        PATHING_SOURCE,
+    )
+    @test occursin("-> dE(tech_tree_slice.graph)", PATHING_SOURCE)
+    @test occursin("-> Ef(demo.pathing.tech.tree.slice.complete)", PATHING_SOURCE)
+end
+
+@testset "pathing source freezes the layered prototype-map slice" begin
+    @test all(
+        occursin("contract $name", PATHING_SOURCE) for name in (
+            "ProtoMapRequest",
+            "AsciiMapLayer",
+            "MapLabelAnchor",
+            "TerrainRule",
+            "TerrainDecision",
+            "LayeredProtoMap",
+        )
+    )
+    @test occursin("scope render_proto", PATHING_SOURCE)
+    @test occursin("i(a) := ProtoMapRequest", PATHING_SOURCE)
+    @test occursin("o(b) := LayeredProtoMap", PATHING_SOURCE)
+    @test occursin("f : i(a) -> o(b)", PATHING_SOURCE)
+    @test occursin("graph prototype_map sync", PATHING_SOURCE)
+    @test occursin(
+        "prototype_map.i(a) -> render_proto.i(a) delivery sync",
+        PATHING_SOURCE,
+    )
+    @test occursin(
+        "render_proto.o(b) -> prototype_map.o(b) delivery sync",
+        PATHING_SOURCE,
+    )
+    @test occursin("bind render_proto.f -> pathing.proto_map.generate", PATHING_SOURCE)
+
+    @test occursin("memo render_proto.f", PATHING_SOURCE)
+    @test occursin(
+        "O city or powerup; . one lane; + crossing; = two shared lanes; E three shared lanes",
+        PATHING_SOURCE,
+    )
+    @test occursin(
+        "i(a) and i(b) are inputs; f(a) and f(b) are functions; o(c) is output",
+        PATHING_SOURCE,
+    )
+    @test occursin(
+        "terrain_cost(tile, runner) is blocked unless required capability is active",
+        PATHING_SOURCE,
+    )
+    @test occursin("current_decisions: List<TerrainDecision>", PATHING_SOURCE)
+    @test occursin("optimum_decisions: List<TerrainDecision>", PATHING_SOURCE)
+    @test occursin(
+        "Each selected route records terrain capability outcome and cost by stage",
+        PATHING_SOURCE,
+    )
+    @test occursin(
+        "Path discovery starts and ends at cities",
+        PATHING_SOURCE,
+    )
+
+    @test occursin("check proto_map_has_stable_dimensions", PATHING_SOURCE)
+    @test occursin("check no_sub_input_cycles", PATHING_SOURCE)
+    @test occursin("check proto_map_uses_declared_glyphs", PATHING_SOURCE)
+    @test occursin("check proto_map_routes_connect_cities", PATHING_SOURCE)
+    @test occursin(
+        "check optimum_route_respects_terrain_capability",
+        PATHING_SOURCE,
+    )
+    @test occursin("report layered_proto_map", PATHING_SOURCE)
+    @test occursin("event prototype_map", PATHING_SOURCE)
+    @test occursin("E0(demo.pathing.proto.map.todo.current)", PATHING_SOURCE)
+    @test occursin("-> dE(prototype_map.graph)", PATHING_SOURCE)
+    @test occursin("-> Ef(demo.pathing.proto.map.complete)", PATHING_SOURCE)
+end
+
 @testset "pathing parser and static graph contracts (expected broken)" begin
     @test_broken PATHING_PARSE_RESULT isa MainLang.Program
     @test_broken PATHING_GRAPH isa AbstractDict
@@ -299,6 +469,12 @@ end
         value_at(PATHING_LOCAL_ROUTE_GRAPH, "downstream", Any[]),
     ) == Set(["crumbs[*].i(j)"])
     @test_broken value_at(PATHING_LOCAL_ROUTE_GRAPH, "dispatch") == "parallel"
+
+    # The 0.3 parser must expand input-bundle fields into dependency edges.
+    # A direct feedback from enrich.o(d) to enrich.i(c).previous is invalid.
+    @test occursin("previous: enrich.o(d)", SUB_INPUT_CYCLE_SOURCE)
+    @test_broken SUB_INPUT_CYCLE_PARSE_RESULT isa MainLang.Program
+    @test_broken sub_input_cycle_is_reported()
 end
 
 @testset "pathing deterministic execution contracts (expected broken)" begin
