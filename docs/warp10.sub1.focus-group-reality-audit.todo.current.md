@@ -17,6 +17,9 @@ before implementation begins.
 - Run the current playable loop and record map manipulation, scene count,
   transition behavior, dialogue behavior, idea acquisition, focus behavior,
   debugger output, and save/load reality.
+- Record the current interaction-state path, panel/overlay depth, transition
+  timing, input-lock ownership, recovery behavior, and places where players
+  hesitate, backtrack, repeat input, or lose spatial context.
 - Identify coupling or asset constraints that require the later slice
   contracts to change.
 
@@ -34,6 +37,8 @@ before implementation begins.
 - Scene/script/input/save ownership map.
 - Current-build runtime receipt with screenshots or video references where
   useful and debugger observations.
+- Initial journey SLO budget and privacy-safe observability plan based on the
+  supported build and hardware rather than invented production telemetry.
 - Proposed refinements to Sub-2 through Sub-7, without silently expanding
   their scope.
 

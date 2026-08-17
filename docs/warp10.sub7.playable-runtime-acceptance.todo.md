@@ -22,6 +22,11 @@ launch -> orient and pan map -> select site -> transition to site
 - Map hit-testing, transition restoration, dialogue branching, idea
   idempotency, persistence, focus, controller, responsive-layout, and
   reduced-motion results.
+- Journey trace covering interaction-state order, transition budget, focus and
+  input-lock ownership, presentation depth, fallbacks, and recovery.
+- Human observation of hesitation, backtracking, repeated input, loss of
+  context, and route abandonment; unexplained confusion remains a residual even
+  when automated checks pass.
 - Focus-group residual matrix updated with accepted, rejected, deferred, and
   still-open findings and reasons.
 - Known risks, limitations, and follow-up Eventness preserved.

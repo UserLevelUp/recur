@@ -18,8 +18,11 @@ discoverable, understandable, persistent idea.
 - Dialogue supports readable pacing, fast reveal, advance/skip, choice focus,
   history where appropriate, keyboard/controller navigation, and clean return
   to site control.
+- Dialogue retains the person and site as spatial context wherever readability
+  permits; idea acquisition is one continuous interaction rather than a chain
+  of dialogue, reward, confirmation, and collection screens.
 - Any generated dialogue is bounded by authored state transitions and has a
-  responsive authored fallback.
+  responsive authored fallback with a declared timeout and recovery signal.
 
 ## Acceptance evidence
 
@@ -29,5 +32,7 @@ discoverable, understandable, persistent idea.
   checks.
 - Runtime receipt for one authored conversation with a meaningful choice, one
   idea payoff, repeat interaction, exit/re-entry, and focus restoration.
+- Journey trace proving one committed idea grant, bounded presentation depth,
+  authored fallback behavior, and return to a usable exploration state.
 - Content review showing that the interaction is informative or delightful,
   not only structurally valid.

@@ -3,8 +3,9 @@
 ## Scope
 
 Consolidate top-level player navigation into one persistent map scene and one
-persistent site scene.  Treat dialogue, settings, details, inventory, help,
-and pause as overlays.
+persistent site scene.  Keep ordinary interaction spatial and contextual;
+reserve focused panels for information or application-level actions that
+cannot remain legible in the world.
 
 ## Required behavior
 
@@ -12,6 +13,9 @@ and pause as overlays.
   state, map transform, and return focus.
 - Repeated navigation requests cannot stack scenes or start competing
   transitions.
+- One presentation owner prevents orphaned or stacked panels and exposes
+  illegal interaction-state combinations during development.
+- Input locks have an owner, bounded lifetime, diagnostics, and recovery path.
 - Site content is data-driven or composed below the site destination rather
   than multiplying top-level navigation scenes.
 - Existing player progress survives the migration or receives a declared save

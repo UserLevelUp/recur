@@ -4,22 +4,24 @@
   "required_slices": [
     {
       "slice_id": "focus-group-reality-audit",
-      "contract_hash": "sha256:47958b0d18989b9a2aa77d3aaebbba3be1148b959dc8dcc10d15c24049b64c69",
+      "contract_hash": "sha256:936f4e5b065bd2e535ae5e16c5930452790f93491aeff49a45ba94ee91b60648",
       "depends_on": [],
       "evidence_gates": [
         "focus-group-residual-matrix",
         "game-workspace-identity",
+        "journey-reliability-baseline",
         "runtime-baseline",
         "scene-script-ownership"
       ]
     },
     {
       "slice_id": "two-scene-foundation",
-      "contract_hash": "sha256:023525a9f2679e4946ef4bb70f77ae5ee537d14513317f260589dde03a6eaf75",
+      "contract_hash": "sha256:01be3954f90f05bf3ec47bf61d75e35ab3913f2164bd33a6706725c75bc5c5d4",
       "depends_on": [
         "focus-group-reality-audit"
       ],
       "evidence_gates": [
+        "journey-state-contract",
         "navigation-contract",
         "runtime-scene-cycle",
         "save-migration"
@@ -52,7 +54,7 @@
     },
     {
       "slice_id": "conversation-idea-discovery",
-      "contract_hash": "sha256:b2cd11d78129c07f253ff449eea142f85ad72c287191838d4670422f9906af8f",
+      "contract_hash": "sha256:e17b87acba035ff909afbff9d7b59c46e45c6cec147190de8dddc112d015744b",
       "depends_on": [
         "two-scene-foundation"
       ],
@@ -60,25 +62,28 @@
         "conversation-and-idea-contracts",
         "runtime-meaningful-conversation",
         "runtime-idea-payoff",
+        "runtime-journey-trace",
         "save-load-idea-state"
       ]
     },
     {
       "slice_id": "interface-polish-accessibility",
-      "contract_hash": "sha256:695640ce70f0f7eea180b8c3f68f829cec8cd7599c9ea026b57e8bcf3a1d06c0",
+      "contract_hash": "sha256:32c86d9e6b64f8490ad88d12ea97863550679a5d7ab339e92422a209fc15f943",
       "depends_on": [
         "map-site-transitions",
         "conversation-idea-discovery"
       ],
       "evidence_gates": [
+        "human-journey-observation",
         "interface-state-inventory",
         "runtime-accessibility-pass",
-        "runtime-responsive-layouts"
+        "runtime-responsive-layouts",
+        "sre-journey-receipt"
       ]
     },
     {
       "slice_id": "playable-runtime-acceptance",
-      "contract_hash": "sha256:11c502becc34a79fe85cb2a79239fd84ed11df0316ad1e142d505ba5fa50183a",
+      "contract_hash": "sha256:426bd6fc923c16f08793b0ef69cc150e7c82cb51e0548e0789f4dd318c82c752",
       "depends_on": [
         "map-direct-manipulation",
         "map-site-transitions",
@@ -89,6 +94,8 @@
         "end-to-end-runtime-receipt",
         "focus-group-residual-decision",
         "godot-debugger-observation",
+        "human-journey-observation",
+        "journey-reliability-trace",
         "known-limitations"
       ]
     }

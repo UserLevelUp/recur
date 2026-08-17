@@ -4,9 +4,10 @@
 
 Warp 10 turns the current tourist prototype into one sharp, continuous player
 experience.  The product has two durable scenes--the map and the selected
-site--with overlays for transient UI.  The player can directly manipulate the
-map, enter and leave a site without losing context, talk with a person, and
-leave the conversation with a visible, persistent idea.
+site--and prefers spatial, contextual interaction over screens and overlay
+chains.  The player can directly manipulate the map, enter and leave a site
+without losing context, talk with a person, and leave the conversation with a
+visible, persistent idea.
 
 ## Current reality
 
@@ -26,7 +27,8 @@ leave the conversation with a visible, persistent idea.
 ## Desired final Eventness
 
 The Warp 10 final is defined in
-`warp10.tourist-experience.warp-final.md`.  Completion means a player can:
+`warp10.tourist-experience.warp-final.md`, with its operational perspective in
+`warp10.journey-reliability.sre-contract.md`.  Completion means a player can:
 
 1. orient on and directly pan the map;
 2. select a site and transition into it cleanly;
@@ -58,6 +60,9 @@ autoloads, input actions, focus-group evidence, and playable baseline.
   receipt.
 - Dialogue completion requires both system behavior and authored playable
   content; an empty branching framework is not the player experience.
+- A sequence of functioning panels is not equivalent to a reliable journey;
+  hesitation, lost context, overlay stacking, and unclear return paths remain
+  unfinished player-facing Eventness.
 - Preserve surprising or incomplete evidence as `strange`; do not silently
   promote partial work.
 
@@ -76,5 +81,6 @@ Eventness.
 
 defines: warp10.tourist-experience two-scene map site dialogue and idea-discovery player loop
 defines: warp10.final receipt-backed sharp tourist experience with preserved navigation context
+defines: warp10.journey-reliability SRE contract for continuity recovery observability and player orientation
 consumes: focus-group.observations incomplete mapping transitions dialogue and UI feedback
 produces: warp10.runtime.acceptance playable end-to-end tourist loop receipt
