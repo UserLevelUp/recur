@@ -1,0 +1,96 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "warp10.tourist-experience",
+  "required_slices": [
+    {
+      "slice_id": "focus-group-reality-audit",
+      "contract_hash": "sha256:47958b0d18989b9a2aa77d3aaebbba3be1148b959dc8dcc10d15c24049b64c69",
+      "depends_on": [],
+      "evidence_gates": [
+        "focus-group-residual-matrix",
+        "game-workspace-identity",
+        "runtime-baseline",
+        "scene-script-ownership"
+      ]
+    },
+    {
+      "slice_id": "two-scene-foundation",
+      "contract_hash": "sha256:023525a9f2679e4946ef4bb70f77ae5ee537d14513317f260589dde03a6eaf75",
+      "depends_on": [
+        "focus-group-reality-audit"
+      ],
+      "evidence_gates": [
+        "navigation-contract",
+        "runtime-scene-cycle",
+        "save-migration"
+      ]
+    },
+    {
+      "slice_id": "map-direct-manipulation",
+      "contract_hash": "sha256:87db3bdd983ad7b8dd39d1318a9309717f6e9a9eae8ef84eb7358107e2a7b9d6",
+      "depends_on": [
+        "two-scene-foundation"
+      ],
+      "evidence_gates": [
+        "input-hit-testing",
+        "runtime-map-pan",
+        "runtime-map-pan-exclusions"
+      ]
+    },
+    {
+      "slice_id": "map-site-transitions",
+      "contract_hash": "sha256:55fa328afb47e74f80d2c5b3bd48d1f09b1e97e96d731f650d44bd793adcdbff",
+      "depends_on": [
+        "two-scene-foundation",
+        "map-direct-manipulation"
+      ],
+      "evidence_gates": [
+        "runtime-forward-reverse-transition",
+        "runtime-map-state-restoration",
+        "runtime-reduced-motion"
+      ]
+    },
+    {
+      "slice_id": "conversation-idea-discovery",
+      "contract_hash": "sha256:b2cd11d78129c07f253ff449eea142f85ad72c287191838d4670422f9906af8f",
+      "depends_on": [
+        "two-scene-foundation"
+      ],
+      "evidence_gates": [
+        "conversation-and-idea-contracts",
+        "runtime-meaningful-conversation",
+        "runtime-idea-payoff",
+        "save-load-idea-state"
+      ]
+    },
+    {
+      "slice_id": "interface-polish-accessibility",
+      "contract_hash": "sha256:695640ce70f0f7eea180b8c3f68f829cec8cd7599c9ea026b57e8bcf3a1d06c0",
+      "depends_on": [
+        "map-site-transitions",
+        "conversation-idea-discovery"
+      ],
+      "evidence_gates": [
+        "interface-state-inventory",
+        "runtime-accessibility-pass",
+        "runtime-responsive-layouts"
+      ]
+    },
+    {
+      "slice_id": "playable-runtime-acceptance",
+      "contract_hash": "sha256:11c502becc34a79fe85cb2a79239fd84ed11df0316ad1e142d505ba5fa50183a",
+      "depends_on": [
+        "map-direct-manipulation",
+        "map-site-transitions",
+        "conversation-idea-discovery",
+        "interface-polish-accessibility"
+      ],
+      "evidence_gates": [
+        "end-to-end-runtime-receipt",
+        "focus-group-residual-decision",
+        "godot-debugger-observation",
+        "known-limitations"
+      ]
+    }
+  ]
+}
