@@ -2,7 +2,8 @@ RECUR IMPROVEMENT 27
 Eventness Warp and Project-Control Commands
 ===========================================
 Date: May 22, 2026
-Status: Proposal / future direction
+Status: Recur v0.2.8 implementation; Warp Methodology v0.3.0;
+pure compositional queries and confirmed Slice-layer writer implemented
 Author: Captured from a 2026-05-22 design discussion
 
 INTENT
@@ -11,6 +12,20 @@ Make the eventness "warp" idea usable as a generic recur command concept:
 given a lane and its surrounding eventness, estimate whether the work is at an
 optimum, sub-optimum, or blocked state; explain the evidence; predict what
 should collapse; and suggest the next scoped management action.
+
+METHODOLOGY ADDENDUM
+--------------------
+`README.CORE.IMPROVEMENT27.Appendum.md` expands Warp as an explicit,
+versioned coordination mental model for participating intelligences. It keeps
+observed evidence, local viewpoints, shared understanding, disagreement,
+Eventness, bounded Slices, receipts, authority, and Warp evolution distinct.
+
+Improvement 27 owns Warp methodology and the proposed `recur warp`
+project-control surface. Improvement 30 is separate: Recur Lang maps exact
+inputs, functions or methods, outputs, and their relationships so contracts,
+dependencies, branches, joins, waits, retries, and circular references can be
+inspected before or during development. Recur Lang may consume a bounded Warp
+Slice contract; it does not own or redefine Warp.
 
 This proposal keeps recur generic. It does not encode any private project,
 domain, persona, or product rule. It treats eventness as plain files with
@@ -28,6 +43,9 @@ Improvement 27 proposes a read-first command family:
 - `recur warp explain <lane>` - show the evidence behind the verdict.
 - `recur warp config` - show the configured weights, state mappings, and hard
   constraints.
+- `recur warp map <warp>` - show the declared final Slice coverage map.
+- `recur warp merge <warp>` - purely compose accepted Slice layers
+  over that map and report coverage, gaps, blockers, and conflicts.
 
 The command is a coordination layer over existing recur primitives:
 
@@ -95,6 +113,25 @@ practical discrete approximation:
 
 The math is a control metaphor with an auditable output. Every score must point
 back to concrete files or configured rules.
+
+COMPOSITIONAL WARP BUBBLES
+--------------------------
+A Warp declares a final Slice coverage map. Accepted completion layers compose
+over that map without imposing an arbitrary completion order, and the derived
+projection self-reports covered, pending, blocked, stale, conflicting,
+complete, or exploded state. Core `recur warp` remains pure; `recur-warp`
+owns confirmation-gated completion writes.
+
+The bubble is recursively ringed: the outer ring owns coordinator/orchestrator
+convergence, while inner rings identify specialized directory domains with
+their own nearest Recur config, reveal capsule, Eventness, subscriptions, and
+local Warp. Inner-domain completion remains distinct from outer-ring
+integration acceptance.
+
+The full model, merge laws, schemas, self-reporting behavior, command boundary,
+and observable explosion/evolution semantics live in
+`README.CORE.IMPROVEMENT27.Appendum.md`. The executable command contract lives
+in `docs/main.command.warp.readme.md`.
 
 CONCEPT TRANSITION INTUITION
 ----------------------------
@@ -513,6 +550,11 @@ defines: recur.warp.next ranked next management action proposal based on residua
 defines: recur.warp.collapse-plan read-only prediction of collapse_known preserve_interesting blockers and ambiguous residue
 defines: recur.warp.explain evidence surface for state suffix distribution trace-id roles related lanes config weights and residual ranking
 defines: recur.warp.config configuration surface for weights state mappings and hard constraints
+defines: recur.warp.bubble.map declared final qualified Slice coverage and evidence-gate manifest
+defines: recur.warp.slice.completion.layer accepted receipt-bound coverage contribution with stable Warp Slice and contract identities
+defines: recur.warp.merge pure deterministic composition of target map and accepted Slice layers independent of readiness order where contracts permit
+defines: recur.warp.self-reporting derived covered pending blocked conflicting stale and complete state from discoverable layers
+defines: recur.warp.explosion observable non-convergence caused by conflict stale contract or falsified material assumption
 defines: recur.warp.concept.transition eventness-space change from before a concept is named to after the concept reshapes collapse interest risk and next actions
 defines: recur.warp.future.state.convergence comparison between current primitive setup intermediate semi-states and intended supersystem eventness target
 defines: recur.warp.supersystem.spec.alignment evidence-first alignment of subsystem constraints capabilities verification and approvals without replacing engineering review
@@ -535,6 +577,8 @@ produces: recur.warp.temporal.residuals auditable residual changes across now da
 produces: recur.warp.milestone.map accessible complete pending research and blocked state view for one epic or milestone
 produces: recur.warp.success.patterns reusable eventness patterns that can improve efficiency and prototype success probability
 produces: recur.warp.integration.surface future JSON Markdown CSV or adapter path for feeding existing project-management systems
+produces: recur.warp.composed.coverage reproducible projection whose gaps and conflicts determine remaining Slice pressure
+triggers: recur-warp.slice.accept future confirmed write-side persistence of qualified completion layers and receipts
 triggers: recur.warp.test.fixtures synthetic optimum sub_optimum and blocked lane fixtures for JSON contract tests
 triggers: recur.warp.docs.schema document warp-status-v1 JSON output schema
 ```

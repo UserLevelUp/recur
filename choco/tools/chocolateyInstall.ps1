@@ -32,3 +32,8 @@ $recurVersion = Join-Path $installDir 'recur-version.exe'
 if (Test-Path $recurVersion) {
     Install-BinFile -Name 'recur-version' -Path $recurVersion
 }
+
+$recurWarp = Join-Path $installDir 'recur-warp.exe'
+if (Test-Path $recurWarp) {
+    Install-BinFile -Name 'recur-warp' -Path $recurWarp
+}

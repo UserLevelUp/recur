@@ -1,0 +1,16 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "demo.partial",
+  "required_slices": [
+    {
+      "slice_id": "alpha",
+      "contract_hash": "contract-alpha-v1",
+      "evidence_gates": ["tests"]
+    },
+    {
+      "slice_id": "beta",
+      "contract_hash": "contract-beta-v1",
+      "evidence_gates": ["tests"]
+    }
+  ]
+}

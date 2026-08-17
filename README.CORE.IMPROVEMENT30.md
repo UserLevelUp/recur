@@ -13,6 +13,19 @@ intelligence can understand bounded work clearly, and multiple entities can
 optionally divide work into lanes, join results, and inspect whether the
 coordination logic is sound.
 
+OWNERSHIP BOUNDARY
+------------------
+Improvement 27 owns the generic Eventness Warp methodology and proposed
+`recur warp` project-control surface. Improvement 30 owns Recur Lang: the
+condensed, checkable mapping of exact inputs, functions or methods, outputs,
+and their relationships.
+
+Recur Lang may consume a Warp, bounded Slice, or receipt as a declared
+contract. Its Warp IR records the exact subset needed by the language and its
+receipt boundary; it does not transfer ownership of Warp methodology into
+Improvement 30. See `README.CORE.IMPROVEMENT27.Appendum.md` for the clarified
+coordination mental model.
+
 The compact Recur Lang form is:
 
 ```text
@@ -524,6 +537,81 @@ completion-order-independent normalized output, idempotent retries, identity
 behavior for empty work, deterministic output, conflicting-key rejection, and
 exact scatter/gather cardinality. These laws belong in the canonical model and
 its tests before a coordinator relies on them.
+
+### IR-backed mocks and smaller tests
+
+The same exact input/output contract can bind to a real worker or a
+deterministic mock. A test changes the binding, not the surrounding graph:
+
+```text
+i(request) -> real.f(request) -> o(receipt)
+i(request) -> mock.f(request) -> o(receipt)
+```
+
+Both bindings must satisfy the same declared input and output identities. This
+lets a test isolate one lane, supply known mock outputs for its dependencies,
+and still validate the real join, consumer, Eventness, and evidence shape
+around it. The IR should reject a mock that omits a required field, returns an
+incompatible contract, or leaves a required join unsatisfied.
+
+This is deliberately smaller than starting the whole system: parse one model,
+select declared mock bindings, run or inspect the bounded flow, and compare the
+resulting normalized outputs and receipts. A mock proves only the tested
+coordination and contract behavior; target-language correctness still requires
+the appropriate external tests and evidence.
+
+### Validation, refinements, and handled exceptions
+
+`validate` is a first-class functional block when raw input must become data
+that later blocks may trust. It makes the refinement visible instead of hiding
+it inside a method body:
+
+```text
+i(a) := RawFormInput
+i(a) -> validate.f(a) -> o(b) := Result<ValidatedFormInput, ValidationErrors>
+
+ValidatedFormInput -> refine.f -> FinalFormModel
+ValidationErrors   -> form_feedback.f -> FormFeedback
+```
+
+The success and failure outcomes are separate declared ports or variants. A
+successful validation may feed `refine`; validation errors feed a named handler
+that produces user-visible feedback. Likewise, a persistence operation may
+return `Result<SavedForm, PersistenceError>` and route the error to a declared
+retry, operator-review, or failure-report block.
+
+The IR must make these exceptional paths visible and verify that each declared
+failure outcome has a compatible handler. It must not treat an exception as an
+implicit side exit. Retry edges are ordinary graph edges and therefore remain
+subject to the same non-circular rules unless a later bounded-feedback contract
+explicitly declares a terminating retry policy.
+
+### Bounded retries and asynchronous awaits
+
+An `await` names the exact outcomes that must exist before a consumer is
+released; it is not an implicit pause or a guess about what might arrive:
+
+```text
+await all [validation.success, policy.success] -> persist
+```
+
+Every awaited outcome needs one declared producer and one compatible consumer.
+An asynchronous completion order may vary, but the normalized result must not.
+
+A retry is the exceptional back-edge case. It must declare a maximum attempt
+count, retain the input snapshot or qualified work key it is retrying, and
+route exhaustion to a terminal handler:
+
+```text
+persist.failure -> retry
+retry.retry -> persist     bounded max_attempts 3
+retry.exhausted -> failure_report
+```
+
+The IR must reject an unbounded retry, an await with a missing producer, a
+retry with no exhaustion outcome, and any retry/await cycle that can deadlock.
+Red-first fixtures should prove those rejected cases as well as a valid bounded
+retry whose completion order preserves the same normalized result.
 
 ### Subsystem contraction and parent integration
 

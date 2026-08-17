@@ -198,6 +198,12 @@ end
         "### Subsystem contraction and parent integration",
         improvement_doc,
     )
+    @test occursin("### IR-backed mocks and smaller tests", improvement_doc)
+    @test occursin("A test changes the binding, not the surrounding graph", improvement_doc)
+    @test occursin("### Validation, refinements, and handled exceptions", improvement_doc)
+    @test occursin("The IR must make these exceptional paths visible", improvement_doc)
+    @test occursin("### Bounded retries and asynchronous awaits", improvement_doc)
+    @test occursin("The IR must reject an unbounded retry", improvement_doc)
     @test occursin(r"contract version or\s+content hash", improvement_doc)
 end
 

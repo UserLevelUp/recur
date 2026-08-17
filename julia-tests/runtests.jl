@@ -63,9 +63,14 @@ try
         include("main.command.capability.test.jl")  # IMPROVEMENT28 - capability-card query surface
         include("main.improvement.27.warp.contract.test.jl")  # IMPROVEMENT27 - frozen warp-status-v1 fixtures
         include("main.command.warp.test.jl")  # IMPROVEMENT27 - read-only warp status
+        include("main.command.warp.bubble.test.jl")  # IMPROVEMENT27 - compositional Warp bubbles
+        include("main.command.warp.ring-topology.test.jl")  # IMPROVEMENT27 - recursive coordinator/worker ring contract
+        include("main.command.recur-warp.test.jl")  # IMPROVEMENT27 - confirmed Slice-layer writer
         include("main.command.warp.structure.test.jl")  # IMPROVEMENT27 - lane boundaries, collapse plan, and config
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
+        include("main.lang.form-validation.test.jl")  # red-first validation, refinement, and error-routing contract
+        include("main.lang.retry-await.test.jl")  # red-first bounded retry and async await contract
         include("main.lang.pathing.test.jl")  # red-first fan-out, scatter, graph, and deterministic pathing contracts
         include("main.lane.coordination.trace-id.test.jl")  # IMPROVEMENT21+22 - trace-id as lane handoff contract
         include("main.recur-git.checkpoint.lanes.test.jl")  # Checkpoint snapshot lane coverage for active agent vaults

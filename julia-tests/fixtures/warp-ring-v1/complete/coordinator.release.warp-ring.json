@@ -1,0 +1,67 @@
+{
+  "schema": "warp-ring-map-v1",
+  "warp_id": "coordinator.release",
+  "coordinator_domain": "coordinator",
+  "projection_depth": 3,
+  "domains": [
+    {
+      "domain_id": "coordinator",
+      "relative_root": ".",
+      "role": "coordinator",
+      "warp_id": "coordinator.release"
+    },
+    {
+      "domain_id": "docs-monkey",
+      "relative_root": "workers/docs-monkey",
+      "role": "worker",
+      "warp_id": "docs.release",
+      "public_contract_hash": "docs-contract-v1",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-docs",
+        "contract_hash": "accept-docs-v1"
+      }
+    },
+    {
+      "domain_id": "test-bird",
+      "relative_root": "workers/test-bird",
+      "role": "worker",
+      "warp_id": "tests.release",
+      "public_contract_hash": "tests-contract-v1",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-tests",
+        "contract_hash": "accept-tests-v1"
+      }
+    }
+  ],
+  "subscriptions": [
+    {
+      "subscription_id": "coordinator-to-docs",
+      "direction": "parent-to-child",
+      "source_domain": "coordinator",
+      "target_domain": "docs-monkey",
+      "filter": "task.docs.**",
+      "event_contract": "recur-watch-event-v1",
+      "freshness_seconds": 30
+    },
+    {
+      "subscription_id": "docs-to-coordinator",
+      "direction": "child-to-parent",
+      "source_domain": "docs-monkey",
+      "target_domain": "coordinator",
+      "filter": "receipt.docs.**",
+      "event_contract": "recur-watch-event-v1",
+      "freshness_seconds": 30
+    },
+    {
+      "subscription_id": "coordinator-to-tests",
+      "direction": "parent-to-child",
+      "source_domain": "coordinator",
+      "target_domain": "test-bird",
+      "filter": "task.tests.**",
+      "event_contract": "recur-watch-event-v1",
+      "freshness_seconds": 30
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "demo.explosion",
+  "slice_id": "alpha",
+  "contract_hash": "contract-alpha-v1",
+  "attempt_id": "attempt-alpha-1",
+  "result_state": "accepted",
+  "result_hash": "result-alpha-one",
+  "evidence": {
+    "tests": ["receipts/alpha-tests-one.json"]
+  }
+}

@@ -31,6 +31,8 @@ The requested lane is a dot-separated boundary. Querying
 | `warp explain <lane>` | status evidence and residual paths | same verdict as status |
 | `warp next <lane>` | suggested action packet | same action kinds as status |
 | `warp collapse-plan <lane>` | `collapse_known`, `preserve_interesting`, `blockers`, `ambiguous` | every scoped file appears in exactly one bucket |
+| `warp map <warp>` | declared required Slice and evidence-gate map | exact manifest identity and schema |
+| `warp merge <warp>` | deterministic coverage projection | complete, partial, conflict, order independence, and idempotence |
 | `warp config` | active suffix policy | configured mapping and defaults are observable |
 
 The fixture at `julia-tests/fixtures/warp-command-v1/` uses one slice with a
@@ -56,4 +58,5 @@ defines: recur.warp.lane.boundary requested lane prefix requires a trailing dot 
 defines: recur.warp.collapse-plan.read-only partition of scoped eventness into known interesting blockers and ambiguous buckets
 consumes: recur.warp.status evidence-backed read-only lane verdict
 produces: recur.warp.fixture.matrix reusable status explain next collapse-plan and config regression contract
+produces: recur.warp.bubble.fixture.matrix reusable complete partial exploded and confirmed-writer contract
 ```

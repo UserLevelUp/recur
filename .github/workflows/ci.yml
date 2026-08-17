@@ -56,6 +56,7 @@ jobs:
           path: |
             target/release-safe/recur.exe
             target/release-safe/recur-git.exe
+            target/release-safe/recur-warp.exe
 
   build-linux:
     runs-on: ubuntu-latest
@@ -77,6 +78,7 @@ jobs:
           path: |
             target/release-safe/recur
             target/release-safe/recur-git
+            target/release-safe/recur-warp
 
   docker:
     runs-on: ubuntu-latest

@@ -9,7 +9,7 @@
     <summary>Trace hierarchy deltas across code, docs, and workflow state</summary>
     <description><![CDATA[**recur** helps developers find deltas in hierarchical structures without standing up a database. The 0.2.5 package line made meaningful file names practical for comparing related work; 0.2.6 clarified folders as traceable hierarchy maps; 0.2.7 emphasized traceability across structure, state, and related work.
 
-Version 0.2.8 carries that curve into a broader eventness workflow: reveal capsules for resuming context, psyche/status inspection, trace-id and trace-stats analysis, flatten/merge composition, pure `recur watch` queries over `recur-watch` state, and pure `recur version` queries over artifact manifests written by `recur-version`.
+Version 0.2.8 carries that curve into a broader eventness workflow: reveal capsules for resuming context, psyche/status inspection, trace-id and trace-stats analysis, flatten/merge composition, pure `recur watch` queries over `recur-watch` state, pure `recur version` queries over artifact manifests written by `recur-version`, and self-reporting Warp bubble composition with confirmation-gated Slice completion through `recur-warp`.
 
 At its core, **recur** is a command-line tool for working with hierarchically named code, docs, generated artifacts, and identifiers whose names encode structure using dot-separated or custom conventions.
 
@@ -25,7 +25,7 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - Reveal capsules for context recovery and lane-local handoff
 - Watcher-state queries through pure `recur watch`
 - Artifact version policy, manifest, and history queries through pure `recur version`
-- Optional companion binaries for active workflow runners (`recur-git`, `recur-watch`, `recur-version`, when included in release zip)
+- Optional companion binaries for active workflow runners (`recur-git`, `recur-watch`, `recur-version`, `recur-warp`, when included in release zip)
 - JSON output for tooling integration
 
 ## Commands
@@ -34,6 +34,7 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur psyche` - inspect project eventness/status documents
 - `recur watch` - list, filter, and explain active watcher state
 - `recur version` - inspect artifact version policy, manifests, and preserved history
+- `recur warp map|merge|status` - inspect target Slice maps and composed completion coverage
 - `recur files` - find files by hierarchical pattern
 - `recur find` - search text within a hierarchy scope
 - `recur tree` - visualize hierarchy as a tree
@@ -52,6 +53,7 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur-git checkpoint` - capture parallel-lane git/todo checkpoints
 - `recur-watch` - run the active watch/subscription loop and write ACK/NAK status records
 - `recur-version` - save artifact snapshots, update manifests, and write ACK/NAK status records
+- `recur-warp complete` - dry-run or confirm one contract-bound accepted Slice completion layer
 
 Named as a quiet tribute to Dennis M. Ritchie's early work on recursive program structure.
 ]]></description>
@@ -61,7 +63,7 @@ Named as a quiet tribute to Dennis M. Ritchie's early work on recursive program 
     <docsUrl>https://github.com/UserLevelUp/recur#readme</docsUrl>
     <releaseNotes>https://github.com/UserLevelUp/recur/releases</releaseNotes>
     <iconUrl>https://cdn.jsdelivr.net/gh/UserLevelUp/recur@main/choco/recur-icon.svg</iconUrl>
-    <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph config git checkpoint trace eventness identifier version manifest history</tags>
+    <tags>search grep hierarchy recursive tree cli developer-tools rust flatten xml json call-graph config git checkpoint trace eventness identifier version manifest history warp</tags>
     <licenseUrl>https://github.com/UserLevelUp/recur/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <packageSourceUrl>https://github.com/UserLevelUp/recur/tree/main/choco</packageSourceUrl>

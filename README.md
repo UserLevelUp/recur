@@ -55,6 +55,7 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
 - **`recur-git`** - Git workflow extension (checkpoint tracking, dogfooding)
   - recur-git depends on existing git binaries to already be installed
 - **`recur-lang`** - Confirmation-gated, receipt-backed Recur Lang Warp companion
+- **`recur-warp`** - Confirmation-gated Warp Slice completion-layer writer
 - **`recur-watch`** - Active watcher/subscription runner that writes watcher status
 - **`recur-version`** - Artifact snapshot/manifest writer for version-eventness lanes
 
@@ -216,6 +217,38 @@ recur reveal main.command.trace-id
 recur reveal skippy
 recur reveal main.improvement.22 --json
 ```
+
+### `recur warp` and `recur-warp` - self-reporting Slice composition
+
+Declare a final Warp bubble in `<warp>.warp-map.json`, then query how accepted
+Slice layers cover it:
+
+```bash
+recur warp map demo.release -d planning/ --json
+recur warp merge demo.release -d planning/ --json
+recur warp status demo.release -d planning/ --json
+```
+
+Complete a declared Slice with a dry run first, then explicitly confirm the
+write:
+
+```bash
+recur-warp complete demo.release alpha \
+  --attempt-id attempt-alpha-1 \
+  --result-hash sha256-result-alpha \
+  --evidence tests=receipts/alpha-tests.json \
+  -d planning/
+
+recur-warp complete demo.release alpha \
+  --attempt-id attempt-alpha-1 \
+  --result-hash sha256-result-alpha \
+  --evidence tests=receipts/alpha-tests.json \
+  -d planning/ --confirm
+```
+
+The accepted layer is canonical evidence; the merged bubble is a deterministic
+projection. Independent completion order does not change coverage, identical
+retries are idempotent, and incompatible accepted results visibly conflict.
 
 `recur init` now scaffolds a default `[reveal]` section in `.recur/config.toml`
 with an ordered field list for reveal output.

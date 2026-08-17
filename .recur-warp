@@ -16,23 +16,37 @@ Warp epics and milestones let an expert name what should be complete, what
 should still be pending, what remains research, and what is blocked at each
 horizon. Long-term epochs can group many epics or milestones.
 
-Warp now has a shipped, read-only core query surface:
+Warp now has a shipped, read-only core query and composition surface:
 
 ```text
 recur warp status <lane> --json
 recur warp explain <lane> --json
 recur warp next <lane> --json
 recur warp collapse-plan <lane> --json
+recur warp map <warp> --json
+recur warp merge <warp> --json
 recur warp config --json
 ```
 
-The supporting implementation and future companion plan live in:
+Recur v0.2.8 also ships one bounded write-side companion action:
+
+```text
+recur-warp complete <warp> <slice> --attempt-id <id> --result-hash <hash> --evidence <gate>=<reference> [--confirm]
+```
+
+Without `--confirm` it is a dry run. A confirmed valid completion atomically
+writes one accepted Slice layer. Identical retry is idempotent; a confirmed
+refusal writes a private NAK receipt under `.recur/warp/`.
+
+The supporting implementation and companion contract live in:
 
 - README.CORE.IMPROVEMENT27.md
 - docs/main.improvement.27.todo.future-plan.md
 - docs/main.improvement.27.recur-ready.todo.future-plan.md
 - docs/main.improvement.27.contract.warp-status-v1.todo.future-plan.md
 - docs/main.improvement.27.command-boundary.todo.future-plan.md
+- docs/main.command.warp.readme.md
+- docs/main.command.warp.companion.complete.md
 
 The core commands only inspect scoped eventness evidence. They may count files,
 classify trace-id roles, load scoring config, return a verdict, explain its
@@ -53,26 +67,18 @@ robotics capability envelopes, subsystem interface alignment, and production-run
 conformance. The command should expose evidence and residuals; it should not
 invent specifications, certify safety, or replace qualified engineering review.
 
-Future companion shape:
-
-```text
-recur-warp
-```
-
-Reserve the companion name for possible approval-gated automation after the
-read-only status contract is boring, tested, and useful.
-
-The name is intentionally not an executable today. Any future `recur-warp`
-must require a declared bounded action and explicit `--confirm`; it must emit
-a durable `.recur/warp/recur-warp.<id>.status.current.md` ACK or NAK receipt
-with before/after evidence references. It must not interpret `next` advice as
-authorization, execute arbitrary commands, or silently start a watcher.
+The shipped companion implements Slice completion only. Warp evolution remains
+future work. `recur-warp` must not interpret `next` advice as authorization,
+execute arbitrary commands, or silently start a watcher.
 
 Trace-id lines:
 
 ```text
 defines: recur.warp.capability ideal-state lane steering and eventness optimality surface
-defines: recur.warp.status future read-only lane verdict command returning optimum sub_optimum or blocked
+defines: recur.warp.status shipped read-only lane verdict command returning optimum sub_optimum or blocked
+defines: recur.warp.bubble.map shipped declared required Slice and evidence-gate manifest query
+defines: recur.warp.merge shipped deterministic self-reporting Slice-layer coverage projection
+defines: recur-warp.complete shipped confirmation-gated atomic accepted Slice-layer writer
 defines: recur.warp.future.state.convergence comparison between current primitive setup intermediate semi-states and intended supersystem eventness target
 defines: recur.warp.temporal.frame.projection bounded day month year decade projection over an eventness membrane
 defines: recur.warp.eventness.membrane scoped prefix base suffix surface whose future semi-states are compared across frames
@@ -81,7 +87,7 @@ defines: recur.warp.long.term.epoch long-horizon grouping of multiple warp epics
 defines: recur.warp.cross.domain.pattern reusable eventness structure shared across repeatable tech stacks prototypes and inventions
 consumes: main.improvement.27 recur warp and project-control command proposal for eventness optimality scoring
 consumes: main.improvement.28 recur capability-card query surface for root .recur-* files
-produces: recur.warp.readiness shared capability-card summary for future implementation without public command exposure
-triggers: main.improvement.27.contract.warp-status-v1 stabilize JSON status contract before code returns
+produces: recur.warp.readiness shared capability-card summary for the v0.2.8 query and companion surfaces
+triggers: recur.warp.bubble.evolution preserve valid layers and expose invalidation before adding write-side evolve
 triggers: main.improvement.27.command-boundary keep core query and companion automation separated
 ```

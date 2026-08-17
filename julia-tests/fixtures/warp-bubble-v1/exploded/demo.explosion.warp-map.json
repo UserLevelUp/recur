@@ -1,0 +1,11 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "demo.explosion",
+  "required_slices": [
+    {
+      "slice_id": "alpha",
+      "contract_hash": "contract-alpha-v1",
+      "evidence_gates": ["tests"]
+    }
+  ]
+}

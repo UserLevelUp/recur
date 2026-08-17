@@ -1,0 +1,85 @@
+# Red-first Recur Lang fixture: independent approvals join at an async await;
+# a persistence failure retries only through a bounded, terminally handled edge.
+
+recur 0.3 coordination RetryAwait
+
+header {
+  contract Submission {
+    id: Text
+    payload: Text
+  }
+
+  contract ValidationApproval {
+    submission: Submission
+  }
+
+  contract PolicyApproval {
+    submission: Submission
+  }
+
+  contract SubmissionReceipt {
+    submission_id: Text
+  }
+
+  contract PersistenceError {
+    submission_id: Text
+    reason: Text
+  }
+
+  contract RetryDecision {
+    retry: Bool
+    exhausted: Bool
+  }
+
+  contract FailureReport {
+    submission_id: Text
+    reason: Text
+  }
+
+  scope validate {
+    i(a) := Submission
+    o(b) := Result<ValidationApproval, ValidationErrors>
+    f : i(a) -> o(b) ~ "Validate one submission"
+  }
+
+  scope policy {
+    i(a) := Submission
+    o(c) := PolicyApproval
+    f : i(a) -> o(c) ~ "Approve one submission against policy"
+  }
+
+  scope persist {
+    i(d) := join(validate.o(b).success, policy.o(c))
+    o(e) := Result<SubmissionReceipt, PersistenceError>
+    f : i(d) -> o(e) ~ "Persist one approved submission"
+  }
+
+  scope retry {
+    i(f) := PersistenceError
+    o(g) := RetryDecision
+    f : i(f) -> o(g) ~ "Retry a transient persistence failure"
+  }
+
+  scope failure_report {
+    i(h) := PersistenceError
+    o(i) := FailureReport
+    f : i(h) -> o(i) ~ "Record an exhausted persistence failure"
+  }
+
+  graph submit async {
+    submit.i(a) -> fork [validate.i(a), policy.i(a)] dispatch parallel delivery async
+    await all [validate.o(b).success, policy.o(c)] -> persist.i(d)
+    persist.o(e).success -> submit.o(e) delivery async
+    persist.o(e).failure -> retry.i(f) delivery async
+    retry.o(g).retry -> persist.i(d) retry bounded max_attempts 3
+    retry.o(g).exhausted -> failure_report.i(h) delivery async
+  }
+}
+
+footer {
+  check every_await_has_producer
+  check retries_are_bounded
+  check every_retry_exhaustion_is_handled
+  check no_retry_await_deadlocks
+  report static_graph
+}

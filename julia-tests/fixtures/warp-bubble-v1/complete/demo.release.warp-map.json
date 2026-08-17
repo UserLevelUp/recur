@@ -1,0 +1,24 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "demo.release",
+  "required_slices": [
+    {
+      "slice_id": "alpha",
+      "contract_hash": "contract-alpha-v1",
+      "depends_on": [],
+      "evidence_gates": ["tests"]
+    },
+    {
+      "slice_id": "beta",
+      "contract_hash": "contract-beta-v1",
+      "depends_on": [],
+      "evidence_gates": ["review"]
+    },
+    {
+      "slice_id": "gamma",
+      "contract_hash": "contract-gamma-v1",
+      "depends_on": ["alpha", "beta"],
+      "evidence_gates": ["integration"]
+    }
+  ]
+}

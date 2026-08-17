@@ -1,0 +1,33 @@
+{
+  "schema": "warp-ring-map-v1",
+  "warp_id": "coordinator.release",
+  "coordinator_domain": "coordinator",
+  "projection_depth": 3,
+  "domains": [
+    {
+      "domain_id": "coordinator",
+      "relative_root": ".",
+      "role": "coordinator",
+      "warp_id": "coordinator.release"
+    },
+    {
+      "domain_id": "docs-monkey",
+      "relative_root": "workers/docs-monkey",
+      "role": "worker",
+      "warp_id": "docs.release",
+      "public_contract_hash": "docs-contract-v1",
+      "required_state": "complete"
+    }
+  ],
+  "subscriptions": [
+    {
+      "subscription_id": "docs-to-coordinator",
+      "direction": "child-to-parent",
+      "source_domain": "docs-monkey",
+      "target_domain": "coordinator",
+      "filter": "receipt.docs.**",
+      "event_contract": "recur-watch-event-v1",
+      "freshness_seconds": 30
+    }
+  ]
+}

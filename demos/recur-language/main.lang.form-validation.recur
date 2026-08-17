@@ -1,0 +1,61 @@
+# Red-first Recur Lang fixture: raw form input is validated, refined, and
+# routed through declared success and failure outcomes.
+
+recur 0.3 coordination FormValidation
+
+header {
+  contract RawFormInput {
+    email: Text
+    display_name: Text
+  }
+
+  contract ValidatedFormInput {
+    email: Text
+    display_name: Text
+  }
+
+  contract ValidationErrors {
+    fields: Map<Text,Text>
+  }
+
+  contract FinalFormModel {
+    email: Text
+    display_name: Text
+    normalized_name: Text
+  }
+
+  contract FormFeedback {
+    fields: Map<Text,Text>
+  }
+
+  scope validate {
+    i(a) := RawFormInput
+    o(b) := Result<ValidatedFormInput, ValidationErrors>
+    f : i(a) -> o(b) ~ "Validate required fields and input format"
+  }
+
+  scope refine {
+    i(b) := ValidatedFormInput
+    o(c) := FinalFormModel
+    f : i(b) -> o(c) ~ "Normalize and refine trusted form data"
+  }
+
+  scope form_feedback {
+    i(d) := ValidationErrors
+    o(e) := FormFeedback
+    f : i(d) -> o(e) ~ "Render validation feedback"
+  }
+
+  graph submit sync {
+    submit.i(a) -> validate.i(a) delivery sync
+    validate.o(b).success -> refine.i(b) delivery sync
+    validate.o(b).failure -> form_feedback.i(d) delivery sync
+    refine.o(c) -> submit.o(c) delivery sync
+  }
+}
+
+footer {
+  check every_failure_outcome_is_handled
+  check no_exception_cycles
+  report static_graph
+}

@@ -57,6 +57,10 @@ path = "src/recur_version_main.rs"
 name = "recur-lang"
 path = "src/recur_lang_main.rs"
 
+[[bin]]
+name = "recur-warp"
+path = "src/recur_warp_main.rs"
+
 [dependencies]
 # Error handling
 thiserror = "1.0"
