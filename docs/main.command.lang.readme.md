@@ -110,9 +110,9 @@ For each selected source or symbol it should make the source's three layers
 legible:
 
 ```text
-header  -> contracts, named ports, aliases, lane policies, and descriptions
-body    -> bindings, compact flows, forks, awaits, and reusable expansions
-footer  -> checks, reports, Eventness consume/trigger/produce/state, and Warps
+header  -> functional contracts f(a) -> f(b), named ports, types, bundle signatures, descriptions
+body    -> hierarchical multi-line state tree with arrows traversing depth levels; instant cycle check
+footer  -> refinement state, checks, reports, bounded Warp Slices, Eventness, and next gate
 ```
 
 The compact text report should include:
@@ -121,9 +121,10 @@ The compact text report should include:
 - the familiar function description and implementation binding when declared;
 - exact input and output contracts, including aliases and canonical identities;
 - direct producers, consumers, fan-out, fan-in, and ordered wait gates;
-- the compact body flow and references to any expansion or bound worker;
+- the compact body state tree and references to any expansion or bound worker;
+- topological soundness checks (cycle detection, unreachable branches, logic gaps);
 - requested footer checks and reports;
-- Eventness transition, current state, and receipt/status evidence when present;
+- Eventness transition, current state, bounded Slice residue, and receipt/status evidence when present;
 - unresolved references, static findings, and the smallest explanatory path to
   each finding.
 

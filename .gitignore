@@ -35,6 +35,8 @@ Thumbs.db
 /.recur/*
 !/.recur/.psyche/
 !/.recur/.psyche/**
+!/.recur/warp/
+!/.recur/warp/**
 
 nul
 

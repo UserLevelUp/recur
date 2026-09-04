@@ -57,6 +57,23 @@ Recur Lang validates orchestration soundness. External evidence is required
 for claims about C#, Rust, Angular, React, MVC, CSHTML, or other implementation
 correctness.
 
+## Canonical Document Structure (Header, Body, Footer)
+
+To support rapid human understanding and checkable compiler rigor, Recur Lang
+standardizes on a three-tier anatomy:
+
+1. **Header (`header { ... }`)**: Pure functional contracts `f(a) -> f(b)`.
+   Explicitly declares input/output ports `i(...) -> o(...)`, type structures,
+   and canonical bundle aliases up front so contracts are unambiguous.
+2. **Body (`body { ... }`)**: Hierarchical multi-line state tree.
+   Renders work hierarchically with directed arrows (`-->`) traversing across
+   depth levels, enabling instant static detection of circular references,
+   deadlocks, starved nodes, and orphan outputs.
+3. **Footer (`footer { ... }`)**: Refinement and state convergence.
+   Requests static soundness checks (`check circular_ref`), generates reports,
+   and anchors execution to physical Eventness files and bounded Warp slices
+   (`E0 -> dE -> Ef`).
+
 ## Active Focused Pull
 
 The single current implementation update is:

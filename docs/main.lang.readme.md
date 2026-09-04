@@ -72,6 +72,28 @@ same.
 Inspecting `gcd.f` reveals the familiar name and contract. Adding `--expand`
 reveals its body. Both views come from one parsed model.
 
+## Canonical Tripartite Anatomy: Header, Body, and Footer
+
+Recur Lang sources are organized into three clear, standardized sections:
+
+```text
+header { ... }  -> Functional contracts: f(a) -> f(b), typed i(...) and o(...) ports,
+                   canonical aliases, lane policies, and block descriptions.
+body { ... }    -> Hierarchical multi-line state tree & bindings: visual state tree with
+                   directed arrows (-->) crossing depth levels; immediate topological
+                   cycle and logic-gap linting.
+footer { ... }  -> Refinement & convergence: static checks (check circular_ref), reports,
+                   Warp slices (E0 -> dE -> Ef), and Eventness lifecycle bindings.
+```
+
+1. **Header (Pure Flow & Contracts)**: Declares dataflow contracts and type signatures
+   unambiguously up front so readers and compilers never guess boundaries.
+2. **Body (State Tree Topology)**: Structures work hierarchically with arrows tracing
+   dataflow across depth levels. Instant cycle and disconnect detection catches deadlocks
+   before code runs.
+3. **Footer (Empirical Refinement)**: Anchors formal blocks to physical Eventness files,
+   residual pressures, test receipts, and verified gates.
+
 ## Hierarchical subsystem composition
 
 A validated subsystem may contract into one reusable block for a larger system.

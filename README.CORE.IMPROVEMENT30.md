@@ -713,6 +713,47 @@ E0(change.todo.current) -> dE(runtime.f) -> Ef(change.merge-ready)
 The transition is evidence, not wishful prose. ACK/NAK records should preserve
 the lane, attempt, source hash, artifact reference, test receipt, and reason.
 
+CANONICAL DOCUMENT STRUCTURE: HEADER, BODY, AND FOOTER
+------------------------------------------------------
+To balance pure human intuition, formal rigor, and state convergence, Recur Lang
+standardizes on a tripartite document anatomy:
+
+```text
++-----------------------------------------------------------------------------------+
+|  HEADER: Functional Contracts & Flow                                              |
+|  f(a) -> f(b) with explicit input / output typing, bundle signatures, and ports   |
++-----------------------------------------------------------------------------------+
+|  BODY: Hierarchical State Tree                                                    |
+|  Multi-line nesting with arrows cutting across depth levels; instant cycle check   |
++-----------------------------------------------------------------------------------+
+|  FOOTER: Refinement & Convergence State                                           |
+|  Current eventness residue, bounded Slices, verification receipts, and next gate  |
++-----------------------------------------------------------------------------------+
+```
+
+### 1. Header — Functional Contracts & Flow
+- Pure directional flow declared explicitly: `f(a) -> f(b)`.
+- Input and output types, aliases, and bundle signatures are declared clearly in
+  the header so readers and parsers never have to guess data contracts.
+- Directionality remains front and center: `i(a) -> f(a) -> o(b)`.
+
+### 2. Body — Multi-Line Hierarchical State Tree
+- Visual, structural hierarchy rendered using familiar Recur namespace/depth semantics.
+- Directed arrows (`-->`) cut across or plunge into varying levels of depth to
+  explicitly chart dataflow, fan-outs, and handoffs.
+- Enables instant topological analysis:
+  - **Circular reference detection**: immediate identification of illegal backward loops.
+  - **Logic gaps & starved nodes**: detection of unsatisfied inputs, unreachable branches,
+    and orphan outputs.
+  - **Boundary encapsulation**: catches illegal arrows penetrating private domain membranes.
+
+### 3. Footer — Refinement & Convergence State
+- Anchors the theoretical flow to real-world Eventness and Warp progress.
+- Tracks residual pressure, bounded Slices (`slice_id`, `contract_hash`, `attempt_id`),
+  and acceptance receipts.
+- Declares static analysis requests (`check circular_ref`, `check lane_scope`) and
+  specifies the next deterministic gate to advance toward optimum completion.
+
 STATIC ORCHESTRATION CHECKS
 ---------------------------
 `recur lang check` should eventually validate the graph without executing

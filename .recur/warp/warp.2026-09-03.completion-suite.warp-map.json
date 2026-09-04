@@ -1,0 +1,60 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "warp.2026-09-03.completion-suite",
+  "required_slices": [
+    {
+      "slice_id": "sub1-ring-schema",
+      "contract_hash": "sha256:01-ring-schema-v1-types-and-contracts",
+      "depends_on": [],
+      "evidence_gates": [
+        "rust-lib-tests",
+        "warp-ring-map-v1-structs"
+      ]
+    },
+    {
+      "slice_id": "sub2-ring-query-merge",
+      "contract_hash": "sha256:02-ring-query-merge-v1-recursive-projection",
+      "depends_on": [
+        "sub1-ring-schema"
+      ],
+      "evidence_gates": [
+        "cargo-test-ring-composition",
+        "julia-ring-test-green"
+      ]
+    },
+    {
+      "slice_id": "sub3-recur-warp-evolve",
+      "contract_hash": "sha256:03-recur-warp-evolve-v1-supersession",
+      "depends_on": [
+        "sub2-ring-query-merge"
+      ],
+      "evidence_gates": [
+        "evolve-confirm-gate",
+        "supersession-layer-receipt"
+      ]
+    },
+    {
+      "slice_id": "sub4-recur-warp-collapse",
+      "contract_hash": "sha256:04-recur-warp-collapse-v1-execution",
+      "depends_on": [
+        "sub2-ring-query-merge"
+      ],
+      "evidence_gates": [
+        "collapse-confirm-gate",
+        "archive-clean-receipt"
+      ]
+    },
+    {
+      "slice_id": "sub5-closed-loop-coordination",
+      "contract_hash": "sha256:05-closed-loop-coordination-v1-multi-tier",
+      "depends_on": [
+        "sub3-recur-warp-evolve",
+        "sub4-recur-warp-collapse"
+      ],
+      "evidence_gates": [
+        "coordinator-watch-receipt",
+        "full-suite-verification"
+      ]
+    }
+  ]
+}

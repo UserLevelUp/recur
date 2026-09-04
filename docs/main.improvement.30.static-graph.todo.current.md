@@ -36,6 +36,13 @@ why the coordination is or is not statically sound
 Later queries, diagrams, grids, and coordinators must not each answer those
 questions differently.
 
+This directly fulfills the canonical tripartite document design:
+- Header contracts provide typed message and port definitions.
+- The Body multi-line state tree provides the directed flow across hierarchical depths.
+- SGR1 evaluates the topological graph to execute the Footer's requested checks
+  (`check circular_ref`, `report static_graph`), reporting cycles and reachability
+  before any state is mutated.
+
 ## Goldilocks dE
 
 Freeze one read-only report over an already parsed
