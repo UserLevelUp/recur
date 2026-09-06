@@ -679,13 +679,13 @@ enum Commands {
         dir: PathBuf,
     },
 
-    /// Read-only eventness status and residual-pressure queries
+    /// List remaining Warp bubbles, or query eventness and residual pressure
     ///
     /// Examples:
     ///   recur warp status main.improvement.27 --json
     Warp {
         #[command(subcommand)]
-        command: main_command_warp_impl::WarpSubcommand,
+        command: Option<main_command_warp_impl::WarpSubcommand>,
 
         /// Project root or directory containing the lane evidence
         #[arg(short = 'd', long, default_value = ".", global = true)]
@@ -1161,7 +1161,11 @@ fn main() {
             main_command_capability_impl::execute(command, dir, cli.json)
         }
 
-        Commands::Warp { command, dir } => main_command_warp_impl::execute(command, dir, cli.json),
+        Commands::Warp { command, dir } => main_command_warp_impl::execute(
+            command.unwrap_or(main_command_warp_impl::WarpSubcommand::List { all: false }),
+            dir,
+            cli.json,
+        ),
 
         Commands::Flatten {
             file,

@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.discovery",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.warp.discovery.slice-0:v1",
+  "attempt_id": "discovery-20260905",
+  "result_state": "accepted",
+  "result_hash": "sha256:b8e777e26fc88a6e22802557952cc09d9c1261ce824ed057bcb84a31dc4ce34d",
+  "evidence": {
+    "verification": [
+      "main.command.warp.discovery.slice-0.complete.md"
+    ]
+  },
+  "reason": null
+}

@@ -19,6 +19,12 @@ use recur::warp_bubble::BUBBLE_MAP_SCHEMA;
 
 #[derive(Subcommand)]
 pub enum WarpSubcommand {
+    /// List remaining declared bubbles and rings (the default when no command is given)
+    List {
+        /// Include completed projections
+        #[arg(long)]
+        all: bool,
+    },
     /// Fingerprint explicitly named evidence inputs (content checksum, not a signature)
     Fingerprint {
         #[arg(required = true)]
@@ -262,6 +268,7 @@ struct WarpRingMergeOutput {
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
+        WarpSubcommand::List { all } => emit_list(&list_warps(&root, all)?, json),
         WarpSubcommand::Fingerprint { paths } => {
             let mut files = BTreeMap::new();
             for path in paths {
@@ -331,6 +338,120 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
             emit_config(&output, json)
         }
     }
+}
+
+// defines: recur.warp.discovery.inventory deterministic read-only manifest discovery
+fn list_warps(root: &Path, all: bool) -> anyhow::Result<serde_json::Value> {
+    let mut candidates: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for entry in WalkDir::new(root).into_iter().filter_entry(keep_entry) {
+        let entry =
+            entry.with_context(|| format!("failed to scan Warp root '{}'", root.display()))?;
+        if !entry.file_type().is_file() {
+            continue;
+        }
+        let Some(name) = entry.file_name().to_str() else {
+            continue;
+        };
+        if let Some(id) = name
+            .strip_suffix(".warp-map.json")
+            .or_else(|| name.strip_suffix(".warp-ring.json"))
+        {
+            candidates
+                .entry(id.to_string())
+                .or_default()
+                .push(normalize_path(
+                    entry.path().strip_prefix(root).unwrap_or(entry.path()),
+                ));
+        }
+    }
+    let discovered = candidates.len();
+    let mut entries = Vec::new();
+    let mut errors = 0;
+    for (id, mut manifests) in candidates {
+        manifests.sort();
+        let ring_count = manifests
+            .iter()
+            .filter(|p| p.ends_with(".warp-ring.json"))
+            .count();
+        let bubble_count = manifests.len() - ring_count;
+        let projection = (|| -> anyhow::Result<serde_json::Value> {
+            checked_warp_id(&id)?;
+            anyhow::ensure!(
+                ring_count <= 1 && bubble_count <= 1,
+                "ambiguous Warp identity: multiple manifests: {}",
+                manifests.join(", ")
+            );
+            if ring_count == 1 {
+                Ok(serde_json::to_value(
+                    merge_ring(root, &id)?.context("ring map disappeared during discovery")?,
+                )?)
+            } else {
+                Ok(serde_json::to_value(merge_bubble(root, &id)?)?)
+            }
+        })();
+        match projection {
+            Ok(p) => {
+                if all || p["state"] != "complete" {
+                    entries.push(serde_json::json!({
+                        "warp_id": id, "manifests": manifests, "state": p["state"],
+                        "kind": if ring_count == 1 { "ring" } else { "bubble" },
+                        "counts": p["counts"], "evidence_status": p["evidence_status"],
+                        "contract_status": p["contract_status"], "error": null
+                    }));
+                }
+            }
+            Err(error) => {
+                errors += 1;
+                entries.push(serde_json::json!({
+                    "warp_id": id, "manifests": manifests, "state": "error",
+                    "kind": "unresolved", "counts": null, "evidence_status": null,
+                    "contract_status": null, "error": format!("{error:#}")
+                }));
+            }
+        }
+    }
+    Ok(serde_json::json!({
+        "schema": "warp-list-v1", "root": root.display().to_string(),
+        "filter": if all { "all" } else { "remaining" },
+        "discovered": discovered, "listed": entries.len(), "errors": errors,
+        "entries": entries
+    }))
+}
+
+fn emit_list(output: &serde_json::Value, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+        return Ok(());
+    }
+    println!(
+        "Warp bubbles ({}) in {}",
+        output["filter"].as_str().unwrap_or("remaining"),
+        output["root"].as_str().unwrap_or("")
+    );
+    let entries = output["entries"].as_array().expect("inventory entries");
+    if entries.is_empty() {
+        println!("No matching Warp bubbles.");
+    }
+    for entry in entries {
+        println!(
+            "{}  {}  counts={}  evidence={}",
+            entry["warp_id"].as_str().unwrap_or(""),
+            entry["state"].as_str().unwrap_or(""),
+            entry["counts"],
+            entry["evidence_status"].as_str().unwrap_or("unassessed")
+        );
+        for path in entry["manifests"].as_array().expect("manifest paths") {
+            println!("  {}", path.as_str().unwrap_or(""));
+        }
+        if let Some(error) = entry["error"].as_str() {
+            println!("  error: {error}");
+        }
+    }
+    println!(
+        "{} listed / {} discovered; {} errors",
+        output["listed"], output["discovered"], output["errors"]
+    );
+    Ok(())
 }
 
 /// Pure reconciliation over explicit capsule fields; authored prose is unassessed.

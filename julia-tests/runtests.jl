@@ -68,6 +68,7 @@ try
         include("main.command.recur-warp.test.jl")  # IMPROVEMENT27 - confirmed Slice-layer writer
         include("main.command.warp.structure.test.jl")  # IMPROVEMENT27 - lane boundaries, collapse plan, and config
         include("main.command.warp.evidence-integrity.test.jl")  # qualified completion and external evidence
+        include("main.command.warp.discovery.test.jl")  # default and explicit Warp inventory
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
         include("main.lang.form-validation.test.jl")  # red-first validation, refinement, and error-routing contract

@@ -1,5 +1,37 @@
 # recur warp
 
+## Discover remaining bubbles
+
+```powershell
+recur warp -d docs
+recur warp list -d docs
+recur warp list --all -d docs --json
+```
+
+Bare `recur warp` is equivalent to `recur warp list`. Both list remaining
+declared bubbles and rings recursively beneath `-d` (the current directory
+by default). `--all` includes completed projections. State and counts come
+from the existing `merge` query, not filenames or authored readiness prose.
+A ring and its coordinator bubble sharing an identity produce one ring row.
+
+JSON uses `warp-list-v1`, with root, filter, discovered/listed/error counts,
+and sorted entries containing identities, manifest paths, projected state,
+counts, evidence/contract qualification where available, and diagnostic errors.
+Invalid manifests and duplicate maps stay visible as error rows; they are never
+treated as completed. Per-entry errors do not fail the inventory command:
+automation must inspect `errors` and each entry's state. Root/traversal failures
+return a failing exit status. Ring evidence qualification is unassessed when
+the existing ring projection does not expose it; use `merge` for details.
+
+Discovery is read-only, does not follow directory symlinks, and retains the
+existing `.recur` exclusion. To query private work, explicitly choose a child
+root such as `-d .recur/warp`. No map means no bubble inventory entry; stale
+`.current` notes alone do not create work. Scope `-d` to project artifacts to
+avoid listing fixture maps or other unrelated maps elsewhere in the repository.
+Evidence paths keep the same query-root semantics as `recur warp merge`.
+
+## Lane queries
+
 Status: `implemented` (status v1, compositional bubble v1, recursive ring v1,
 and confirmed companion completion/evolution/collapse)
 Date: 2026-09-04
