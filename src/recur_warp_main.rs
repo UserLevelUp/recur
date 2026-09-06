@@ -30,6 +30,17 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Preview a policy-aware lifecycle receipt; --confirm records a declaration
+    Receipt {
+        warp: String,
+        slice: String,
+        #[arg(long)]
+        attempt_id: String,
+        #[arg(long = "evidence", value_name = "GATE=REFERENCE")]
+        evidence: Vec<String>,
+        #[arg(long)]
+        confirm: bool,
+    },
     /// Plan or persist one accepted Slice completion layer
     Complete {
         /// Stable Warp identity, such as demo.release
@@ -161,6 +172,16 @@ fn main() {
         }
     };
     let result = match cli.command {
+        Commands::Receipt {
+            warp,
+            slice,
+            attempt_id,
+            evidence,
+            confirm,
+        } => receipt(&root, &warp, &slice, &attempt_id, &evidence, confirm).and_then(|output| {
+            println!("{}", serde_json::to_string_pretty(&output)?);
+            Ok(())
+        }),
         Commands::Complete {
             warp,
             slice,
@@ -192,6 +213,58 @@ fn main() {
         eprintln!("Error: {error:#}");
         process::exit(2);
     }
+}
+
+fn receipt(
+    root: &Path,
+    warp: &str,
+    slice: &str,
+    attempt: &str,
+    values: &[String],
+    confirm: bool,
+) -> anyhow::Result<serde_json::Value> {
+    validate_identity("Warp", warp, true)?;
+    validate_identity("Slice", slice, true)?;
+    validate_identity("attempt", attempt, false)?;
+    let (manifest, map) = find_map(root, warp)?;
+    let required = map
+        .required_slices
+        .iter()
+        .find(|s| s.slice_id == slice)
+        .ok_or_else(|| anyhow::anyhow!("unknown Slice '{}'", slice))?;
+    let policy = recur::warp_policy::WarpPolicy::load(root)?;
+    let suffix = policy
+        .complete
+        .first()
+        .context("no completion suffix configured")?;
+    let parent = manifest.parent().context("map has no parent")?;
+    let stem = format!("{warp}.{slice}.{attempt}.receipt");
+    let target = parent.join(format!("{stem}.{suffix}.md"));
+    // An existing attempt in any lifecycle state must be reconciled explicitly.
+    for entry in fs::read_dir(parent)? {
+        let entry = entry?;
+        if entry
+            .file_name()
+            .to_string_lossy()
+            .starts_with(&format!("{stem}."))
+        {
+            anyhow::bail!("receipt attempt already exists or conflicts at '{}'; use a new attempt or reconcile state", entry.path().display());
+        }
+    }
+    let evidence = parse_evidence(values)?;
+    let data = serde_json::json!({"schema":"warp-lifecycle-receipt-v1", "warp_id":warp,
+        "slice_id":slice, "attempt_id":attempt, "contract_hash":required.contract_hash,
+        "depends_on":required.depends_on, "evidence_gates":required.evidence_gates,
+        "evidence_mode":required.evidence_mode, "gate_rules":required.gate_rules,
+        "evidence":evidence, "evidence_status":"declared"});
+    let text = format!("# Recorded Slice completion\n\nThis receipt records a declaration. Required evidence must be validated separately.\n\nwarp.receipt = {}\n", serde_json::to_string(&data)?);
+    if confirm {
+        write_bytes_atomically(&target, text.as_bytes())?;
+    }
+    Ok(
+        serde_json::json!({"schema":"recur-warp-receipt-v1", "state":if confirm {"recorded"} else {"planned"},
+        "path":normalize_path(target.strip_prefix(root).unwrap_or(&target)), "policy":policy, "receipt":data, "template":text}),
+    )
 }
 
 fn complete_with_nak(
@@ -265,6 +338,15 @@ fn complete(
         })?;
     let evidence = parse_evidence(evidence_values)?;
     validate_evidence_gates(&evidence, &required.evidence_gates)?;
+    let assessments = recur::warp_evidence::gates(root, required, &evidence);
+    if let Some(gate) = assessments.iter().find(|g| !g.satisfied) {
+        anyhow::bail!(
+            "evidence gate '{}' is {}: {}",
+            gate.gate,
+            gate.status,
+            serde_json::to_string(gate)?
+        );
+    }
     reject_conflicting_result(root, warp, slice, &required.contract_hash, result_hash)?;
 
     let layer = WarpSliceLayer {
@@ -757,6 +839,7 @@ fn find_map(root: &Path, warp: &str) -> anyhow::Result<(PathBuf, WarpBubbleMap)>
             warp
         );
     }
+    recur::warp_bubble::validate_bubble_map(&map, warp, &path)?;
     Ok((path, map))
 }
 

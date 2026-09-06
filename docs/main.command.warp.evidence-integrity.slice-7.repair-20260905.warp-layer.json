@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.evidence-integrity",
+  "slice_id": "slice-7",
+  "contract_hash": "contract:main.command.warp.evidence-integrity.slice-7:v1",
+  "attempt_id": "repair-20260905",
+  "result_state": "accepted",
+  "result_hash": "sha256:789e036ab34a92bc8d254835f6132f8dfc69583ae838128c7d18e8111f2d1580",
+  "evidence": {
+    "authored-intent-preservation-tests": [
+      "main.command.warp.evidence-integrity.slice-7.complete.md"
+    ],
+    "summary-reconciliation-tests": [
+      "main.command.warp.evidence-integrity.slice-7.complete.md"
+    ]
+  },
+  "reason": null
+}

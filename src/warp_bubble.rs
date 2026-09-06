@@ -2,7 +2,8 @@
 //! write-side `recur-warp` companion.
 
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
+use std::path::Path;
 
 pub const BUBBLE_MAP_SCHEMA: &str = "warp-bubble-map-v1";
 pub const WARP_RING_MAP_SCHEMA: &str = "warp-ring-map-v1";
@@ -18,6 +19,15 @@ pub struct WarpRequiredSlice {
     pub depends_on: Vec<String>,
     #[serde(default)]
     pub evidence_gates: Vec<String>,
+    /// Legacy maps use declared coverage; checked requires validated external artifacts.
+    #[serde(default = "default_evidence_mode")]
+    pub evidence_mode: String,
+    #[serde(default)]
+    pub gate_rules: BTreeMap<String, crate::warp_evidence::GateRule>,
+}
+
+fn default_evidence_mode() -> String {
+    "declared".into()
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -212,9 +222,154 @@ pub struct WarpSliceLayer {
     pub reason: Option<String>,
 }
 
+pub fn validate_bubble_map(map: &WarpBubbleMap, warp: &str, path: &Path) -> anyhow::Result<()> {
+    if map.required_slices.is_empty() {
+        anyhow::bail!("Warp bubble map must declare at least one required Slice");
+    }
+    if map.schema != BUBBLE_MAP_SCHEMA {
+        anyhow::bail!(
+            "unsupported Warp bubble map schema '{}' in '{}'; expected '{}'",
+            map.schema,
+            path.display(),
+            BUBBLE_MAP_SCHEMA
+        );
+    }
+    if map.warp_id != warp {
+        anyhow::bail!(
+            "Warp identity '{}' in '{}' does not match requested '{}'",
+            map.warp_id,
+            path.display(),
+            warp
+        );
+    }
+    let mut ids = BTreeSet::new();
+    for required in &map.required_slices {
+        if required.evidence_mode == "checked" && required.evidence_gates.is_empty() {
+            anyhow::bail!(
+                "checked Slice '{}' must declare at least one evidence gate",
+                required.slice_id
+            );
+        }
+        if !matches!(required.evidence_mode.as_str(), "declared" | "checked") {
+            anyhow::bail!(
+                "Slice '{}' has unsupported evidence_mode '{}'",
+                required.slice_id,
+                required.evidence_mode
+            );
+        }
+        for (gate, rule) in &required.gate_rules {
+            if !required.evidence_gates.contains(gate)
+                || !matches!(rule.kind.as_str(), "" | "test" | "build" | "scan")
+            {
+                anyhow::bail!(
+                    "Slice '{}' has invalid gate rule '{}'",
+                    required.slice_id,
+                    gate
+                );
+            }
+        }
+        if required.slice_id.trim().is_empty() || required.contract_hash.trim().is_empty() {
+            anyhow::bail!(
+                "Warp bubble map '{}' contains a blank Slice identity or contract hash",
+                path.display()
+            );
+        }
+        if !ids.insert(required.slice_id.clone()) {
+            anyhow::bail!(
+                "Warp bubble map '{}' contains duplicate Slice '{}'",
+                path.display(),
+                required.slice_id
+            );
+        }
+        let gates = required
+            .evidence_gates
+            .iter()
+            .map(|gate| gate.trim())
+            .collect::<BTreeSet<_>>();
+        if gates.len() != required.evidence_gates.len() || gates.contains("") {
+            anyhow::bail!(
+                "Warp Slice '{}' in '{}' has blank or duplicate evidence gates",
+                required.slice_id,
+                path.display()
+            );
+        }
+    }
+    for required in &map.required_slices {
+        let dependencies = required.depends_on.iter().collect::<BTreeSet<_>>();
+        if dependencies.len() != required.depends_on.len() {
+            anyhow::bail!(
+                "Warp Slice '{}' in '{}' has duplicate dependencies",
+                required.slice_id,
+                path.display()
+            );
+        }
+        for dependency in &required.depends_on {
+            if dependency == &required.slice_id || !ids.contains(dependency) {
+                anyhow::bail!(
+                    "Warp Slice '{}' in '{}' has invalid dependency '{}'",
+                    required.slice_id,
+                    path.display(),
+                    dependency
+                );
+            }
+        }
+    }
+    let mut remaining = map
+        .required_slices
+        .iter()
+        .map(|required| {
+            (
+                required.slice_id.clone(),
+                required.depends_on.iter().cloned().collect::<BTreeSet<_>>(),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    while !remaining.is_empty() {
+        let ready = remaining
+            .iter()
+            .filter(|(_, dependencies)| dependencies.is_empty())
+            .map(|(slice, _)| slice.clone())
+            .collect::<Vec<_>>();
+        if ready.is_empty() {
+            anyhow::bail!(
+                "Warp bubble map '{}' contains a dependency cycle involving {}",
+                path.display(),
+                remaining.keys().cloned().collect::<Vec<_>>().join(", ")
+            );
+        }
+        for slice in &ready {
+            remaining.remove(slice);
+        }
+        for dependencies in remaining.values_mut() {
+            for slice in &ready {
+                dependencies.remove(slice);
+            }
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn checked_maps_require_nonempty_work_and_gates() {
+        let mut map: WarpBubbleMap = serde_json::from_str(
+            r#"{"schema":"warp-bubble-map-v1","warp_id":"demo","required_slices":[]}"#,
+        )
+        .unwrap();
+        assert!(validate_bubble_map(&map, "demo", Path::new("demo.warp-map.json")).is_err());
+        map.required_slices.push(
+            serde_json::from_str(
+                r#"{"slice_id":"test","contract_hash":"contract:v1","evidence_mode":"checked"}"#,
+            )
+            .unwrap(),
+        );
+        assert!(validate_bubble_map(&map, "demo", Path::new("demo.warp-map.json")).is_err());
+        map.required_slices[0].evidence_gates.push("tests".into());
+        assert!(validate_bubble_map(&map, "demo", Path::new("demo.warp-map.json")).is_ok());
+    }
 
     fn complete_ring() -> WarpRingMap {
         serde_json::from_str(include_str!(

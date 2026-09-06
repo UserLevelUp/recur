@@ -1,0 +1,27 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.evidence-integrity",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.warp.evidence-integrity.slice-final:v1",
+  "attempt_id": "repair-20260905",
+  "result_state": "accepted",
+  "result_hash": "sha256:7d4f4ec8fa714b1398ef23fef136c5c8c284b43fba847f67f031553d328043ea",
+  "evidence": {
+    "cargo-regression": [
+      "main.command.warp.evidence-integrity.verification.reference.md"
+    ],
+    "eventness-closeout": [
+      "main.command.warp.evidence-integrity.verification.reference.md"
+    ],
+    "fresh-evidence-and-recovery": [
+      "main.command.warp.evidence-integrity.verification.reference.md"
+    ],
+    "integrated-external-project-scenario": [
+      "main.command.warp.evidence-integrity.verification.reference.md"
+    ],
+    "julia-regression": [
+      "main.command.warp.evidence-integrity.verification.reference.md"
+    ]
+  },
+  "reason": null
+}

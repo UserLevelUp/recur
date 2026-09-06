@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.evidence-integrity",
+  "slice_id": "slice-1",
+  "contract_hash": "contract:main.command.warp.evidence-integrity.slice-1:v1",
+  "attempt_id": "repair-20260905",
+  "result_state": "accepted",
+  "result_hash": "sha256:26a535521262e99925b134d2b31bf4e465c4f9d135a0f67148ea6445026b55f5",
+  "evidence": {
+    "nonmutating-diagnostics-tests": [
+      "main.command.warp.evidence-integrity.slice-1.complete.md"
+    ],
+    "suffix-diagnostics-tests": [
+      "main.command.warp.evidence-integrity.slice-1.complete.md"
+    ]
+  },
+  "reason": null
+}

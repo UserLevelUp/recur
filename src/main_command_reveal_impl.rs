@@ -57,6 +57,9 @@ struct RevealListOutput {
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 struct RevealShowOutput {
+    eventness_policy: recur::warp_policy::WarpPolicy,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    reconciliation: Option<serde_json::Value>,
     root: String,
     lane: String,
     path: String,
@@ -94,7 +97,32 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
             RevealSelection::Found(entry) => {
                 let fields = parse_reveal_fields(&entry.absolute_path)?;
                 let (ordered_fields, extra_fields) = arrange_fields(&fields, &policy.order_steps);
+                let field = |name: &str| {
+                    fields
+                        .iter()
+                        .find(|f| f.key == name)
+                        .map(|f| f.value.as_str())
+                };
+                let reconciliation = field("warp.id").map(|warp| {
+                    let evidence_root = root.join(field("warp.root").unwrap_or("."));
+                    let result = (|| -> Result<serde_json::Value> {
+                        let bounded = evidence_root.canonicalize()?;
+                        if !bounded.starts_with(root.canonicalize()?) { anyhow::bail!("warp.root escapes project root"); }
+                        crate::main_command_warp_impl::reconcile(&bounded, warp, field("observed.state"), field("readiness.slice"))
+                    })();
+                    result.unwrap_or_else(|error| serde_json::json!({"schema":"warp-reconciliation-v1",
+                        "warnings":[format!("reconciliation unavailable: {error:#}")], "mutation":"none"}))
+                });
+                let eventness_root = field("warp.root")
+                    .map(|relative| root.join(relative))
+                    .unwrap_or_else(|| entry.absolute_path.parent().unwrap_or(&root).to_path_buf());
+                let eventness_root = eventness_root.canonicalize()?;
+                if !eventness_root.starts_with(root.canonicalize()?) {
+                    anyhow::bail!("warp.root escapes project root");
+                }
                 let output = RevealShowOutput {
+                    reconciliation,
+                    eventness_policy: recur::warp_policy::WarpPolicy::load(&eventness_root)?,
                     root: root.display().to_string(),
                     lane: entry.lane.clone(),
                     path: entry.path.clone(),
@@ -395,6 +423,16 @@ fn print_show_output(output: &RevealShowOutput, json: bool) -> Result<()> {
     }
 
     println!("Reveal for {}", output.lane);
+    println!(
+        "  eventness policy: {}",
+        serde_json::to_string(&output.eventness_policy)?
+    );
+    if let Some(reconciliation) = &output.reconciliation {
+        println!(
+            "  reconciliation: {}",
+            serde_json::to_string(reconciliation)?
+        );
+    }
     println!("  path: {}", output.path);
     println!(
         "  policy: mode={}, trust={}, max_threads={}, skip_persona_if_known={}",

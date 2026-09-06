@@ -1,0 +1,116 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.evidence-integrity",
+  "required_slices": [
+    {
+      "slice_id": "slice-0",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-capability-audit",
+        "reported-cases-reproduced"
+      ]
+    },
+    {
+      "slice_id": "slice-1",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "suffix-diagnostics-tests",
+        "nonmutating-diagnostics-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-2",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "reveal-policy-tests",
+        "policy-source-parity-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-3",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-3:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "receipt-discovery-tests",
+        "receipt-conflict-tests",
+        "receipt-workflow-docs"
+      ]
+    },
+    {
+      "slice_id": "slice-4",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-4:v1",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "status-evidence-state-tests",
+        "mandatory-gate-visibility-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-5",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-5:v1",
+      "depends_on": [
+        "slice-4"
+      ],
+      "evidence_gates": [
+        "external-evidence-tests",
+        "freshness-and-dirty-source-tests",
+        "zero-tests-failure-skip-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-6",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-6:v1",
+      "depends_on": [
+        "slice-5"
+      ],
+      "evidence_gates": [
+        "map-dependency-contract-tests",
+        "map-evidence-outcome-tests",
+        "baseline-preservation-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-7",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-7:v1",
+      "depends_on": [
+        "slice-6"
+      ],
+      "evidence_gates": [
+        "summary-reconciliation-tests",
+        "authored-intent-preservation-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-final",
+      "contract_hash": "contract:main.command.warp.evidence-integrity.slice-final:v1",
+      "depends_on": [
+        "slice-0",
+        "slice-1",
+        "slice-2",
+        "slice-3",
+        "slice-4",
+        "slice-5",
+        "slice-6",
+        "slice-7"
+      ],
+      "evidence_gates": [
+        "integrated-external-project-scenario",
+        "cargo-regression",
+        "julia-regression",
+        "fresh-evidence-and-recovery",
+        "eventness-closeout"
+      ]
+    }
+  ]
+}

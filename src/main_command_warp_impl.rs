@@ -4,8 +4,7 @@ use anyhow::Context;
 use clap::Subcommand;
 use recur::warp_bubble::{
     validate_warp_ring_map, WarpBubbleMap, WarpRequiredSlice, WarpRingDomain, WarpRingMap,
-    WarpRingSubscription, WarpSliceLayer, BUBBLE_MAP_SCHEMA, MAP_VIEW_SCHEMA, MERGE_SCHEMA,
-    SLICE_LAYER_SCHEMA,
+    WarpRingSubscription, WarpSliceLayer, MAP_VIEW_SCHEMA, MERGE_SCHEMA, SLICE_LAYER_SCHEMA,
 };
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
@@ -15,9 +14,22 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use walkdir::{DirEntry, WalkDir};
 
 const SCHEMA: &str = "warp-status-v1";
+#[cfg(test)]
+use recur::warp_bubble::BUBBLE_MAP_SCHEMA;
 
 #[derive(Subcommand)]
 pub enum WarpSubcommand {
+    /// Fingerprint explicitly named evidence inputs (content checksum, not a signature)
+    Fingerprint {
+        #[arg(required = true)]
+        paths: Vec<String>,
+    },
+    /// Validate a structured external evidence manifest without running its producer
+    Evidence {
+        path: String,
+        #[arg(long)]
+        allow_skipped: bool,
+    },
     /// Score one lane from its file eventness and trace-id role evidence
     Status {
         /// Lane prefix such as demo.project.good
@@ -58,12 +70,7 @@ pub enum WarpSubcommand {
     Config,
 }
 
-#[derive(Clone)]
-struct SuffixPolicy {
-    complete: Vec<String>,
-    interesting: Vec<String>,
-    blocked: Vec<String>,
-}
+type SuffixPolicy = recur::warp_policy::WarpPolicy;
 
 #[derive(Clone, Serialize)]
 struct WarpFile {
@@ -104,6 +111,11 @@ struct WarpNextAction {
 
 #[derive(Serialize)]
 struct WarpStatusOutput {
+    gate_evidence: Vec<recur::warp_evidence::GateAssessment>,
+    recorded_state: String,
+    evidence_status: String,
+    contract_status: String,
+    verdict_scope: &'static str,
     schema: &'static str,
     lane: String,
     scope: String,
@@ -150,6 +162,8 @@ struct WarpConfigOutput {
     schema: &'static str,
     root: String,
     active_suffixes: Vec<String>,
+    policy_source: String,
+    field_sources: BTreeMap<String, String>,
     complete_suffixes: Vec<String>,
     interesting_suffixes: Vec<String>,
     blocked_suffixes: Vec<String>,
@@ -180,6 +194,9 @@ struct WarpProjectionIssue {
 
 #[derive(Clone, Serialize)]
 struct WarpMergeOutput {
+    evidence_status: String,
+    contract_status: String,
+    gate_evidence: Vec<recur::warp_evidence::GateAssessment>,
     schema: &'static str,
     warp_id: String,
     root: String,
@@ -245,6 +262,38 @@ struct WarpRingMergeOutput {
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
+        WarpSubcommand::Fingerprint { paths } => {
+            let mut files = BTreeMap::new();
+            for path in paths {
+                let resolved = recur::warp_evidence::contained_file(&root, &path)?;
+                files.insert(
+                    path,
+                    recur::warp_evidence::fingerprint(&fs::read(resolved)?),
+                );
+            }
+            println!(
+                "{}",
+                serde_json::to_string_pretty(
+                    &serde_json::json!({"schema":"warp-content-fingerprints-v1","algorithm":"fnv1a64","files":files})
+                )?
+            );
+            Ok(())
+        }
+        WarpSubcommand::Evidence {
+            path,
+            allow_skipped,
+        } => {
+            let result = recur::warp_evidence::assess(
+                &root,
+                &format!("evidence:{path}"),
+                &recur::warp_evidence::GateRule {
+                    kind: String::new(),
+                    allow_skipped,
+                },
+            );
+            println!("{}", serde_json::to_string_pretty(&result)?);
+            Ok(())
+        }
         WarpSubcommand::Status { lane } => {
             let output = status(&root, &lane)?;
             emit(&output, json)
@@ -282,6 +331,56 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
             emit_config(&output, json)
         }
     }
+}
+
+/// Pure reconciliation over explicit capsule fields; authored prose is unassessed.
+pub fn reconcile(
+    root: &Path,
+    warp: &str,
+    observed: Option<&str>,
+    next: Option<&str>,
+) -> anyhow::Result<serde_json::Value> {
+    let projection = merge_bubble(root, warp)?;
+    let mut warnings = Vec::new();
+    if observed == Some("complete") && projection.state != "complete" {
+        warnings.push(
+            "observed.state=complete conflicts with unresolved map receipts or gates".to_string(),
+        );
+    }
+    if observed == Some("verified")
+        && (projection.state != "complete"
+            || projection.contract_status != "checked-gates-satisfied")
+    {
+        warnings.push("observed.state=verified is not supported by checked map gates".to_string());
+    }
+    if let Some(next) = next.filter(|s| !s.is_empty() && *s != "none") {
+        if projection.state == "complete" {
+            warnings.push(format!(
+                "readiness.slice={next} is stale: all required slices are recorded complete"
+            ));
+        } else if projection.covered.iter().any(|s| s == next) {
+            warnings.push(format!(
+                "readiness.slice={next} already has accepted coverage"
+            ));
+        } else if !projection.pending.iter().any(|s| s == next)
+            && !projection.blocked.iter().any(|s| s.slice_id == next)
+            && !projection.stale_contract.iter().any(|s| s.slice_id == next)
+        {
+            warnings.push(format!(
+                "readiness.slice={next} is not a recognized unresolved slice"
+            ));
+        }
+    }
+    if observed.is_some_and(|s| !matches!(s, "pending" | "complete" | "verified")) {
+        warnings.push("unsupported observed.state; use pending, complete, or verified".into());
+    }
+    Ok(
+        serde_json::json!({"schema":"warp-reconciliation-v1","warp_id":warp,
+        "projection":projection,"warnings":warnings,"narrative":"unassessed; only explicit observed.state and readiness.slice are compared",
+        "suggested_fields":{"observed.state":if projection.state == "complete" {"complete"} else {"pending"},
+            "readiness.slice":projection.pending.first().map(String::as_str).unwrap_or("none")},
+        "mutation":"none"}),
+    )
 }
 
 fn collapse_plan(root: &Path, lane: &str) -> anyhow::Result<WarpCollapsePlanOutput> {
@@ -326,7 +425,9 @@ fn config(root: &Path) -> anyhow::Result<WarpConfigOutput> {
     Ok(WarpConfigOutput {
         schema: "warp-config-v1",
         root: root.display().to_string(),
-        active_suffixes: vec!["current".to_string()],
+        active_suffixes: policy.active,
+        policy_source: policy.source,
+        field_sources: policy.field_sources,
         complete_suffixes: policy.complete,
         interesting_suffixes: policy.interesting,
         blocked_suffixes: policy.blocked,
@@ -757,103 +858,7 @@ fn load_bubble_map(root: &Path, warp: &str) -> anyhow::Result<Option<(String, Wa
 }
 
 fn validate_bubble_map(map: &WarpBubbleMap, warp: &str, path: &Path) -> anyhow::Result<()> {
-    if map.schema != BUBBLE_MAP_SCHEMA {
-        anyhow::bail!(
-            "unsupported Warp bubble map schema '{}' in '{}'; expected '{}'",
-            map.schema,
-            path.display(),
-            BUBBLE_MAP_SCHEMA
-        );
-    }
-    if map.warp_id != warp {
-        anyhow::bail!(
-            "Warp identity '{}' in '{}' does not match requested '{}'",
-            map.warp_id,
-            path.display(),
-            warp
-        );
-    }
-    let mut ids = BTreeSet::new();
-    for required in &map.required_slices {
-        if required.slice_id.trim().is_empty() || required.contract_hash.trim().is_empty() {
-            anyhow::bail!(
-                "Warp bubble map '{}' contains a blank Slice identity or contract hash",
-                path.display()
-            );
-        }
-        if !ids.insert(required.slice_id.clone()) {
-            anyhow::bail!(
-                "Warp bubble map '{}' contains duplicate Slice '{}'",
-                path.display(),
-                required.slice_id
-            );
-        }
-        let gates = required
-            .evidence_gates
-            .iter()
-            .map(|gate| gate.trim())
-            .collect::<BTreeSet<_>>();
-        if gates.len() != required.evidence_gates.len() || gates.contains("") {
-            anyhow::bail!(
-                "Warp Slice '{}' in '{}' has blank or duplicate evidence gates",
-                required.slice_id,
-                path.display()
-            );
-        }
-    }
-    for required in &map.required_slices {
-        let dependencies = required.depends_on.iter().collect::<BTreeSet<_>>();
-        if dependencies.len() != required.depends_on.len() {
-            anyhow::bail!(
-                "Warp Slice '{}' in '{}' has duplicate dependencies",
-                required.slice_id,
-                path.display()
-            );
-        }
-        for dependency in &required.depends_on {
-            if dependency == &required.slice_id || !ids.contains(dependency) {
-                anyhow::bail!(
-                    "Warp Slice '{}' in '{}' has invalid dependency '{}'",
-                    required.slice_id,
-                    path.display(),
-                    dependency
-                );
-            }
-        }
-    }
-    let mut remaining = map
-        .required_slices
-        .iter()
-        .map(|required| {
-            (
-                required.slice_id.clone(),
-                required.depends_on.iter().cloned().collect::<BTreeSet<_>>(),
-            )
-        })
-        .collect::<BTreeMap<_, _>>();
-    while !remaining.is_empty() {
-        let ready = remaining
-            .iter()
-            .filter(|(_, dependencies)| dependencies.is_empty())
-            .map(|(slice, _)| slice.clone())
-            .collect::<Vec<_>>();
-        if ready.is_empty() {
-            anyhow::bail!(
-                "Warp bubble map '{}' contains a dependency cycle involving {}",
-                path.display(),
-                remaining.keys().cloned().collect::<Vec<_>>().join(", ")
-            );
-        }
-        for slice in &ready {
-            remaining.remove(slice);
-        }
-        for dependencies in remaining.values_mut() {
-            for slice in &ready {
-                dependencies.remove(slice);
-            }
-        }
-    }
-    Ok(())
+    recur::warp_bubble::validate_bubble_map(map, warp, path)
 }
 
 fn load_warp_layers(root: &Path, warp: &str) -> anyhow::Result<Vec<LocatedWarpLayer>> {
@@ -920,6 +925,7 @@ fn compose_bubble(
     map: WarpBubbleMap,
     layers: Vec<LocatedWarpLayer>,
 ) -> WarpMergeOutput {
+    let mut gate_evidence = Vec::new();
     let required_by_id = map
         .required_slices
         .iter()
@@ -980,6 +986,11 @@ fn compose_bubble(
             .cloned()
             .unwrap_or_default();
         if located.is_empty() {
+            gate_evidence.extend(recur::warp_evidence::gates(
+                root,
+                required,
+                &BTreeMap::new(),
+            ));
             pending.push(required.slice_id.clone());
             continue;
         }
@@ -1012,14 +1023,23 @@ fn compose_bubble(
             .iter()
             .filter(|item| {
                 !item.layer.result_hash.trim().is_empty()
-                    && required.evidence_gates.iter().all(|gate| {
-                        item.layer
-                            .evidence
-                            .get(gate)
-                            .is_some_and(|references| !references.is_empty())
-                    })
+                    && recur::warp_evidence::gates(root, required, &item.layer.evidence)
+                        .iter()
+                        .all(|g| g.satisfied)
             })
             .copied()
+            .collect::<Vec<_>>();
+        for item in &current {
+            gate_evidence.extend(recur::warp_evidence::gates(
+                root,
+                required,
+                &item.layer.evidence,
+            ));
+        }
+        let invalid_gates = gate_evidence
+            .iter()
+            .filter(|g| g.slice_id == required.slice_id && !g.satisfied)
+            .map(|g| format!("{}={}", g.gate, g.status))
             .collect::<Vec<_>>();
         let result_hashes = valid
             .iter()
@@ -1034,9 +1054,9 @@ fn compose_bubble(
                 ),
                 evidence: valid.iter().map(|item| item.path.clone()).collect(),
             });
-        } else if stale.is_empty() && result_hashes.len() == 1 {
+        } else if stale.is_empty() && result_hashes.len() == 1 && invalid_gates.is_empty() {
             candidates.insert(required.slice_id.clone());
-        } else if current.len() > valid.len() {
+        } else if current.len() > valid.len() || !invalid_gates.is_empty() {
             let missing = required
                 .evidence_gates
                 .iter()
@@ -1052,7 +1072,9 @@ fn compose_bubble(
                 .collect::<Vec<_>>();
             blocked.push(WarpProjectionIssue {
                 slice_id: required.slice_id.clone(),
-                reason: if missing.is_empty() {
+                reason: if !invalid_gates.is_empty() {
+                    format!("unresolved evidence gates: {}", invalid_gates.join(", "))
+                } else if missing.is_empty() {
                     "accepted layer is missing a result hash or a complete evidence set".to_string()
                 } else {
                     format!(
@@ -1130,6 +1152,23 @@ fn compose_bubble(
     ]);
     layer_ids.sort();
     WarpMergeOutput {
+        evidence_status: recur::warp_evidence::combined_status(
+            gate_evidence.iter().map(|g| g.status.as_str()),
+        )
+        .into(),
+        contract_status: if state != "complete" {
+            "unresolved"
+        } else if map
+            .required_slices
+            .iter()
+            .all(|s| s.evidence_mode == "checked" && !s.evidence_gates.is_empty())
+        {
+            "checked-gates-satisfied"
+        } else {
+            "declared-gates-satisfied"
+        }
+        .into(),
+        gate_evidence,
         schema: MERGE_SCHEMA,
         warp_id: map.warp_id,
         root: root.display().to_string(),
@@ -1163,7 +1202,32 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
     };
     let ring = merge_ring(root, lane)?;
     if files.is_empty() && bubble.is_none() && ring.is_none() {
-        anyhow::bail!("no eventness files found for lane '{}'", lane);
+        let mut nearby = WalkDir::new(root)
+            .into_iter()
+            .filter_entry(keep_entry)
+            .filter_map(Result::ok)
+            .filter(|entry| entry.file_type().is_file())
+            .filter(|entry| {
+                entry
+                    .file_name()
+                    .to_string_lossy()
+                    .starts_with(&format!("{lane}."))
+            })
+            .map(|entry| normalize_path(entry.path().strip_prefix(root).unwrap_or(entry.path())))
+            .collect::<Vec<_>>();
+        nearby.sort();
+        let detail = if nearby.is_empty() {
+            "no matching lane artifacts; check the lane identity and --dir (other roots were not searched)".to_string()
+        } else {
+            format!("nearby files have unsupported state suffixes: {}; recognized suffixes: {}; inspect `recur warp config` and select a configured suffix; check destination conflicts before any rename (no files changed)",
+                nearby.join(", "), policy.active.iter().chain(&policy.complete).chain(&policy.interesting).chain(&policy.blocked).cloned().collect::<Vec<_>>().join(", "))
+        };
+        anyhow::bail!(
+            "no eventness files found for lane '{}' in '{}': {}",
+            lane,
+            root.display(),
+            detail
+        );
     }
     files.sort_by(|left, right| left.path.cmp(&right.path));
 
@@ -1182,6 +1246,7 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
         trigger: 0,
     };
     let mut blocked_evidence = Vec::new();
+    let mut gate_evidence = Vec::new();
 
     for file in &files {
         *state_suffixes.entry(file.state.clone()).or_insert(0) += 1;
@@ -1191,6 +1256,22 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
         let text = fs::read_to_string(&absolute)
             .with_context(|| format!("failed to read '{}'", absolute.display()))?;
         count_roles(&text, &mut roles);
+        for line in text
+            .lines()
+            .filter_map(|l| l.strip_prefix("warp.receipt = "))
+        {
+            let receipt: serde_json::Value =
+                serde_json::from_str(line).context("invalid lifecycle receipt metadata")?;
+            let declared: WarpRequiredSlice = serde_json::from_value(receipt.clone())
+                .context("invalid lifecycle receipt contract")?;
+            let evidence: BTreeMap<String, Vec<String>> = serde_json::from_value(
+                receipt
+                    .get("evidence")
+                    .cloned()
+                    .unwrap_or_else(|| serde_json::json!({})),
+            )?;
+            gate_evidence.extend(recur::warp_evidence::gates(root, &declared, &evidence));
+        }
         if file_contains_blocker(&text) {
             *state_groups.entry("blocked".to_string()).or_insert(0) += 1;
             blocked_evidence.push(file.path.clone());
@@ -1222,6 +1303,20 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
 
     let mut residuals = Vec::new();
     let mut actions = Vec::new();
+    for gate in gate_evidence.iter().filter(|g| !g.satisfied) {
+        residuals.push(WarpResidual {
+            name: format!(
+                "evidence-gate:{}:{}:{}",
+                gate.slice_id, gate.gate, gate.status
+            ),
+            weight: 5.0,
+            evidence: gate.evidence.iter().map(|e| e.reference.clone()).collect(),
+            blocker: true,
+        });
+    }
+    if let Some(b) = &bubble {
+        gate_evidence.extend(b.gate_evidence.clone());
+    }
     if blocked > 0 {
         residuals.push(WarpResidual {
             name: "external-blocker".to_string(),
@@ -1298,6 +1393,25 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
     };
 
     Ok(WarpStatusOutput {
+        recorded_state: if complete > 0 {
+            "completion-present"
+        } else {
+            "no-completion-record"
+        }
+        .into(),
+        evidence_status: recur::warp_evidence::combined_status(
+            gate_evidence.iter().map(|g| g.status.as_str()),
+        )
+        .into(),
+        contract_status: match bubble.as_ref() {
+            Some(b) => b.contract_status.as_str(),
+            None if gate_evidence.is_empty() => "not-declared",
+            None if gate_evidence.iter().any(|g| !g.satisfied) => "unresolved",
+            None => "declared-gates-satisfied",
+        }
+        .into(),
+        gate_evidence,
+        verdict_scope: "recorded-eventness-and-declared-coverage; does not certify test success",
         schema: SCHEMA,
         lane: lane.to_string(),
         scope: format!("{lane}.**"),
@@ -1376,42 +1490,7 @@ fn add_projection_pressure(
 }
 
 fn load_suffix_policy(root: &Path) -> anyhow::Result<SuffixPolicy> {
-    let defaults = SuffixPolicy {
-        complete: vec!["complete".to_string()],
-        interesting: vec!["strange".to_string()],
-        blocked: vec!["blocked".to_string()],
-    };
-    let config_path = root.join(".recur").join("config.toml");
-    if !config_path.is_file() {
-        return Ok(defaults);
-    }
-    let text = fs::read_to_string(&config_path)
-        .with_context(|| format!("failed to read '{}'", config_path.display()))?;
-    let value: toml::Value = toml::from_str(&text)
-        .with_context(|| format!("failed to parse '{}'", config_path.display()))?;
-    let Some(suffixes) = value
-        .get("warp")
-        .and_then(toml::Value::as_table)
-        .and_then(|warp| warp.get("suffixes"))
-        .and_then(toml::Value::as_table)
-    else {
-        return Ok(defaults);
-    };
-    Ok(SuffixPolicy {
-        complete: strings_at(suffixes, "complete").unwrap_or(defaults.complete),
-        interesting: strings_at(suffixes, "interesting").unwrap_or(defaults.interesting),
-        blocked: strings_at(suffixes, "blocked").unwrap_or(defaults.blocked),
-    })
-}
-
-fn strings_at(table: &toml::value::Table, key: &str) -> Option<Vec<String>> {
-    table.get(key).and_then(toml::Value::as_array).map(|items| {
-        items
-            .iter()
-            .filter_map(toml::Value::as_str)
-            .map(|value| value.to_ascii_lowercase())
-            .collect()
-    })
+    SuffixPolicy::load(root)
 }
 
 fn collect_lane_files(
@@ -1460,31 +1539,11 @@ fn keep_entry(entry: &DirEntry) -> bool {
 }
 
 fn state_from_name(name: &str, policy: &SuffixPolicy) -> Option<String> {
-    let stem = name.strip_suffix(".md")?;
-    let state = stem.rsplit('.').next()?.to_ascii_lowercase();
-    if state == "current"
-        || policy.complete.contains(&state)
-        || policy.interesting.contains(&state)
-        || policy.blocked.contains(&state)
-    {
-        Some(state)
-    } else {
-        None
-    }
+    policy.state(name)
 }
 
 fn group_for_state(state: &str, policy: &SuffixPolicy) -> &'static str {
-    if state == "current" {
-        "active"
-    } else if policy.complete.iter().any(|value| value == state) {
-        "complete"
-    } else if policy.interesting.iter().any(|value| value == state) {
-        "interesting"
-    } else if policy.blocked.iter().any(|value| value == state) {
-        "blocked"
-    } else {
-        "other"
-    }
+    policy.group(state)
 }
 
 fn count_roles(text: &str, roles: &mut TraceIdRoles) {
@@ -1513,12 +1572,20 @@ fn normalize_path(path: &Path) -> String {
     path.to_string_lossy().replace('\\', "/")
 }
 
+fn emit_evidence_qualification(output: &WarpStatusOutput) {
+    println!("  recorded state: {}", output.recorded_state);
+    println!("  evidence status: {}", output.evidence_status);
+    println!("  contract status: {}", output.contract_status);
+    println!("  verdict scope: {}", output.verdict_scope);
+}
+
 fn emit(output: &WarpStatusOutput, json: bool) -> anyhow::Result<()> {
     if json {
         println!("{}", serde_json::to_string_pretty(output)?);
         return Ok(());
     }
     println!("Warp status for {}", output.lane);
+    emit_evidence_qualification(output);
     println!("  verdict: {}", output.verdict);
     println!("  objective: {}", output.objective);
     println!("  files: {}", output.files.len());
@@ -1539,6 +1606,7 @@ fn emit_explain(output: &WarpStatusOutput, json: bool) -> anyhow::Result<()> {
         return Ok(());
     }
     println!("Warp explanation for {}", output.lane);
+    emit_evidence_qualification(output);
     println!("  verdict: {}", output.verdict);
     println!("  objective: {}", output.objective);
     println!("  evidence:");
@@ -1620,6 +1688,11 @@ fn emit_config(output: &WarpConfigOutput, json: bool) -> anyhow::Result<()> {
     println!("  complete: {}", output.complete_suffixes.join(", "));
     println!("  interesting: {}", output.interesting_suffixes.join(", "));
     println!("  blocked: {}", output.blocked_suffixes.join(", "));
+    println!("  policy source: {}", output.policy_source);
+    println!(
+        "  field sources: {}",
+        serde_json::to_string(&output.field_sources)?
+    );
     Ok(())
 }
 
@@ -1657,6 +1730,14 @@ fn emit_merge(output: &WarpMergeOutput, json: bool) -> anyhow::Result<()> {
         return Ok(());
     }
     println!("Warp bubble merge for {}", output.warp_id);
+    println!("  evidence status: {}", output.evidence_status);
+    println!("  contract status: {}", output.contract_status);
+    for gate in &output.gate_evidence {
+        println!(
+            "  gate {}.{}: {} (satisfied={})",
+            gate.slice_id, gate.gate, gate.status, gate.satisfied
+        );
+    }
     println!("  state: {}", output.state);
     println!(
         "  coverage: {}/{}",
@@ -1692,6 +1773,8 @@ mod tests {
 
     fn required(slice_id: &str, depends_on: &[&str]) -> WarpRequiredSlice {
         WarpRequiredSlice {
+            evidence_mode: "declared".into(),
+            gate_rules: BTreeMap::new(),
             slice_id: slice_id.to_string(),
             contract_hash: format!("contract-{slice_id}"),
             depends_on: depends_on.iter().map(|value| value.to_string()).collect(),

@@ -10,6 +10,8 @@ pub mod recur_lang_ir;
 pub mod search;
 pub mod tree;
 pub mod warp_bubble;
+pub mod warp_evidence;
+pub mod warp_policy;
 
 // Traits for dogfooding hierarchical organization
 #[path = "trait/mod.rs"]

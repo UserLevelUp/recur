@@ -110,6 +110,9 @@ Core `recur warp` never performs these writes.
 
 ## Recursive ring topology
 
+For precise completion claims, policy-aware receipts, checked external evidence,
+and reveal reconciliation, see [completion evidence](main.command.warp.evidence.readme.md).
+
 When `<warp>.warp-ring.json` is present, the pure query surface projects a
 coordinator and independently rooted child Warp domains:
 
