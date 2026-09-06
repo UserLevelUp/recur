@@ -9,7 +9,10 @@
 
 import { candidates } from './solver.js';
 
-export async function loadPuzzle(dataDir) {
+export async function loadPuzzle(dataDir, difficulty='medium') {
+  const response = await fetch(`${dataDir}/sudoku.playable.json`, {cache:'no-store'});
+  if (response.ok) return parsePlayable(await response.json(), difficulty);
+  if (response.status !== 404) throw new Error('Playable package unavailable');
   const [solutionText, cascadesJson] = await Promise.all([
     fetch(`${dataDir}/sudoku.solution.txt`).then(r => r.text()),
     fetch(`${dataDir}/sudoku.cascades.json`).then(r => r.json()),
@@ -19,6 +22,30 @@ export async function loadPuzzle(dataDir) {
   const cascades = indexCascades(cascadesJson);
 
   return { solution, cascades };
+}
+
+import {validBoard, fingerprint} from './teaching.js';
+
+export function parsePlayable(pkg, difficulty) {
+  if(pkg.schema !== 'sudoku-playable-v1' || typeof pkg.puzzle_id !== 'string') throw new Error('Unsupported playable package');
+  const solution=parseSolution(pkg.solution_text), full=buildGrid(solution,new Set());
+  if(solution.size!==81 || !validBoard(full) || full.flat().includes(0)) throw new Error('Invalid solution');
+  const preset=pkg.presets?.[difficulty];
+  if(!preset || !validBoard(preset.givens)) throw new Error('Invalid playable givens');
+  const mask=new Set();
+  for(let r=1;r<=9;r++) for(let c=1;c<=9;c++) {
+    const value=preset.givens[r-1][c-1];
+    if(value===0) mask.add(cellId(r,c));
+    else if(value!==full[r-1][c-1]) throw new Error('Givens disagree with solution');
+  }
+  if(mask.size!==preset.gaps || !['naked-single-solvable','ungraded'].includes(preset.grade?.label) ||
+      preset.grade.rubric!=='naked-singles-v1') throw new Error('Invalid grading metadata');
+  if(!Array.isArray(pkg.cascades) || pkg.cascades.length!==81 ||
+      new Set(pkg.cascades.map(e=>e.cell)).size!==81 ||
+      pkg.cascades.some(e=>solution.get(e.cell)!==e.value || !e.cascade)) throw new Error('Invalid cascade package');
+  return {solution,cascades:indexCascades(pkg.cascades),mask,
+    puzzleId:pkg.puzzle_id+':'+difficulty+':'+fingerprint(preset.givens),
+    grade:`${mask.size} gaps; Julia-validated unique puzzle. Technique grade: ${preset.grade.label}. Ungraded does not mean hard.`};
 }
 
 /**
@@ -48,13 +75,10 @@ function indexCascades(arr) {
 
 /**
  * Build a mask Set from the solution — cells the player must fill.
- * Uses a seeded deterministic approach that respects solvability.
+ * Legacy-only seeded clue-density mask. No uniqueness guarantee.
  *
- * The algorithm removes cells one at a time and validates that the
- * reduced grid can still be solved with progressively harder strategies:
- *   Easy:   ~25 blanks, every blank solvable by naked singles alone
- *   Medium: ~35 blanks, solvable by naked + hidden singles
- *   Hard:   ~45 blanks, deeper elimination needed
+ * Candidate-count heuristics do not establish technique difficulty.
+ * New Julia packages provide validated givens; this fallback preserves old data.
  *
  * The mask is symmetric (180° rotational) when possible, giving
  * the puzzle a professional look.

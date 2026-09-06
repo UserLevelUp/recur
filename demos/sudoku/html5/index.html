@@ -16,9 +16,9 @@
 <main>
   <div class="left-col">
     <div class="difficulty-bar">
-      <button class="difficulty-btn" data-difficulty="easy">Easy</button>
-      <button class="difficulty-btn" data-difficulty="medium">Medium</button>
-      <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+      <button class="difficulty-btn" data-difficulty="easy">25 gaps</button>
+      <button class="difficulty-btn" data-difficulty="medium">35 gaps</button>
+      <button class="difficulty-btn" data-difficulty="hard">45 gaps</button>
       <button class="new-puzzle-btn" id="new-puzzle-btn">New Puzzle</button>
     </div>
     <div id="generate-status" class="generate-status hidden"></div>
@@ -27,6 +27,7 @@
       <span id="stat-remaining">?</span> remaining &nbsp;·&nbsp;
       <span id="stat-placed">0</span> / <span id="stat-total">?</span> placed
     </div>
+    <div id="puzzle-grade" role="status"></div>
 
     <div id="grid-container"></div>
 
@@ -41,6 +42,19 @@
 
   <div class="right-col">
     <div class="panel-label" id="label-cascade">Cascade &amp; Hints</div>
+    <div class="teaching-controls" aria-label="Teaching actions">
+      <button id="help-cell">Help with this cell</button>
+      <button id="easier-move">Find an easier move</button>
+      <button id="show-candidates">Show candidates</button>
+      <button id="show-solution">Show solution</button>
+    </div>
+    <div id="teaching-content" class="teaching-content" aria-live="polite">
+      Select an empty cell. H gives the next teaching step; it never places a digit.
+    </div>
+    <div class="teaching-controls">
+      <button id="next-hint" hidden>Next teaching step</button>
+      <button id="jump-hint" hidden>Select suggested cell</button>
+    </div>
     <div id="cascade-container"></div>
 
     <div class="panel-label" id="label-pencil" style="margin-top: 1rem;">Pencil Ins</div>

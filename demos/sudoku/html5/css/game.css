@@ -1,6 +1,21 @@
 /* ── Reset & base ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+.teaching-controls { display:flex; flex-wrap:wrap; gap:.5rem; margin:.5rem 0; }
+.teaching-controls button, #pencil-container button {
+  padding:.55rem .75rem; border:1px solid #7893bd; border-radius:4px;
+  background:#16213e; color:#e0eaff; cursor:pointer;
+}
+button:focus-visible, .sudoku-grid td:focus-visible { outline:3px solid #ffd080; outline-offset:2px; }
+.teaching-controls [hidden] { display:none; }
+.teaching-content { background:#16213e; padding:1rem; border:1px solid #7893bd; line-height:1.6; min-height:7rem; }
+#puzzle-grade { color:#c0cddd; font-size:.85rem; max-width:440px; }
+body .pencil-marks .pm { font-size:11px; color:#d3e1f7; }
+body .pencil-marks .pm-manual { color:#ffe0a0; }
+body .stats-bar, body .panel-label, body header .subtitle { color:#abb8ca; }
+body .cascade-placeholder, body .cascade-placeholder .cascade-hint, body .pencil-count, body footer { color:#abb8ca; }
+#pencil-container { line-height:1.6; }
+
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
   background: #1a1a2e;

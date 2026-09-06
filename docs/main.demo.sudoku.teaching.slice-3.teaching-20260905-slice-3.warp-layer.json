@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.sudoku.teaching",
+  "slice_id": "slice-3",
+  "contract_hash": "contract:main.demo.sudoku.teaching.slice-3:v1",
+  "attempt_id": "teaching-20260905-slice-3",
+  "result_state": "accepted",
+  "result_hash": "sha256:5be9ed5e9b2c0ad2870e9ec8b6e22197841aaaa114de29c7ef732e140c5f8947",
+  "evidence": {
+    "pencil-ui-regression": [
+      "main.demo.sudoku.teaching.slice-3.complete.md"
+    ],
+    "state-invalidation-tests": [
+      "main.demo.sudoku.teaching.slice-3.complete.md"
+    ]
+  },
+  "reason": null
+}

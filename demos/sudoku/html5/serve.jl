@@ -12,9 +12,10 @@ No user-supplied code is ever executed.
 """
 
 using HTTP
+using JSON3
 
 const DIR = @__DIR__
-const PORT = 8787
+const PORT = parse(Int, get(ENV, "SUDOKU_PORT", "8787"))
 
 # Load Generator + Recur modules (one-time cost at startup)
 const JULIA_DIR = normpath(joinpath(DIR, "..", "julia"))
@@ -31,7 +32,7 @@ const MIME_TYPES = Dict(
     ".txt"  => "text/plain",
 )
 
-const DATA_DIR = joinpath(DIR, "data", "easy-001")
+const DATA_DIR = get(ENV, "SUDOKU_DATA_DIR", joinpath(DIR, "data", "easy-001"))
 
 function handler(req)
     # Strip query string first, then handle root
@@ -46,7 +47,7 @@ function handler(req)
     end
 
     # ── Static file serving ────────────────────────────────────────
-    filepath = joinpath(DIR, lstrip(path_clean, '/'))
+    filepath = path_clean == "/data/easy-001/sudoku.playable.json" ? joinpath(DATA_DIR,"sudoku.playable.json") : joinpath(DIR, lstrip(path_clean, '/'))
 
     if !isfile(filepath)
         return HTTP.Response(404, "Not found: $path_clean")
@@ -60,38 +61,15 @@ end
 
 """
 Generate a new random puzzle: solution → flow events → recur trace-id → cascades JSON.
-Writes to data/easy-001/ (overwrites) and returns the cascades + solution as JSON.
+Publishes one complete sudoku.playable.json; legacy files remain unchanged.
 """
 function handle_generate()
     try
         println("  [API] Generating new puzzle...")
         t0 = time()
 
-        # 1. Generate random valid solution
-        grid = Generator.generate_solution()
-        pairs = Generator.solution_to_pairs(grid)
-        println("  [API] Solution generated ($(round(time() - t0, digits=2))s)")
-
-        # 2. Write solution file
-        Generator.write_solution_file(grid, DATA_DIR)
-
-        # 3. Generate cascades (calls recur 81 times)
-        t1 = time()
-        cascades_path = Generator.generate_cascades(pairs, DATA_DIR, Recur)
-        println("  [API] Cascades generated — 81 recur calls ($(round(time() - t1, digits=2))s)")
-
-        # 4. Read back and return as JSON
-        cascades_json = read(cascades_path, String)
-
-        # Build solution map for the response
-        solution_lines = ["$(id) = $(val)" for (id, val) in pairs]
-
-        response = """{
-  "status": "ok",
-  "solution_text": $(repr(join(solution_lines, "\n"))),
-  "cascades": $(cascades_json),
-  "elapsed_ms": $(round(Int, (time() - t0) * 1000))
-}"""
+        package = Generator.publish_playable(DATA_DIR, Recur)
+        response = JSON3.write(merge(package, Dict("status"=>"ok", "elapsed_ms"=>round(Int,(time()-t0)*1000))))
 
         println("  [API] Done in $(round(time() - t0, digits=2))s")
         return HTTP.Response(200, [
@@ -104,7 +82,7 @@ function handle_generate()
         println("  [API] Error: $msg")
         return HTTP.Response(500, [
             "Content-Type" => "application/json",
-        ], """{"status": "error", "message": $(repr(msg))}""")
+        ], JSON3.write(Dict("status"=>"error", "message"=>msg)))
     end
 end
 

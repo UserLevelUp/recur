@@ -68,6 +68,7 @@ function trace_id(
         run(pipeline(`$args`, stdout=out, stderr=err))
     catch e
         isa(e, ProcessFailedException) || rethrow()
+        return nothing
     end
 
     output = String(take!(out))

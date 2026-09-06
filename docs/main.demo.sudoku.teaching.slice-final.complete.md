@@ -1,6 +1,6 @@
 # Slice final: Verify the complete teaching loop and close out
 
-Status: todo
+Status: complete
 Warp: main.demo.sudoku.teaching
 Contract: contract:main.demo.sudoku.teaching.slice-final:v1
 
@@ -29,12 +29,14 @@ Improvement 27 docs-reconciliation Warp is not completed by this work.
 - full-regression
 - evidence-and-eventness-closeout
 
-## Observed state and next action
+## Observed state
 
-Pending. These are target criteria, not completed implementation or test receipts.
-Start by reading main.demo.sudoku.teaching.readme.md and the accepted predecessor, if any.
-Retain failing/reproduced behavior, implementation evidence and verified results before
-writing an acceptance layer. Keep one current marker within this bubble.
+Complete. See verified outcome below and the final source-bound verification receipt.
 
 defines: sudoku.teaching.slice.final Verify the complete teaching loop and close out
 consumes: sudoku.teaching.contract board-bound progressive teaching without false proof claims
+
+
+## Verified slice outcome
+
+All preceding slices passed their targeted checks. End-to-end browser and real Julia API tests passed; Cargo 179 passed / 7 ignored; full Julia 2723 passed / 73 expected broken / zero failed. Exact commands, environment, compatibility decisions, local screenshot references, limitations and source-byte hashes are recorded in main.demo.sudoku.teaching.verification.md and .sources.json. No core Recur changes; no live user puzzle regeneration. Reveal and readme now point to completed evidence. Layer references represent reviewed declared evidence, not a claim that Recur itself ran the tests.

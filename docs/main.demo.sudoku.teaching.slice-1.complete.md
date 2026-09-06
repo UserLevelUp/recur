@@ -1,6 +1,6 @@
 # Slice 1: Define and verify board-bound deduction records
 
-Status: todo
+Status: complete
 Warp: main.demo.sudoku.teaching
 Contract: contract:main.demo.sudoku.teaching.slice-1:v1
 
@@ -26,12 +26,16 @@ does not certify mathematical validity. No new generic Recur schema is required.
 - deduction-contract
 - deduction-soundness-tests
 
-## Observed state and next action
+## Observed state
 
-Pending. These are target criteria, not completed implementation or test receipts.
-Start by reading main.demo.sudoku.teaching.readme.md and the accepted predecessor, if any.
-Retain failing/reproduced behavior, implementation evidence and verified results before
-writing an acceptance layer. Keep one current marker within this bubble.
+Complete. See verified outcome below and the final source-bound verification receipt.
 
 defines: sudoku.teaching.slice.1 Define and verify board-bound deduction records
 consumes: sudoku.teaching.contract board-bound progressive teaching without false proof claims
+
+
+## Verified slice outcome
+
+Added js/teaching.js and tests/teaching.test.js. Records bind puzzle ID, revision, full board fingerprint, canonical cell IDs, technique, all occupied peer premises, conclusion and highlights. Only naked singles are supported. Tentative attempts block teaching; manual notes are not logical premises. Invalid boards, stale/tampered records and unsupported techniques are rejected. Row-major ordering is deterministic, not a claimed difficulty ranking. Existing cascade JSON is unchanged.
+
+`python demos/sudoku/html5/tests/browser_test.py --baseline` executed ES modules in actual Edge 152.0.4191.62: 44 assertions passed, including 12 single proofs, candidate spoilers staged explicitly, mismatched identity/revision/fingerprint, tampering, duplicate board and no board mutation. Tests use only the accepted board, no stored solution. Implementation is currently uncommitted; evidence is source-bound by subsequent final receipt.

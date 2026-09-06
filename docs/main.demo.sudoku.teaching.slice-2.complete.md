@@ -1,6 +1,6 @@
 # Slice 2: Present a clickable progressive teaching hint
 
-Status: todo
+Status: complete
 Warp: main.demo.sudoku.teaching
 Contract: contract:main.demo.sudoku.teaching.slice-2:v1
 
@@ -27,12 +27,16 @@ a real browser; do not substitute a screenshot of markup for interaction evidenc
 - progressive-hint-tests
 - browser-interaction-evidence
 
-## Observed state and next action
+## Observed state
 
-Pending. These are target criteria, not completed implementation or test receipts.
-Start by reading main.demo.sudoku.teaching.readme.md and the accepted predecessor, if any.
-Retain failing/reproduced behavior, implementation evidence and verified results before
-writing an acceptance layer. Keep one current marker within this bubble.
+Complete. See verified outcome below and the final source-bound verification receipt.
 
 defines: sudoku.teaching.slice.2 Present a clickable progressive teaching hint
 consumes: sudoku.teaching.contract board-bound progressive teaching without false proof claims
+
+
+## Verified slice outcome
+
+Implemented explicit Help with this cell / Find an easier move, clickable suggestion selection, H shortcut, and four progressive explanation stages. Candidate and stored-solution disclosure are separate actions. No unsupported contradiction claim is made. Focus stays on the next-step control through conclusion; suggesting a cell does not silently select or place it.
+
+`python demos/sudoku/html5/tests/browser_test.py` passes in Edge 152.0.4191.62. Real click/keyboard checks cover spoiler boundaries, row/peer highlights, selection preservation, explicit jump focus, and four steps. See html5/TEACHING.md and final verification receipt. Advanced legacy exports remain available but the teaching UI supports only verified naked singles.

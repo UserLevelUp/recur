@@ -1,6 +1,6 @@
 # Slice 3: Keep hints and pencil annotations consistent after changes
 
-Status: todo
+Status: complete
 Warp: main.demo.sudoku.teaching
 Contract: contract:main.demo.sudoku.teaching.slice-3:v1
 
@@ -24,12 +24,16 @@ highlight or annotation count. Record browser proof of the former 20-annotated v
 - state-invalidation-tests
 - pencil-ui-regression
 
-## Observed state and next action
+## Observed state
 
-Pending. These are target criteria, not completed implementation or test receipts.
-Start by reading main.demo.sudoku.teaching.readme.md and the accepted predecessor, if any.
-Retain failing/reproduced behavior, implementation evidence and verified results before
-writing an acceptance layer. Keep one current marker within this bubble.
+Complete. See verified outcome below and the final source-bound verification receipt.
 
 defines: sudoku.teaching.slice.3 Keep hints and pencil annotations consistent after changes
 consumes: sudoku.teaching.contract board-bound progressive teaching without false proof claims
+
+
+## Verified slice outcome
+
+Game revisions increment on accepted placement and tentative entry/clear. New puzzles and presets reload bound identities; cached records are revalidated before display. Hint requests do not clear attempts or place values. Manual notes override the live computed layer per cell; explicit Auto-fill replaces them. Solved notes are removed and counts refresh immediately.
+
+Browser fixture starts with the screenshot's 19 blanks. Auto-fill reports 19 annotated; placing r2c9=4 reports 18 and removes that row (no stale 20-versus-19 discrepancy). Manual notes survive another move. Tests cover tentative wrong entry, blocked teaching, Backspace correction, rapid hint/move transitions, zero remaining/notes, difficulty navigation, failed generation retaining board and successful reset.

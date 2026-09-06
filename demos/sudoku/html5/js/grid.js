@@ -19,6 +19,7 @@ export class Grid {
 
     this.pencilMode = false;    // P key toggles pencil mode
     this.manualMarks = new Map(); // cellId -> Set of player-annotated digits
+    this.computedMarks = new Map(); // live automatic layer; manual notes override per cell
 
     this._build();
     this._bindKeyboard();
@@ -35,6 +36,8 @@ export class Grid {
       for (let col = 1; col <= 9; col++) {
         const td = document.createElement('td');
         const id = `sudoku.r${row}.c${col}`;
+        td.dataset.cell = id;
+        td.setAttribute('aria-label', `row ${row}, column ${col}`);
 
         if (col === 4 || col === 7) td.classList.add('box-left');
 
@@ -58,6 +61,12 @@ export class Grid {
           td.appendChild(val);
 
           td.addEventListener('click', () => this._selectCell(id, row, col, td));
+          td.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              if (this.selected !== id) this._selectCell(id, row, col, td);
+            }
+          });
         } else {
           td.classList.add('given');
           td.textContent = this.solution.get(id);
@@ -75,6 +84,7 @@ export class Grid {
 
   _bindKeyboard() {
     document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.altKey || e.metaKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
       if (!this.selected) return;
       const m = this.selected.match(/sudoku\.r(\d+)\.c(\d+)/);
       if (!m) return;
@@ -83,6 +93,7 @@ export class Grid {
   }
 
   _selectCell(id, row, col, td) {
+    if (!td.classList.contains('empty')) return;
     // Toggle: clicking the same cell deselects it
     if (this.selected === id) {
       td.classList.remove('selected');
@@ -133,10 +144,13 @@ export class Grid {
     if (val) { val.textContent = value; val.style.display = 'flex'; }
     else td.textContent = value; // fallback for given cells
 
-    td.classList.remove('error', 'placed');
+    td.classList.remove('error', 'placed', 'wrong');
     td.classList.add(correct ? 'placed' : 'wrong');
     if (correct) {
       td.classList.remove('empty');
+      td.classList.remove('selected');
+      this.manualMarks.delete(id);
+      this.computedMarks.delete(id);
       td.tabIndex = -1;
       if (this.selected === id) this.selected = null;
     }
@@ -158,6 +172,7 @@ export class Grid {
 
     td.classList.remove('wrong');
     td.classList.add('empty');
+    this.onCellCleared?.(row, col);
     return true;
   }
 
@@ -168,7 +183,7 @@ export class Grid {
   _togglePencilMark(row, col, digit) {
     const id = `sudoku.r${row}.c${col}`;
     const td = this.cells.get(id);
-    if (!td) return;
+    if (!td || !td.classList.contains('empty') || td.classList.contains('wrong')) return;
 
     if (!this.manualMarks.has(id)) {
       this.manualMarks.set(id, new Set());
@@ -191,6 +206,21 @@ export class Grid {
       span.classList.add('pm-active', 'pm-manual');
     }
     this.onPencilMarkChanged?.();
+  }
+
+  renderMarks() {
+    for (const [id, td] of this.cells) {
+      const pm = td.querySelector('.pencil-marks');
+      if (!pm || !td.classList.contains('empty')) continue;
+      const manual = this.manualMarks.has(id);
+      const marks = this.manualMarks.get(id) ?? this.computedMarks.get(id) ?? new Set();
+      for (let digit=1; digit<=9; digit++) {
+        const span=pm.children[digit-1];
+        span.textContent=marks.has(digit) ? digit : '';
+        span.classList.toggle('pm-active',marks.has(digit));
+        span.classList.toggle('pm-manual',manual && marks.has(digit));
+      }
+    }
   }
 
   /**

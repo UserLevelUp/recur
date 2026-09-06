@@ -1,7 +1,7 @@
 # Warp: Sudoku teaching
 
 Created: 2026-09-05
-State: planned; Slice 0 current; no slices accepted.
+State: implemented and verified; six slices complete. See the verification receipt.
 Warp identity: main.demo.sudoku.teaching
 
 ## Desired result
@@ -72,6 +72,7 @@ recur trace-id "sudoku.teaching.**" --scope "main.demo.sudoku.teaching.**" -d do
 ```
 
 Use target/release-safe/recur.exe if the installed executable differs.
-Creating this Warp does not implement the teaching feature or accept any slice.
+Implementation and test receipts: main.demo.sudoku.teaching.verification.md.
+Player instructions and compatibility: ../demos/sudoku/html5/TEACHING.md.
 
 defines: sudoku.teaching.contract board-bound progressive teaching with unique playable puzzles and preserved query/execution boundaries

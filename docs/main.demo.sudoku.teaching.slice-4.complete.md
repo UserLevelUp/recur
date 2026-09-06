@@ -1,6 +1,6 @@
 # Slice 4: Generate and validate playable puzzles in Julia
 
-Status: todo
+Status: complete
 Warp: main.demo.sudoku.teaching
 Contract: contract:main.demo.sudoku.teaching.slice-4:v1
 
@@ -31,12 +31,16 @@ the old puzzle on failure. Test in temporary output directories, not the user's 
 - difficulty-and-package-contract
 - generation-integration
 
-## Observed state and next action
+## Observed state
 
-Pending. These are target criteria, not completed implementation or test receipts.
-Start by reading main.demo.sudoku.teaching.readme.md and the accepted predecessor, if any.
-Retain failing/reproduced behavior, implementation evidence and verified results before
-writing an acceptance layer. Keep one current marker within this bubble.
+Complete. See verified outcome below and the final source-bound verification receipt.
 
 defines: sudoku.teaching.slice.4 Generate and validate playable puzzles in Julia
 consumes: sudoku.teaching.contract board-bound progressive teaching without false proof claims
+
+
+## Verified slice outcome
+
+Added Julia Playable.jl: legal-board validation, capped-at-two MRV solution counting with a node budget, bounded uniqueness-preserving removals, and a replayable naked-single grade. Presets now describe 25/35/45 gaps; ungraded means unsupported by this grader, never an asserted hard puzzle. Additive sudoku-playable-v1 contains all givens/solution/cascades in one atomic publication. Legacy files remain untouched and the fallback UI explicitly reports unverified status.
+
+139 focused Julia assertions pass for legality, ambiguity, budgets, every preset, proof replay, legacy preservation, failed trace/removal preservation, replacement and staging cleanup. Real generation invoked Recur 81 times successfully; it exposed and fixed unconditional --run-name when saved runs were disabled. Real API/browser test passed with all three gap counts, 81 nonempty produce/consume cascades, independent Python uniqueness checks and zero page errors. Browser package tests reject eight malformed cases. Commands and contracts are in html5/TEACHING.md. Temporary cascade source paths are historical generation metadata, not durable live deductions.

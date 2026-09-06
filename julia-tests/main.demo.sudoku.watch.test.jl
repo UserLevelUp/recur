@@ -9,8 +9,16 @@ on disk.
 
 include("runtests.setup.jl")
 
-const DEMO_SCRIPT = normpath(joinpath(@__DIR__, "..", "demos", "sudoku", "julia", "run_watch_demo.jl"))
-const DEMO_TABLE_DIR = normpath(joinpath(@__DIR__, "..", "demos", "sudoku", "table"))
+# Mirror only the script and watcher into a disposable root. The demo clears its
+# table, so a regression run must never target the user's live table directory.
+const DEMO_TEST_ROOT = mktempdir(prefix="recur-sudoku-watch-test-")
+const DEMO_SCRIPT = joinpath(DEMO_TEST_ROOT,"demos","sudoku","julia","run_watch_demo.jl")
+const DEMO_TABLE_DIR = joinpath(DEMO_TEST_ROOT,"demos","sudoku","table")
+mkpath(dirname(DEMO_SCRIPT))
+cp(joinpath(@__DIR__,"..","demos","sudoku","julia","run_watch_demo.jl"),DEMO_SCRIPT)
+mkpath(joinpath(DEMO_TEST_ROOT,"target","release-safe"))
+cp(joinpath(@__DIR__,"..","target","release-safe","recur-watch.exe"),
+   joinpath(DEMO_TEST_ROOT,"target","release-safe","recur-watch.exe"))
 const DEMO_RUN_TIMEOUT_SECONDS = 30.0
 
 function run_demo_subprocess()

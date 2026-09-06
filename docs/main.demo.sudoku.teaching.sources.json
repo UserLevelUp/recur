@@ -1,0 +1,87 @@
+{
+  "schema": "sudoku-teaching-source-receipt-v1",
+  "base_commit": "4b9d8af805a3e35040bf3a1a2fdfc211cbdc0ac3",
+  "binding": "SHA256 of working-tree bytes; CRLF conversion changes hashes",
+  "files": [
+    {
+      "path": "demos/sudoku/html5/css/game.css",
+      "sha256": "8a3d1c7bbba4f608fe6a1fcd491641b7de62a68d6902fe86c999a9011232a269"
+    },
+    {
+      "path": "demos/sudoku/html5/data/.gitignore",
+      "sha256": "9b3778fb3bba44980e7cdad3971eecf69cfdf0dd48156013cf2f4d3c61f70a47"
+    },
+    {
+      "path": "demos/sudoku/html5/generate.jl",
+      "sha256": "e3150cf29ca14095f4d22b0750d1b3aefa71e4c4f55c8053c9a3e6cda4a7ca2b"
+    },
+    {
+      "path": "demos/sudoku/html5/index.html",
+      "sha256": "055566e494e534d8db76801feee069d9593d68563163b9f80e0911c5ee136b6a"
+    },
+    {
+      "path": "demos/sudoku/html5/js/game.js",
+      "sha256": "fe25d45caba5429c81fd651a8a92980e073d2562e0c678fe7b39727fd261c709"
+    },
+    {
+      "path": "demos/sudoku/html5/js/grid.js",
+      "sha256": "d6f75795ca75e8ffd6da46ea5dfc247f9b5a7df097384eca5c2e18d4d9e3a3c9"
+    },
+    {
+      "path": "demos/sudoku/html5/js/puzzle.js",
+      "sha256": "cebfc1ac7593cb276c1a1680fec3d7d95ef0e7ad488b17943a259520f2fb95df"
+    },
+    {
+      "path": "demos/sudoku/html5/js/teaching.js",
+      "sha256": "225744f670fbf638821085134230d380edaa9a11460f40f0c824e1dc4b8c2f4d"
+    },
+    {
+      "path": "demos/sudoku/html5/serve.jl",
+      "sha256": "5c3067918f19a0b3001db8fd8acb6f3e24fa05f3653e6567b639bc703c68030f"
+    },
+    {
+      "path": "demos/sudoku/html5/TEACHING.md",
+      "sha256": "90e2c32d1abf87b18b7daa2b4490aeda01b9bb7f051c5c786077d2c3e31497a5"
+    },
+    {
+      "path": "demos/sudoku/html5/tests/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b"
+    },
+    {
+      "path": "demos/sudoku/html5/tests/api_test.py",
+      "sha256": "181c336db97866fe1f7606639aaab585ddfc36639a24421fc71f15bcaff27d7b"
+    },
+    {
+      "path": "demos/sudoku/html5/tests/browser_test.py",
+      "sha256": "9700d2aae7607144212baf43cf9751ecca5cfd7d345b7afd203d4e52cffe8a48"
+    },
+    {
+      "path": "demos/sudoku/html5/tests/teaching.test.js",
+      "sha256": "c3ed54748e3ae4e620ace80fb5ef3eea8196ee190d54ee151f0d84cccf0b8d8b"
+    },
+    {
+      "path": "demos/sudoku/julia/Generator.jl",
+      "sha256": "e892b135df6546c20bb4b31b5b439c4c36f5608a132c9c1a6b19194878ea0ebd"
+    },
+    {
+      "path": "demos/sudoku/julia/Playable.jl",
+      "sha256": "500163a6667584caa6033d7c2c5e3b3399b8612ec9f6a82f5e2ab09b97d65c66"
+    },
+    {
+      "path": "demos/sudoku/julia/Recur.jl",
+      "sha256": "5b3eab8a30d4d8101b2530c17fe17165bcd95e52abc0bdda0ce810c197adb847"
+    },
+    {
+      "path": "julia-tests/main.demo.sudoku.watch.test.jl",
+      "sha256": "efee18231ca80cbd3e75378a233ea9796f6e0fb0f048afe125b4a2b72f63b348"
+    },
+    {
+      "path": "julia-tests/runtests.demo.sudoku.teaching.jl",
+      "sha256": "7e44a0fd38f02fb1175bb6a040b7a1a486a0812059891b0f4d2c155717eebf1a"
+    },
+    {
+      "path": "julia-tests/runtests.jl",
+      "sha256": "5a3731f422e36407c83ac6c731276214900f170d8cbc704a32e901bcb8c32ea9"
+    }
+  ]
+}

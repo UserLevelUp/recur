@@ -245,7 +245,7 @@ function generate_cascade(
         ext   = ".txt",
         save_run = save_run,
         reuse_if_fresh = reuse_if_fresh,
-        run_name = id,
+        run_name = (save_run || reuse_if_fresh) ? id : nothing,
     )
 
     cascade === nothing && return nothing
@@ -299,5 +299,7 @@ function generate_cascades(
     end
     return out_path
 end
+
+include("Playable.jl")
 
 end # module

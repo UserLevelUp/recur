@@ -1,0 +1,3 @@
+# Additive generated packages are local demo state, not source fixtures.
+*/sudoku.playable.json
+*/.teaching-stage-*/

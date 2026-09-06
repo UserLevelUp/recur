@@ -1,6 +1,12 @@
 # Demo: Sudoku Eyeball Order + Teaching Bubble
 
-Status: `todo.current`
+Status: historical design; teaching implementation superseded by `main.demo.sudoku.teaching`.
+
+2026-09-05: the successor Warp replaces the active browser hint flow with verified
+naked-single teaching, removes the game.js monkey-patch and supplies a real browser
+harness. Advanced strategy teaching remains outside that successor's scope. The
+older design and filename are retained for existing links; the observations below
+describe the earlier implementation, not the current UI.
 Date: 2026-04-09
 
 ## Purpose
