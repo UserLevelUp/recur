@@ -1,5 +1,16 @@
 # main.improvement.27.contract.warp-status-v1.todo.future-plan
 
+## Current split — 2026-09-06
+
+The baseline warp-status-v1 fields and synthetic verdict fixtures are implemented. The large historical JSON sketch below is not the current output contract: prefix_scope, target_state, semi_states, epics and time_frames are proposed extensions, not enabled merely by adding configuration. Actual output/tests are linked in the audited matrix.
+
+See [audited implementation](main.command.warp.docs-reconciliation.current-state.md)
+and [claim evidence](main.command.warp.docs-reconciliation.claims.json).
+The future-plan filename is retained for remaining proposals and link stability;
+it does not mark today's implemented commands as unfinished.
+
+## Historical proposal snapshot — original status and wording follow
+
 Status: `future-plan`
 Date: 2026-05-23
 

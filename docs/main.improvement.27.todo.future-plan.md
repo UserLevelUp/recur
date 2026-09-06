@@ -1,5 +1,16 @@
 # main.improvement.27.todo.future-plan
 
+## Current split — 2026-09-06
+
+Partially implemented. The read-only command family, bubble/ring composition and confirmed companion writers exist. Configurable scoring weights, temporal frames and generalized milestone analysis remain proposals. The old 0.2.20 parking decision below is superseded, not a current release instruction.
+
+See [audited implementation](main.command.warp.docs-reconciliation.current-state.md)
+and [claim evidence](main.command.warp.docs-reconciliation.claims.json).
+The future-plan filename is retained for remaining proposals and link stability;
+it does not mark today's implemented commands as unfinished.
+
+## Historical proposal snapshot — original status and wording follow
+
 Status: `future-plan`
 Date: 2026-05-22
 

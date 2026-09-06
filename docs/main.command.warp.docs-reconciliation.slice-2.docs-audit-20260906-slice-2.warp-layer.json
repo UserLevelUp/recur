@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.docs-reconciliation",
+  "slice_id": "slice-2",
+  "contract_hash": "contract:main.command.warp.docs-reconciliation.slice-2:v1",
+  "attempt_id": "docs-audit-20260906-slice-2",
+  "result_state": "accepted",
+  "result_hash": "sha256:7332e37630f232af9c658f955b88edef08801303fbfd76b43d03d341f7fc26c6",
+  "evidence": {
+    "methodology-preserved": [
+      "main.command.warp.docs-reconciliation.slice-2.complete.md"
+    ],
+    "root-document-parity": [
+      "main.command.warp.docs-reconciliation.slice-2.complete.md"
+    ]
+  },
+  "reason": null
+}

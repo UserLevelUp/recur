@@ -1,6 +1,6 @@
 # Slice final: Verify the reconciled documentation and close the Warp
 
-Status: todo
+Status: complete
 Warp: main.command.warp.docs-reconciliation
 Contract: contract:main.command.warp.docs-reconciliation.slice-final:v1
 
@@ -14,8 +14,7 @@ Required evidence gates:
 
 ## Current observation
 
-Pending. This is an acceptance target, not an implementation or verification receipt.
-Retain exact sources, commands, outcomes and unresolved claims before acceptance.
+Complete; reviewed outcome and the final verification receipt supply the evidence.
 
 ## Recovery
 
@@ -25,3 +24,8 @@ the declared gates have supporting reviewed evidence; never accept by filename a
 
 defines: recur.warp.docs.reconciliation.slice.final Verify the reconciled documentation and close the Warp
 consumes: recur.warp.docs.reconciliation.contract evidence-backed documentation reconciliation
+
+
+## Verified slice outcome
+
+Eight focused suites pass: 490 assertions, including 49 reconciliation assertions. No full-suite rerun claimed; no production Rust/Cargo changes. Source-bound verification, matrix, historical preservation and recovery checks recorded. Reveal marks complete with no readiness slice. Five accepted layers use declared reviewed evidence, not checked external attestation. Proposed next companion policy Warp is not created.

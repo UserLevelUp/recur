@@ -6,6 +6,22 @@ Status: Recur v0.2.8 implementation; Warp Methodology v0.3.0;
 pure compositional queries and confirmed Slice-layer writer implemented
 Author: Captured from a 2026-05-22 design discussion
 
+CURRENT IMPLEMENTATION — audited 2026-09-06
+------------------------------------------
+The source at 837dee4 implements status/explain/next, collapse-plan/config,
+bare Warp inventory, flat maps, recursive rings, evidence inspection and the
+confirmed recur-warp receipt/complete/evolve/collapse commands. This is branch
+publication, not an assertion about every installed binary or registry release.
+See [audited scope and configuration limits](docs/main.command.warp.docs-reconciliation.current-state.md)
+and [current commands](docs/main.command.warp.readme.md).
+
+Suffix policy and discovery are configurable; arbitrary scoring weights,
+temporal forecasts and general opinionated transition policies remain proposals.
+Companion collapse still has a separate policy loader: do not assume complete
+query/actor parity for nested config or compound suffixes. Configuration cannot
+grant authority. The following rationale preserves the original methodology;
+design sketches and candidate fields are not current CLI/schema guarantees.
+
 INTENT
 ------
 Make the eventness "warp" idea usable as a generic recur command concept:
@@ -298,7 +314,7 @@ The lane moved, but one or more residual gradients remain:
 The best next action requires an external event, operator approval, destructive
 action, private-sensitive decision, or product-direction judgment.
 
-COMMAND SURFACE
+HISTORICAL PROPOSED COMMAND SKETCHES (not executable contract fixtures)
 ---------------
 
 ### `recur warp status`
@@ -379,8 +395,8 @@ Separates residue into buckets:
 - `ambiguous` - items requiring config or operator judgment.
 
 This command must be read-only in the first slice. It should never delete or
-rename files. A future write-side tool can consume this plan after explicit
-operator approval.
+rename files. The implemented companion can archive after explicit confirmation;
+its own dry run must be inspected because policy parity is not yet complete.
 
 ### `recur warp explain`
 
@@ -578,7 +594,7 @@ produces: recur.warp.milestone.map accessible complete pending research and bloc
 produces: recur.warp.success.patterns reusable eventness patterns that can improve efficiency and prototype success probability
 produces: recur.warp.integration.surface future JSON Markdown CSV or adapter path for feeding existing project-management systems
 produces: recur.warp.composed.coverage reproducible projection whose gaps and conflicts determine remaining Slice pressure
-triggers: recur-warp.slice.accept future confirmed write-side persistence of qualified completion layers and receipts
+triggers: recur-warp.slice.accept implemented confirmed write-side persistence subject to map gates and explicit authority
 triggers: recur.warp.test.fixtures synthetic optimum sub_optimum and blocked lane fixtures for JSON contract tests
 triggers: recur.warp.docs.schema document warp-status-v1 JSON output schema
 ```

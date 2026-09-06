@@ -1,5 +1,16 @@
 # main.improvement.27.command-boundary.todo.future-plan
 
+## Current split — 2026-09-06
+
+Core queries and the receipt/complete/evolve/collapse companion already exist. The query versus authorized actor separation remains valid. Config-driven opinionated transitions are only partly realized; shared receipt policy and separate collapse policy must not be described as equivalent. The old packaging hold and 0.2.20 horizon are historical.
+
+See [audited implementation](main.command.warp.docs-reconciliation.current-state.md)
+and [claim evidence](main.command.warp.docs-reconciliation.claims.json).
+The future-plan filename is retained for remaining proposals and link stability;
+it does not mark today's implemented commands as unfinished.
+
+## Historical proposal snapshot — original status and wording follow
+
 Status: `future-plan`
 Date: 2026-05-23
 

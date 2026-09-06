@@ -99,8 +99,9 @@ their suggestions are not commands to execute and do not start `recur-warp`.
 complete/verified files are `collapse_known`, interesting files remain
 `preserve_interesting`, blocked files or blocker-marked files are `blockers`,
 and active current files remain `ambiguous`. It does not rename or collapse any
-file. `recur warp config` reports the active suffix mapping used by every Warp
-projection, including defaults when no project policy exists.
+file. `recur warp config` reports the shared query suffix mapping, including
+defaults when no project policy exists. Companion collapse uses a separate loader;
+see [audited configuration limits](main.command.warp.docs-reconciliation.current-state.md).
 
 The dot-separated fixture strategy and full read-only command matrix are in
 `main.command.warp.test-structure`.
@@ -211,8 +212,9 @@ accepted layers whose Slice and contract identities are unchanged, and writes a
 ## Confirmed collapse
 
 `recur warp collapse-plan` remains the read-only classification surface.
-`recur-warp collapse` mirrors that plan and performs recoverable archival only
-after confirmation:
+`recur-warp collapse` provides its own dry run and performs recoverable archival
+only after confirmation. Its root-local config and final-token suffix handling
+can differ from core collapse-plan's nearest-config/compound-suffix policy:
 
 ```powershell
 recur warp collapse-plan demo.lane -d planning/ --json

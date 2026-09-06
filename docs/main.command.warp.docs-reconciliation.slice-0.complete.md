@@ -1,6 +1,6 @@
 # Slice 0: Capture current documentation and implementation baseline
 
-Status: todo.current
+Status: complete
 Warp: main.command.warp.docs-reconciliation
 Contract: contract:main.command.warp.docs-reconciliation.slice-0:v1
 
@@ -14,8 +14,7 @@ Required evidence gates:
 
 ## Current observation
 
-Pending. This is an acceptance target, not an implementation or verification receipt.
-Retain exact sources, commands, outcomes and unresolved claims before acceptance.
+Complete; reviewed outcome and the final verification receipt supply the evidence.
 
 ## Recovery
 
@@ -25,3 +24,8 @@ the declared gates have supporting reviewed evidence; never accept by filename a
 
 defines: recur.warp.docs.reconciliation.slice.0 Capture current documentation and implementation baseline
 consumes: recur.warp.docs.reconciliation.contract evidence-backed documentation reconciliation
+
+
+## Verified slice outcome
+
+Audited baseline 837dee4, original dirty test-first scope, root docs, six notes, public card, guides and implementation/test sources. Actual release-safe CLI help/config/status inspected. Binary hashes, scope and commands are in main.command.warp.docs-reconciliation.verification.md. No registry publication inferred. Initial red suite 10 pass/4 fail confirmed the bounded target.

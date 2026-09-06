@@ -7,8 +7,12 @@ runtime contract.
 
 Implementation target: Recur v0.2.8. The first compositional runtime slice now
 ships `recur warp map`, `recur warp merge`, status integration, and the
-confirmation-gated `recur-warp complete` writer. Warp evolution remains a
-later write-side slice.
+confirmation-gated `recur-warp complete` writer. The current source also implements
+recursive rings, receipt declarations, evolution and archival collapse.
+Audited 2026-09-06 at source 837dee4: see
+[current scope and configuration limits](docs/main.command.warp.docs-reconciliation.current-state.md).
+Temporal/intelligence-routing examples below remain methodology, not runtime
+contracts. Branch publication does not establish package-registry availability.
 
 Ownership: this document clarifies the human and multi-intelligence mental
 model behind `README.CORE.IMPROVEMENT27.md` and its proposed read-first
@@ -292,7 +296,7 @@ peer   -> peer: declared dependency output or evidence handoff
 ```
 
 `recur-watch` can implement filesystem subscriptions today, while core
-`recur watch` remains the pure state query. A future ring schema should record
+`recur watch` remains the pure state query. The explicit ring schema records
 the subscription identity, direction, source domain, target domain, filter,
 public event contract, freshness policy, and ACK/NAK state. A subscription is
 coordination evidence, not authority for the subscriber to mutate the
@@ -330,10 +334,10 @@ into the outer ring through the declared public boundary.
 - Ring depth and traversal use explicit budgets so recursive coordination does
   not become unbounded context ingestion.
 
-The shipped `warp-bubble-map-v1` remains a flat first slice. Recursive domains,
-nested projections, and subscription edges require a separately frozen schema
-revision and red-first fixtures; they must not be inferred from arbitrary
-directory nesting.
+`warp-bubble-map-v1` remains flat. The separate implemented `warp-ring-map-v1`
+schema supplies explicit recursive domains, bounded nested projections and
+directional subscription receipts. These must not be inferred from arbitrary
+directory nesting; projection does not itself start an active watcher.
 
 ## Merge laws
 
@@ -382,7 +386,9 @@ recur warp status <warp>    report coverage and convergence state
 recur warp explain <warp>   explain gaps conflicts hashes and evidence
 
 recur-warp complete ...     confirmed persistence of a Slice receipt/layer
-recur-warp evolve ...       future confirmed Warp supersession record
+recur-warp evolve ...       confirmed supersession of an exploded bubble
+recur-warp receipt ...      policy-aware lifecycle declaration, not proof
+recur-warp collapse ...     confirmed archival after its own dry run
 ```
 
 `recur warp merge` does not modify project state. The merge happens naturally

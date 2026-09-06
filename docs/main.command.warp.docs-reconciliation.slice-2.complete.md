@@ -1,6 +1,6 @@
 # Slice 2: Reconcile root Improvement 27 documents
 
-Status: todo
+Status: complete
 Warp: main.command.warp.docs-reconciliation
 Contract: contract:main.command.warp.docs-reconciliation.slice-2:v1
 
@@ -14,8 +14,7 @@ Required evidence gates:
 
 ## Current observation
 
-Pending. This is an acceptance target, not an implementation or verification receipt.
-Retain exact sources, commands, outcomes and unresolved claims before acceptance.
+Complete; reviewed outcome and the final verification receipt supply the evidence.
 
 ## Recovery
 
@@ -25,3 +24,8 @@ the declared gates have supporting reviewed evidence; never accept by filename a
 
 defines: recur.warp.docs.reconciliation.slice.2 Reconcile root Improvement 27 documents
 consumes: recur.warp.docs.reconciliation.contract evidence-backed documentation reconciliation
+
+
+## Verified slice outcome
+
+Root implementation summaries now acknowledge receipt/complete/evolve/collapse and recursive ring schema. Historical command sketches explicitly are not runnable CLI contracts. Methodology and cross-domain examples retained as design. Canonical current-state document separates Improvements 27, 29 and 30 and identifies the proposed configuration-driven companion gap.

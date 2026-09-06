@@ -1,6 +1,6 @@
 # Slice 1: Build a claim-by-claim reconciliation matrix
 
-Status: todo
+Status: complete
 Warp: main.command.warp.docs-reconciliation
 Contract: contract:main.command.warp.docs-reconciliation.slice-1:v1
 
@@ -14,8 +14,7 @@ Required evidence gates:
 
 ## Current observation
 
-Pending. This is an acceptance target, not an implementation or verification receipt.
-Retain exact sources, commands, outcomes and unresolved claims before acceptance.
+Complete; reviewed outcome and the final verification receipt supply the evidence.
 
 ## Recovery
 
@@ -25,3 +24,8 @@ the declared gates have supporting reviewed evidence; never accept by filename a
 
 defines: recur.warp.docs.reconciliation.slice.1 Build a claim-by-claim reconciliation matrix
 consumes: recur.warp.docs.reconciliation.contract evidence-backed documentation reconciliation
+
+
+## Verified slice outcome
+
+Ten-family claims matrix links classification, limitations and publication scope to source/test/doc excerpts. Configurable suffix/discovery policy distinguished from fixed scoring and proposed temporal/epic features. Documented actual collapse/shared-policy divergence rather than assuming config-driven actors are absent or uniform. Matrix and synthetic negative checks pass.

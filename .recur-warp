@@ -7,12 +7,12 @@ Warp is the convergence idea: move from primitive setup toward a future
 supersystem state by keeping the target, the intermediate semi-states, and the
 remaining residual gaps visible.
 
-Warp also treats a scoped eventness surface such as `prefix.base.suffix.*` as a
-membrane through time. It can ask what that membrane looks like now, in a day,
+The proposed temporal model treats `prefix.base.suffix.*` as a
+membrane through time. It would ask what that membrane looks like now, in a day,
 in a month, in a year, or across a decade, using only bounded evidence from the
 workspace.
 
-Warp epics and milestones let an expert name what should be complete, what
+Proposed Warp epics and milestones let an expert name what should be complete, what
 should still be pending, what remains research, and what is blocked at each
 horizon. Long-term epochs can group many epics or milestones.
 
@@ -28,10 +28,13 @@ recur warp merge <warp> --json
 recur warp config --json
 ```
 
-Recur v0.2.8 also ships one bounded write-side companion action:
+The audited 837dee4 source also implements bounded companion actions:
 
 ```text
 recur-warp complete <warp> <slice> --attempt-id <id> --result-hash <hash> --evidence <gate>=<reference> [--confirm]
+recur-warp receipt --help
+recur-warp evolve --help
+recur-warp collapse --help
 ```
 
 Without `--confirm` it is a dry run. A confirmed valid completion atomically
@@ -49,7 +52,7 @@ The supporting implementation and companion contract live in:
 - docs/main.command.warp.companion.complete.md
 
 The core commands only inspect scoped eventness evidence. They may count files,
-classify trace-id roles, load scoring config, return a verdict, explain its
+classify trace-id roles, load suffix/discovery config, return a verdict, explain its
 evidence, suggest next actions, and partition evidence into a collapse plan.
 They must not rename files, delete files, collapse eventness, stage commits,
 approve transitions, or start watchers.
@@ -67,8 +70,12 @@ robotics capability envelopes, subsystem interface alignment, and production-run
 conformance. The command should expose evidence and residuals; it should not
 invent specifications, certify safety, or replace qualified engineering review.
 
-The shipped companion implements Slice completion only. Warp evolution remains
-future work. `recur-warp` must not interpret `next` advice as authorization,
+The companion implements declarations, completion, exploded-bubble evolution and
+archival collapse. General configuration-driven transitions remain proposed;
+collapse policy differs from shared query/receipt policy. See
+[audited scope](docs/main.command.warp.docs-reconciliation.current-state.md).
+Source-branch publication does not attest package-registry release status.
+`recur-warp` must not interpret `next` advice as authorization,
 execute arbitrary commands, or silently start a watcher.
 
 Trace-id lines:
@@ -80,7 +87,7 @@ defines: recur.warp.bubble.map shipped declared required Slice and evidence-gate
 defines: recur.warp.merge shipped deterministic self-reporting Slice-layer coverage projection
 defines: recur-warp.complete shipped confirmation-gated atomic accepted Slice-layer writer
 defines: recur.warp.future.state.convergence comparison between current primitive setup intermediate semi-states and intended supersystem eventness target
-defines: recur.warp.temporal.frame.projection bounded day month year decade projection over an eventness membrane
+defines: recur.warp.temporal.frame.projection proposed bounded day month year decade projection over an eventness membrane
 defines: recur.warp.eventness.membrane scoped prefix base suffix surface whose future semi-states are compared across frames
 defines: recur.warp.eventness.epic expert-authored horizon target complete pending and research milestone frame
 defines: recur.warp.long.term.epoch long-horizon grouping of multiple warp epics or milestones
@@ -88,6 +95,6 @@ defines: recur.warp.cross.domain.pattern reusable eventness structure shared acr
 consumes: main.improvement.27 recur warp and project-control command proposal for eventness optimality scoring
 consumes: main.improvement.28 recur capability-card query surface for root .recur-* files
 produces: recur.warp.readiness shared capability-card summary for the v0.2.8 query and companion surfaces
-triggers: recur.warp.bubble.evolution preserve valid layers and expose invalidation before adding write-side evolve
+triggers: recur.warp.bubble.evolution implemented exploded-bubble supersession preserving eligible layers under explicit confirmation
 triggers: main.improvement.27.command-boundary keep core query and companion automation separated
 ```

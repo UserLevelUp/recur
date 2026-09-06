@@ -1,0 +1,98 @@
+{
+  "schema": "warp-doc-source-receipt-v1",
+  "baseline": "837dee48bdd5b2f4fd5e1a0692c5629fca92c2e5",
+  "files": [
+    {
+      "path": ".recur-warp",
+      "sha256": "ccdc24b3361ffae5328e2e945e07f2197aae18c2d0d637e73539445fc6fb4619"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.claims.json",
+      "sha256": "5687c090957db3f694816d4563a6d1d10ed6518a9d5b15c9f51c9ca97418c4dd"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+      "sha256": "0bf548f6ff41cee4741cd3d4471f169644f5cc0ae7738d9a9eb923e5aed529ff"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.readme.md",
+      "sha256": "7f439537ef24f7c6447fdc6d7eef6563fb6ac0e91de8d0400bd285b7f2c4509c"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.recur.md",
+      "sha256": "223f411ce8d0fe2bc89998cc68cc4d668f1a291ff6cc721b0fe21ac88fcf70bb"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.slice-0.complete.md",
+      "sha256": "113e37c451281aa2b4de7e9c7fc249d8809a446734eebbfab6c7b064e486c84a"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.slice-1.complete.md",
+      "sha256": "a2967ac61bd67b5ae599373e43ad1cffaa093423ae36b7587d97e8b9491501d0"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.slice-2.complete.md",
+      "sha256": "7332e37630f232af9c658f955b88edef08801303fbfd76b43d03d341f7fc26c6"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.slice-3.complete.md",
+      "sha256": "b4b502629824eafc4f77a53e0a2ad67cbd198f5d88993a933a3b4ebf07a48eb1"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.slice-final.complete.md",
+      "sha256": "3bb05626221156427257fd9425c742e8b776650c93d4919b6b97aa84e97330b5"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.tests.md",
+      "sha256": "829fbd4e35265eeec8a4d936bd92f49e317b82d1816ae5e0864bc3afb97775a1"
+    },
+    {
+      "path": "docs/main.command.warp.docs-reconciliation.verification.md",
+      "sha256": "f737d065ff9afa1ed70f9c2485f64895a3b521368f75110962dff71d018dfd1b"
+    },
+    {
+      "path": "docs/main.command.warp.readme.md",
+      "sha256": "696ce0e3f0a80c23a7520e6da560b60dd3c6e5abfbe9b4ea86953fdfee56259e"
+    },
+    {
+      "path": "docs/main.improvement.27.command-boundary.todo.future-plan.md",
+      "sha256": "8964e79692c2cb8e956672e751e54df052da153192a03c5c903128e13ab7432b"
+    },
+    {
+      "path": "docs/main.improvement.27.contract.warp-status-v1.todo.future-plan.md",
+      "sha256": "29ebfa05afbc5a10697835fbd1e56cac377de7d6ac381520979e39ac318cdab9"
+    },
+    {
+      "path": "docs/main.improvement.27.differential-execution.historical.md",
+      "sha256": "9f30fd40a3eeaf4ba5c3c2878ad366733df49f8ba1b9ea54e8bacc9ded0d6160"
+    },
+    {
+      "path": "docs/main.improvement.27.epic.milestone.todo.future-plan.md",
+      "sha256": "f8e5953f738af10e5393e25c9954319eb62a0a1d147feb180cca872018d10929"
+    },
+    {
+      "path": "docs/main.improvement.27.recur-ready.todo.future-plan.md",
+      "sha256": "3356204175ef9cb5522ad18a9f3dbe45d4386be01fdcb9abc6066b7c614874c7"
+    },
+    {
+      "path": "docs/main.improvement.27.todo.future-plan.md",
+      "sha256": "e78d797575e501bcf2f26168aacd81b5327f18abdbabba5d88945680f5cc4ef1"
+    },
+    {
+      "path": "julia-tests/main.command.warp.docs-reconciliation.test.jl",
+      "sha256": "4139aa317e20060fb126c9c6677da097e7edaa780b16a6869b09689eea3374ea"
+    },
+    {
+      "path": "julia-tests/runtests.jl",
+      "sha256": "318fb9f49b6138b477aa0785badc3f85135e722afd8df4cc6707fe8f2ebb9e23"
+    },
+    {
+      "path": "README.CORE.IMPROVEMENT27.Appendum.md",
+      "sha256": "2cfe52ef24e13f82fff7422bd7ea0abb9a86b7c1576978d0c7d8cbec0a488666"
+    },
+    {
+      "path": "README.CORE.IMPROVEMENT27.md",
+      "sha256": "32461ec344006a633c6f7cfdbbef27f671658b8e8a94e820685a26c11d516eaf"
+    }
+  ]
+}

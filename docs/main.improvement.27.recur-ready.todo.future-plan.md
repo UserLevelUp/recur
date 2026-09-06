@@ -1,5 +1,16 @@
 # main.improvement.27.recur-ready.todo.future-plan
 
+## Current split — 2026-09-06
+
+The status contract, synthetic fixtures, query surface and companion boundary have implementation evidence. The prior claim that Warp must not appear in help is superseded. Richer temporal/epic vocabulary and general policy-driven execution remain design work; do not rerun the original readiness sequence as a fresh backlog.
+
+See [audited implementation](main.command.warp.docs-reconciliation.current-state.md)
+and [claim evidence](main.command.warp.docs-reconciliation.claims.json).
+The future-plan filename is retained for remaining proposals and link stability;
+it does not mark today's implemented commands as unfinished.
+
+## Historical proposal snapshot — original status and wording follow
+
 Status: `future-plan`
 Date: 2026-05-23
 

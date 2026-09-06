@@ -1,7 +1,10 @@
 # Warp: Improvement 27 documentation reconciliation
 
 Created: 2026-09-05
-State: planned; Slice 0 current; no slices accepted.
+State: reconciled 2026-09-06; five slices complete with reviewed declared evidence.
+
+Current scope: main.command.warp.docs-reconciliation.current-state.md.
+Audit receipt: main.command.warp.docs-reconciliation.verification.md.
 Warp identity: main.command.warp.docs-reconciliation
 
 ## Goal
@@ -27,15 +30,15 @@ This is documentation reconciliation, not implementation of every proposed featu
 - docs/main.improvement.27.command-boundary.todo.future-plan.md
 - docs/main.improvement.27.contract.warp-status-v1.todo.future-plan.md
 - docs/main.improvement.27.epic.milestone.todo.future-plan.md
-- docs/main.improvement.27.differential-execution.todo.current.md
+- docs/main.improvement.27.differential-execution.historical.md (archived prior trajectory)
 - Root .recur-warp capability card, if present
 - docs/main.command.warp.readme.md and docs/main.command.warp.evidence.readme.md
 - Current Rust command/schema implementations and focused Julia/Rust tests
 
 Improvement 29 and Improvement 30 are boundary references, not implementation scope.
-The working tree already contains uncommitted project-discovery and administrative
-Warp 10 closure changes. Preserve them; do not rewrite historical verification
-records or treat their presence as proof of publication.
+At plan creation, project-discovery and administrative Warp 10 closure changes
+were uncommitted. They are now in baseline 837dee4's history. That original warning
+is not the present working-tree status. Historical verification is preserved.
 
 ## Rules and non-goals
 

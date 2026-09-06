@@ -1,6 +1,13 @@
 # Improvement 27 differential execution
 
-Status: `todo.current`
+Status: historical trajectory; not an active work queue.
+
+Reconciled 2026-09-06: status/explain/next and companion writers are implemented.
+This preserves the original slice targets and prior receipt without declaring
+every unrelated governance/Psyche target complete. Current Warp facts and limits:
+[audited implementation](main.command.warp.docs-reconciliation.current-state.md).
+
+## Historical snapshot
 Date: 2026-07-15
 
 ## Warp signature

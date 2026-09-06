@@ -1,6 +1,6 @@
 # Slice 3: Reconcile supporting notes and recovery surfaces
 
-Status: todo
+Status: complete
 Warp: main.command.warp.docs-reconciliation
 Contract: contract:main.command.warp.docs-reconciliation.slice-3:v1
 
@@ -14,8 +14,7 @@ Required evidence gates:
 
 ## Current observation
 
-Pending. This is an acceptance target, not an implementation or verification receipt.
-Retain exact sources, commands, outcomes and unresolved claims before acceptance.
+Complete; reviewed outcome and the final verification receipt supply the evidence.
 
 ## Recovery
 
@@ -25,3 +24,8 @@ the declared gates have supporting reviewed evidence; never accept by filename a
 
 defines: recur.warp.docs.reconciliation.slice.3 Reconcile supporting notes and recovery surfaces
 consumes: recur.warp.docs.reconciliation.contract evidence-backed documentation reconciliation
+
+
+## Verified slice outcome
+
+Five future-plan notes now split current implementation from preserved historical proposals; remaining fields were not promoted to complete. Differential execution current marker moved to historical with original targets/receipt retained. Public .recur-warp and command guide updated, including nonuniform collapse policy. Private capsules/checkpoints untouched. Local links and historical boundary tests pass.

@@ -1,5 +1,16 @@
 # main.improvement.27.epic.milestone.todo.future-plan
 
+## Current split — 2026-09-06
+
+Epic, horizon and temporal projection behavior remains proposed. Existing maps/rings provide concrete Slice coverage and parent acceptance but do not implement this entire planning model. The statement below about not having shipped refers to the original proposal date, not current branch functionality.
+
+See [audited implementation](main.command.warp.docs-reconciliation.current-state.md)
+and [claim evidence](main.command.warp.docs-reconciliation.claims.json).
+The future-plan filename is retained for remaining proposals and link stability;
+it does not mark today's implemented commands as unfinished.
+
+## Historical proposal snapshot — original status and wording follow
+
 Status: `future-plan`
 Date: 2026-05-23
 

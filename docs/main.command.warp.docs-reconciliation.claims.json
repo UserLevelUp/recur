@@ -1,0 +1,245 @@
+{
+  "schema": "warp-doc-claims-v1",
+  "audit_date": "2026-09-06",
+  "source_revision": "837dee48bdd5b2f4fd5e1a0692c5629fca92c2e5",
+  "claims": [
+    {
+      "id": "scoring-config",
+      "status": "partially-implemented",
+      "summary": "Suffix policy and fixed scoring are implemented.",
+      "limitations": "Scoring weights are constants; collapse policy differs from shared policy.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| scoring-config |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/warp_policy.rs",
+          "contains": "pub struct WarpPolicy"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.structure.test.jl",
+          "contains": "config exposes the policy"
+        }
+      ]
+    },
+    {
+      "id": "status-explain-next",
+      "status": "implemented",
+      "summary": "Pure status, explain and next projections expose evidence and suggestions.",
+      "limitations": "No automatic execution, generalized scheduler or domain certification.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| status-explain-next |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/main_command_warp_impl.rs",
+          "contains": "fn emit_next"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    },
+    {
+      "id": "maps-rings",
+      "status": "implemented",
+      "summary": "Flat Slice composition and explicit recursive ring projection.",
+      "limitations": "Subscriptions inspect declared receipts; they do not start watchers.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| maps-rings |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/warp_bubble.rs",
+          "contains": "pub struct WarpRingMap"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.ring-topology.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    },
+    {
+      "id": "complete-receipt",
+      "status": "implemented",
+      "summary": "Map-gated completion and policy-aware lifecycle declarations.",
+      "limitations": "A declared receipt is not checked evidence; map gate rules govern completion.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| complete-receipt |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/recur_warp_main.rs",
+          "contains": "fn receipt("
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.evidence-integrity.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    },
+    {
+      "id": "evolve-collapse",
+      "status": "partially-implemented",
+      "summary": "Exploded-source supersession and bounded confirmed archival.",
+      "limitations": "Separate collapse parser lacks shared nearest-config and compound-suffix behavior; not a general transition engine.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| evolve-collapse |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/recur_warp_main.rs",
+          "contains": "fn collapse_suffix_policy"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.recur-warp.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    },
+    {
+      "id": "evidence-freshness",
+      "status": "implemented",
+      "summary": "Declared and checked evidence assessment with named input fingerprints.",
+      "limitations": "No producer rerun, unlisted-input coverage or cryptographic attestation.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| evidence-freshness |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/warp_evidence.rs",
+          "contains": "pub fn assess"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.evidence-integrity.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    },
+    {
+      "id": "reveal",
+      "status": "implemented",
+      "summary": "Opt-in structured Warp state/readiness reconciliation.",
+      "limitations": "No narrative rewrite or recovery of unrecorded intent.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| reveal |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/main_command_warp_impl.rs",
+          "contains": "pub fn reconcile"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.evidence-integrity.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    },
+    {
+      "id": "discovery",
+      "status": "implemented",
+      "summary": "Default inventory with configurable roots and exclusions.",
+      "limitations": "Manifest-local inventory evidence differs from legacy explicit merge traversal.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| discovery |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/warp_discovery.rs",
+          "contains": "pub struct DiscoveryPolicy"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.discovery.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    },
+    {
+      "id": "milestones-temporal",
+      "status": "proposed",
+      "summary": "General epic/horizon forecasting is design vocabulary.",
+      "limitations": "Map coverage is not a temporal projection engine.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| milestones-temporal |"
+        }
+      ]
+    },
+    {
+      "id": "methodology",
+      "status": "partially-implemented",
+      "summary": "Bounded Slice/contract model has concrete composition support.",
+      "limitations": "Human/intelligence routing rationale is broader than implemented runtime semantics.",
+      "publication": "Observed source baseline 837dee4 published on recur-lang/a.0.2.8; no package-registry claim; reconciliation is local until committed.",
+      "docs": [
+        {
+          "path": "docs/main.command.warp.docs-reconciliation.current-state.md",
+          "contains": "| methodology |"
+        }
+      ],
+      "source": [
+        {
+          "path": "src/warp_bubble.rs",
+          "contains": "pub struct WarpRequiredSlice"
+        }
+      ],
+      "tests": [
+        {
+          "path": "julia-tests/main.command.warp.bubble.test.jl",
+          "contains": "@testset"
+        }
+      ]
+    }
+  ]
+}
