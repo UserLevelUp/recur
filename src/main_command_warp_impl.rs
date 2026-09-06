@@ -180,6 +180,8 @@ struct WarpConfigOutput {
     complete_suffixes: Vec<String>,
     interesting_suffixes: Vec<String>,
     blocked_suffixes: Vec<String>,
+    removal: recur::warp_policy::WarpRemovalPolicy,
+    removal_guards_enforced: bool,
 }
 
 #[derive(Clone)]
@@ -192,6 +194,8 @@ struct LocatedWarpLayer {
 struct WarpMapOutput {
     schema: &'static str,
     warp_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    bubble_uuid: Option<String>,
     root: String,
     manifest: String,
     manifest_schema: String,
@@ -212,6 +216,8 @@ struct WarpMergeOutput {
     gate_evidence: Vec<recur::warp_evidence::GateAssessment>,
     schema: &'static str,
     warp_id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    bubble_uuid: Option<String>,
     root: String,
     manifest: String,
     state: String,
@@ -574,26 +580,57 @@ fn emit_list(output: &serde_json::Value, json: bool) -> anyhow::Result<()> {
     println!(
         "Warp bubbles ({}) in {}",
         output["filter"].as_str().unwrap_or("remaining"),
-        output["root"].as_str().unwrap_or("")
+        output["root"]
     );
     let entries = output["entries"].as_array().expect("inventory entries");
     if entries.is_empty() {
         println!("No matching Warp bubbles.");
     }
     for entry in entries {
-        println!(
-            "{}  {}  counts={}  evidence={}",
-            entry["warp_id"].as_str().unwrap_or(""),
-            entry["state"].as_str().unwrap_or(""),
-            entry["counts"],
-            entry["evidence_status"].as_str().unwrap_or("unassessed")
-        );
-        println!("  scope: {}", entry["scope"].as_str().unwrap_or(""));
-        for path in entry["manifests"].as_array().expect("manifest paths") {
-            println!("  {}", path.as_str().unwrap_or(""));
+        println!("\n[warps.{}]", entry["warp_id"]);
+        println!("state = {}", entry["state"]);
+        println!("kind = {}", entry["kind"]);
+        let counts = &entry["counts"];
+        for (label, key) in [
+            ("completed", "covered"),
+            ("required", "required"),
+            ("pending", "pending"),
+            ("blocked", "blocked"),
+            ("conflicting", "conflicting"),
+            ("stale_contract", "stale_contract"),
+        ] {
+            let value = counts
+                .get(key)
+                .filter(|v| entry["kind"] == "bubble" && v.is_number())
+                .cloned()
+                .unwrap_or_else(|| serde_json::json!("unknown"));
+            println!("{label} = {value}");
         }
+        if entry["kind"] == "ring" {
+            if let Some(counts) = counts.as_object() {
+                for (key, value) in counts {
+                    println!("ring.{} = {}", serde_json::to_string(key)?, value);
+                }
+            }
+        }
+        println!(
+            "evidence = {}",
+            entry["evidence_status"]
+                .as_str()
+                .map(serde_json::Value::from)
+                .unwrap_or_else(|| serde_json::json!("unassessed"))
+        );
+        println!(
+            "contract = {}",
+            entry["contract_status"]
+                .as_str()
+                .map(serde_json::Value::from)
+                .unwrap_or_else(|| serde_json::json!("unassessed"))
+        );
+        println!("scope = {}", entry["scope"]);
+        println!("manifests = {}", entry["manifests"]);
         if let Some(error) = entry["error"].as_str() {
-            println!("  error: {error}");
+            println!("error = {}", serde_json::json!(format!("error: {error}")));
         }
     }
     println!(
@@ -693,6 +730,8 @@ fn collapse_plan(root: &Path, lane: &str) -> anyhow::Result<WarpCollapsePlanOutp
 fn config(root: &Path) -> anyhow::Result<WarpConfigOutput> {
     let policy = load_suffix_policy(root)?;
     Ok(WarpConfigOutput {
+        removal: recur::warp_policy::WarpRemovalPolicy::load(root)?,
+        removal_guards_enforced: false,
         schema: "warp-config-v1",
         root: root.display().to_string(),
         active_suffixes: policy.active,
@@ -728,6 +767,7 @@ fn bubble_map(root: &Path, raw_warp: &str) -> anyhow::Result<WarpMapOutput> {
     Ok(WarpMapOutput {
         schema: MAP_VIEW_SCHEMA,
         warp_id: map.warp_id,
+        bubble_uuid: map.bubble_uuid,
         root: root.display().to_string(),
         manifest,
         manifest_schema: map.schema,
@@ -1470,6 +1510,7 @@ fn compose_bubble(
         gate_evidence,
         schema: MERGE_SCHEMA,
         warp_id: map.warp_id,
+        bubble_uuid: map.bubble_uuid,
         root: root.display().to_string(),
         manifest,
         state: state.to_string(),
@@ -1989,6 +2030,11 @@ fn emit_config(output: &WarpConfigOutput, json: bool) -> anyhow::Result<()> {
     println!("  blocked: {}", output.blocked_suffixes.join(", "));
     println!("  policy source: {}", output.policy_source);
     println!(
+        "  removal policy: {}",
+        serde_json::to_string(&output.removal)?
+    );
+    println!("  removal guards enforced: false (configuration only; no removal command)");
+    println!(
         "  field sources: {}",
         serde_json::to_string(&output.field_sources)?
     );
@@ -2072,6 +2118,7 @@ mod tests {
 
     fn required(slice_id: &str, depends_on: &[&str]) -> WarpRequiredSlice {
         WarpRequiredSlice {
+            slice_uuid: None,
             evidence_mode: "declared".into(),
             gate_rules: BTreeMap::new(),
             slice_id: slice_id.to_string(),
@@ -2103,6 +2150,7 @@ mod tests {
 
     fn map() -> WarpBubbleMap {
         WarpBubbleMap {
+            bubble_uuid: None,
             schema: BUBBLE_MAP_SCHEMA.to_string(),
             warp_id: "demo.release".to_string(),
             required_slices: vec![required("alpha", &[]), required("beta", &["alpha"])],
@@ -2267,6 +2315,7 @@ mod tests {
             Path::new("fixture"),
             "demo.release.warp-map.json".to_string(),
             WarpBubbleMap {
+                bubble_uuid: None,
                 schema: BUBBLE_MAP_SCHEMA.to_string(),
                 warp_id: "demo.release".to_string(),
                 required_slices: vec![required("alpha", &[])],
@@ -2285,6 +2334,7 @@ mod tests {
     #[test]
     fn dependency_cycles_are_rejected_before_composition() {
         let cyclic = WarpBubbleMap {
+            bubble_uuid: None,
             schema: BUBBLE_MAP_SCHEMA.to_string(),
             warp_id: "demo.release".to_string(),
             required_slices: vec![required("alpha", &["beta"]), required("beta", &["alpha"])],

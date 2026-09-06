@@ -15,6 +15,13 @@ directory by default). `--all` includes completed projections. State and counts 
 from the existing `merge` query, not filenames or authored readiness prose.
 A ring and its coordinator bubble sharing an identity produce one ring row.
 
+Human output uses `[warps."<readable-id>"]` sections with separate `state`,
+`completed`, `required`, `pending`, `blocked`, `conflicting`, `stale_contract`,
+`evidence`, `contract`, `scope` and `manifests` fields. Unknown counts print
+`"unknown"`; ring domain counts appear under `ring` rather than claiming completed
+slices. Strings are JSON-escaped, including diagnostics. Repeated IDs retain
+their distinct manifest scopes. The final inventory summary remains visible.
+
 JSON uses `warp-list-v1`, with root, filter, discovered/listed/error counts,
 and sorted entries containing identities, manifest paths, projected state,
 counts, evidence/contract qualification where available, scope and diagnostic errors.
@@ -59,7 +66,51 @@ behavior; inventory scoping does not silently change those APIs. For legacy layo
 with layers spread across subdirectories, use the explicit merge at the intended
 root; the inventory may conservatively show missing coverage.
 
-## Lane queries
+## Initialize editable creation defaults
+
+```powershell
+recur-warp init --dry-run -d . --json
+recur-warp init -d .
+recur-warp create demo.pool --goal "Safe swimming" -d . --confirm
+recur warp show demo.pool -d . --json
+```
+
+`recur-warp init` is an explicit setup write and needs no extra confirmation.
+It augments the nearest project's `.recur/config.toml`, or creates one at `-d`
+when none exists. Existing values, comments, unrelated sections and user templates
+survive; repeated initialization leaves the files unchanged. Dry-run writes nothing.
+Missing defaults install `.recur/warp-template.json` and use `warps/` for output:
+
+```toml
+[warp.creation]
+# Alternatives: docs/warps or .recur/warps
+directory = "warps"
+template = ".recur/warp-template.json"
+
+[warp.removal]
+require_confirmation = true
+require_committed_snapshot = true
+require_preservation_ref = true
+require_pushed_ref = false
+```
+
+Removal settings are typed configuration for a future removal API. Explicit false
+values are preserved. `recur warp config` exposes the effective settings and
+`removal_guards_enforced = false`: no removal command or Git snapshot/ref enforcement
+ships here. Existing writer confirmations remain required even if this future
+removal policy opts out. Closing and removal are separate operations.
+
+Creation assigns a new UUIDv7 `bubble_uuid` and distinct `slice_uuid` values,
+replacing any identities supplied by a template. Preview identities are prospective,
+not reservations. These fields supplement readable `warp_id`/`slice_id` and filenames;
+`map`, `show`, `slices` and `merge` expose available identities to JSON consumers.
+Malformed, non-v7 and duplicate identities within a map are rejected. Legacy maps
+without UUIDs remain readable and are never silently migrated. Completion preserves
+map bytes; copying or renaming an existing map preserves its UUIDs. An evolved
+successor with UUID metadata must have a different bubble UUID from its predecessor.
+Semantic merge/split and explicit identity migration remain deferred.
+
+## Inspect lanes
 
 Status: `implemented` (status v1, compositional bubble v1, recursive ring v1,
 and confirmed companion completion/evolution/collapse)

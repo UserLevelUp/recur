@@ -2,7 +2,7 @@
   "schema": "warp-bubble-map-v1",
   "warp_id": "main.command.warp.identity-policy",
   "goal": "Initialize editable Warp defaults, assign stable UUIDv7 identities, and configure optional preservation safeguards without deleting artifacts.",
-  "current_slice": "slice-1",
+  "current_slice": null,
   "required_slices": [
     {
       "slice_id": "slice-0",

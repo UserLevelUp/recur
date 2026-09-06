@@ -82,7 +82,23 @@ ready.state = I know the lane and what to pull next
 - if multiple reveal capsules match a loose query, `recur reveal` lists the
   candidates instead of guessing
 
+## Skills handoff
+
+`recur reveal recur-expert` exposes the expert capsule and a pointer to
+`recur-expert/SKILL.md`. The canonical playbook remains
+`julia-expert/references/recur-playbook.md`; root/docs expert prompt files point there.
+
+`skill.name`, `skill.path` and `skill.loading` are ordinary capsule fields, not
+special loader directives. Reveal prints them; it does not discover/install Codex
+skills, parse their YAML frontmatter, follow references or execute instructions.
+An agent can separately load the indicated skill through its own supported loader
+or explicitly read the file. Keep `.recur.md` capsule discovery unchanged rather
+than switching entry_suffix to SKILL.md (the formats serve different purposes).
+
 ## Related
+
+Planned: [persona-skill configuration Warp](main.command.reveal.persona-skills.readme.md)
+for recur init defaults and a future recur-reveal companion. Not implemented yet.
 
 - `README.CORE.IMPROVEMENT22.md`
 - `docs/main.improvement.22.todo.future-plan.md`

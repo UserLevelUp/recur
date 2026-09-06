@@ -23,7 +23,7 @@ fn portable_component(value: &str) -> bool {
         .contains(&stem.as_str())
 }
 
-fn relative(base: &Path, text: &str) -> anyhow::Result<PathBuf> {
+pub(crate) fn relative(base: &Path, text: &str) -> anyhow::Result<PathBuf> {
     ensure!(!text.is_empty(), "empty configured path");
     let path = Path::new(text);
     for part in path.components() {
@@ -39,7 +39,7 @@ fn relative(base: &Path, text: &str) -> anyhow::Result<PathBuf> {
     Ok(base.join(path))
 }
 
-fn contained(path: &Path, root: &Path) -> anyhow::Result<()> {
+pub(crate) fn contained(path: &Path, root: &Path) -> anyhow::Result<()> {
     ensure!(path.starts_with(root), "configured output escapes -d scope");
     let mut current = root.to_path_buf();
     for part in path.strip_prefix(root)?.components() {
@@ -71,6 +71,33 @@ fn render(value: &mut Value, warp: &str, goal: &str) {
     }
 }
 
+pub(crate) fn starter_template() -> Value {
+    json!({"schema":"warp-bubble-map-v1", "warp_id":"{warp}", "goal":"{goal}",
+        "invariants":[], "current_slice":"slice-0", "required_slices":[
+            {"slice_id":"slice-0", "contract_hash":"contract:{warp}.slice-0:v1", "depends_on":[], "evidence_gates":["baseline"], "evidence_mode":"declared"},
+            {"slice_id":"slice-final", "contract_hash":"contract:{warp}.slice-final:v1", "depends_on":["slice-0"], "evidence_gates":["acceptance"], "evidence_mode":"declared"}]})
+}
+
+// UUIDv7: 48-bit Unix milliseconds, version/variant bits, and 74 random bits.
+fn uuid7() -> anyhow::Result<String> {
+    let mut bytes = [0u8; 16];
+    getrandom::fill(&mut bytes).map_err(|e| anyhow::anyhow!("UUID randomness: {e}"))?;
+    let millis = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
+    ensure!(millis < (1u128 << 48), "UUIDv7 timestamp out of range");
+    bytes[..6].copy_from_slice(&(millis as u64).to_be_bytes()[2..]);
+    bytes[6] = (bytes[6] & 0x0f) | 0x70;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    let hex: String = bytes.iter().map(|b| format!("{b:02x}")).collect();
+    Ok(format!(
+        "{}-{}-{}-{}-{}",
+        &hex[..8],
+        &hex[8..12],
+        &hex[12..16],
+        &hex[16..20],
+        &hex[20..]
+    ))
+}
+
 pub fn create(root: &Path, warp: &str, goal: &str, confirm: bool) -> anyhow::Result<Value> {
     ensure!(
         portable_component(warp)
@@ -98,6 +125,7 @@ pub fn create(root: &Path, warp: &str, goal: &str, confirm: bool) -> anyhow::Res
         Some(p) => toml::from_str(&fs::read_to_string(p)?)?,
         None => toml::Value::Table(Default::default()),
     };
+    recur::warp_policy::WarpRemovalPolicy::from_config(&settings)?;
     let creation = settings.get("warp").and_then(|v| v.get("creation"));
     if let Some(value) = creation {
         ensure!(value.is_table(), "warp.creation must be a table");
@@ -129,15 +157,22 @@ pub fn create(root: &Path, warp: &str, goal: &str, confirm: bool) -> anyhow::Res
         );
         serde_json::from_slice(&fs::read(path)?)?
     } else {
-        json!({"schema":"warp-bubble-map-v1", "warp_id":"{warp}", "goal":"{goal}",
-            "invariants":[], "current_slice":"slice-0", "required_slices":[
-                {"slice_id":"slice-0", "contract_hash":"contract:{warp}.slice-0:v1", "depends_on":[], "evidence_gates":["baseline"], "evidence_mode":"declared"},
-                {"slice_id":"slice-final", "contract_hash":"contract:{warp}.slice-final:v1", "depends_on":["slice-0"], "evidence_gates":["acceptance"], "evidence_mode":"declared"}]})
+        starter_template()
     };
     render(&mut map, warp, goal);
     map.as_object_mut()
         .context("template must be a JSON object")?
         .insert("goal".into(), goal.into());
+    map["bubble_uuid"] = uuid7()?.into();
+    for slice in map["required_slices"]
+        .as_array_mut()
+        .context("required_slices must be an array")?
+    {
+        slice
+            .as_object_mut()
+            .context("slice must be an object")?
+            .insert("slice_uuid".into(), uuid7()?.into());
+    }
     let parsed: WarpBubbleMap = serde_json::from_value(map.clone())?;
     validate_bubble_map(&parsed, warp, &target)?;
     for slice in &parsed.required_slices {

@@ -74,6 +74,8 @@ try
         include("main.command.warp.companion-policy.test.jl") # Shared collapse policy and no-mutation safety
         include("main.command.warp.usability.test.jl") # Creation, progress and fail-closed safety
         include("main.command.warp.query-compatibility.test.jl") # Hierarchy/trace queries remain read-only with UUID metadata
+        include("main.command.warp.identity-policy.test.jl") # Editable init and stable UUID identities
+        include("main.command.warp.list-format.test.jl") # Human presentation and JSON compatibility
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
         include("main.lang.form-validation.test.jl")  # red-first validation, refinement, and error-routing contract

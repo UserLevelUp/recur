@@ -783,6 +783,7 @@ dependencies = [
  "clap",
  "criterion",
  "csv",
+ "getrandom",
  "ignore",
  "notify",
  "predicates",
@@ -797,6 +798,7 @@ dependencies = [
  "terminal_size",
  "thiserror",
  "toml",
+ "toml_edit",
  "walkdir",
 ]
 

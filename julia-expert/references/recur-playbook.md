@@ -21,6 +21,57 @@ The same query-first workflow is portable to external projects (including Visual
 
 ## Fast Rehydration
 
+### Warp specialization (checkpoint df946cf, 2026-09-06)
+
+For Warp work, start with `recur reveal recur-expert`, `recur warp`, and
+`recur warp slices <warp-id>`. Read docs/main.command.warp.readme.md and the
+selected bubble's map/readme before broader theory. Re-query live state rather
+than treating this dated checkpoint as the current completion state.
+
+Core `recur warp` is read-only inventory, projection and evidence inspection.
+The opinionated `recur-warp` companion authors data/structures and manages policy
+and declared state where implemented. Calculated stats and qualified completion
+are not arbitrary writable status fields. Check local --help/source before using
+proposed commands; installed binaries may lag target/release-safe.
+
+At this checkpoint create/show/slices and companion policy are implemented.
+The pending main.command.warp.identity-policy bubble has baseline slice-0 accepted;
+slice-1 init, slice-2 UUIDs, slice-3 optional preservation config, slice-4 human
+list formatting and slice-final regression closeout remain unimplemented.
+Its identity-policy and list-format Julia suites are standalone intentionally red,
+not part of the passing full runner yet. Read the bubble's acceptance contract for
+additional cases; do not weaken tests or mark them broken to close the bubble.
+
+Subsequent local work on 2026-09-06 accepted all identity-policy slices: init,
+UUIDv7 metadata, optional removal policy and human list formatting now ship in
+source. The full Julia runner passed 3205 tests with 73 known-broken cases using
+`--startup-file=no -C generic -O0`; default Julia 1.12.0 suffered runtime crashes.
+Read its verification record for that qualification. Prompt discovery (including
+app-provided defaults/project overrides) and reveal persona-skills are separate
+planned bubbles with standalone red tests, not implemented command surfaces.
+
+The proposed work model is warp -> slice -> work name -> hierarchical tags -> UUID.
+Readable hierarchy is the address; UUID is stable identity. Tags classify purpose;
+dependencies constrain execution. Work-item semantics, semantic merge/split,
+identity migration and deletion enforcement are deferred, not shipped by declaring
+configuration fields. Preserve source bubbles and reassess evidence after contract
+changes. Optional Git-preservation policy must not be mistaken for automatic Git
+operations or implemented removal safeguards.
+
+tree/files/trace-id remain complementary: select hierarchy, locate artifacts,
+then inspect declared roles and their context. UUID metadata alone is not a trace
+role. For hidden storage use explicit -d .recur/warps with generic queries when
+needed. Existing warp merge composes acceptance layers, not arbitrary project union.
+
+Use cargo test --locked and julia julia-tests/runtests.jl for regressions;
+use the selected main.command.warp.*.test.jl files for focused tests. Historical
+passing counts are evidence of a run, not proof about later artifacts.
+
+Reveal only prints capsule fields (including skill pointers). A skill-capable
+agent must separately load SKILL.md. It does not recursively load references,
+execute pull/verify commands, or grant implementation/commit/push/removal authority.
+See docs/main.command.reveal.readme.md and recur-expert/SKILL.md.
+
 When bringing Skippy or another LLM back into this repo, load context in this order:
 
 1. `docs/eventness_explained_whitepaper.docx` for the deeper eventness theory and equation framing.
@@ -679,7 +730,9 @@ recur files "**.todo" -d docs/
 recur files "**.reference" -d docs/
 ```
 
-**The hierarchy IS the state!** File presence/absence tells you everything.
+Hierarchy exposes recorded state and interest. File presence/absence alone does
+not prove acceptance, runtime correctness or evidence freshness; use Warp projection
+and applicable tests for those questions.
 
 ## Common Patterns
 
@@ -719,7 +772,7 @@ recur files "main_command_<name>_*" -d src/ --sep _
 ## Key Principles
 
 1. **Query, don't remember** - Use recur to discover state
-2. **Files are state** - Presence/absence of files shows progress
+2. **Files record state** - Distinguish authored markers from qualified progress
 3. **Explicit over implicit** - No hidden automation, run commands manually
 4. **Clean up ephemeral** - Delete .current files when done
 5. **Separator awareness** - Use `--sep _` for src/, dots for docs/tests

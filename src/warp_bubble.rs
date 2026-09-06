@@ -14,6 +14,12 @@ pub const MERGE_SCHEMA: &str = "warp-bubble-projection-v1";
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WarpRequiredSlice {
     pub slice_id: String,
+    #[serde(
+        default,
+        deserialize_with = "present_uuid",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub slice_uuid: Option<String>,
     pub contract_hash: String,
     #[serde(default)]
     pub depends_on: Vec<String>,
@@ -30,10 +36,18 @@ fn default_evidence_mode() -> String {
     "declared".into()
 }
 
+fn present_uuid<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<String>, D::Error> {
+    String::deserialize(deserializer).map(Some)
+}
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct WarpBubbleMap {
     pub schema: String,
     pub warp_id: String,
+    #[serde(default, deserialize_with = "present_uuid")]
+    pub bubble_uuid: Option<String>,
     pub required_slices: Vec<WarpRequiredSlice>,
 }
 
@@ -223,6 +237,31 @@ pub struct WarpSliceLayer {
 }
 
 pub fn validate_bubble_map(map: &WarpBubbleMap, warp: &str, path: &Path) -> anyhow::Result<()> {
+    let mut identities = BTreeSet::new();
+    for (field, identity) in std::iter::once(("bubble_uuid", &map.bubble_uuid)).chain(
+        map.required_slices
+            .iter()
+            .map(|s| ("slice_uuid", &s.slice_uuid)),
+    ) {
+        if let Some(identity) = identity {
+            let bytes = identity.as_bytes();
+            let valid = bytes.len() == 36
+                && bytes.iter().enumerate().all(|(i, b)| {
+                    if [8, 13, 18, 23].contains(&i) {
+                        *b == b'-'
+                    } else {
+                        b.is_ascii_digit() || (b'a'..=b'f').contains(b)
+                    }
+                })
+                && bytes[14] == b'7'
+                && b"89ab".contains(&bytes[19]);
+            anyhow::ensure!(valid, "{field} must be a canonical UUIDv7: {identity}");
+            anyhow::ensure!(
+                identities.insert(identity),
+                "duplicate UUID identity: {identity}"
+            );
+        }
+    }
     if map.required_slices.is_empty() {
         anyhow::bail!("Warp bubble map must declare at least one required Slice");
     }

@@ -3,6 +3,55 @@ use anyhow::{bail, Context, Result};
 use serde::Serialize;
 use std::{collections::BTreeMap, fs, path::Path};
 
+/// Configuration for a future removal API. No current command enforces Git guards
+/// or removes bubbles based on these settings.
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+pub struct WarpRemovalPolicy {
+    pub require_confirmation: bool,
+    pub require_committed_snapshot: bool,
+    pub require_preservation_ref: bool,
+    pub require_pushed_ref: bool,
+}
+
+impl WarpRemovalPolicy {
+    pub fn load(root: &Path) -> Result<Self> {
+        let config = root
+            .ancestors()
+            .map(|p| p.join(".recur/config.toml"))
+            .find(|p| p.is_file());
+        let value = match config {
+            Some(path) => toml::from_str(&fs::read_to_string(path)?)?,
+            None => toml::Value::Table(Default::default()),
+        };
+        Self::from_config(&value)
+    }
+    pub fn from_config(config: &toml::Value) -> Result<Self> {
+        let warp = config.get("warp");
+        if warp.is_some_and(|v| !v.is_table()) {
+            bail!("warp must be a table");
+        }
+        let removal = warp.and_then(|v| v.get("removal"));
+        if removal.is_some_and(|v| !v.is_table()) {
+            bail!("warp.removal must be a table");
+        }
+        let field = |key: &str, default| -> Result<bool> {
+            removal
+                .and_then(|v| v.get(key))
+                .map(|v| {
+                    v.as_bool()
+                        .with_context(|| format!("warp.removal.{key} must be a boolean"))
+                })
+                .unwrap_or(Ok(default))
+        };
+        Ok(Self {
+            require_confirmation: field("require_confirmation", true)?,
+            require_committed_snapshot: field("require_committed_snapshot", true)?,
+            require_preservation_ref: field("require_preservation_ref", true)?,
+            require_pushed_ref: field("require_pushed_ref", false)?,
+        })
+    }
+}
+
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct WarpPolicy {
     pub active: Vec<String>,

@@ -8,7 +8,7 @@ function query(root,args...)
     success(p),String(take!(out)),String(take!(err))
 end
 snapshot(root)=Dict(relpath(joinpath(d,f),root)=>read(joinpath(d,f)) for (d,_,files) in walkdir(root) for f in files)
-# Intentionally red standalone contract; integrate into runtests.jl when implemented.
+# Human output contract; JSON inventory remains unchanged.
 @testset "Warp list trait-style human presentation" begin
     mktempdir() do root
         id="demo.pool"
@@ -50,6 +50,55 @@ snapshot(root)=Dict(relpath(joinpath(d,f),root)=>read(joinpath(d,f)) for (d,_,fi
         @test occursin("state = \"error\"",text)
         @test occursin("error = ",text)
         @test occursin("1 errors",text)
+        @test snapshot(root)==before
+    end
+end
+
+@testset "List rings, duplicate scopes, escaping and qualified counts" begin
+    mktempdir() do root
+        cp(joinpath(@__DIR__,"fixtures","warp-ring-v1","complete"),joinpath(root,"ring"))
+        before=snapshot(root)
+        ok,text,_=query(root,"list","--all"); @test ok
+        @test occursin("kind = \"ring\"",text)
+        ring=split(split(text,"[warps.\"coordinator.release\"]")[2],"[warps.")[1]
+        @test occursin("completed = \"unknown\"",ring)
+        @test occursin("required = \"unknown\"",ring)
+        @test occursin("pending = \"unknown\"",ring)
+        @test occursin("ring.\"domains\" = 3",ring)
+        @test occursin("ring.\"ready\" = 3",ring)
+        @test snapshot(root)==before
+    end
+    mktempdir() do root
+        for scope in ("one","two")
+            mkpath(joinpath(root,scope))
+            write(joinpath(root,scope,"demo.same.warp-map.json"),JSON3.write(Dict(
+                "schema"=>"warp-bubble-map-v1","warp_id"=>"demo.same","required_slices"=>[
+                Dict("slice_id"=>"a","contract_hash"=>"v2","evidence_gates"=>["tests"])])))
+        end
+        write(joinpath(root,"one","demo.same.a.old.warp-layer.json"),JSON3.write(Dict(
+            "schema"=>"warp-slice-layer-v1","warp_id"=>"demo.same","slice_id"=>"a",
+            "contract_hash"=>"v1","attempt_id"=>"old","result_state"=>"accepted",
+            "result_hash"=>"old","evidence"=>Dict("tests"=>["old-receipt"]))))
+        before=snapshot(root)
+        ok,text,_=query(root,"list"); @test ok
+        @test length(findall("[warps.\"demo.same\"]",text))==2
+        @test occursin("stale_contract = 1",text)
+        @test occursin("stale_contract = 0",text)
+        @test occursin("one/demo.same.warp-map.json",text)
+        @test occursin("two/demo.same.warp-map.json",text)
+        @test occursin("2 listed / 2 discovered; 0 errors",text)
+        @test query(root)[2]==text
+        @test snapshot(root)==before
+        write(joinpath(root,"demo.escape.warp-map.json"),JSON3.write(Dict(
+            "schema"=>"warp-bubble-map-v1","warp_id"=>"bad\n\"name\"\t",
+            "required_slices"=>[Dict("slice_id"=>"a","contract_hash"=>"v1")])) )
+        before=snapshot(root)
+        ok,text,_=query(root,"list"); @test ok
+        @test !occursin("bad\n\"name\"\t",text)
+        @test occursin("bad\\n\\\"name\\\"\\t",text)
+        errorentry=split(split(text,"[warps.\"demo.escape\"]")[2],"[warps.")[1]
+        @test occursin("completed = \"unknown\"",errorentry)
+        @test occursin("error = ",errorentry)
         @test snapshot(root)==before
     end
 end

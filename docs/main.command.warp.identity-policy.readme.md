@@ -1,11 +1,14 @@
 # Warp: initialization, identities and optional preservation policy
 
-Status: planned; Slice 0 baseline recorded, implementation not started.
+Status: complete; all six slices accepted, with the original Slice 0 baseline
+retained. The verification record includes full-regression results and the required
+Julia runtime settings.
 
 A bubble has a permanent identity and an editable name. Its slices identify work
 independently of its container. A successor gets a new bubble identity and explicit
 lineage; moving or renaming an existing bubble does not create a new identity.
-This Warp prepares that model; it does not implement semantic merge/split.
+This Warp implements initialization and identity metadata; it does not implement
+semantic merge/split.
 
 ## Scope and defaults
 
@@ -38,8 +41,8 @@ zero; ring domain counts must not be mislabeled as completed slices. JSON-escape
 names/values to prevent control characters corrupting output. Scope may use a
 readable relative path when unambiguous; do not change actual scope resolution.
 Bare warp and explicit list must match. --json stays warp-list-v1 unchanged.
-The standalone main.command.warp.list-format.test.jl contract is intentionally red
-until implemented; extend with ring/escaping/duplicate-scope fixtures at that slice.
+The main.command.warp.list-format.test.jl contract now passes, including
+ring/escaping/duplicate-scope fixtures, and is included in runtests.jl.
 The unaccepted final Slice contract advances to v2 because it now depends on Slice 4.
 Previously accepted baseline receipts remain unchanged.
 
@@ -58,12 +61,12 @@ The passing main.command.warp.query-compatibility.test.jl suite checks visible
 and hidden placement, UUID-bearing maps, explicit trace markers, eleven slices,
 inventory/progress and no query writes. Keep it in the normal regression suite.
 
-Standalone executable contract: julia-tests/main.command.warp.identity-policy.test.jl.
-Keep it deliberately red outside runtests.jl until implementation; then integrate
-it as ordinary passing tests, without test_broken or weakened legacy assertions.
-Extend it during implementation for partial configuration, nearest-project scope,
-template identity injection, UUID preservation through completion and copy/rename,
-malformed/duplicate identities, legacy maps, and failure-safe init publication.
+Executable contract: julia-tests/main.command.warp.identity-policy.test.jl,
+now integrated in runtests.jl with ordinary passing assertions. It covers partial
+and inline configuration, nearest-project scope, template identity injection,
+UUID preservation through completion, evolution and copy/rename, malformed/duplicate
+identities, legacy maps, and failure-safe initialization. A Windows Cargo test
+locks the config against replacement and proves template/staging rollback.
 Dry-run UUIDs are prospective, not persisted identity reservations.
 
 Before a future removal API ships, executable temporary-Git tests must cover:
@@ -75,3 +78,8 @@ lineage, not only the map. Never use the live repository for deletion fixtures.
 
 Final gate: Cargo and full Julia regressions plus new tests pass with existing
 known-broken cases reported honestly. No automatic commit, push, migration or cleanup.
+
+Implementation: [command usage](main.command.warp.readme.md) and
+[observed verification](main.command.warp.identity-policy.verification.current.md).
+
+defines: recur.warp.identity.policy editable initialization and stable UUID metadata

@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.prompt.discovery",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.prompt.discovery.slice-0:v1",
+  "attempt_id": "red-baseline-20260906",
+  "result_state": "accepted",
+  "result_hash": "sha256:591a09a9338118787803231c8723e3a3e8a28d8af4055098f749ea5b088524e0",
+  "evidence": {
+    "baseline-contract": [
+      "main.command.prompt.discovery.slice-0.complete.md"
+    ]
+  },
+  "reason": null
+}

@@ -1,7 +1,7 @@
 # Warp command roadmap — 2026-09-06
 
 Current: read-only list/show/slices/map/merge/status/explain/next/config/evidence/fingerprint/
-collapse-plan; companion create/receipt/complete/evolve/collapse. Shared suffix policy
+collapse-plan; companion init/create/receipt/complete/evolve/collapse. Shared suffix policy
 foundation is implemented locally. Existing behavior/tests remain the compatibility
 baseline. `merge` projects layers; it is not arbitrary project union.
 
@@ -13,10 +13,21 @@ accepting placeholder work. Canonical map/layer filenames remain stable.
 
 Remaining foundational work, not implemented by that bounded Warp:
 
-Next declared Warp: [identity and policy initialization](main.command.warp.identity-policy.readme.md).
-Its standalone tests are intentionally red. It covers init, automatic UUIDv7 bubble/
-slice identities, optional preservation configuration and trait-style human list
-presentation, not deletion enforcement. List JSON and query semantics stay stable.
+Separate planned bubble: [capability prompt discovery](main.command.prompt.discovery.readme.md)
+adds shared app-provided prompt defaults with project overrides, list/show/context packets, trait and Warp
+adapters, and reveal references. Its standalone acceptance tests are intentionally
+red. Provider invocation and automatic application of proposed names are deferred.
+
+Separate planned bubble: [reveal persona skills](main.command.reveal.persona-skills.readme.md)
+extends recur init defaults and proposes recur-reveal profile setup/context packets.
+Skippy's advanced Recur/Warp associations are configurable requests, not installed
+skills or execution permissions. This does not expand the identity-policy bubble.
+
+Completed locally with all six slices accepted:
+[identity and policy initialization](main.command.warp.identity-policy.readme.md).
+Its integrated tests cover init, automatic UUIDv7 bubble/slice identities, optional
+preservation configuration and trait-style human list presentation. Deletion
+enforcement remains deferred. List JSON and query semantics stay stable.
 
 - Semantic repartition: many source bubbles to many destinations, stable identity,
   hierarchical tags, explicit contract/dependency revisions and lineage. Freeze

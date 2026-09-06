@@ -112,6 +112,27 @@ end
         end
     end
 
+    @testset "skill pointers are exposed without loading instructions" begin
+        mktempdir() do root
+            mkpath(joinpath(root,"docs")); mkpath(joinpath(root,"expert"))
+            skill=joinpath(root,"expert","SKILL.md")
+            write(skill,"---\nname: expert\ndescription: Fixture only\n---\nPRIVATE_SKILL_BODY_SENTINEL\n")
+            capsule=joinpath(root,"docs","expert.recur.md")
+            write(capsule,"skill.name = expert\nskill.path = expert/SKILL.md\nverify = do-not-execute-this\n")
+            before=Dict(skill=>read(skill),capsule=>read(capsule))
+            ok,out,_=run_recur(["reveal","expert","-d",root,"--json"])
+            @test ok
+            parsed=JSON3.read(out)
+            fields=vcat(collect(parsed["ordered_fields"]),collect(parsed["extra_fields"]))
+            @test any(f->f["key"]=="skill.path" && f["value"]=="expert/SKILL.md",fields)
+            @test !occursin("PRIVATE_SKILL_BODY_SENTINEL",out)
+            @test all(read(path)==bytes for (path,bytes) in before)
+            ok,out,_=run_recur(["reveal","-d",root,"--json"])
+            @test ok
+            @test length(JSON3.read(out)["entries"])==1
+        end
+    end
+
     @testset "reveal falls back cleanly when config is absent" begin
         root = mktempdir()
         try

@@ -1,0 +1,91 @@
+{
+  "bubble_uuid": "01a078b8-3c3d-76c0-bab3-76aeec4223d8",
+  "current_slice": "slice-1",
+  "goal": "Discover capability prompts and assemble bounded hierarchy-aware context packets",
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.prompt.discovery.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-contract"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a078b8-3c3d-7a3b-a03d-4656cc4c9f66"
+    },
+    {
+      "contract_hash": "contract:main.command.prompt.discovery.slice-1:v2",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "registry-resolution"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-1",
+      "slice_uuid": "01a078b8-3c3d-701f-83a9-82d18c130bbd"
+    },
+    {
+      "contract_hash": "contract:main.command.prompt.discovery.slice-2:v2",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "prompt-list-show"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-2",
+      "slice_uuid": "01a078b8-3c3d-7c0a-a70e-ef461e30747e"
+    },
+    {
+      "contract_hash": "contract:main.command.prompt.discovery.slice-3:v2",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "bounded-context-packets"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-3",
+      "slice_uuid": "01a078b8-3c3d-72ca-86e4-47cf92bec375"
+    },
+    {
+      "contract_hash": "contract:main.command.prompt.discovery.slice-4:v2",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "shared-command-adapters"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-4",
+      "slice_uuid": "01a078b8-3c3d-754b-898f-e11f52c51b09"
+    },
+    {
+      "contract_hash": "contract:main.command.prompt.discovery.slice-5:v2",
+      "depends_on": [
+        "slice-4"
+      ],
+      "evidence_gates": [
+        "trait-reveal-references"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-5",
+      "slice_uuid": "01a078b8-3c3d-7e58-9293-25b6739678e2"
+    },
+    {
+      "contract_hash": "contract:main.command.prompt.discovery.slice-final:v2",
+      "depends_on": [
+        "slice-5"
+      ],
+      "evidence_gates": [
+        "regression-closeout"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a078b8-3c3d-7daa-9e5e-910f613bd00a"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.prompt.discovery"
+}

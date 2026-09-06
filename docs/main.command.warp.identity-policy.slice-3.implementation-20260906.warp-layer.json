@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.identity-policy",
+  "slice_id": "slice-3",
+  "contract_hash": "contract:main.command.warp.identity-policy.slice-3:v1",
+  "attempt_id": "implementation-20260906",
+  "result_state": "accepted",
+  "result_hash": "sha256:9333efa7a3c28f9b9978a350e1c6e2a02d112cdbff765a771e9b986f5919fb80",
+  "evidence": {
+    "optional-preservation-policy": [
+      "main.command.warp.identity-policy.verification.current.md"
+    ]
+  },
+  "reason": null
+}

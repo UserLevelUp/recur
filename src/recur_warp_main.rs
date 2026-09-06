@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 use std::process;
 use walkdir::{DirEntry, WalkDir};
 mod recur_warp_create;
+mod recur_warp_init;
 
 #[derive(Parser)]
 #[command(name = "recur-warp")]
@@ -31,6 +32,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Install missing editable defaults. Removal policy is configuration only:
+    /// no removal command or Git snapshot/ref enforcement is provided.
+    Init {
+        /// Preview without writing configuration or templates
+        #[arg(long)]
+        dry_run: bool,
+    },
     /// Preview a configured bubble map; --confirm creates it without overwriting
     Create {
         warp: String,
@@ -181,6 +189,18 @@ fn main() {
         }
     };
     let result = match cli.command {
+        Commands::Init { dry_run } => recur_warp_init::init(&root, dry_run).and_then(|output| {
+            if cli.json {
+                println!("{}", serde_json::to_string_pretty(&output)?);
+            } else {
+                println!(
+                    "{}: {}",
+                    output["state"].as_str().unwrap_or(""),
+                    output["configuration_source"].as_str().unwrap_or("")
+                );
+            }
+            Ok(())
+        }),
         Commands::Create {
             warp,
             goal,
@@ -455,6 +475,20 @@ fn evolve(
         .with_context(|| format!("failed to read '{}'", canonical_candidate.display()))?;
     let target_map: WarpBubbleMap = serde_json::from_slice(&target_bytes)
         .with_context(|| format!("failed to parse '{}'", canonical_candidate.display()))?;
+    recur::warp_bubble::validate_bubble_map(
+        &target_map,
+        &target_map.warp_id,
+        &canonical_candidate,
+    )?;
+    if let Some(source) = &source_map.bubble_uuid {
+        anyhow::ensure!(
+            target_map
+                .bubble_uuid
+                .as_ref()
+                .is_some_and(|target| source != target),
+            "a successor must have a new bubble_uuid"
+        );
+    }
     validate_identity("target Warp", &target_map.warp_id, true)?;
     if target_map.schema != BUBBLE_MAP_SCHEMA {
         anyhow::bail!(
