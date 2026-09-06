@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "warp10.tourist-experience",
+  "slice_id": "recur-administrative-closeout",
+  "contract_hash": "contract:warp10.recur-administrative-closeout:v1",
+  "attempt_id": "administrative-20260905",
+  "result_state": "accepted",
+  "result_hash": "sha256:247ae324ef7e19c13b6d8de701412fa5a03d0c9325d2df3f42abff1964a117ec",
+  "evidence": {
+    "owner-disposition": [
+      "warp10.tourist-experience.recur-closeout.complete.md"
+    ]
+  },
+  "reason": null
+}

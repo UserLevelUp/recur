@@ -1,5 +1,8 @@
 # Warp 10 Journey Reliability Contract
 
+> Archived external-project requirements, not satisfied implementation claims.
+> Warp 10 is administratively closed in Recur; see its recur-closeout.complete.md record.
+
 ## SRE perspective
 
 Warp 10 treats the player journey as a stateful, observable service.  Its

@@ -264,15 +264,23 @@ git diff --name-only origin/main...HEAD | recur trace-id "ulu.topic.dot.**" --sc
 
 ### `recur trait` - manage trait settings in project config
 `recur trait` reads/writes trait settings in `.recur/config.toml`.
-Run `recur init` first so the config file exists.
+Run `recur init` before setting values. Built-in capability traits can be listed
+and explained without a config file. Warp, watch, merge and Git are implemented
+capabilities; unmerge is explicitly proposed. Their preference/notes fields are
+descriptive, not command permissions or runtime switches.
 
 ```bash
 recur trait list
 recur trait get traversal_budget.max_depth
+recur trait explain warp
+recur trait set warp.preference preferred
 recur trait set traversal_budget.max_depth 3
 recur trait set traversal_budget.depth_guard clamp
 recur trait set trace_id.producer_keywords "\"publish,send,emit,enqueue\""
 ```
+
+See [Capability traits](docs/main.command.trait.capabilities.readme.md) for defaults,
+configuration scope and the distinction from Rust traits and capability cards.
 
 ### `recur version` - inspect artifact version lanes
 `recur version` is the pure query surface for artifact version policy,

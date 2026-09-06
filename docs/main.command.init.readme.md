@@ -17,6 +17,8 @@ Creates:
 - `.recur/checkpoints.md` (if missing)
 - default `[reveal]` sections for lane-local `*.recur.md` ignition capsules
 - all default `[traits.*]` sections used by `recur trait`
+- capability-trait preference/notes sections for warp, watch, merge, unmerge and git
+- `[warp.discovery]` roots and directory exclusions for project-aware Warp inventory
 
 Generated lane names are normalized to lowercase kebab-case section names.
 If two directories collapse to the same normalized lane name, `recur init`

@@ -3,100 +3,11 @@
   "warp_id": "warp10.tourist-experience",
   "required_slices": [
     {
-      "slice_id": "focus-group-reality-audit",
-      "contract_hash": "sha256:936f4e5b065bd2e535ae5e16c5930452790f93491aeff49a45ba94ee91b60648",
+      "slice_id": "recur-administrative-closeout",
+      "contract_hash": "contract:warp10.recur-administrative-closeout:v1",
       "depends_on": [],
       "evidence_gates": [
-        "focus-group-residual-matrix",
-        "game-workspace-identity",
-        "journey-reliability-baseline",
-        "runtime-baseline",
-        "scene-script-ownership"
-      ]
-    },
-    {
-      "slice_id": "two-scene-foundation",
-      "contract_hash": "sha256:01be3954f90f05bf3ec47bf61d75e35ab3913f2164bd33a6706725c75bc5c5d4",
-      "depends_on": [
-        "focus-group-reality-audit"
-      ],
-      "evidence_gates": [
-        "journey-state-contract",
-        "navigation-contract",
-        "runtime-scene-cycle",
-        "save-migration"
-      ]
-    },
-    {
-      "slice_id": "map-direct-manipulation",
-      "contract_hash": "sha256:87db3bdd983ad7b8dd39d1318a9309717f6e9a9eae8ef84eb7358107e2a7b9d6",
-      "depends_on": [
-        "two-scene-foundation"
-      ],
-      "evidence_gates": [
-        "input-hit-testing",
-        "runtime-map-pan",
-        "runtime-map-pan-exclusions"
-      ]
-    },
-    {
-      "slice_id": "map-site-transitions",
-      "contract_hash": "sha256:55fa328afb47e74f80d2c5b3bd48d1f09b1e97e96d731f650d44bd793adcdbff",
-      "depends_on": [
-        "two-scene-foundation",
-        "map-direct-manipulation"
-      ],
-      "evidence_gates": [
-        "runtime-forward-reverse-transition",
-        "runtime-map-state-restoration",
-        "runtime-reduced-motion"
-      ]
-    },
-    {
-      "slice_id": "conversation-idea-discovery",
-      "contract_hash": "sha256:e17b87acba035ff909afbff9d7b59c46e45c6cec147190de8dddc112d015744b",
-      "depends_on": [
-        "two-scene-foundation"
-      ],
-      "evidence_gates": [
-        "conversation-and-idea-contracts",
-        "runtime-meaningful-conversation",
-        "runtime-idea-payoff",
-        "runtime-journey-trace",
-        "save-load-idea-state"
-      ]
-    },
-    {
-      "slice_id": "interface-polish-accessibility",
-      "contract_hash": "sha256:32c86d9e6b64f8490ad88d12ea97863550679a5d7ab339e92422a209fc15f943",
-      "depends_on": [
-        "map-site-transitions",
-        "conversation-idea-discovery"
-      ],
-      "evidence_gates": [
-        "human-journey-observation",
-        "interface-state-inventory",
-        "runtime-accessibility-pass",
-        "runtime-responsive-layouts",
-        "sre-journey-receipt"
-      ]
-    },
-    {
-      "slice_id": "playable-runtime-acceptance",
-      "contract_hash": "sha256:426bd6fc923c16f08793b0ef69cc150e7c82cb51e0548e0789f4dd318c82c752",
-      "depends_on": [
-        "map-direct-manipulation",
-        "map-site-transitions",
-        "conversation-idea-discovery",
-        "interface-polish-accessibility"
-      ],
-      "evidence_gates": [
-        "end-to-end-runtime-receipt",
-        "focus-group-residual-decision",
-        "godot-debugger-observation",
-        "human-journey-observation",
-        "journey-reliability-trace",
-        "known-limitations"
+        "owner-disposition"
       ]
     }
   ]

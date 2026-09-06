@@ -15,8 +15,11 @@ const CONFIG_FILE: &str = "config.toml";
 
 #[derive(Subcommand, Debug)]
 pub enum TraitSubcommand {
-    /// List configured traits and fields
+    /// List configured traits plus built-in capability traits and their effective defaults
     List,
+
+    /// Explain a built-in capability or configured custom trait without running it
+    Explain { name: String },
 
     /// Get a trait key (e.g., trace_id.enabled or traits.trace_id.enabled)
     Get {
@@ -38,6 +41,7 @@ pub fn execute(command: TraitSubcommand, dir: PathBuf, json: bool) -> anyhow::Re
 
     match command {
         TraitSubcommand::List => list_traits(&root, json),
+        TraitSubcommand::Explain { name } => explain_trait(&root, &name, json),
         TraitSubcommand::Get { key } => get_trait_value(&root, &key, json),
         TraitSubcommand::Set { key, value } => set_trait_value(&root, &key, &value, json),
     }
@@ -51,7 +55,10 @@ fn resolve_root(dir: PathBuf) -> anyhow::Result<PathBuf> {
 }
 
 fn config_path(root: &Path) -> PathBuf {
-    root.join(RECUR_DIR).join(CONFIG_FILE)
+    root.ancestors()
+        .map(|p| p.join(RECUR_DIR).join(CONFIG_FILE))
+        .find(|p| p.is_file())
+        .unwrap_or_else(|| root.join(RECUR_DIR).join(CONFIG_FILE))
 }
 
 fn ensure_config_exists(root: &Path) -> anyhow::Result<PathBuf> {
@@ -82,9 +89,64 @@ fn save_config_table(path: &Path, table: toml::value::Table) -> anyhow::Result<(
     Ok(())
 }
 
+fn effective_config(root: &Path) -> anyhow::Result<(PathBuf, toml::value::Table)> {
+    let path = config_path(root);
+    let mut table = if path.is_file() {
+        load_config_table(&path)?
+    } else {
+        toml::value::Table::new()
+    };
+    let traits = recur::capability_traits::effective(&table)?;
+    table.insert("traits".into(), TomlValue::Table(traits));
+    Ok((path, table))
+}
+
+fn explain_trait(root: &Path, name: &str, json_output: bool) -> anyhow::Result<()> {
+    let key = normalize_trait_key_path(name, false)?;
+    anyhow::ensure!(key.len() == 2, "Explain expects a trait name, not a field");
+    let (path, table) = effective_config(root)?;
+    let config = get_value_at_path(&table, &key).context("Unknown trait")?;
+    let capability = recur::capability_traits::find(&key[1]);
+    let configured = if path.is_file() {
+        get_value_at_path(&load_config_table(&path)?, &key).is_some()
+    } else {
+        false
+    };
+    let payload = json!({
+        "schema":"recur-trait-explain-v1", "name":key[1],
+        "kind":if capability.is_some() {"capability"} else {"configured"},
+        "catalog":capability, "effective":config,
+        "config_path":if path.is_file() {Some(path.display().to_string())} else {None},
+        "source":if configured {"project-with-defaults"} else {"built-in-defaults"},
+        "mutation":"none"
+    });
+    if json_output {
+        println!("{}", serde_json::to_string_pretty(&payload)?);
+    } else {
+        println!(
+            "Trait: {} ({})",
+            key[1],
+            payload["kind"].as_str().unwrap_or("")
+        );
+        if let Some(c) = capability {
+            println!("{} — {}\n{}", c.status, c.description, c.effect);
+            println!(
+                "Commands: {}\nConfiguration references: {}",
+                c.commands.join(", "),
+                c.configuration.join(", ")
+            );
+        }
+        println!(
+            "Source: {}\n{}",
+            payload["source"],
+            serde_json::to_string_pretty(config)?
+        );
+    }
+    Ok(())
+}
+
 fn list_traits(root: &Path, json_output: bool) -> anyhow::Result<()> {
-    let path = ensure_config_exists(root)?;
-    let table = load_config_table(&path)?;
+    let (path, table) = effective_config(root)?;
     let traits = table.get("traits").and_then(|v| v.as_table());
 
     if json_output {
@@ -131,8 +193,7 @@ fn list_traits(root: &Path, json_output: bool) -> anyhow::Result<()> {
 }
 
 fn get_trait_value(root: &Path, key: &str, json_output: bool) -> anyhow::Result<()> {
-    let path = ensure_config_exists(root)?;
-    let table = load_config_table(&path)?;
+    let (path, table) = effective_config(root)?;
     let key_path = normalize_trait_key_path(key, false)?;
     let value = get_value_at_path(&table, &key_path).with_context(|| {
         format!(
@@ -166,6 +227,10 @@ fn set_trait_value(
     let mut table = load_config_table(&path)?;
     let key_path = normalize_trait_key_path(key, true)?;
     let value = parse_cli_value(raw_value);
+
+    if recur::capability_traits::find(&key_path[1]).is_some() {
+        recur::capability_traits::validate_field(&key_path, &value)?;
+    }
 
     set_value_at_path(&mut table, &key_path, value.clone())?;
     save_config_table(&path, table)?;

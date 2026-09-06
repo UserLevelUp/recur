@@ -1,5 +1,8 @@
 # Warp 10 Final: A Sharp Tourist Loop
 
+> Historical target for another solution. Administratively closed in Recur;
+> not implemented or runtime-verified here. See warp10.tourist-experience.recur-closeout.complete.md.
+
 ## Final player experience
 
 Warp 10 is complete when the map, site, conversation, and idea systems feel

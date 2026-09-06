@@ -1,5 +1,17 @@
 # Warp 10 Tourist Experience
 
+Status: closed in Recur — misplaced external-project plan, not implemented here.
+warp.id = warp10.tourist-experience
+warp.root = docs
+observed.state = complete
+readiness.slice = none
+goals.now = administrative closure only; no tourist-game implementation is claimed.
+pull.first = read docs/warp10.tourist-experience.recur-closeout.complete.md
+
+The text below is the archived game brief, not current Recur work. The original
+seven-slice map is retained as warp10.tourist-experience.original-map.reference.json;
+slice documents are now .reference.md. Only administrative disposition is accepted.
+
 ## Reveal
 
 Warp 10 turns the current tourist prototype into one sharp, continuous player
@@ -39,7 +51,7 @@ The Warp 10 final is defined in
 
 ## Slice order
 
-1. `warp10.sub1.focus-group-reality-audit` -- current
+1. `warp10.sub1.focus-group-reality-audit` -- archived, not implemented here
 2. `warp10.sub2.two-scene-foundation`
 3. `warp10.sub3.map-direct-manipulation`
 4. `warp10.sub4.map-site-transitions`
@@ -75,9 +87,9 @@ recur tree "warp10" -d docs
 git status -sb
 ```
 
-Then open the final contract and the one `.todo.current.md` slice.  Verify all
-claims against the actual game workspace and playable build before advancing
-Eventness.
+To resume game work elsewhere, read the original-map reference, final contract
+and archived slice references. There is no current game slice in Recur. Verify
+claims in the owning game workspace before accepting any original game gate.
 
 defines: warp10.tourist-experience two-scene map site dialogue and idea-discovery player loop
 defines: warp10.final receipt-backed sharp tourist experience with preserved navigation context

@@ -24,6 +24,9 @@ pub enum WarpSubcommand {
         /// Include completed projections
         #[arg(long)]
         all: bool,
+        /// Scan every directory under -d, bypassing discovery roots and exclusions
+        #[arg(long)]
+        scan_all: bool,
     },
     /// Fingerprint explicitly named evidence inputs (content checksum, not a signature)
     Fingerprint {
@@ -268,7 +271,9 @@ struct WarpRingMergeOutput {
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
-        WarpSubcommand::List { all } => emit_list(&list_warps(&root, all)?, json),
+        WarpSubcommand::List { all, scan_all } => {
+            emit_list(&list_warps(&root, all, scan_all)?, json)
+        }
         WarpSubcommand::Fingerprint { paths } => {
             let mut files = BTreeMap::new();
             for path in paths {
@@ -341,34 +346,46 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
 }
 
 // defines: recur.warp.discovery.inventory deterministic read-only manifest discovery
-fn list_warps(root: &Path, all: bool) -> anyhow::Result<serde_json::Value> {
-    let mut candidates: BTreeMap<String, Vec<String>> = BTreeMap::new();
-    for entry in WalkDir::new(root).into_iter().filter_entry(keep_entry) {
-        let entry =
-            entry.with_context(|| format!("failed to scan Warp root '{}'", root.display()))?;
-        if !entry.file_type().is_file() {
-            continue;
-        }
-        let Some(name) = entry.file_name().to_str() else {
-            continue;
-        };
-        if let Some(id) = name
-            .strip_suffix(".warp-map.json")
-            .or_else(|| name.strip_suffix(".warp-ring.json"))
+fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_json::Value> {
+    let root = fs::canonicalize(root)?;
+    let policy = recur::warp_discovery::DiscoveryPolicy::load(&root, scan_all)?;
+    let mut candidates: BTreeMap<(String, PathBuf), BTreeSet<String>> = BTreeMap::new();
+    for scan_root in &policy.roots {
+        for entry in WalkDir::new(scan_root)
+            .into_iter()
+            .filter_entry(|e| policy.keep(e))
         {
-            candidates
-                .entry(id.to_string())
-                .or_default()
-                .push(normalize_path(
-                    entry.path().strip_prefix(root).unwrap_or(entry.path()),
-                ));
+            let entry = entry
+                .with_context(|| format!("failed to scan Warp root '{}'", scan_root.display()))?;
+            if !entry.file_type().is_file() {
+                continue;
+            }
+            let Some(name) = entry.file_name().to_str() else {
+                continue;
+            };
+            if let Some(id) = name
+                .strip_suffix(".warp-map.json")
+                .or_else(|| name.strip_suffix(".warp-ring.json"))
+            {
+                let scope = entry
+                    .path()
+                    .parent()
+                    .context("manifest has no parent")?
+                    .to_path_buf();
+                candidates
+                    .entry((id.to_string(), scope))
+                    .or_default()
+                    .insert(normalize_path(
+                        entry.path().strip_prefix(&root).unwrap_or(entry.path()),
+                    ));
+            }
         }
     }
     let discovered = candidates.len();
     let mut entries = Vec::new();
     let mut errors = 0;
-    for (id, mut manifests) in candidates {
-        manifests.sort();
+    for ((id, scope), manifest_set) in candidates {
+        let manifests: Vec<String> = manifest_set.into_iter().collect();
         let ring_count = manifests
             .iter()
             .filter(|p| p.ends_with(".warp-ring.json"))
@@ -383,17 +400,25 @@ fn list_warps(root: &Path, all: bool) -> anyhow::Result<serde_json::Value> {
             );
             if ring_count == 1 {
                 Ok(serde_json::to_value(
-                    merge_ring(root, &id)?.context("ring map disappeared during discovery")?,
+                    merge_ring_inner(&scope, &id, None, &mut BTreeSet::new(), true)?
+                        .context("ring map disappeared during discovery")?,
                 )?)
             } else {
-                Ok(serde_json::to_value(merge_bubble(root, &id)?)?)
+                let (manifest, map) = load_bubble_map_scoped(&scope, &id, true)?
+                    .context("bubble map disappeared during discovery")?;
+                Ok(serde_json::to_value(compose_bubble(
+                    &scope,
+                    manifest,
+                    map,
+                    load_warp_layers_scoped(&scope, &id, true)?,
+                ))?)
             }
         })();
         match projection {
             Ok(p) => {
                 if all || p["state"] != "complete" {
                     entries.push(serde_json::json!({
-                        "warp_id": id, "manifests": manifests, "state": p["state"],
+                        "warp_id": id, "scope": normalize_path(&scope), "manifests": manifests, "state": p["state"],
                         "kind": if ring_count == 1 { "ring" } else { "bubble" },
                         "counts": p["counts"], "evidence_status": p["evidence_status"],
                         "contract_status": p["contract_status"], "error": null
@@ -403,7 +428,7 @@ fn list_warps(root: &Path, all: bool) -> anyhow::Result<serde_json::Value> {
             Err(error) => {
                 errors += 1;
                 entries.push(serde_json::json!({
-                    "warp_id": id, "manifests": manifests, "state": "error",
+                    "warp_id": id, "scope": normalize_path(&scope), "manifests": manifests, "state": "error",
                     "kind": "unresolved", "counts": null, "evidence_status": null,
                     "contract_status": null, "error": format!("{error:#}")
                 }));
@@ -412,7 +437,7 @@ fn list_warps(root: &Path, all: bool) -> anyhow::Result<serde_json::Value> {
     }
     Ok(serde_json::json!({
         "schema": "warp-list-v1", "root": root.display().to_string(),
-        "filter": if all { "all" } else { "remaining" },
+        "filter": if all { "all" } else { "remaining" }, "discovery_policy": policy,
         "discovered": discovered, "listed": entries.len(), "errors": errors,
         "entries": entries
     }))
@@ -440,6 +465,7 @@ fn emit_list(output: &serde_json::Value, json: bool) -> anyhow::Result<()> {
             entry["counts"],
             entry["evidence_status"].as_str().unwrap_or("unassessed")
         );
+        println!("  scope: {}", entry["scope"].as_str().unwrap_or(""));
         for path in entry["manifests"].as_array().expect("manifest paths") {
             println!("  {}", path.as_str().unwrap_or(""));
         }
@@ -618,11 +644,20 @@ fn ring_map(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMapOut
 }
 
 fn load_ring_map(root: &Path, warp: &str) -> anyhow::Result<Option<(String, WarpRingMap)>> {
+    load_ring_map_scoped(root, warp, false)
+}
+
+fn load_ring_map_scoped(
+    root: &Path,
+    warp: &str,
+    local: bool,
+) -> anyhow::Result<Option<(String, WarpRingMap)>> {
     let expected_name = format!("{warp}.warp-ring.json");
     let mut matches = Vec::new();
     for entry in WalkDir::new(root)
+        .max_depth(if local { 1 } else { usize::MAX })
         .into_iter()
-        .filter_entry(keep_entry)
+        .filter_entry(|entry| local || keep_entry(entry))
         .filter_map(Result::ok)
     {
         if entry.file_type().is_file() && entry.file_name().to_str() == Some(&expected_name) {
@@ -660,7 +695,7 @@ fn merge_ring(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMerg
     let canonical_root = fs::canonicalize(root)
         .with_context(|| format!("failed to resolve Warp ring root '{}'", root.display()))?;
     let mut visited = BTreeSet::new();
-    merge_ring_inner(&canonical_root, warp, None, &mut visited)
+    merge_ring_inner(&canonical_root, warp, None, &mut visited, false)
 }
 
 fn merge_ring_inner(
@@ -668,8 +703,9 @@ fn merge_ring_inner(
     warp: &str,
     remaining_depth: Option<usize>,
     visited: &mut BTreeSet<(PathBuf, String)>,
+    local: bool,
 ) -> anyhow::Result<Option<WarpRingMergeOutput>> {
-    let Some((manifest, map)) = load_ring_map(root, warp)? else {
+    let Some((manifest, map)) = load_ring_map_scoped(root, warp, local)? else {
         return Ok(None);
     };
     let allowed_depth = remaining_depth
@@ -687,9 +723,9 @@ fn merge_ring_inner(
         anyhow::bail!("Warp ring cycle detected at '{}@{}'", warp, root.display());
     }
 
-    let coordinator_projection = load_bubble_map(root, warp)?
+    let coordinator_projection = load_bubble_map_scoped(root, warp, local)?
         .map(|(bubble_manifest, bubble_map)| {
-            load_warp_layers(root, warp)
+            load_warp_layers_scoped(root, warp, local)
                 .map(|layers| compose_bubble(root, bubble_manifest, bubble_map, layers))
         })
         .transpose()?;
@@ -734,16 +770,17 @@ fn merge_ring_inner(
             &domain.warp_id,
             Some(allowed_depth - 1),
             visited,
+            local,
         )? {
             projection.state
         } else if let Some((child_manifest, child_map)) =
-            load_bubble_map(&child_root, &domain.warp_id)?
+            load_bubble_map_scoped(&child_root, &domain.warp_id, local)?
         {
             compose_bubble(
                 &child_root,
                 child_manifest,
                 child_map,
-                load_warp_layers(&child_root, &domain.warp_id)?,
+                load_warp_layers_scoped(&child_root, &domain.warp_id, local)?,
             )
             .state
         } else {
@@ -943,11 +980,20 @@ fn checked_warp_id(raw_warp: &str) -> anyhow::Result<&str> {
 }
 
 fn load_bubble_map(root: &Path, warp: &str) -> anyhow::Result<Option<(String, WarpBubbleMap)>> {
+    load_bubble_map_scoped(root, warp, false)
+}
+
+fn load_bubble_map_scoped(
+    root: &Path,
+    warp: &str,
+    local: bool,
+) -> anyhow::Result<Option<(String, WarpBubbleMap)>> {
     let expected_name = format!("{warp}.warp-map.json");
     let mut matches = Vec::new();
     for entry in WalkDir::new(root)
+        .max_depth(if local { 1 } else { usize::MAX })
         .into_iter()
-        .filter_entry(keep_entry)
+        .filter_entry(|entry| local || keep_entry(entry))
         .filter_map(Result::ok)
     {
         if entry.file_type().is_file() && entry.file_name().to_str() == Some(&expected_name) {
@@ -983,11 +1029,20 @@ fn validate_bubble_map(map: &WarpBubbleMap, warp: &str, path: &Path) -> anyhow::
 }
 
 fn load_warp_layers(root: &Path, warp: &str) -> anyhow::Result<Vec<LocatedWarpLayer>> {
+    load_warp_layers_scoped(root, warp, false)
+}
+
+fn load_warp_layers_scoped(
+    root: &Path,
+    warp: &str,
+    local: bool,
+) -> anyhow::Result<Vec<LocatedWarpLayer>> {
     let prefix = format!("{warp}.");
     let mut paths = Vec::new();
     for entry in WalkDir::new(root)
+        .max_depth(if local { 1 } else { usize::MAX })
         .into_iter()
-        .filter_entry(keep_entry)
+        .filter_entry(|entry| local || keep_entry(entry))
         .filter_map(Result::ok)
     {
         if !entry.file_type().is_file() {

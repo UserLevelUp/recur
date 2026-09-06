@@ -50,6 +50,7 @@ try
         include("main.command.id.test.jl")
         include("main.command.stats.test.jl")
         include("main.command.merge.test.jl")
+        include("main.command.pipeline.compatibility.test.jl") # Real OS/shell pipes and stage failures
         include("main.command.unflatten.test.jl")  # IMPROVEMENT15 - frozen contract tests (expected broken)
         include("main.command.callers.test.jl")
         include("main.command.callees.test.jl")
@@ -84,6 +85,7 @@ try
         include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
         include("main.command.trace-id.test.jl")     # IMPROVEMENT8 - trace-id MVP contract tests (expected broken)
         include("main.command.trait.test.jl")        # Trait config command + traversal budget placeholders
+        include("main.command.trait.capabilities.test.jl") # Built-in capability metadata and preferences
         include("main.demo.skippy.trace-id.test.jl") # Demo: Skippy adaptive comms + trace-id protocol
         include("runtests.demo.sudoku.jl")           # Demo: Sudoku + trace-id Phase 1+2 (file protocol + Recur.jl)
         include("runtests.demo.sudoku.phase3.jl")    # Demo: Sudoku Phase 3 (Generator.jl — flow files + cascades)

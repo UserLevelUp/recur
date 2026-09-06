@@ -807,8 +807,10 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("todo_suffix = \".todo.md\"\n");
     content.push_str("complete_suffix = \".complete.md\"\n");
     content.push_str("\n[lanes]\n");
+    // Warp inventory policy is explicit; existing configs use the same defaults.
     content.push_str("root = \"lanes/\"\n");
     content.push_str("entry_suffix = \".recur.md\"\n");
+    content.push_str("\n[warp.discovery]\nroots = [\".\"]\nexclude_dirs = [\".git\", \"target\", \"build\", \"dist\", \"node_modules\", \"fixtures\"]\n");
     content.push_str("\n[reveal]\n");
     content.push_str(&format!("mode = \"{}\"\n", DEFAULT_REVEAL_MODE));
     content.push_str(&format!(
@@ -839,6 +841,7 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("\n[traversal]\n");
     content.push_str("max_depth = 5\n");
     content.push_str("depth_guard = \"hard-fail\"\n");
+    content.push_str(&crate::capability_traits::init_sections());
     content.push_str("\n[traits.content_search]\n");
     content.push_str("enabled = true\n");
     content.push_str("max_file_bytes = 1048576\n");

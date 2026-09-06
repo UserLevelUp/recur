@@ -6,29 +6,58 @@
 recur warp -d docs
 recur warp list -d docs
 recur warp list --all -d docs --json
+recur warp list --scan-all --all --json
 ```
 
 Bare `recur warp` is equivalent to `recur warp list`. Both list remaining
-declared bubbles and rings recursively beneath `-d` (the current directory
-by default). `--all` includes completed projections. State and counts come
+declared bubbles and rings within project-aware scope beneath `-d` (the current
+directory by default). `--all` includes completed projections. State and counts come
 from the existing `merge` query, not filenames or authored readiness prose.
 A ring and its coordinator bubble sharing an identity produce one ring row.
 
 JSON uses `warp-list-v1`, with root, filter, discovered/listed/error counts,
 and sorted entries containing identities, manifest paths, projected state,
-counts, evidence/contract qualification where available, and diagnostic errors.
-Invalid manifests and duplicate maps stay visible as error rows; they are never
+counts, evidence/contract qualification where available, scope and diagnostic errors.
+Each identity is qualified by its manifest directory. A ring and coordinator map
+in the same directory form one entry; identical IDs in different directories are
+independent entries, not duplicate errors. Invalid manifests stay visible as error rows; they are never
 treated as completed. Per-entry errors do not fail the inventory command:
 automation must inspect `errors` and each entry's state. Root/traversal failures
 return a failing exit status. Ring evidence qualification is unassessed when
 the existing ring projection does not expose it; use `merge` for details.
 
-Discovery is read-only, does not follow directory symlinks, and retains the
-existing `.recur` exclusion. To query private work, explicitly choose a child
-root such as `-d .recur/warp`. No map means no bubble inventory entry; stale
-`.current` notes alone do not create work. Scope `-d` to project artifacts to
-avoid listing fixture maps or other unrelated maps elsewhere in the repository.
-Evidence paths keep the same query-root semantics as `recur warp merge`.
+Discovery is read-only and includes `.recur`, including maps directly inside it.
+It does not follow directory symlinks during traversal. No map means no bubble
+entry: config, personas, watch status and stale `.current` notes are not bubbles.
+
+The nearest `.recur/config.toml` can configure discovery; `recur init` writes:
+
+```toml
+[warp.discovery]
+roots = ["."]
+exclude_dirs = [".git", "target", "build", "dist", "node_modules", "fixtures"]
+```
+
+Existing configs without this section get these same defaults. Roots are existing
+relative directories beneath the config's project root; exclusions are literal
+directory names (case-insensitive), not globs. Configured arrays replace defaults.
+`-d` narrows configured roots and never widens them. Overlapping roots are deduplicated.
+The nearest config applies to the invocation; descendant configs are not merged
+while walking. Invalid config/escaping roots fail clearly. An explicitly selected
+scan root is entered even if its own name is excluded.
+
+`--scan-all` bypasses discovery roots/exclusions under `-d` for diagnostics;
+it does not imply `--all`, follow symlinks, or relax ring-domain containment.
+JSON includes the effective `discovery_policy` and its source.
+
+Inventory uses the manifest directory as its evidence root and reads that
+directory's map/layers only. Ring children resolve their explicit `relative_root`
+and use the same local rule. This prevents nested projects exchanging receipts.
+Keep a bubble's map and layers together and evidence paths relative to that directory.
+Existing explicit `map`, `merge` and lane queries retain their previous traversal
+behavior; inventory scoping does not silently change those APIs. For legacy layouts
+with layers spread across subdirectories, use the explicit merge at the intended
+root; the inventory may conservatively show missing coverage.
 
 ## Lane queries
 

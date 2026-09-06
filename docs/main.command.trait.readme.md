@@ -7,10 +7,16 @@ behavior policies (traits) that tune how commands like `trace-id`, `trace`, and
 `find` operate.  Traits are stored under the `[traits.*]` sections of the
 project-local `.recur/config.toml` file created by `recur init`.
 
+It also discovers capability traits: Warp, watch, merge, Git, and proposed unmerge.
+Their preference/notes fields describe project intent only; unlike consumed runtime
+policies, they do not enable/disable commands or authorize execution. See
+[Capability traits](main.command.trait.capabilities.readme.md).
+
 ## Subcommands
 
 ```
-recur trait list                          # Show all configured traits
+recur trait list                          # Configured traits plus built-in capabilities
+recur trait explain <name>                # Explain commands, status and effective metadata
 recur trait get <key>                     # Get a trait value
 recur trait set <key> <value>             # Set a trait value
 ```
@@ -47,7 +53,7 @@ recur trait set trace_id.trigger_keywords  "register(,route,map"
 recur trait set traversal_budget.max_depth  3
 recur trait set traversal_budget.depth_guard clamp
 
-# Disable a trait entirely (command falls back to built-in defaults)
+# Disable trace-id policy overrides (not a universal capability switch)
 recur trait set trace_id.enabled false
 
 # JSON output
@@ -92,6 +98,9 @@ recur trace-id "ulu.topic.dot.ownership.create" --scope "**" --ext .cs
 
 `recur trait` does NOT modify command behavior directly.  It only edits the
 config file.  The consuming command picks up changes on the next invocation.
+Capability preferences have no runtime consumer: they remain descriptive metadata.
+List/get/explain read the nearest ancestor config and provide built-in capability
+defaults without creating files; set requires an existing config.
 
 ## See Also
 

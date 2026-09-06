@@ -1,3 +1,5 @@
+> Archived: misplaced tourist-game plan. Closed administratively in Recur on 2026-09-05; not implemented or runtime-verified here. Original acceptance criteria below are historical, not satisfied.
+
 # Warp 10 Sub-5: Conversation and Idea Discovery
 
 ## Scope

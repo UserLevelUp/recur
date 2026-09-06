@@ -1162,7 +1162,10 @@ fn main() {
         }
 
         Commands::Warp { command, dir } => main_command_warp_impl::execute(
-            command.unwrap_or(main_command_warp_impl::WarpSubcommand::List { all: false }),
+            command.unwrap_or(main_command_warp_impl::WarpSubcommand::List {
+                all: false,
+                scan_all: false,
+            }),
             dir,
             cli.json,
         ),

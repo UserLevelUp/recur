@@ -2,6 +2,7 @@
 //!
 //! The binary (`src/main.rs`) calls into this crate.
 
+pub mod capability_traits;
 pub mod output;
 pub mod parser;
 pub mod project_config;
@@ -10,6 +11,7 @@ pub mod recur_lang_ir;
 pub mod search;
 pub mod tree;
 pub mod warp_bubble;
+pub mod warp_discovery;
 pub mod warp_evidence;
 pub mod warp_policy;
 
