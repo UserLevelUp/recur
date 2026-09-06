@@ -162,12 +162,45 @@ end
         end
     end
 
-    @testset "ring projection remains red until recur warp consumes the companion map" begin
+    @testset "ring projection composes child completion and parent acceptance" begin
         root = joinpath(WARP_RING_FIXTURE_ROOT, "complete")
-        success, _, _ = run_recur([
+
+        success, output, error_output = run_recur([
+            "warp", "map", "coordinator.release", "-d", root, "--json",
+        ])
+        @test success
+        @test isempty(strip(error_output))
+        map_view = JSON3.read(output)
+        @test String(map_view["schema"]) == "warp-ring-map-view-v1"
+        @test length(map_view["domains"]) == 3
+
+        success, output, error_output = run_recur([
             "warp", "merge", "coordinator.release", "-d", root, "--json",
         ])
 
-        @test_broken success
+        @test success
+        @test isempty(strip(error_output))
+        projection = JSON3.read(output)
+        @test String(projection["schema"]) == "warp-ring-projection-v1"
+        @test String(projection["state"]) == "complete"
+        @test Int(projection["counts"]["ready"]) == 3
+        @test all(
+            domain -> Bool(domain["child_state_satisfied"]),
+            projection["domains"],
+        )
+        workers = filter(domain -> String(domain["role"]) == "worker", projection["domains"])
+        @test all(
+            domain -> String(domain["parent_acceptance"]) == "accepted",
+            workers,
+        )
+
+        success, output, error_output = run_recur([
+            "warp", "status", "coordinator.release", "-d", root, "--json",
+        ])
+        @test success
+        @test isempty(strip(error_output))
+        status = JSON3.read(output)
+        @test String(status["verdict"]) == "optimum"
+        @test String(status["ring"]["state"]) == "complete"
     end
 end

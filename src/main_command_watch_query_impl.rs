@@ -11,6 +11,8 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
+use std::thread;
+use std::time::Duration;
 
 const WATCH_DIR: &str = ".recur/watch";
 const STATUS_PREFIX: &str = "recur-watch.";
@@ -111,9 +113,7 @@ fn collect_states(dir: &Path, filter: Option<&str>) -> anyhow::Result<Vec<WatchS
             continue;
         };
 
-        let text = fs::read_to_string(&path)
-            .with_context(|| format!("failed to read '{}'", path.display()))?;
-        let fields = parse_state_fields(&text);
+        let fields = read_state_fields(&path)?;
         let state = state_from_fields(&root, &path, id, &fields);
 
         if matches_filter(&state, filter.as_ref()) {
@@ -123,6 +123,29 @@ fn collect_states(dir: &Path, filter: Option<&str>) -> anyhow::Result<Vec<WatchS
 
     states.sort_by(|left, right| left.id.cmp(&right.id));
     Ok(states)
+}
+
+fn read_state_fields(path: &Path) -> anyhow::Result<BTreeMap<String, String>> {
+    // The active watcher refreshes this small text record in place. A query
+    // can briefly observe the file after truncation but before the rewritten
+    // fields arrive, so retry snapshots that do not contain the required
+    // record header instead of emitting misleading `unknown`/null state.
+    for attempt in 0..10 {
+        let text = fs::read_to_string(path)
+            .with_context(|| format!("failed to read '{}'", path.display()))?;
+        let fields = parse_state_fields(&text);
+        if fields.contains_key("state") && fields.contains_key("ack") {
+            return Ok(fields);
+        }
+        if attempt < 9 {
+            thread::sleep(Duration::from_millis(10));
+        }
+    }
+
+    anyhow::bail!(
+        "watch state '{}' remained incomplete while it was being refreshed",
+        path.display()
+    )
 }
 
 fn watch_id_from_path(path: &Path) -> Option<String> {

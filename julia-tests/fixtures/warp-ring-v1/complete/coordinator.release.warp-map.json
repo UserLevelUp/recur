@@ -1,0 +1,16 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "coordinator.release",
+  "required_slices": [
+    {
+      "slice_id": "accept-docs",
+      "contract_hash": "accept-docs-v1",
+      "evidence_gates": ["integration"]
+    },
+    {
+      "slice_id": "accept-tests",
+      "contract_hash": "accept-tests-v1",
+      "evidence_gates": ["integration"]
+    }
+  ]
+}

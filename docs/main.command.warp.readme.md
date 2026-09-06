@@ -1,7 +1,8 @@
 # recur warp
 
-Status: `implemented` (read-only status v1 and compositional bubble v1)
-Date: 2026-08-15
+Status: `implemented` (status v1, compositional bubble v1, recursive ring v1,
+and confirmed companion completion/evolution/collapse)
+Date: 2026-09-04
 
 `recur warp status <lane>` reads a bounded lane membrane and returns an
 evidence-backed `optimum`, `sub_optimum`, or `blocked` verdict. It does not
@@ -106,3 +107,56 @@ Without `--confirm`, it prints a plan and writes nothing. With confirmation it
 atomically persists one accepted layer. Identical retries report `idempotent`;
 conflicting results are refused and leave a NAK receipt under `.recur/warp/`.
 Core `recur warp` never performs these writes.
+
+## Recursive ring topology
+
+When `<warp>.warp-ring.json` is present, the pure query surface projects a
+coordinator and independently rooted child Warp domains:
+
+```powershell
+recur warp map coordinator.release -d planning/ --json
+recur warp merge coordinator.release -d planning/ --json
+recur warp status coordinator.release -d planning/ --json
+```
+
+The `warp-ring-map-v1` contract declares the coordinator, bounded projection
+depth, domain-relative roots, required child states, distinct parent acceptance
+Slices, public contract hashes, and directional watch subscriptions. Projection
+rejects workspace escapes, cycles, exhausted depth, stale accepted public
+contracts, and stale or rejected watcher receipts. A missing watcher receipt is
+reported as `declared`; an observed stale/rejected receipt blocks convergence.
+
+Parent acceptance is intentionally separate from child completion. A child can
+be locally complete without being accepted into the coordinator's result.
+
+## Confirmed evolution
+
+`recur-warp evolve` only supersedes a bubble whose accepted layers prove it is
+exploded by conflict or stale contract:
+
+```powershell
+recur-warp evolve demo.source candidate.target.json -d planning/ --json
+recur-warp evolve demo.source candidate.target.json -d planning/ --json --confirm
+```
+
+The dry run identifies carried and invalidated Slices without writing. Confirmed
+execution publishes the successor map, carries forward only single-result
+accepted layers whose Slice and contract identities are unchanged, and writes a
+`recur-warp-supersession-v1` ACK under `.recur/warp/`.
+
+## Confirmed collapse
+
+`recur warp collapse-plan` remains the read-only classification surface.
+`recur-warp collapse` mirrors that plan and performs recoverable archival only
+after confirmation:
+
+```powershell
+recur warp collapse-plan demo.lane -d planning/ --json
+recur-warp collapse demo.lane -d planning/ --json
+recur-warp collapse demo.lane -d planning/ --json --confirm
+```
+
+Known-complete evidence moves under `.recur/warp/archive/<lane>/`; interesting
+evidence is preserved. Blocked or ambiguous/current evidence prevents mutation
+until an operator resolves it. A successful collapse writes a
+`recur-warp-collapse-receipt-v1` ACK.

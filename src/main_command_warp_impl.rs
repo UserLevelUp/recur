@@ -3,14 +3,15 @@
 use anyhow::Context;
 use clap::Subcommand;
 use recur::warp_bubble::{
-    WarpBubbleMap, WarpRequiredSlice, WarpSliceLayer, BUBBLE_MAP_SCHEMA, MAP_VIEW_SCHEMA,
-    MERGE_SCHEMA, SLICE_LAYER_SCHEMA,
+    validate_warp_ring_map, WarpBubbleMap, WarpRequiredSlice, WarpRingDomain, WarpRingMap,
+    WarpRingSubscription, WarpSliceLayer, BUBBLE_MAP_SCHEMA, MAP_VIEW_SCHEMA, MERGE_SCHEMA,
+    SLICE_LAYER_SCHEMA,
 };
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::time::SystemTime;
+use std::time::{SystemTime, UNIX_EPOCH};
 use walkdir::{DirEntry, WalkDir};
 
 const SCHEMA: &str = "warp-status-v1";
@@ -118,6 +119,8 @@ struct WarpStatusOutput {
     next_actions: Vec<WarpNextAction>,
     #[serde(skip_serializing_if = "Option::is_none")]
     bubble: Option<WarpMergeOutput>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    ring: Option<WarpRingMergeOutput>,
 }
 
 #[derive(Serialize)]
@@ -191,6 +194,54 @@ struct WarpMergeOutput {
     layers: Vec<String>,
 }
 
+#[derive(Serialize)]
+struct WarpRingMapOutput {
+    schema: &'static str,
+    warp_id: String,
+    root: String,
+    manifest: String,
+    manifest_schema: String,
+    coordinator_domain: String,
+    projection_depth: usize,
+    domains: Vec<WarpRingDomain>,
+    subscriptions: Vec<WarpRingSubscription>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+struct WarpRingDomainProjection {
+    domain_id: String,
+    relative_root: String,
+    role: String,
+    warp_id: String,
+    state: String,
+    required_state: Option<String>,
+    child_state_satisfied: bool,
+    parent_acceptance: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+struct WarpRingSubscriptionProjection {
+    subscription_id: String,
+    source_domain: String,
+    target_domain: String,
+    direction: String,
+    state: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+struct WarpRingMergeOutput {
+    schema: &'static str,
+    warp_id: String,
+    root: String,
+    manifest: String,
+    state: String,
+    coordinator_domain: String,
+    projection_depth: usize,
+    counts: BTreeMap<String, usize>,
+    domains: Vec<WarpRingDomainProjection>,
+    subscriptions: Vec<WarpRingSubscriptionProjection>,
+}
+
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
@@ -211,12 +262,20 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
             emit_collapse_plan(&output, json)
         }
         WarpSubcommand::Map { warp } => {
-            let output = bubble_map(&root, &warp)?;
-            emit_map(&output, json)
+            if let Some(output) = ring_map(&root, &warp)? {
+                emit_ring_map(&output, json)
+            } else {
+                let output = bubble_map(&root, &warp)?;
+                emit_map(&output, json)
+            }
         }
         WarpSubcommand::Merge { warp } => {
-            let output = merge_bubble(&root, &warp)?;
-            emit_merge(&output, json)
+            if let Some(output) = merge_ring(&root, &warp)? {
+                emit_ring_merge(&output, json)
+            } else {
+                let output = merge_bubble(&root, &warp)?;
+                emit_merge(&output, json)
+            }
         }
         WarpSubcommand::Config => {
             let output = config(&root)?;
@@ -316,6 +375,341 @@ fn merge_bubble(root: &Path, raw_warp: &str) -> anyhow::Result<WarpMergeOutput> 
     })?;
     let layers = load_warp_layers(root, warp)?;
     Ok(compose_bubble(root, manifest, map, layers))
+}
+
+fn ring_map(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMapOutput>> {
+    let warp = checked_warp_id(raw_warp)?;
+    let Some((manifest, map)) = load_ring_map(root, warp)? else {
+        return Ok(None);
+    };
+    Ok(Some(WarpRingMapOutput {
+        schema: "warp-ring-map-view-v1",
+        warp_id: map.warp_id,
+        root: root.display().to_string(),
+        manifest,
+        manifest_schema: map.schema,
+        coordinator_domain: map.coordinator_domain,
+        projection_depth: map.projection_depth,
+        domains: map.domains,
+        subscriptions: map.subscriptions,
+    }))
+}
+
+fn load_ring_map(root: &Path, warp: &str) -> anyhow::Result<Option<(String, WarpRingMap)>> {
+    let expected_name = format!("{warp}.warp-ring.json");
+    let mut matches = Vec::new();
+    for entry in WalkDir::new(root)
+        .into_iter()
+        .filter_entry(keep_entry)
+        .filter_map(Result::ok)
+    {
+        if entry.file_type().is_file() && entry.file_name().to_str() == Some(&expected_name) {
+            matches.push(entry.path().to_path_buf());
+        }
+    }
+    matches.sort();
+    if matches.len() > 1 {
+        anyhow::bail!(
+            "multiple Warp ring maps found for '{}': {}",
+            warp,
+            matches
+                .iter()
+                .map(|path| normalize_path(path.strip_prefix(root).unwrap_or(path)))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+    }
+    let Some(path) = matches.pop() else {
+        return Ok(None);
+    };
+    let text = fs::read_to_string(&path)
+        .with_context(|| format!("failed to read '{}'", path.display()))?;
+    let map: WarpRingMap = serde_json::from_str(&text)
+        .with_context(|| format!("failed to parse Warp ring map '{}'", path.display()))?;
+    validate_warp_ring_map(&map, warp)
+        .map_err(anyhow::Error::msg)
+        .with_context(|| format!("invalid Warp ring map '{}'", path.display()))?;
+    let relative = normalize_path(path.strip_prefix(root).unwrap_or(&path));
+    Ok(Some((relative, map)))
+}
+
+fn merge_ring(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMergeOutput>> {
+    let warp = checked_warp_id(raw_warp)?;
+    let canonical_root = fs::canonicalize(root)
+        .with_context(|| format!("failed to resolve Warp ring root '{}'", root.display()))?;
+    let mut visited = BTreeSet::new();
+    merge_ring_inner(&canonical_root, warp, None, &mut visited)
+}
+
+fn merge_ring_inner(
+    root: &Path,
+    warp: &str,
+    remaining_depth: Option<usize>,
+    visited: &mut BTreeSet<(PathBuf, String)>,
+) -> anyhow::Result<Option<WarpRingMergeOutput>> {
+    let Some((manifest, map)) = load_ring_map(root, warp)? else {
+        return Ok(None);
+    };
+    let allowed_depth = remaining_depth
+        .map(|remaining| remaining.min(map.projection_depth))
+        .unwrap_or(map.projection_depth);
+    if allowed_depth == 0 {
+        anyhow::bail!(
+            "Warp ring projection depth exhausted at '{}@{}'",
+            warp,
+            root.display()
+        );
+    }
+    let key = (root.to_path_buf(), warp.to_string());
+    if !visited.insert(key.clone()) {
+        anyhow::bail!("Warp ring cycle detected at '{}@{}'", warp, root.display());
+    }
+
+    let coordinator_projection = load_bubble_map(root, warp)?
+        .map(|(bubble_manifest, bubble_map)| {
+            load_warp_layers(root, warp)
+                .map(|layers| compose_bubble(root, bubble_manifest, bubble_map, layers))
+        })
+        .transpose()?;
+    let mut domains = Vec::new();
+    let mut exploded = false;
+    let mut blocked = false;
+    let mut complete = 0usize;
+
+    for domain in &map.domains {
+        if domain.domain_id == map.coordinator_domain {
+            let state = coordinator_projection
+                .as_ref()
+                .map(|projection| projection.state.clone())
+                .unwrap_or_else(|| "missing".to_string());
+            exploded |= state == "exploded";
+            blocked |= state == "blocked";
+            let satisfied = coordinator_projection.is_some()
+                && domain
+                    .required_state
+                    .as_deref()
+                    .map(|required| required == state)
+                    .unwrap_or(true);
+            if satisfied {
+                complete += 1;
+            }
+            domains.push(WarpRingDomainProjection {
+                domain_id: domain.domain_id.clone(),
+                relative_root: domain.relative_root.clone(),
+                role: domain.role.clone(),
+                warp_id: domain.warp_id.clone(),
+                state,
+                required_state: domain.required_state.clone(),
+                child_state_satisfied: satisfied,
+                parent_acceptance: "not-required".to_string(),
+            });
+            continue;
+        }
+
+        let child_root = contained_domain_root(root, &domain.relative_root)?;
+        let child_state = if let Some(projection) = merge_ring_inner(
+            &child_root,
+            &domain.warp_id,
+            Some(allowed_depth - 1),
+            visited,
+        )? {
+            projection.state
+        } else if let Some((child_manifest, child_map)) =
+            load_bubble_map(&child_root, &domain.warp_id)?
+        {
+            compose_bubble(
+                &child_root,
+                child_manifest,
+                child_map,
+                load_warp_layers(&child_root, &domain.warp_id)?,
+            )
+            .state
+        } else {
+            "missing".to_string()
+        };
+        let state_satisfied = domain
+            .required_state
+            .as_deref()
+            .map(|required| required == child_state)
+            .unwrap_or(true);
+        let acceptance =
+            parent_acceptance_state(root, warp, domain, coordinator_projection.as_ref())?;
+        let accepted = acceptance == "accepted" || acceptance == "not-required";
+        let ready = state_satisfied && accepted;
+        exploded |= child_state == "exploded" || acceptance == "stale-public-contract";
+        blocked |= child_state == "blocked" || !accepted;
+        if ready {
+            complete += 1;
+        }
+        domains.push(WarpRingDomainProjection {
+            domain_id: domain.domain_id.clone(),
+            relative_root: domain.relative_root.clone(),
+            role: domain.role.clone(),
+            warp_id: domain.warp_id.clone(),
+            state: child_state,
+            required_state: domain.required_state.clone(),
+            child_state_satisfied: state_satisfied,
+            parent_acceptance: acceptance,
+        });
+    }
+    visited.remove(&key);
+
+    let subscriptions = map
+        .subscriptions
+        .iter()
+        .map(|subscription| project_subscription(root, &map, subscription))
+        .collect::<anyhow::Result<Vec<_>>>()?;
+    blocked |= subscriptions
+        .iter()
+        .any(|subscription| matches!(subscription.state.as_str(), "stale" | "rejected"));
+    let state = if exploded {
+        "exploded"
+    } else if blocked {
+        "blocked"
+    } else if complete == map.domains.len() {
+        "complete"
+    } else {
+        "incomplete"
+    };
+    let counts = BTreeMap::from([
+        ("domains".to_string(), map.domains.len()),
+        ("ready".to_string(), complete),
+        ("pending".to_string(), map.domains.len() - complete),
+        ("subscriptions".to_string(), subscriptions.len()),
+    ]);
+    Ok(Some(WarpRingMergeOutput {
+        schema: "warp-ring-projection-v1",
+        warp_id: map.warp_id,
+        root: root.display().to_string(),
+        manifest,
+        state: state.to_string(),
+        coordinator_domain: map.coordinator_domain,
+        projection_depth: allowed_depth,
+        counts,
+        domains,
+        subscriptions,
+    }))
+}
+
+fn project_subscription(
+    root: &Path,
+    map: &WarpRingMap,
+    subscription: &WarpRingSubscription,
+) -> anyhow::Result<WarpRingSubscriptionProjection> {
+    let target = map
+        .domains
+        .iter()
+        .find(|domain| domain.domain_id == subscription.target_domain)
+        .expect("ring validation guarantees subscription endpoints");
+    let target_root = if target.domain_id == map.coordinator_domain {
+        root.to_path_buf()
+    } else {
+        contained_domain_root(root, &target.relative_root)?
+    };
+    let status_path = target_root.join(".recur").join("watch").join(format!(
+        "recur-watch.{}.status.current.md",
+        subscription.subscription_id
+    ));
+    let state = if !status_path.is_file() {
+        "declared"
+    } else {
+        let text = fs::read_to_string(&status_path)
+            .with_context(|| format!("failed to read '{}'", status_path.display()))?;
+        let fields = text
+            .lines()
+            .filter_map(|line| line.split_once('='))
+            .map(|(key, value)| {
+                (
+                    key.trim().to_ascii_lowercase(),
+                    value.trim().trim_matches('"').to_string(),
+                )
+            })
+            .collect::<BTreeMap<_, _>>();
+        if fields.get("ack").map(String::as_str) != Some("accepted") {
+            "rejected"
+        } else if fields
+            .get("last_event_at")
+            .and_then(|stamp| stamp.strip_prefix("unix:"))
+            .and_then(|seconds| seconds.parse::<u64>().ok())
+            .is_some_and(|seconds| {
+                SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_secs()
+                    .saturating_sub(seconds)
+                    > subscription.freshness_seconds
+            })
+        {
+            "stale"
+        } else {
+            "accepted"
+        }
+    };
+    Ok(WarpRingSubscriptionProjection {
+        subscription_id: subscription.subscription_id.clone(),
+        source_domain: subscription.source_domain.clone(),
+        target_domain: subscription.target_domain.clone(),
+        direction: subscription.direction.clone(),
+        state: state.to_string(),
+    })
+}
+
+fn contained_domain_root(root: &Path, relative_root: &str) -> anyhow::Result<PathBuf> {
+    let relative = Path::new(relative_root);
+    if relative.is_absolute() {
+        anyhow::bail!(
+            "Warp domain root '{}' escapes ring root '{}'",
+            relative_root,
+            root.display()
+        );
+    }
+    let candidate = root.join(relative);
+    let canonical = fs::canonicalize(&candidate).with_context(|| {
+        format!(
+            "failed to resolve Warp domain root '{}'",
+            candidate.display()
+        )
+    })?;
+    if !canonical.starts_with(root) {
+        anyhow::bail!(
+            "Warp domain root '{}' escapes ring root '{}'",
+            candidate.display(),
+            root.display()
+        );
+    }
+    Ok(canonical)
+}
+
+fn parent_acceptance_state(
+    root: &Path,
+    warp: &str,
+    domain: &WarpRingDomain,
+    coordinator: Option<&WarpMergeOutput>,
+) -> anyhow::Result<String> {
+    let Some(required) = &domain.parent_acceptance else {
+        return Ok("missing".to_string());
+    };
+    let Some(coordinator) = coordinator else {
+        return Ok("missing".to_string());
+    };
+    if !coordinator.covered.contains(&required.slice_id) {
+        return Ok("missing".to_string());
+    }
+    let layers = load_warp_layers(root, warp)?;
+    let accepted = layers.iter().find(|located| {
+        located.layer.slice_id == required.slice_id
+            && located.layer.contract_hash == required.contract_hash
+            && located.layer.result_state.eq_ignore_ascii_case("accepted")
+    });
+    let Some(accepted) = accepted else {
+        return Ok("missing".to_string());
+    };
+    if let Some(public_hash) = &domain.public_contract_hash {
+        if accepted.layer.result_hash != *public_hash {
+            return Ok("stale-public-contract".to_string());
+        }
+    }
+    Ok("accepted".to_string())
 }
 
 fn checked_warp_id(raw_warp: &str) -> anyhow::Result<&str> {
@@ -767,7 +1161,8 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
         )),
         None => None,
     };
-    if files.is_empty() && bubble.is_none() {
+    let ring = merge_ring(root, lane)?;
+    if files.is_empty() && bubble.is_none() && ring.is_none() {
         anyhow::bail!("no eventness files found for lane '{}'", lane);
     }
     files.sort_by(|left, right| left.path.cmp(&right.path));
@@ -869,58 +1264,29 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
             });
         }
     }
-    if let Some(projection) = &bubble {
-        match projection.state.as_str() {
-            "complete" => signals.push(WarpSignal {
-                name: "warp-bubble-complete".to_string(),
-                weight: -1.0,
-                evidence: projection.layers.clone(),
-            }),
-            "exploded" => {
-                residuals.push(WarpResidual {
-                    name: "warp-bubble-exploded".to_string(),
-                    weight: 5.0,
-                    evidence: projection.layers.clone(),
-                    blocker: true,
-                });
-                actions.push(WarpNextAction {
-                    kind: "evolve-warp".to_string(),
-                    lane: lane.to_string(),
-                    reason: "the composed bubble contains stale or conflicting accepted layers"
-                        .to_string(),
-                });
-            }
-            "blocked" => {
-                residuals.push(WarpResidual {
-                    name: "warp-bubble-blocked".to_string(),
-                    weight: 5.0,
-                    evidence: projection.layers.clone(),
-                    blocker: true,
-                });
-                actions.push(WarpNextAction {
-                    kind: "resolve-slice-blocker".to_string(),
-                    lane: lane.to_string(),
-                    reason: "one or more required Slices cannot contribute accepted coverage"
-                        .to_string(),
-                });
-            }
-            _ => {
-                residuals.push(WarpResidual {
-                    name: "incomplete-warp-coverage".to_string(),
-                    weight: 1.0,
-                    evidence: projection.layers.clone(),
-                    blocker: false,
-                });
-                actions.push(WarpNextAction {
-                    kind: "complete-slice".to_string(),
-                    lane: lane.to_string(),
-                    reason: format!(
-                        "{} required Slice layer(s) remain pending",
-                        projection.pending.len()
-                    ),
-                });
-            }
+    if ring.is_none() {
+        if let Some(projection) = &bubble {
+            add_projection_pressure(
+                projection.state.as_str(),
+                projection.pending.len(),
+                &projection.layers,
+                lane,
+                &mut signals,
+                &mut residuals,
+                &mut actions,
+            );
         }
+    }
+    if let Some(projection) = &ring {
+        add_projection_pressure(
+            projection.state.as_str(),
+            projection.counts["pending"],
+            std::slice::from_ref(&projection.manifest),
+            lane,
+            &mut signals,
+            &mut residuals,
+            &mut actions,
+        );
     }
     let objective = residuals.iter().map(|residual| residual.weight).sum();
     let verdict = if residuals.iter().any(|residual| residual.blocker) {
@@ -946,7 +1312,67 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
         residuals,
         next_actions: actions,
         bubble,
+        ring,
     })
+}
+
+fn add_projection_pressure(
+    state: &str,
+    pending: usize,
+    evidence: &[String],
+    lane: &str,
+    signals: &mut Vec<WarpSignal>,
+    residuals: &mut Vec<WarpResidual>,
+    actions: &mut Vec<WarpNextAction>,
+) {
+    match state {
+        "complete" => signals.push(WarpSignal {
+            name: "warp-bubble-complete".to_string(),
+            weight: -1.0,
+            evidence: evidence.to_vec(),
+        }),
+        "exploded" => {
+            residuals.push(WarpResidual {
+                name: "warp-bubble-exploded".to_string(),
+                weight: 5.0,
+                evidence: evidence.to_vec(),
+                blocker: true,
+            });
+            actions.push(WarpNextAction {
+                kind: "evolve-warp".to_string(),
+                lane: lane.to_string(),
+                reason: "the composed bubble contains stale or conflicting accepted layers"
+                    .to_string(),
+            });
+        }
+        "blocked" => {
+            residuals.push(WarpResidual {
+                name: "warp-bubble-blocked".to_string(),
+                weight: 5.0,
+                evidence: evidence.to_vec(),
+                blocker: true,
+            });
+            actions.push(WarpNextAction {
+                kind: "resolve-slice-blocker".to_string(),
+                lane: lane.to_string(),
+                reason: "one or more required Slices cannot contribute accepted coverage"
+                    .to_string(),
+            });
+        }
+        _ => {
+            residuals.push(WarpResidual {
+                name: "incomplete-warp-coverage".to_string(),
+                weight: 1.0,
+                evidence: evidence.to_vec(),
+                blocker: false,
+            });
+            actions.push(WarpNextAction {
+                kind: "complete-slice".to_string(),
+                lane: lane.to_string(),
+                reason: format!("{} required Slice layer(s) remain pending", pending),
+            });
+        }
+    }
 }
 
 fn load_suffix_policy(root: &Path) -> anyhow::Result<SuffixPolicy> {
@@ -1211,6 +1637,20 @@ fn emit_map(output: &WarpMapOutput, json: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
+fn emit_ring_map(output: &WarpRingMapOutput, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+        return Ok(());
+    }
+    println!("Warp ring map for {}", output.warp_id);
+    println!("  manifest: {}", output.manifest);
+    println!("  coordinator: {}", output.coordinator_domain);
+    println!("  projection depth: {}", output.projection_depth);
+    println!("  domains: {}", output.domains.len());
+    println!("  subscriptions: {}", output.subscriptions.len());
+    Ok(())
+}
+
 fn emit_merge(output: &WarpMergeOutput, json: bool) -> anyhow::Result<()> {
     if json {
         println!("{}", serde_json::to_string_pretty(output)?);
@@ -1229,9 +1669,26 @@ fn emit_merge(output: &WarpMergeOutput, json: bool) -> anyhow::Result<()> {
     Ok(())
 }
 
+fn emit_ring_merge(output: &WarpRingMergeOutput, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+        return Ok(());
+    }
+    println!("Warp ring merge for {}", output.warp_id);
+    println!("  state: {}", output.state);
+    println!(
+        "  domains ready: {}/{}",
+        output.counts["ready"], output.counts["domains"]
+    );
+    println!("  subscriptions: {}", output.counts["subscriptions"]);
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
+    use tempfile::tempdir;
 
     fn required(slice_id: &str, depends_on: &[&str]) -> WarpRequiredSlice {
         WarpRequiredSlice {
@@ -1268,6 +1725,134 @@ mod tests {
             warp_id: "demo.release".to_string(),
             required_slices: vec![required("alpha", &[]), required("beta", &["alpha"])],
         }
+    }
+
+    fn write_json(path: &Path, value: serde_json::Value) {
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).unwrap();
+        }
+        fs::write(
+            path,
+            format!("{}\n", serde_json::to_string_pretty(&value).unwrap()),
+        )
+        .unwrap();
+    }
+
+    fn write_complete_child(root: &Path, warp: &str) {
+        write_json(
+            &root.join(format!("{warp}.warp-map.json")),
+            json!({
+                "schema": BUBBLE_MAP_SCHEMA,
+                "warp_id": warp,
+                "required_slices": [{
+                    "slice_id": "work",
+                    "contract_hash": "work-v1",
+                    "evidence_gates": ["tests"]
+                }]
+            }),
+        );
+        write_json(
+            &root.join(format!("{warp}.work.attempt-1.warp-layer.json")),
+            json!({
+                "schema": SLICE_LAYER_SCHEMA,
+                "warp_id": warp,
+                "slice_id": "work",
+                "contract_hash": "work-v1",
+                "attempt_id": "attempt-1",
+                "result_state": "accepted",
+                "result_hash": "result-v1",
+                "evidence": {"tests": ["receipt.json"]}
+            }),
+        );
+    }
+
+    fn write_ring(root: &Path, warp: &str, child_warp: &str, relative_root: &str, depth: usize) {
+        write_json(
+            &root.join(format!("{warp}.warp-ring.json")),
+            json!({
+                "schema": "warp-ring-map-v1",
+                "warp_id": warp,
+                "coordinator_domain": "coordinator",
+                "projection_depth": depth,
+                "domains": [
+                    {
+                        "domain_id": "coordinator",
+                        "relative_root": ".",
+                        "role": "coordinator",
+                        "warp_id": warp
+                    },
+                    {
+                        "domain_id": "worker",
+                        "relative_root": relative_root,
+                        "role": "worker",
+                        "warp_id": child_warp,
+                        "required_state": "complete"
+                    }
+                ],
+                "subscriptions": []
+            }),
+        );
+    }
+
+    fn write_parent_acceptance(root: &Path, result_hash: &str) {
+        write_json(
+            &root.join("coordinator.release.warp-map.json"),
+            json!({
+                "schema": BUBBLE_MAP_SCHEMA,
+                "warp_id": "coordinator.release",
+                "required_slices": [{
+                    "slice_id": "accept-worker",
+                    "contract_hash": "accept-worker-v1",
+                    "evidence_gates": ["integration"]
+                }]
+            }),
+        );
+        write_json(
+            &root.join("coordinator.release.accept-worker.attempt-1.warp-layer.json"),
+            json!({
+                "schema": SLICE_LAYER_SCHEMA,
+                "warp_id": "coordinator.release",
+                "slice_id": "accept-worker",
+                "contract_hash": "accept-worker-v1",
+                "attempt_id": "attempt-1",
+                "result_state": "accepted",
+                "result_hash": result_hash,
+                "evidence": {"integration": ["receipt.json"]}
+            }),
+        );
+    }
+
+    fn write_accepted_ring(root: &Path, subscriptions: serde_json::Value) {
+        write_json(
+            &root.join("coordinator.release.warp-ring.json"),
+            json!({
+                "schema": "warp-ring-map-v1",
+                "warp_id": "coordinator.release",
+                "coordinator_domain": "coordinator",
+                "projection_depth": 2,
+                "domains": [
+                    {
+                        "domain_id": "coordinator",
+                        "relative_root": ".",
+                        "role": "coordinator",
+                        "warp_id": "coordinator.release"
+                    },
+                    {
+                        "domain_id": "worker",
+                        "relative_root": "worker",
+                        "role": "worker",
+                        "warp_id": "worker.release",
+                        "public_contract_hash": "worker-public-v1",
+                        "required_state": "complete",
+                        "parent_acceptance": {
+                            "slice_id": "accept-worker",
+                            "contract_hash": "accept-worker-v1"
+                        }
+                    }
+                ],
+                "subscriptions": subscriptions
+            }),
+        );
     }
 
     #[test]
@@ -1327,5 +1912,153 @@ mod tests {
             .unwrap_err()
             .to_string();
         assert!(error.contains("dependency cycle"));
+    }
+
+    #[test]
+    fn completed_child_without_parent_acceptance_is_blocked() {
+        let temporary = tempdir().unwrap();
+        let worker = temporary.path().join("worker");
+        fs::create_dir_all(&worker).unwrap();
+        write_complete_child(&worker, "worker.release");
+        write_ring(
+            temporary.path(),
+            "coordinator.release",
+            "worker.release",
+            "worker",
+            2,
+        );
+
+        let projection = merge_ring(temporary.path(), "coordinator.release")
+            .unwrap()
+            .unwrap();
+        assert_eq!(projection.state, "blocked");
+        let worker = projection
+            .domains
+            .iter()
+            .find(|domain| domain.domain_id == "worker")
+            .unwrap();
+        assert_eq!(worker.state, "complete");
+        assert_eq!(worker.parent_acceptance, "missing");
+    }
+
+    #[test]
+    fn ring_rejects_domain_roots_outside_the_workspace() {
+        let workspace = tempdir().unwrap();
+        let outside = tempdir().unwrap();
+        write_complete_child(outside.path(), "worker.release");
+        let relative = outside.path().to_string_lossy().to_string();
+        write_ring(
+            workspace.path(),
+            "coordinator.release",
+            "worker.release",
+            &relative,
+            2,
+        );
+
+        let error = merge_ring(workspace.path(), "coordinator.release")
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("escapes ring root"));
+    }
+
+    #[test]
+    fn recursive_ring_cycles_are_rejected() {
+        let temporary = tempdir().unwrap();
+        write_ring(
+            temporary.path(),
+            "coordinator.release",
+            "coordinator.release",
+            ".",
+            3,
+        );
+
+        let error = merge_ring(temporary.path(), "coordinator.release")
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("cycle detected"));
+    }
+
+    #[test]
+    fn recursive_ring_depth_is_bounded() {
+        let temporary = tempdir().unwrap();
+        let child = temporary.path().join("child");
+        let grandchild = child.join("grandchild");
+        fs::create_dir_all(&grandchild).unwrap();
+        write_ring(
+            temporary.path(),
+            "coordinator.release",
+            "child.release",
+            "child",
+            1,
+        );
+        write_ring(
+            &child,
+            "child.release",
+            "grandchild.release",
+            "grandchild",
+            3,
+        );
+        write_complete_child(&grandchild, "grandchild.release");
+
+        let error = merge_ring(temporary.path(), "coordinator.release")
+            .unwrap_err()
+            .to_string();
+        assert!(error.contains("projection depth exhausted"));
+    }
+
+    #[test]
+    fn stale_child_public_contract_explodes_parent_acceptance() {
+        let temporary = tempdir().unwrap();
+        let worker = temporary.path().join("worker");
+        fs::create_dir_all(&worker).unwrap();
+        write_complete_child(&worker, "worker.release");
+        write_parent_acceptance(temporary.path(), "old-worker-public");
+        write_accepted_ring(temporary.path(), json!([]));
+
+        let projection = merge_ring(temporary.path(), "coordinator.release")
+            .unwrap()
+            .unwrap();
+        assert_eq!(projection.state, "exploded");
+        let worker = projection
+            .domains
+            .iter()
+            .find(|domain| domain.domain_id == "worker")
+            .unwrap();
+        assert_eq!(worker.parent_acceptance, "stale-public-contract");
+    }
+
+    #[test]
+    fn stale_subscription_blocks_otherwise_complete_ring() {
+        let temporary = tempdir().unwrap();
+        let worker = temporary.path().join("worker");
+        fs::create_dir_all(&worker).unwrap();
+        write_complete_child(&worker, "worker.release");
+        write_parent_acceptance(temporary.path(), "worker-public-v1");
+        write_accepted_ring(
+            temporary.path(),
+            json!([{
+                "subscription_id": "worker-receipt",
+                "direction": "child-to-parent",
+                "source_domain": "worker",
+                "target_domain": "coordinator",
+                "filter": "receipt.worker.**",
+                "event_contract": "recur-watch-event-v1",
+                "freshness_seconds": 1
+            }]),
+        );
+        fs::create_dir_all(temporary.path().join(".recur/watch")).unwrap();
+        fs::write(
+            temporary
+                .path()
+                .join(".recur/watch/recur-watch.worker-receipt.status.current.md"),
+            "state = \"active\"\nack = \"accepted\"\nlast_event_at = \"unix:1\"\n",
+        )
+        .unwrap();
+
+        let projection = merge_ring(temporary.path(), "coordinator.release")
+            .unwrap()
+            .unwrap();
+        assert_eq!(projection.state, "blocked");
+        assert_eq!(projection.subscriptions[0].state, "stale");
     }
 }

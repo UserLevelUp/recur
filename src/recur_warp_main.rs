@@ -54,6 +54,29 @@ enum Commands {
         #[arg(long)]
         confirm: bool,
     },
+
+    /// Plan or persist a superseding Warp bubble after an explosion
+    Evolve {
+        /// Exploded source Warp identity
+        warp: String,
+
+        /// Candidate target Warp bubble map JSON
+        target_map: PathBuf,
+
+        /// Persist the target map, carried layers, and supersession receipt
+        #[arg(long)]
+        confirm: bool,
+    },
+
+    /// Plan or execute archival of unambiguous completed eventness
+    Collapse {
+        /// Lane prefix whose eventness should be classified and collapsed
+        lane: String,
+
+        /// Archive known-complete evidence and write a collapse receipt
+        #[arg(long)]
+        confirm: bool,
+    },
 }
 
 #[derive(Serialize)]
@@ -77,6 +100,51 @@ struct NakReceipt<'a> {
     attempt_id: &'a str,
     result_state: &'static str,
     reason: String,
+}
+
+#[derive(Serialize)]
+struct EvolveOutput {
+    schema: &'static str,
+    source_warp: String,
+    target_warp: String,
+    state: String,
+    target_manifest: String,
+    carried_slices: Vec<String>,
+    invalidated_slices: Vec<String>,
+    receipt: String,
+}
+
+#[derive(Serialize)]
+struct SupersessionReceipt<'a> {
+    schema: &'static str,
+    source_warp: &'a str,
+    target_warp: &'a str,
+    result_state: &'static str,
+    target_manifest: &'a str,
+    carried_slices: &'a [String],
+    invalidated_slices: &'a [String],
+}
+
+#[derive(Serialize)]
+struct CollapseOutput {
+    schema: &'static str,
+    lane: String,
+    state: String,
+    collapse_known: Vec<String>,
+    preserve_interesting: Vec<String>,
+    blockers: Vec<String>,
+    ambiguous: Vec<String>,
+    archived: Vec<String>,
+    receipt: String,
+}
+
+#[derive(Serialize)]
+struct CollapseReceipt<'a> {
+    schema: &'static str,
+    lane: &'a str,
+    result_state: &'static str,
+    archived: &'a [String],
+    preserved: &'a [String],
 }
 
 fn main() {
@@ -110,6 +178,15 @@ fn main() {
             confirm,
         )
         .and_then(|output| emit(&output, cli.json)),
+        Commands::Evolve {
+            warp,
+            target_map,
+            confirm,
+        } => evolve(&root, &warp, &target_map, confirm)
+            .and_then(|output| emit_evolve(&output, cli.json)),
+        Commands::Collapse { lane, confirm } => {
+            collapse(&root, &lane, confirm).and_then(|output| emit_collapse(&output, cli.json))
+        }
     };
     if let Err(error) = result {
         eprintln!("Error: {error:#}");
@@ -237,6 +314,399 @@ fn complete(
         result_hash: result_hash.to_string(),
         evidence,
     })
+}
+
+fn evolve(
+    root: &Path,
+    source_warp: &str,
+    target_map_arg: &Path,
+    confirm: bool,
+) -> anyhow::Result<EvolveOutput> {
+    if !root.is_dir() {
+        anyhow::bail!("invalid --dir '{}': directory not found", root.display());
+    }
+    validate_identity("Warp", source_warp, true)?;
+    let canonical_root = fs::canonicalize(root)?;
+    let candidate = if target_map_arg.is_absolute() {
+        target_map_arg.to_path_buf()
+    } else {
+        root.join(target_map_arg)
+    };
+    let canonical_candidate = fs::canonicalize(&candidate)
+        .with_context(|| format!("failed to resolve target map '{}'", candidate.display()))?;
+    if !canonical_candidate.starts_with(&canonical_root) {
+        anyhow::bail!(
+            "target map '{}' escapes Warp root '{}'",
+            candidate.display(),
+            root.display()
+        );
+    }
+
+    let (source_manifest, source_map) = find_map(root, source_warp)?;
+    let source_layers = load_layers(root, source_warp)?;
+    let target_bytes = fs::read(&canonical_candidate)
+        .with_context(|| format!("failed to read '{}'", canonical_candidate.display()))?;
+    let target_map: WarpBubbleMap = serde_json::from_slice(&target_bytes)
+        .with_context(|| format!("failed to parse '{}'", canonical_candidate.display()))?;
+    validate_identity("target Warp", &target_map.warp_id, true)?;
+    if target_map.schema != BUBBLE_MAP_SCHEMA {
+        anyhow::bail!(
+            "target map schema '{}' is unsupported; expected '{}'",
+            target_map.schema,
+            BUBBLE_MAP_SCHEMA
+        );
+    }
+    if target_map.warp_id == source_warp {
+        anyhow::bail!("target Warp must supersede the source with a new identity");
+    }
+
+    let (exploded, source_invalidated) = explosion_state(&source_map, &source_layers);
+    if !exploded {
+        anyhow::bail!(
+            "Warp '{}' is not exploded; refusing to supersede a converging bubble",
+            source_warp
+        );
+    }
+
+    let target_parent = source_manifest
+        .parent()
+        .ok_or_else(|| anyhow::anyhow!("source Warp map has no parent directory"))?;
+    let target_manifest = target_parent.join(format!("{}.warp-map.json", target_map.warp_id));
+    let mut carried = Vec::new();
+    let mut carried_layers = Vec::new();
+    for required in &target_map.required_slices {
+        let Some(source_required) = source_map
+            .required_slices
+            .iter()
+            .find(|source| source.slice_id == required.slice_id)
+        else {
+            continue;
+        };
+        if source_required.contract_hash != required.contract_hash {
+            continue;
+        }
+        let candidates = source_layers
+            .iter()
+            .filter(|layer| {
+                layer.slice_id == required.slice_id
+                    && layer.contract_hash == required.contract_hash
+                    && layer.result_state.eq_ignore_ascii_case("accepted")
+                    && !layer.result_hash.trim().is_empty()
+                    && required.evidence_gates.iter().all(|gate| {
+                        layer
+                            .evidence
+                            .get(gate)
+                            .is_some_and(|references| !references.is_empty())
+                    })
+            })
+            .collect::<Vec<_>>();
+        let hashes = candidates
+            .iter()
+            .map(|layer| layer.result_hash.as_str())
+            .collect::<BTreeSet<_>>();
+        if hashes.len() != 1 {
+            continue;
+        }
+        let source = candidates[0];
+        let attempt_id = format!("evolved-{}", source.attempt_id);
+        carried.push(required.slice_id.clone());
+        carried_layers.push(WarpSliceLayer {
+            schema: SLICE_LAYER_SCHEMA.to_string(),
+            warp_id: target_map.warp_id.clone(),
+            slice_id: required.slice_id.clone(),
+            contract_hash: required.contract_hash.clone(),
+            attempt_id,
+            result_state: "accepted".to_string(),
+            result_hash: source.result_hash.clone(),
+            evidence: source.evidence.clone(),
+            reason: Some(format!("carried forward from Warp '{source_warp}'")),
+        });
+    }
+    carried.sort();
+    let mut invalidated = source_invalidated;
+    invalidated.extend(
+        source_map
+            .required_slices
+            .iter()
+            .filter(|required| !carried.contains(&required.slice_id))
+            .map(|required| required.slice_id.clone()),
+    );
+    invalidated.sort();
+    invalidated.dedup();
+
+    let receipt_path = root.join(".recur").join("warp").join(format!(
+        "recur-warp.{source_warp}.to.{}.supersession.ack.json",
+        target_map.warp_id
+    ));
+    if confirm {
+        fs::create_dir_all(target_parent)?;
+        write_if_absent_or_equal(&target_manifest, &target_bytes)?;
+        for layer in &carried_layers {
+            let path = target_parent.join(format!(
+                "{}.{}.{}.warp-layer.json",
+                layer.warp_id, layer.slice_id, layer.attempt_id
+            ));
+            let bytes = format!("{}\n", serde_json::to_string_pretty(layer)?);
+            write_if_absent_or_equal(&path, bytes.as_bytes())?;
+        }
+        fs::create_dir_all(receipt_path.parent().expect("receipt has parent"))?;
+        let target_manifest_text = normalize_path(
+            target_manifest
+                .strip_prefix(root)
+                .unwrap_or(&target_manifest),
+        );
+        let receipt = SupersessionReceipt {
+            schema: "recur-warp-supersession-v1",
+            source_warp,
+            target_warp: &target_map.warp_id,
+            result_state: "accepted",
+            target_manifest: &target_manifest_text,
+            carried_slices: &carried,
+            invalidated_slices: &invalidated,
+        };
+        let bytes = format!("{}\n", serde_json::to_string_pretty(&receipt)?);
+        write_if_absent_or_equal(&receipt_path, bytes.as_bytes())?;
+    }
+
+    Ok(EvolveOutput {
+        schema: "recur-warp-evolve-v1",
+        source_warp: source_warp.to_string(),
+        target_warp: target_map.warp_id,
+        state: if confirm { "written" } else { "planned" }.to_string(),
+        target_manifest: normalize_path(
+            target_manifest
+                .strip_prefix(root)
+                .unwrap_or(&target_manifest),
+        ),
+        carried_slices: carried,
+        invalidated_slices: invalidated,
+        receipt: normalize_path(receipt_path.strip_prefix(root).unwrap_or(&receipt_path)),
+    })
+}
+
+fn collapse(root: &Path, lane: &str, confirm: bool) -> anyhow::Result<CollapseOutput> {
+    if !root.is_dir() {
+        anyhow::bail!("invalid --dir '{}': directory not found", root.display());
+    }
+    validate_identity("lane", lane, true)?;
+    let (complete_suffixes, interesting_suffixes, blocked_suffixes) = collapse_suffix_policy(root)?;
+    let lane_prefix = format!("{lane}.");
+    let mut collapse_known = Vec::new();
+    let mut preserve_interesting = Vec::new();
+    let mut blockers = Vec::new();
+    let mut ambiguous = Vec::new();
+    for entry in WalkDir::new(root)
+        .into_iter()
+        .filter_entry(keep_entry)
+        .filter_map(Result::ok)
+    {
+        if !entry.file_type().is_file() {
+            continue;
+        }
+        let name = entry.file_name().to_string_lossy();
+        if !name.starts_with(&lane_prefix) {
+            continue;
+        }
+        let relative = normalize_path(entry.path().strip_prefix(root).unwrap_or(entry.path()));
+        let text = fs::read_to_string(entry.path()).unwrap_or_default();
+        let state = name
+            .strip_suffix(".md")
+            .and_then(|stem| stem.rsplit('.').next())
+            .unwrap_or_default();
+        if blocked_suffixes.iter().any(|suffix| suffix == state)
+            || text.to_ascii_lowercase().contains("operator approval")
+            || text.to_ascii_lowercase().contains("blocker")
+        {
+            blockers.push(relative);
+        } else if complete_suffixes.iter().any(|suffix| suffix == state) {
+            collapse_known.push(relative);
+        } else if interesting_suffixes.iter().any(|suffix| suffix == state) {
+            preserve_interesting.push(relative);
+        } else {
+            ambiguous.push(relative);
+        }
+    }
+    collapse_known.sort();
+    preserve_interesting.sort();
+    blockers.sort();
+    ambiguous.sort();
+
+    if confirm && (!blockers.is_empty() || !ambiguous.is_empty()) {
+        anyhow::bail!(
+            "collapse requires operator resolution; blockers [{}], ambiguous [{}]",
+            blockers.join(", "),
+            ambiguous.join(", ")
+        );
+    }
+
+    let archive_root = root.join(".recur").join("warp").join("archive").join(lane);
+    let receipt_path = root
+        .join(".recur")
+        .join("warp")
+        .join(format!("recur-warp.{lane}.collapse.ack.json"));
+    let mut archived = Vec::new();
+    if confirm {
+        let moves = collapse_known
+            .iter()
+            .map(|relative| {
+                let source = root.join(relative);
+                let target = archive_root.join(relative);
+                (source, target)
+            })
+            .collect::<Vec<_>>();
+        for (_, target) in &moves {
+            if target.exists() {
+                anyhow::bail!(
+                    "collapse archive target already exists: '{}'",
+                    target.display()
+                );
+            }
+        }
+        let mut completed_moves = Vec::new();
+        for (source, target) in &moves {
+            if let Some(parent) = target.parent() {
+                fs::create_dir_all(parent)?;
+            }
+            if let Err(error) = fs::rename(source, target) {
+                for (moved_source, moved_target) in completed_moves.iter().rev() {
+                    let _ = fs::rename(moved_target, moved_source);
+                }
+                return Err(error)
+                    .with_context(|| format!("failed to archive '{}'", source.display()));
+            }
+            completed_moves.push((source.clone(), target.clone()));
+            archived.push(normalize_path(target.strip_prefix(root).unwrap_or(target)));
+        }
+        let mut preserved = preserve_interesting.clone();
+        preserved.extend(blockers.clone());
+        preserved.extend(ambiguous.clone());
+        let receipt = CollapseReceipt {
+            schema: "recur-warp-collapse-receipt-v1",
+            lane,
+            result_state: "accepted",
+            archived: &archived,
+            preserved: &preserved,
+        };
+        if let Some(parent) = receipt_path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        let bytes = format!("{}\n", serde_json::to_string_pretty(&receipt)?);
+        write_if_absent_or_equal(&receipt_path, bytes.as_bytes())?;
+    }
+
+    Ok(CollapseOutput {
+        schema: "recur-warp-collapse-v1",
+        lane: lane.to_string(),
+        state: if confirm { "written" } else { "planned" }.to_string(),
+        collapse_known,
+        preserve_interesting,
+        blockers,
+        ambiguous,
+        archived,
+        receipt: normalize_path(receipt_path.strip_prefix(root).unwrap_or(&receipt_path)),
+    })
+}
+
+fn collapse_suffix_policy(root: &Path) -> anyhow::Result<(Vec<String>, Vec<String>, Vec<String>)> {
+    let mut complete = vec!["complete".to_string()];
+    let mut interesting = vec!["strange".to_string()];
+    let mut blocked = vec!["blocked".to_string()];
+    let config = root.join(".recur").join("config.toml");
+    if config.is_file() {
+        let value: toml::Value = toml::from_str(&fs::read_to_string(&config)?)?;
+        if let Some(suffixes) = value
+            .get("warp")
+            .and_then(|warp| warp.get("suffixes"))
+            .and_then(toml::Value::as_table)
+        {
+            let values = |key: &str| {
+                suffixes
+                    .get(key)
+                    .and_then(toml::Value::as_array)
+                    .map(|items| {
+                        items
+                            .iter()
+                            .filter_map(toml::Value::as_str)
+                            .map(str::to_string)
+                            .collect::<Vec<_>>()
+                    })
+            };
+            if let Some(values) = values("complete") {
+                complete = values;
+            }
+            if let Some(values) = values("interesting") {
+                interesting = values;
+            }
+            if let Some(values) = values("blocked") {
+                blocked = values;
+            }
+        }
+    }
+    Ok((complete, interesting, blocked))
+}
+
+fn load_layers(root: &Path, warp: &str) -> anyhow::Result<Vec<WarpSliceLayer>> {
+    let prefix = format!("{warp}.");
+    let mut layers = Vec::new();
+    for entry in WalkDir::new(root)
+        .into_iter()
+        .filter_entry(keep_entry)
+        .filter_map(Result::ok)
+    {
+        let name = entry.file_name().to_string_lossy();
+        if entry.file_type().is_file()
+            && name.starts_with(&prefix)
+            && name.ends_with(".warp-layer.json")
+        {
+            let layer: WarpSliceLayer = serde_json::from_str(&fs::read_to_string(entry.path())?)
+                .with_context(|| format!("failed to parse '{}'", entry.path().display()))?;
+            if layer.warp_id == warp && layer.schema == SLICE_LAYER_SCHEMA {
+                layers.push(layer);
+            }
+        }
+    }
+    Ok(layers)
+}
+
+fn explosion_state(map: &WarpBubbleMap, layers: &[WarpSliceLayer]) -> (bool, Vec<String>) {
+    let mut exploded = false;
+    let mut invalidated = Vec::new();
+    for required in &map.required_slices {
+        let accepted = layers
+            .iter()
+            .filter(|layer| {
+                layer.slice_id == required.slice_id
+                    && layer.result_state.eq_ignore_ascii_case("accepted")
+            })
+            .collect::<Vec<_>>();
+        let stale = accepted
+            .iter()
+            .any(|layer| layer.contract_hash != required.contract_hash);
+        let hashes = accepted
+            .iter()
+            .filter(|layer| layer.contract_hash == required.contract_hash)
+            .map(|layer| layer.result_hash.as_str())
+            .collect::<BTreeSet<_>>();
+        if stale || hashes.len() > 1 {
+            exploded = true;
+            invalidated.push(required.slice_id.clone());
+        }
+    }
+    (exploded, invalidated)
+}
+
+fn write_if_absent_or_equal(target: &Path, bytes: &[u8]) -> anyhow::Result<()> {
+    if target.is_file() {
+        let existing = fs::read(target)?;
+        if existing == bytes {
+            return Ok(());
+        }
+        anyhow::bail!(
+            "refusing to replace incompatible file '{}'",
+            target.display()
+        );
+    }
+    write_bytes_atomically(target, bytes)
 }
 
 fn validate_identity(label: &str, value: &str, allow_dot: bool) -> anyhow::Result<()> {
@@ -466,6 +936,36 @@ fn emit(output: &CompleteOutput, json: bool) -> anyhow::Result<()> {
         println!("  Warp: {}", output.warp_id);
         println!("  state: {}", output.state);
         println!("  layer: {}", output.path);
+    }
+    Ok(())
+}
+
+fn emit_evolve(output: &EvolveOutput, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+    } else {
+        println!("Warp evolution from {}", output.source_warp);
+        println!("  target: {}", output.target_warp);
+        println!("  state: {}", output.state);
+        println!("  carried: {}", output.carried_slices.join(", "));
+        println!("  invalidated: {}", output.invalidated_slices.join(", "));
+        println!("  receipt: {}", output.receipt);
+    }
+    Ok(())
+}
+
+fn emit_collapse(output: &CollapseOutput, json: bool) -> anyhow::Result<()> {
+    if json {
+        println!("{}", serde_json::to_string_pretty(output)?);
+    } else {
+        println!("Warp collapse for {}", output.lane);
+        println!("  state: {}", output.state);
+        println!("  known: {}", output.collapse_known.len());
+        println!("  interesting: {}", output.preserve_interesting.len());
+        println!("  blockers: {}", output.blockers.len());
+        println!("  ambiguous: {}", output.ambiguous.len());
+        println!("  archived: {}", output.archived.len());
+        println!("  receipt: {}", output.receipt);
     }
     Ok(())
 }

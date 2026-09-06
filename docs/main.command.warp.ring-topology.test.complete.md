@@ -23,11 +23,11 @@ Date: 2026-08-15
 julia julia-tests/main.command.warp.ring-topology.test.jl
 ```
 
-Result: 29 passed, 1 intentionally broken, 30 total.
+Result after implementation: 44 passed, 0 broken, 44 total.
 
-The broken assertion is the implementation handoff: `recur warp merge` does
-not yet consume `warp-ring-map-v1`. It must become an ordinary passing
-assertion when the recursive projection is implemented.
+The former broken assertion is now green: `recur warp map`, `merge`, and
+`status` consume `warp-ring-map-v1`, compose complete child bubbles, and keep
+parent acceptance distinct from child completion.
 
 ## Trace-id lines
 
@@ -36,5 +36,5 @@ defines: main.command.warp.ring-topology.test.complete verified recursive-domain
 consumes: recur.warp.ring.schema warp-ring-map-v1 companion contract
 consumes: main.command.watch.impl coordinator-to-worker and worker-to-coordinator active event delivery
 consumes: main.command.watch.query.impl pure subscription ACK inspection
-produces: recur.warp.ring.projection.red executable handoff to recursive recur warp merge composition
+produces: recur.warp.ring.projection.green verified recursive recur warp merge composition
 ```

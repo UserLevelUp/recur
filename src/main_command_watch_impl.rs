@@ -308,6 +308,12 @@ fn classify_event_kind(kind: &EventKind) -> Option<&'static str> {
 
 fn emit_event(config: &WatchConfig, path: &Path, event_type: &'static str) -> anyhow::Result<()> {
     let path_text = path.to_string_lossy().to_string();
+    // Persist the accepted event before publishing it. Consumers commonly use
+    // the stdout event as the signal that the query-side status receipt is
+    // ready, so publishing first creates a race where `recur watch status`
+    // can still observe the initial record with no ACK.
+    record_event_seen(config)?;
+
     let stdout = io::stdout();
     let mut handle = stdout.lock();
 
@@ -329,7 +335,6 @@ fn emit_event(config: &WatchConfig, path: &Path, event_type: &'static str) -> an
     }
 
     handle.flush()?;
-    record_event_seen(config)?;
     Ok(())
 }
 
