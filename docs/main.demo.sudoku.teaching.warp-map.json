@@ -1,0 +1,76 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.demo.sudoku.teaching",
+  "required_slices": [
+    {
+      "slice_id": "slice-0",
+      "contract_hash": "contract:main.demo.sudoku.teaching.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "source-and-runtime-baseline",
+        "reproducible-fixtures"
+      ]
+    },
+    {
+      "slice_id": "slice-1",
+      "contract_hash": "contract:main.demo.sudoku.teaching.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "deduction-contract",
+        "deduction-soundness-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-2",
+      "contract_hash": "contract:main.demo.sudoku.teaching.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "progressive-hint-tests",
+        "browser-interaction-evidence"
+      ]
+    },
+    {
+      "slice_id": "slice-3",
+      "contract_hash": "contract:main.demo.sudoku.teaching.slice-3:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "state-invalidation-tests",
+        "pencil-ui-regression"
+      ]
+    },
+    {
+      "slice_id": "slice-4",
+      "contract_hash": "contract:main.demo.sudoku.teaching.slice-4:v1",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "puzzle-uniqueness-tests",
+        "difficulty-and-package-contract",
+        "generation-integration"
+      ]
+    },
+    {
+      "slice_id": "slice-final",
+      "contract_hash": "contract:main.demo.sudoku.teaching.slice-final:v1",
+      "depends_on": [
+        "slice-0",
+        "slice-1",
+        "slice-2",
+        "slice-3",
+        "slice-4"
+      ],
+      "evidence_gates": [
+        "end-to-end-browser-receipt",
+        "full-regression",
+        "evidence-and-eventness-closeout"
+      ]
+    }
+  ]
+}
