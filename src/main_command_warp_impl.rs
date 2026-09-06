@@ -19,6 +19,10 @@ use recur::warp_bubble::BUBBLE_MAP_SCHEMA;
 
 #[derive(Subcommand)]
 pub enum WarpSubcommand {
+    /// Show a discovered bubble's progress (including completed bubbles)
+    Show { warp: String },
+    /// List a discovered bubble's slices, dependencies, and readiness
+    Slices { warp: String },
     /// List remaining declared bubbles and rings (the default when no command is given)
     List {
         /// Include completed projections
@@ -271,6 +275,37 @@ struct WarpRingMergeOutput {
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
+        WarpSubcommand::Show { warp } | WarpSubcommand::Slices { warp } => {
+            let output = bubble_progress(&root, &warp)?;
+            if json {
+                println!("{}", serde_json::to_string_pretty(&output)?);
+            } else {
+                println!(
+                    "{}: {} (evidence: {})",
+                    warp,
+                    output["state"].as_str().unwrap_or("unknown"),
+                    output["evidence_status"].as_str().unwrap_or("unknown")
+                );
+                println!(
+                    "Current slice: {}",
+                    output["current_slice"].as_str().unwrap_or("not declared")
+                );
+                println!("Counts: {}", output["counts"]);
+                for slice in output["slices"].as_array().context("missing slices")? {
+                    println!(
+                        "  {}  {}  ready={}  depends_on={}",
+                        slice["slice_id"].as_str().unwrap_or(""),
+                        slice["state"].as_str().unwrap_or(""),
+                        slice["ready"],
+                        slice["depends_on"]
+                    );
+                }
+                for warning in output["warnings"].as_array().context("missing warnings")? {
+                    println!("Warning: {}", warning.as_str().unwrap_or(""));
+                }
+            }
+            Ok(())
+        }
         WarpSubcommand::List { all, scan_all } => {
             emit_list(&list_warps(&root, all, scan_all)?, json)
         }
@@ -346,6 +381,94 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
 }
 
 // defines: recur.warp.discovery.inventory deterministic read-only manifest discovery
+fn bubble_progress(root: &Path, warp: &str) -> anyhow::Result<serde_json::Value> {
+    let inventory = list_warps(root, true, false)?;
+    let matches: Vec<_> = inventory["entries"]
+        .as_array()
+        .context("missing inventory")?
+        .iter()
+        .filter(|entry| entry["warp_id"] == warp)
+        .collect();
+    anyhow::ensure!(
+        !matches.is_empty(),
+        "Warp '{warp}' not found within discovery scope"
+    );
+    anyhow::ensure!(
+        matches.len() == 1,
+        "ambiguous Warp identity '{warp}'; narrow -d to one manifest directory"
+    );
+    let entry = matches[0];
+    anyhow::ensure!(
+        entry["error"].is_null(),
+        "Warp discovery error: {}",
+        entry["error"]
+    );
+    anyhow::ensure!(
+        entry["kind"] == "bubble",
+        "show/slices inspect bubbles; use warp merge for ring domain progress"
+    );
+    let scope = PathBuf::from(entry["scope"].as_str().context("missing scope")?);
+    let (manifest, map) = load_bubble_map_scoped(&scope, warp, true)?.context("map disappeared")?;
+    let raw: serde_json::Value = serde_json::from_slice(&fs::read(scope.join(&manifest))?)?;
+    let projection = compose_bubble(
+        &scope,
+        manifest,
+        map.clone(),
+        load_warp_layers_scoped(&scope, warp, true)?,
+    );
+    let mut ready = Vec::new();
+    let mut slices = Vec::new();
+    for slice in &map.required_slices {
+        let id = &slice.slice_id;
+        let state = if projection.conflicts.iter().any(|i| &i.slice_id == id) {
+            "conflicting"
+        } else if projection.stale_contract.iter().any(|i| &i.slice_id == id) {
+            "stale_contract"
+        } else if projection.blocked.iter().any(|i| &i.slice_id == id) {
+            "blocked"
+        } else if projection.covered.contains(id) {
+            "complete"
+        } else {
+            "pending"
+        };
+        let is_ready = state == "pending"
+            && projection.conflicts.is_empty()
+            && slice
+                .depends_on
+                .iter()
+                .all(|dep| projection.covered.contains(dep));
+        if is_ready {
+            ready.push(id.clone());
+        }
+        let mut item = serde_json::to_value(slice)?;
+        item["state"] = state.into();
+        item["ready"] = is_ready.into();
+        slices.push(item);
+    }
+    let mut warnings = Vec::new();
+    let current = raw
+        .get("current_slice")
+        .and_then(|v| v.as_str())
+        .filter(|id| {
+            let valid = ready.iter().any(|r| r == id);
+            if !valid {
+                warnings.push(format!(
+                    "Declared current_slice '{id}' is no longer ready; selection not inferred."
+                ));
+            }
+            valid
+        });
+    let mut output = serde_json::to_value(&projection)?;
+    output["schema"] = "warp-progress-v1".into();
+    output["goal"] = raw["goal"].clone();
+    output["current_slice"] = serde_json::to_value(current)?;
+    output["ready_slices"] = serde_json::to_value(ready)?;
+    output["completed_slices"] = serde_json::to_value(&projection.covered)?;
+    output["slices"] = slices.into();
+    output["warnings"] = serde_json::to_value(warnings)?;
+    Ok(output)
+}
+
 fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_json::Value> {
     let root = fs::canonicalize(root)?;
     let policy = recur::warp_discovery::DiscoveryPolicy::load(&root, scan_all)?;

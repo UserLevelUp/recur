@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.usability",
+  "slice_id": "slice-1",
+  "contract_hash": "contract:main.command.warp.usability.slice-1:v1",
+  "attempt_id": "usability-20260906-1",
+  "result_state": "accepted",
+  "result_hash": "sha256:5d48648b474d0dc246f79e4bcb6f259a72cbeff8e92e7b351e34d8894e00a709",
+  "evidence": {
+    "read-only-progress": [
+      "main.command.warp.usability.slice-1.complete.md"
+    ]
+  },
+  "reason": null
+}

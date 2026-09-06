@@ -19,6 +19,10 @@ horizon. Long-term epochs can group many epics or milestones.
 Warp now has a shipped, read-only core query and composition surface:
 
 ```text
+recur warp
+recur warp list --all --json
+recur warp show <warp> --json
+recur warp slices <warp> --json
 recur warp status <lane> --json
 recur warp explain <lane> --json
 recur warp next <lane> --json
@@ -27,6 +31,14 @@ recur warp map <warp> --json
 recur warp merge <warp> --json
 recur warp config --json
 ```
+
+The local usability extension adds `recur-warp create <warp> --goal <text>`:
+dry-run single-map scaffolding, with `--confirm` for no-overwrite publication.
+Nearest `[warp.creation]` configuration selects directory and optional JSON
+template; default directory is `warps`. See docs/main.command.warp.readme.md.
+Progress views expose ready/completed slices and optional `current_slice` map
+metadata, without inventing acceptance. Semantic repartition and broader lifecycle
+controls remain in docs/main.command.warp.roadmap.md.
 
 The audited 837dee4 source also implements bounded companion actions:
 
@@ -72,7 +84,7 @@ invent specifications, certify safety, or replace qualified engineering review.
 
 The companion implements declarations, completion, exploded-bubble evolution and
 archival collapse. General configuration-driven transitions remain proposed;
-collapse policy differs from shared query/receipt policy. See
+collapse now shares query/receipt suffix policy. See
 [audited scope](docs/main.command.warp.docs-reconciliation.current-state.md).
 Source-branch publication does not attest package-registry release status.
 `recur-warp` must not interpret `next` advice as authorization,
@@ -82,6 +94,9 @@ Trace-id lines:
 
 ```text
 defines: recur.warp.capability ideal-state lane steering and eventness optimality surface
+defines: recur.warp.show discovery-scoped bubble progress with ready completed and declared current slices
+defines: recur.warp.slices read-only slice states dependencies and evidence gates
+defines: recur-warp.create configured single-map template preview and confirmed no-overwrite publication
 defines: recur.warp.status shipped read-only lane verdict command returning optimum sub_optimum or blocked
 defines: recur.warp.bubble.map shipped declared required Slice and evidence-gate manifest query
 defines: recur.warp.merge shipped deterministic self-reporting Slice-layer coverage projection

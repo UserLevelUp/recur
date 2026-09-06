@@ -10,6 +10,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process;
 use walkdir::{DirEntry, WalkDir};
+mod recur_warp_create;
 
 #[derive(Parser)]
 #[command(name = "recur-warp")]
@@ -30,6 +31,14 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Preview a configured bubble map; --confirm creates it without overwriting
+    Create {
+        warp: String,
+        #[arg(long)]
+        goal: String,
+        #[arg(long)]
+        confirm: bool,
+    },
     /// Preview a policy-aware lifecycle receipt; --confirm records a declaration
     Receipt {
         warp: String,
@@ -172,6 +181,22 @@ fn main() {
         }
     };
     let result = match cli.command {
+        Commands::Create {
+            warp,
+            goal,
+            confirm,
+        } => recur_warp_create::create(&root, &warp, &goal, confirm).and_then(|output| {
+            if cli.json {
+                println!("{}", serde_json::to_string_pretty(&output)?);
+            } else {
+                println!(
+                    "{}: {}",
+                    output["state"].as_str().unwrap_or(""),
+                    output["path"].as_str().unwrap_or("")
+                );
+            }
+            Ok(())
+        }),
         Commands::Receipt {
             warp,
             slice,
@@ -571,7 +596,7 @@ fn collapse(root: &Path, lane: &str, confirm: bool) -> anyhow::Result<CollapseOu
         anyhow::bail!("invalid --dir '{}': directory not found", root.display());
     }
     validate_identity("lane", lane, true)?;
-    let (complete_suffixes, interesting_suffixes, blocked_suffixes) = collapse_suffix_policy(root)?;
+    let policy = collapse_suffix_policy(root)?;
     let lane_prefix = format!("{lane}.");
     let mut collapse_known = Vec::new();
     let mut preserve_interesting = Vec::new();
@@ -590,19 +615,19 @@ fn collapse(root: &Path, lane: &str, confirm: bool) -> anyhow::Result<CollapseOu
             continue;
         }
         let relative = normalize_path(entry.path().strip_prefix(root).unwrap_or(entry.path()));
-        let text = fs::read_to_string(entry.path()).unwrap_or_default();
-        let state = name
-            .strip_suffix(".md")
-            .and_then(|stem| stem.rsplit('.').next())
-            .unwrap_or_default();
-        if blocked_suffixes.iter().any(|suffix| suffix == state)
+        // Unreadable evidence must not be silently treated as completed content.
+        let text = fs::read_to_string(entry.path())
+            .with_context(|| format!("failed to read '{}'", entry.path().display()))?;
+        let state = policy.state(&name);
+        let group = state.as_deref().map(|s| policy.group(s)).unwrap_or("other");
+        if group == "blocked"
             || text.to_ascii_lowercase().contains("operator approval")
             || text.to_ascii_lowercase().contains("blocker")
         {
             blockers.push(relative);
-        } else if complete_suffixes.iter().any(|suffix| suffix == state) {
+        } else if group == "complete" {
             collapse_known.push(relative);
-        } else if interesting_suffixes.iter().any(|suffix| suffix == state) {
+        } else if group == "interesting" {
             preserve_interesting.push(relative);
         } else {
             ambiguous.push(relative);
@@ -689,42 +714,8 @@ fn collapse(root: &Path, lane: &str, confirm: bool) -> anyhow::Result<CollapseOu
     })
 }
 
-fn collapse_suffix_policy(root: &Path) -> anyhow::Result<(Vec<String>, Vec<String>, Vec<String>)> {
-    let mut complete = vec!["complete".to_string()];
-    let mut interesting = vec!["strange".to_string()];
-    let mut blocked = vec!["blocked".to_string()];
-    let config = root.join(".recur").join("config.toml");
-    if config.is_file() {
-        let value: toml::Value = toml::from_str(&fs::read_to_string(&config)?)?;
-        if let Some(suffixes) = value
-            .get("warp")
-            .and_then(|warp| warp.get("suffixes"))
-            .and_then(toml::Value::as_table)
-        {
-            let values = |key: &str| {
-                suffixes
-                    .get(key)
-                    .and_then(toml::Value::as_array)
-                    .map(|items| {
-                        items
-                            .iter()
-                            .filter_map(toml::Value::as_str)
-                            .map(str::to_string)
-                            .collect::<Vec<_>>()
-                    })
-            };
-            if let Some(values) = values("complete") {
-                complete = values;
-            }
-            if let Some(values) = values("interesting") {
-                interesting = values;
-            }
-            if let Some(values) = values("blocked") {
-                blocked = values;
-            }
-        }
-    }
-    Ok((complete, interesting, blocked))
+fn collapse_suffix_policy(root: &Path) -> anyhow::Result<recur::warp_policy::WarpPolicy> {
+    recur::warp_policy::WarpPolicy::load(root)
 }
 
 fn load_layers(root: &Path, warp: &str) -> anyhow::Result<Vec<WarpSliceLayer>> {

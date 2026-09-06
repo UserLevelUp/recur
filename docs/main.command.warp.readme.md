@@ -100,8 +100,8 @@ complete/verified files are `collapse_known`, interesting files remain
 `preserve_interesting`, blocked files or blocker-marked files are `blockers`,
 and active current files remain `ambiguous`. It does not rename or collapse any
 file. `recur warp config` reports the shared query suffix mapping, including
-defaults when no project policy exists. Companion collapse uses a separate loader;
-see [audited configuration limits](main.command.warp.docs-reconciliation.current-state.md).
+defaults when no project policy exists. Companion collapse now uses that same
+validated nearest-config suffix policy; see [policy compatibility](main.command.warp.companion-policy.readme.md).
 
 The dot-separated fixture strategy and full read-only command matrix are in
 `main.command.warp.test-structure`.
@@ -209,12 +209,55 @@ execution publishes the successor map, carries forward only single-result
 accepted layers whose Slice and contract identities are unchanged, and writes a
 `recur-warp-supersession-v1` ACK under `.recur/warp/`.
 
+## Beginner creation and progress
+
+```powershell
+recur warp
+recur warp show demo.pool --json
+recur warp slices demo.pool
+recur-warp create demo.pool --goal "A safe swimming pool" --json
+recur-warp create demo.pool --goal "A safe swimming pool" --confirm
+```
+
+`show` and `slices` resolve a unique bubble through the same configured discovery
+as `list`, including `.recur`. Both return `warp-progress-v1` with counts, slice
+states, dependencies, completed and ready slices, and an optional declared current
+slice from optional `current_slice` map metadata (not filename inference). Stale
+current selection is warned about, not silently advanced. These are
+read-only views of existing evidence; declared completion is not independent test
+verification. Duplicate identities require a narrower `-d`. Rings use `merge` for
+domain progress rather than these bubble-only views.
+
+Optional nearest `.recur/config.toml` configuration:
+
+```toml
+[warp.creation]
+directory = ".recur/warps" # default: warps
+template = "templates/bubble.json" # optional JSON bubble-map template
+```
+
+Paths are relative to that configuration's project root; writes must also remain
+within `-d`. Discovery roots/exclusions must include the chosen output directory.
+Templates substitute `{warp}` and `{goal}` in string values only. Map identity,
+dependencies and gates are validated before writing. Extra descriptive metadata
+is retained. Every generated slice requires acceptance gates. Without a template,
+creation declares baseline `slice-0` and dependent `slice-final`, not accepted work.
+
+Creation is dry-run by default and publishes only `<warp>.warp-map.json`. It never
+overwrites. Publication requires filesystem hard-link support and fails closed
+otherwise; an interrupted attempt can leave an ignored temporary file. No scripts
+run and no multi-file scaffold is implied. Existing receipt/complete/evolve/collapse
+commands retain their original scope and confirmation contracts.
+
+See [remaining work](main.command.warp.roadmap.md) for semantic repartition,
+broader lifecycle controls, recovery and multi-file scaffolding.
+
 ## Confirmed collapse
 
 `recur warp collapse-plan` remains the read-only classification surface.
 `recur-warp collapse` provides its own dry run and performs recoverable archival
-only after confirmation. Its root-local config and final-token suffix handling
-can differ from core collapse-plan's nearest-config/compound-suffix policy:
+only after confirmation. It shares nearest-config and compound-suffix policy with
+core collapse-plan. It remains conservative about unrecognized files in scope:
 
 ```powershell
 recur warp collapse-plan demo.lane -d planning/ --json

@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.identity-policy",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.warp.identity-policy.slice-0:v1",
+  "attempt_id": "identity-policy-baseline-20260906",
+  "result_state": "accepted",
+  "result_hash": "sha256:32d8b721fa456b228483a384443912c08b91ce253ca8303051467852b7b94f5b",
+  "evidence": {
+    "red-first-baseline": [
+      "main.command.warp.identity-policy.slice-0.complete.md"
+    ]
+  },
+  "reason": null
+}

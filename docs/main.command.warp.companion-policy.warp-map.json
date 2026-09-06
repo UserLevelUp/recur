@@ -1,0 +1,34 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.companion-policy",
+  "required_slices": [
+    {
+      "slice_id": "slice-0",
+      "contract_hash": "contract:main.command.warp.companion-policy.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-and-red-tests"
+      ]
+    },
+    {
+      "slice_id": "slice-1",
+      "contract_hash": "contract:main.command.warp.companion-policy.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "shared-policy-parity"
+      ]
+    },
+    {
+      "slice_id": "slice-final",
+      "contract_hash": "contract:main.command.warp.companion-policy.slice-final:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "regression-and-closeout"
+      ]
+    }
+  ]
+}

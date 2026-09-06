@@ -15,10 +15,17 @@ publication, not an assertion about every installed binary or registry release.
 See [audited scope and configuration limits](docs/main.command.warp.docs-reconciliation.current-state.md)
 and [current commands](docs/main.command.warp.readme.md).
 
+The local [usability Warp](docs/main.command.warp.usability.readme.md) adds
+`recur warp show`, `recur warp slices`, and configured `recur-warp create`.
+See the [remaining-work roadmap](docs/main.command.warp.roadmap.md): semantic
+many-to-many repartition, broader failure recovery, lifecycle controls and batch
+transactions are still future work, not alternate meanings of the existing merge.
+
 Suffix policy and discovery are configurable; arbitrary scoring weights,
 temporal forecasts and general opinionated transition policies remain proposals.
-Companion collapse still has a separate policy loader: do not assume complete
-query/actor parity for nested config or compound suffixes. Configuration cannot
+The subsequent [companion policy foundation](docs/main.command.warp.companion-policy.readme.md)
+unifies collapse suffix policy with queries; unknown files still cause conservative
+companion refusal. Generalized opinionated transition policy remains future work. Configuration cannot
 grant authority. The following rationale preserves the original methodology;
 design sketches and candidate fields are not current CLI/schema guarantees.
 
@@ -587,6 +594,8 @@ consumes: recur.trace-id define consume produce trigger evidence classification
 produces: recur.warp.verdict optimum sub_optimum or blocked verdict for a lane
 produces: recur.warp.residuals auditable project-control pressure list with file or config evidence
 produces: recur.warp.next-actions scoped management action recommendations
+consumes: main.command.warp.roadmap remaining semantic repartition lifecycle recovery and batch transaction work in docs/main.command.warp.roadmap.md
+produces: recur.warp.usability show and slices progress queries plus configured recur-warp create single-map scaffolding
 produces: recur.warp.concept.delta auditable before-after residue comparison for concept-driven eventness changes
 produces: recur.warp.convergence.residuals auditable gaps between current component evidence and intended future supersystem state
 produces: recur.warp.temporal.residuals auditable residual changes across now day month year and decade frames

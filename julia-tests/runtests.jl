@@ -71,6 +71,9 @@ try
         include("main.command.warp.evidence-integrity.test.jl")  # qualified completion and external evidence
         include("main.command.warp.discovery.test.jl")  # default and explicit Warp inventory
         include("main.command.warp.docs-reconciliation.test.jl") # Audited docs, references and proposal boundaries
+        include("main.command.warp.companion-policy.test.jl") # Shared collapse policy and no-mutation safety
+        include("main.command.warp.usability.test.jl") # Creation, progress and fail-closed safety
+        include("main.command.warp.query-compatibility.test.jl") # Hierarchy/trace queries remain read-only with UUID metadata
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
         include("main.lang.form-validation.test.jl")  # red-first validation, refinement, and error-routing contract

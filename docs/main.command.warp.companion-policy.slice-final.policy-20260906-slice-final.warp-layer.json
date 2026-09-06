@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.companion-policy",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.warp.companion-policy.slice-final:v1",
+  "attempt_id": "policy-20260906-slice-final",
+  "result_state": "accepted",
+  "result_hash": "sha256:43aa9445722234ad915f8da827c531d62ead0b92d245f7825d70aa7de4af44a5",
+  "evidence": {
+    "regression-and-closeout": [
+      "main.command.warp.companion-policy.slice-final.complete.md"
+    ]
+  },
+  "reason": null
+}

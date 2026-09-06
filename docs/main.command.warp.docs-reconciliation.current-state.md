@@ -1,5 +1,11 @@
 # Warp: audited implementation and proposal boundary
 
+Follow-up 2026-09-06: [companion policy foundation](main.command.warp.companion-policy.readme.md)
+resolves the suffix-policy mismatch described in this baseline audit. The historical
+finding below explains why the follow-up exists; it is not an unfixed current claim.
+Generalized transition policies remain proposed. Original audit receipts retain
+their baseline source binding.
+
 Audit date: 2026-09-06. Source baseline: `837dee4` on `recur-lang` and
 `a.0.2.8`; this is branch/source publication, not proof of a package-registry
 release or the version installed on another machine. This reconciliation changes
@@ -34,13 +40,14 @@ an exploded source and matching carried Slice contracts; it is not a configurabl
 general transition engine. Scoring weights are constants in the current scorer,
 not arbitrary values loaded from the configuration examples in the old proposal.
 
-Important mismatch: `collapse_suffix_policy` in `src/recur_warp_main.rs` reads only
+Historical mismatch at 837dee4 (resolved by the follow-up): `collapse_suffix_policy` read only
 `<invocation-root>/.recur/config.toml`, not nearest-ancestor policy. Collapse takes
 the final dot-delimited filename token, rather than longest compound suffix, and
 uses a separate permissive parser. Thus previewing core `collapse-plan` is not
 a guarantee the companion will classify every custom/nested policy identically.
 Use the companion's own dry run and inspect it before any authorized confirmation.
-This audit does not fix that runtime behavior or claim existing tests cover parity.
+The reconciliation itself did not fix that behavior; the follow-up adds executable
+parity and refusal tests and delegates that helper to shared WarpPolicy.
 
 ## Proposed next implementation, not a declared or completed Warp
 
