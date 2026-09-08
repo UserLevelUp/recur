@@ -1,0 +1,3 @@
+# Preserve tool-produced transcript bytes, including their trailing whitespace.
+# Code and documentation outside this evidence directory keep normal checks.
+* -text -whitespace

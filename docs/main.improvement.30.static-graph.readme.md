@@ -1,10 +1,10 @@
 # Recur Lang static graph Warp
 
-Status: draft implementation plan; no slices accepted.
+Status: all four slices accepted with declared evidence; inspect the live projection.
 Release target: a.0.2.8, subject to the final Recur Lang release scope.
 
 This map makes the existing
-`main.improvement.30.static-graph.todo.current.md` contract discoverable through
+`main.improvement.30.static-graph.contract.complete.md` contract discoverable through
 `recur warp`. That document remains the acceptance authority for SGR1. WIR1
 and CIR1 remain historical completed contracts; this map does not reclassify
 their receipts or claim that they were tested again.
@@ -15,7 +15,7 @@ their receipts or claim that they were tested again.
 - `src/recur_lang_concurrent_ir.rs` defines `ConcurrentIr` and its parser.
 - `src/recur_lang_main.rs` implements receipt-backed `recur-lang warp`.
 - `main.improvement.30.concurrent-ir.contract.complete.md` records CIR1 acceptance.
-- `main.improvement.30.static-graph.todo.current.md` specifies the unimplemented
+- `main.improvement.30.static-graph.contract.complete.md` specifies the accepted
   shared graph report and its existing exit evidence.
 - `../demos/main.lang/main.lang.skippy-watch-coordination.recur` supplies the
   accepted concurrent source fixture.
@@ -32,8 +32,8 @@ inspection on 2026-09-08. This is an inspection result, not a fresh test baselin
 | slice-2 | Report dependency cycles, wait cycles, unreachable lanes and unsatisfied joins. | Independent synthetic positive and negative graphs exercise each finding, exact identities and available source spans; the valid fixture has no blocking finding; `orchestration_sound` agrees with findings. |
 | slice-final | Accept the complete SGR1 contract against current artifacts. | Full Rust regression, focused Julia fixture regression, deterministic JSON and read-only checks, formatting/diff hygiene, and no new Clippy diagnostics in touched modules. Follow the existing contract's implementation-commit and manual Eventness transition requirements. |
 
-Dependencies are sequential. `slice-0` is the first ready slice. Test descriptions
-above are proposed acceptance work; no passing runs or receipts are invented.
+Dependencies are sequential. The observed runs and source applicability are in
+`main.improvement.30.static-graph.verification.md`.
 The map uses the repository's declared evidence gates. Review actual logs and
 their source applicability before recording acceptance; a gate label alone does
 not establish checked external evidence.
@@ -52,7 +52,7 @@ existing contract and use a revised contract identity if its requirements change
 
 After SGR1, build separate bounded Warps from the existing design:
 
-1. Pure language queries: `main.lang.baseline` now plans the bounded baseline
+1. Pure language queries: `main.lang.baseline` implements the bounded baseline
    in `warps/main.lang.baseline.contract.md`. Select the first useful commands from
    `main.command.lang.readme.md` and project the shared model/report. Freeze
    scope plus Eventness filtering, header/body/footer explanation, compact

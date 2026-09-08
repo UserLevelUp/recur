@@ -1,0 +1,1290 @@
+╔═══════════════════════════════════════════════════════════╗
+║         Recur Integration Test Suite                     ║
+║         Hierarchical Search Tool Testing                 ║
+╚═══════════════════════════════════════════════════════════╝
+
+
+============================================================
+  Setting up test environment
+============================================================
+
+============================================================
+  Testing: recur files
+============================================================
+  -> recur files UserService.Handlers -d test_environment
+  ✓ PASS
+  -> recur files UserService.* -d test_environment
+  ✓ PASS
+  -> recur files UserService.** -d test_environment
+  ✓ PASS
+  -> recur files UserService.** --min-depth 2 -d test_environment
+  ✗ FAIL (KNOWN ISSUE)
+  -> recur files UserService.** --max-depth 1 -d test_environment
+  ✗ FAIL (KNOWN ISSUE)
+  -> recur files ** --min-depth 1 --max-depth 1 -d test_environment
+  ✗ FAIL (KNOWN ISSUE)
+  -> recur files ** --min-depth 5 --max-depth 2 -d test_environment
+  ✓ PASS
+  -> recur files ** --ext .cs -d test_environment
+  ✓ PASS
+  -> recur files ** --ext .cs,.json -d test_environment
+  ✓ PASS
+  -> recur files UserService.** --count -d test_environment
+  ✓ PASS
+  -> recur files UserService.** --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur find
+============================================================
+  -> recur find async --scope ** -d test_environment
+  ✓ PASS
+  -> recur find async --scope UserService.** -d test_environment
+  ✓ PASS
+  -> recur find ASYNC --scope ** -i -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 2 -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 0 -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 5 -d test_environment
+  ✓ PASS
+  -> recur find async.*Task --scope ** -E -d test_environment
+  ✓ PASS
+  -> recur find (Create|Update)User --scope UserService.** -E -d test_environment
+  ✓ PASS
+  -> recur find async --scope UserService.** --json -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 2 --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur tree
+============================================================
+  -> recur tree UserService -d test_environment
+  ✓ PASS
+  -> recur tree UserService --depth 1 -d test_environment
+  ✓ PASS
+  -> recur tree config --ascii -d test_environment
+  ✗ FAIL
+  -> recur tree UserService --count -d test_environment
+  ✓ PASS
+  -> recur tree ApiController --json -d test_environment
+  ✓ PASS
+  -> recur tree main.**.current.** -d /tmp/jl_pa4X7N --json
+
+============================================================
+  Testing: recur related
+============================================================
+  -> recur related UserService.Handlers.Create.cs -d test_environment
+  ✓ PASS
+  -> recur related UserService.Handlers.Create.cs --exclude-self -d test_environment
+  ✓ PASS
+  -> recur related ApiController.Auth.cs --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur children
+============================================================
+  -> recur children UserService -d test_environment
+  ✓ PASS
+  -> recur children UserService.Handlers --count -d test_environment
+  ✓ PASS
+  -> recur children config --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur id
+============================================================
+  -> recur id config.database -d test_environment
+  ✓ PASS
+  -> recur id config.* -d test_environment
+  ✓ PASS
+  -> recur id public -C 1 -d test_environment
+  ✓ PASS
+  -> recur id connection --ext .json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur stats
+============================================================
+  -> recur stats ** -d test_environment
+  ✓ PASS
+  -> recur stats UserService.** -d test_environment
+  ✓ PASS
+  -> recur stats ** -l 0 -d test_environment
+  ✓ PASS
+  -> recur stats ** -l 1 -d test_environment
+  ✓ PASS
+  -> recur stats UserService.** -l 2 -d test_environment
+  ✓ PASS
+  -> recur stats config.** --json -d test_environment
+  ✓ PASS
+  -> recur stats ** -l 1 --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur merge
+============================================================
+  -> recur merge test_environment/merge_docs.json test_environment/merge_src.json --sep . --sep _ --base main.command.merge --show-sep -d test_environment
+  PASS
+  -> recur files main.command.files.** -d test_environment --sep . --json
+  -> recur merge --stdin --base main.command.files --sep . -d test_environment
+  PASS
+  -> recur tree main.command.tree -d test_environment --sep . --json
+  -> recur tree main_command_tree -d test_environment --sep _ --json
+  -> recur merge --stdin --base main.command.tree --sep . --sep _ --show-sep -d test_environment
+  PASS
+  -> recur tree main.auto -d test_environment --sep .
+  PASS
+
+============================================================
+  Testing: recur unflatten (expected broken)
+============================================================
+  -> recur unflatten --help
+  -> recur unflatten --stdin --format json
+  -> recur merge --pattern improvement.15.contract --sep . --pattern improvement_15_contract --sep _ --base improvement.15.contract --format flat --json -d test_environment
+
+============================================================
+  Testing: recur callers
+============================================================
+  -> recur callers ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers SaveUser --scope UserService.** -d test_environment
+  ✓ PASS
+  -> recur callers Initialize --scope ApiController.** -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers validateemail --scope ** -i -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope ** --ext .cs -d test_environment
+  ✓ PASS
+  -> recur callers Initialize --scope ** -C 1 -d test_environment
+  ✓ PASS
+  -> recur callers SaveUser --scope ** --count -d test_environment
+  ✓ PASS
+  -> recur callers Initialize --scope ApiController.** --json -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope UserService.** --json -d test_environment
+  ✓ PASS
+  -> recur callers NonExistentFunction --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers email --scope ** -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur callees
+============================================================
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees ProcessRequest --scope UserService.** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees createuser --scope ** -i -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** --ext .cs -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -C 1 -d test_environment
+  ✓ PASS
+  -> recur callees --help -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard hard-fail -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard clamp -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard hard-fail --force -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 1 -d test_environment
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  BROKEN
+  -> recur callees CreateUser --scope ** --count -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** --json -d test_environment
+  ✓ PASS
+  -> recur callees ProcessRequest --scope UserService.** --json -d test_environment
+  ✓ PASS
+  -> recur callees NonExistentFunction --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope NonExistent.** -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur trace
+============================================================
+  -> recur trace --help -d test_environment
+  PASS
+  -> recur trace -d test_environment
+  PASS
+  -> recur trace CreateWizard3 -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 -d test_environment
+  PASS
+  -> recur trace ValidateEmail --scope UserService.** --depth 2 -d test_environment
+  PASS
+  -> recur trace SaveUser --scope ** --depth 1 --direction callees -d test_environment
+  PASS
+  -> recur trace ValidateEmail --scope ** --depth 1 --direction callers -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --direction both -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  PASS
+  -> recur trace ApplyTemplate --scope LevelController.CreateWizard3.** --ext .cs --depth 2 --pick 1 -d test_environment
+  PASS
+  -> recur trace DeleteGameComponentAsync --scope DynamicGameComponentService.** --ext .cs --depth 2 -d test_environment
+  PASS
+  -> recur trace ApplyTemplate --scope LevelController.CreateWizard3.** --ext .cs --depth 1 -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  PASS
+  -> recur trace CreateWizard3.Tab --scope AddComponent --ext .cshtml --depth 1 -d test_environment
+  PASS
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs -d test_environment
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 1 -d test_environment
+  PASS
+  -> recur trace FunctionA --scope CycleService --ext .cs --depth 3 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 0 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 3 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 10 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --format tree -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --format flat -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --json -d test_environment
+  PASS
+  -> recur trace NoSuchSymbol --scope ** --depth 1 --json -d test_environment
+  PASS
+  -> recur trace WideRoot --scope WideService --ext .cs --depth 1 --max-width 1 -d test_environment
+  PASS
+  -> recur trace createuser --scope ** --depth 1 --ignore-case -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --ext .cs -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope ** --depth 1 --ext .cs -d test_environment
+  PASS
+  -> recur trace GenerateAiContent --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur trace ApplyAiContent --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur callees GenerateAiContent --scope LevelController.CreateWizard3.** --ext .cs -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur callers CreateChildComponent --scope LevelController.CreateWizard3.** --ext .cs -d test_environment
+  PASS
+  -> recur trace GetStates --scope LocationController.** --ext .cs --depth 2 -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur files LocationController.** --ext .cs -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --force -d test_environment
+  PASS
+  -> recur trace WideRoot --scope WideService --ext .cs --depth 6 --max-width 1 --force -d test_environment
+  PASS
+
+============================================================
+  Testing: dogfooding hierarchy with recur tree
+============================================================
+  -> recur tree main -d test_environment/dogfooding
+  -> recur tree main.command.stats -d test_environment/dogfooding
+  -> recur tree command -d test_environment/dogfooding --sep _
+  -> recur tree main -d test_environment/dogfooding
+  -> recur tree main -d test_environment/dogfooding --sep _
+
+============================================================
+  Testing: recur files with --stdin
+============================================================
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.Handlers.* --stdin
+  PASS
+  -> <stdin> | recur files Api* --stdin
+  PASS
+  -> <stdin> | recur files **.Handlers.* --stdin
+  PASS
+  -> <stdin> | recur files ** --stdin --ext .cs
+  PASS
+  -> <stdin> | recur files ** --stdin
+  FAIL
+  -> recur files UserService.** -d test_environment
+  -> recur files ** -d test_environment
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin --count
+  PASS
+  -> <stdin> | recur files UserService.** --stdin --json
+  PASS
+  -> <stdin> | recur find class --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur stats UserService.** --stdin
+  PASS
+  -> <stdin> | recur tree UserService.** --stdin
+  PASS
+  -> <stdin> | recur related UserService.cs --stdin
+  PASS
+  -> <stdin> | recur children UserService --stdin -d test_environment
+  PASS
+  -> <stdin> | recur id UserService --stdin -d test_environment
+  FAIL
+  -> <stdin> | recur callers ValidateEmail --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur callees ProcessRequest --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur trace CreateWizard3 --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin --count
+  PASS
+  -> <stdin> | recur files ** --stdin
+  PASS
+  -> <stdin> | recur files **.UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  FAIL
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files **.UserService.** --stdin
+  FAIL
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files File* --stdin
+  PASS
+  -> <stdin> | recur files User* --stdin
+  PASS
+
+============================================================
+  Testing: recur init
+============================================================
+  -> recur init -d test_environment --help
+  -> recur init -d /tmp/jl_aLrdD5
+  -> recur trait -d /tmp/jl_aLrdD5 list
+  -> recur --json init -d /tmp/jl_Kzhdcg --analyze
+  -> recur init -d /tmp/jl_HFneVV
+  -> recur trait -d /tmp/jl_HFneVV list
+  -> recur trait -d /tmp/jl_HFneVV get traversal_budget.depth_guard
+
+============================================================
+  Testing: recur reveal
+============================================================
+  -> recur reveal --help -d test_environment
+  -> recur init -d /tmp/jl_i0eOSP
+  -> recur reveal -d /tmp/jl_i0eOSP --json
+  -> recur init -d /tmp/jl_RA2Zwb
+  -> recur reveal main.command.trace-id -d /tmp/jl_RA2Zwb --json
+  -> recur reveal expert -d /tmp/jl_elZQS6 --json
+  -> recur reveal -d /tmp/jl_elZQS6 --json
+  -> recur reveal main.improvement.22 -d /tmp/jl_ndD7Fb
+  -> recur reveal -d /tmp/jl_z9SFMb --json skill
+  -> recur reveal -d /tmp/jl_z9SFMb --json persona
+  -> recur reveal -d /tmp/jl_z9SFMb --json agent
+  -> recur reveal -d /tmp/jl_z9SFMb --json team.Custom-v1
+  -> recur reveal -d /tmp/jl_z9SFMb --json legacy
+  -> recur reveal -d /tmp/jl_z9SFMb --json empty
+  -> recur reveal -d /tmp/jl_z9SFMb --json bad
+  -> recur reveal -d /tmp/jl_z9SFMb --json conflict
+  -> recur reveal -d /tmp/jl_z9SFMb --json same
+  -> recur reveal -d /tmp/jl_z9SFMb --json
+  -> recur reveal -d /tmp/jl_zWoI8D --json skill.expert
+  -> recur reveal -d /tmp/jl_zWoI8D --json skill.team.expert
+  -> recur reveal -d /tmp/jl_zWoI8D --json skill.override
+  -> recur reveal -d /tmp/jl_zWoI8D --json --type skill
+  -> recur reveal -d /tmp/jl_zWoI8D --json expert
+  -> recur reveal -d /tmp/jl_zWoI8D --json expert --type persona
+  -> recur reveal -d /tmp/jl_zWoI8D --json skill.expert --type persona
+  -> recur reveal -d /tmp/jl_zWoI8D --json --type absent
+  -> recur reveal -d /tmp/jl_zWoI8D --json skill.expert
+  -> recur reveal -d /tmp/jl_zWoI8D --json skill.override
+  -> recur reveal -d /tmp/jl_F1xSZs/.recur/private --json
+  -> recur reveal -d /tmp/jl_F1xSZs/.recur/private --json expert
+  -> recur reveal -d /tmp/jl_F1xSZs/.recur/private --json ./skill_team_expert.capsule.md
+  -> recur reveal -d /tmp/jl_F1xSZs/.recur/private --json --sep .
+  -> recur reveal -d /tmp/jl_bXKYXu --json skill.expert
+  -> recur reveal -d /tmp/jl_bXKYXu --json
+  -> recur reveal -d /tmp/jl_bXKYXu --json
+  -> recur reveal -d /tmp/jl_bXKYXu --json
+  -> recur reveal -d /tmp/jl_bXKYXu --json
+  -> recur reveal -d /tmp/jl_bXKYXu --json
+  -> recur reveal -d /tmp/jl_6nCuga --json skill.expert
+  -> recur reveal -d /tmp/jl_6nCuga --json skill.expert --type skill
+  -> recur reveal -d /tmp/jl_6nCuga --json ./a/skill.expert.capsule.md
+  -> recur reveal -d /tmp/jl_6nCuga --json skill.expert --type agent
+  -> recur reveal -d /tmp/jl_6nCuga --json missing
+  -> recur reveal -d /tmp/jl_6nCuga --json skillish
+  -> recur reveal -d /tmp/jl_6nCuga --json --type skill
+  -> recur reveal -d /tmp/jl_6nCuga
+  -> recur reveal -d /tmp/jl_6nCuga a/skill.expert.capsule.md
+  -> recur reveal -d /tmp/jl_6nCuga --type "bad type"
+  -> recur reveal -d /tmp/jl_6nCuga --sep too-long
+  -> recur reveal -d /tmp/jl_rTIkNC --json skill.team.expert
+  -> recur reveal -d /tmp/jl_rTIkNC --json skill.team.expert --sep . --sep _
+  -> recur reveal -d /tmp/jl_rTIkNC --json --type Team.Custom --sep . --sep _
+  -> recur reveal -d /tmp/jl_rTIkNC --json --type team.custom
+  -> recur reveal -d /tmp/jl_rTIkNC
+  -> recur reveal -d /tmp/jl_rTIkNC
+  -> recur reveal -d /tmp/jl_rTIkNC
+  -> recur tree skill -d /tmp/jl_WiFzMr/.recur --sep . --json
+  -> recur files skill.** -d /tmp/jl_WiFzMr/.recur --sep . --json
+  -> recur reveal -d /tmp/jl_WiFzMr/.recur --json
+  -> recur reveal -d /tmp/jl_brBEgp/child/docs --json
+  -> recur reveal escape -d /tmp/jl_brBEgp/child/docs
+
+============================================================
+  Testing: recur watch query
+============================================================
+  -> recur watch --help -d test_environment
+  -> recur watch explain -d test_environment
+  -> recur watch -d /tmp/jl_k8rwZ2
+  -> recur watch -d /tmp/jl_g3tGQq
+  -> recur watch list --filter **.active -d /tmp/jl_g3tGQq
+  -> recur watch list --filter **.stale -d /tmp/jl_g3tGQq
+  -> recur --json watch status docs-monkey -d /tmp/jl_g3tGQq
+  -> recur watch status missing-watch -d /tmp/jl_6cA1lO
+
+============================================================
+  Testing: recur version command
+============================================================
+  -> recur version status care.subject.routine -d /tmp/jl_kvy6vh
+  -> recur version policy care.subject.routine -d /tmp/jl_kvy6vh
+  -> recur version schema care.subject.routine -d /tmp/jl_kvy6vh
+  -> recur version query care.subject.routine --question "when did item-a become discontinued" -d /tmp/jl_kvy6vh
+
+============================================================
+  Testing: recur-version command
+============================================================
+  -> recur-version next care.subject.routine.proposed.current.csv -d /tmp/jl_pNxSa1
+  -> recur-version save care.subject.routine.proposed.current.csv --slug item-a-discontinued --reason "synthetic state correction" --operator operator-a -d /tmp/jl_pNxSa1
+  -> recur version status care.subject.routine -d /tmp/jl_pNxSa1
+  -> recur-version save missing.current.csv --slug bad-save --id bad-save -d /tmp/jl_pNxSa1
+
+============================================================
+  Testing: recur capability
+============================================================
+  -> recur capability --help -d test_environment
+  -> recur capability list -d /tmp/jl_ectStL
+  -> recur capability explain warp -d /tmp/jl_ectStL
+  -> recur capability explain .recur-watch -d /tmp/jl_ectStL
+  -> recur --json capability list -d /tmp/jl_I45utx
+  -> recur --json capability doctor -d /tmp/jl_I45utx
+  -> recur capability explain reveal -d /tmp/jl_SjQscI
+  -> recur warp status demo.project.good -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/optimum --json
+  -> recur warp explain demo.project.good -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/optimum --json
+  -> recur warp next demo.project.good -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/optimum --json
+  -> recur warp status demo.project.needs -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/sub-optimum --json
+  -> recur warp explain demo.project.needs -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/sub-optimum --json
+  -> recur warp next demo.project.needs -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/sub-optimum --json
+  -> recur warp status demo.project.blocked -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/blocked --json
+  -> recur warp explain demo.project.blocked -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/blocked --json
+  -> recur warp next demo.project.blocked -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/blocked --json
+  -> recur warp status demo.project.custom -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/config-override --json
+config-override: Test Failed at /home/runner/work/recur/recur/julia-tests/main.command.warp.test.jl:22
+  Expression: success
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:22 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:15 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:13
+config-override: Test Failed at /home/runner/work/recur/recur/julia-tests/main.command.warp.test.jl:23
+  Expression: error_output == ""
+   Evaluated: "Error: no eventness files found for lane 'demo.project.custom' in '/home/runner/work/recur/recur/julia-tests/fixtures/warp-status-v1/config-override': nearby files have unsupported state suffixes: demo.project.custom.verified.md; recognized suffixes: current, complete, strange, blocked; inspect `recur warp config` and select a configured suffix; check destination conflicts before any rename (no files changed)\n" == ""
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:23 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:15 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:13
+config-override: Error During Test at /home/runner/work/recur/recur/julia-tests/main.command.warp.test.jl:14
+  Got exception outside of a @test
+  ArgumentError: invalid JSON at byte position 0 while parsing type Any: UnexpectedEOF
+  
+  
+  Stacktrace:
+    [1] invalid(error::JSON3.Error, buf::Base.CodeUnits{UInt8, String}, pos::Int64, T::Type)
+      @ JSON3 ~/.julia/packages/JSON3/rT1w2/src/JSON3.jl:30
+    [2] parse(str::String; jsonlines::Bool, numbertype::Nothing, kw::@Kwargs{})
+      @ JSON3 ~/.julia/packages/JSON3/rT1w2/src/read.jl:76
+    [3] parse
+      @ ~/.julia/packages/JSON3/rT1w2/src/read.jl:36 [inlined]
+    [4] #read#5
+      @ ~/.julia/packages/JSON3/rT1w2/src/read.jl:33 [inlined]
+    [5] read
+      @ ~/.julia/packages/JSON3/rT1w2/src/read.jl:31 [inlined]
+    [6] macro expansion
+      @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:24 [inlined]
+    [7] macro expansion
+      @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+    [8] macro expansion
+      @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:15 [inlined]
+    [9] macro expansion
+      @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+   [10] top-level scope
+      @ ~/work/recur/recur/julia-tests/main.command.warp.test.jl:13
+   [11] include(fname::String)
+      @ Base.MainInclude ./client.jl:487
+   [12] macro expansion
+      @ ~/work/recur/recur/julia-tests/runtests.jl:67 [inlined]
+   [13] macro expansion
+      @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+   [14] top-level scope
+      @ ~/work/recur/recur/julia-tests/runtests.jl:44
+  -> recur warp map demo.release -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-bubble-v1/complete --json
+  -> recur warp merge demo.release -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-bubble-v1/complete --json
+  -> recur warp status demo.release -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-bubble-v1/complete --json
+  -> recur warp merge demo.partial -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-bubble-v1/partial --json
+  -> recur warp status demo.partial -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-bubble-v1/partial --json
+  -> recur warp merge demo.explosion -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-bubble-v1/exploded --json
+  -> recur warp status demo.explosion -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-bubble-v1/exploded --json
+  -> recur init -d /tmp/jl_F9bJHh/coordinator
+  -> recur init -d /tmp/jl_F9bJHh/coordinator/workers/docs-monkey
+  -> recur init -d /tmp/jl_F9bJHh/coordinator/workers/test-bird
+  -> recur --json watch status coordinator-to-docs -d /tmp/jl_F9bJHh/coordinator/workers/docs-monkey
+  -> recur --json watch status docs-to-coordinator -d /tmp/jl_F9bJHh/coordinator
+  -> recur warp map coordinator.release -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-ring-v1/complete --json
+  -> recur warp merge coordinator.release -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-ring-v1/complete --json
+  -> recur warp status coordinator.release -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-ring-v1/complete --json
+  -> recur warp merge demo.evolved -d /tmp/jl_QX9Izk --json
+  -> recur warp collapse-plan demo.lane -d /tmp/jl_ES9aAG --json
+  -> recur warp merge demo.partial -d /tmp/jl_5cK7RH/partial --json
+  -> recur warp status demo.warp.slice.alpha -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-command-v1 --json
+  -> recur warp collapse-plan demo.warp.slice.alpha -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-command-v1 --json
+  -> recur warp config -d /home/runner/work/recur/recur/julia-tests/fixtures/warp-command-v1 --json
+  -> recur warp merge demo.release -d /tmp/jl_gOpbal --json
+  -> recur warp merge demo.release -d /tmp/jl_gOpbal --json
+  -> recur warp merge demo.release -d /tmp/jl_gOpbal --json
+  -> recur warp merge demo.release -d /tmp/jl_gOpbal --json
+  -> recur warp merge demo.release -d /tmp/jl_gOpbal --json
+  -> recur warp fingerprint source.txt -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp merge demo.release -d /tmp/jl_50ESMI --json
+  -> recur reveal demo -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp status demo.release -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp status demo.release -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp status demo.release -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp status demo.release -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json --allow-skipped
+  -> recur warp merge demo.release -d /tmp/jl_50ESMI --json
+  -> recur reveal demo -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp evidence evidence.json -d /tmp/jl_50ESMI --json
+  -> recur warp status demo.release.alpha -d /tmp/jl_Oqoali --json
+  -> recur reveal demo -d /tmp/jl_QGKUcD --json
+  -> recur warp config -d /tmp/jl_QGKUcD/docs --json
+  -> recur reveal demo -d /tmp/jl_QGKUcD
+  -> recur reveal demo -d /tmp/jl_QGKUcD --json
+  -> recur warp status demo.receipt -d /tmp/jl_futYGa --json
+  -> recur warp status demo.other -d /tmp/jl_futYGa --json
+  -> recur warp status demo.receipt -d /tmp/jl_futYGa --json
+Read-only companion help: /home/runner/work/recur/recur/target/debug/recur-warp
+
+============================================================
+  Testing: recur lane
+============================================================
+  -> recur lane --help -d test_environment
+  -> recur init -d /tmp/jl_zBLIfI
+  -> recur init -d /tmp/jl_ITgrKk
+  -> recur lane docs -d /tmp/jl_ITgrKk
+  -> recur init -d /tmp/jl_daLztO
+  -> recur lane impl -d /tmp/jl_daLztO
+  -> recur init -d /tmp/jl_vnug9y
+  -> recur lane tests -d /tmp/jl_vnug9y
+  -> recur init -d /tmp/jl_zRxG18
+  -> recur lane docs -d /tmp/jl_zRxG18
+  -> recur reveal docs -d /tmp/jl_zRxG18/lanes/docs --json
+  -> recur init -d /tmp/jl_rlGSYT
+  -> recur lane docs -d /tmp/jl_rlGSYT
+  -> recur lane impl -d /tmp/jl_rlGSYT
+  -> recur lane tests -d /tmp/jl_rlGSYT
+  -> recur lane -d /tmp/jl_rlGSYT --json
+  -> recur init -d /tmp/jl_3VNv7A
+  -> recur lane docs -d /tmp/jl_3VNv7A
+  -> recur lane docs -d /tmp/jl_3VNv7A
+  -> recur lane docs -d /tmp/jl_W00rKb
+  -> recur lane  -d /tmp/jl_nD1HSi
+
+============================================================
+  Testing: lane coordination via trace-id
+============================================================
+  -> recur trace-id lane.a.api.contract --scope ** --ext .txt --json -d /tmp/jl_rsGpyu
+  -> recur trace-id lane.a.api.contract --scope ** --ext .txt --json -d /tmp/jl_ekhMoL/lanes/docs
+  -> recur trace-id lane.a.thing.that.does.not.exist --scope ** --ext .txt --json -d /tmp/jl_hg2liA
+  -> recur trace-id lane.a.api.contract --scope ** --ext .txt --json -d /tmp/jl_qzltKF
+  -> recur trace-id lane.a.api.contract --scope ** --ext .txt --json -d /tmp/jl_I21gQS
+  -> recur files ** --sep . -d /tmp/jl_xnC2q6/lanes/docs
+  -> recur files ** --sep . -d /tmp/jl_xnC2q6/lanes/impl
+  -> recur files lane.** --sep . -d /tmp/jl_xnC2q6
+
+============================================================
+  Testing: recur-git checkpoint lane coverage
+============================================================
+  -> recur-git checkpoint --snapshot
+checkpoint snapshot includes active agent vault lanes: Test Failed at /home/runner/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:49
+  Expression: contains(snapshot_text, "lane.state.skippy1.current:")
+   Evaluated: contains("\n== Checkpoint Snapshot ==\ngit.branch: a.0.2.8\ngit.head: 7d042c4 feat(lang): implement bounded queries, static graph checks and candidate packaging\ngit.worktree: dirty=2\nlane.state.docs.current: docs/main.command.reveal.persona-skills.slice-0.todo.current.md, docs/main.command.watch.cli-art.todo.current.md\nlane.state.src.current: none\nlane.state.tests.passed: none\nlane.state.tests.failed: none\nlane.separator.docs: .\nlane.separator.src: _\n", "lane.state.skippy1.current:")
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:49 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:46 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:43
+checkpoint snapshot includes active agent vault lanes: Test Failed at /home/runner/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:50
+  Expression: contains(snapshot_text, "lane.state.skippy2.current:")
+   Evaluated: contains("\n== Checkpoint Snapshot ==\ngit.branch: a.0.2.8\ngit.head: 7d042c4 feat(lang): implement bounded queries, static graph checks and candidate packaging\ngit.worktree: dirty=2\nlane.state.docs.current: docs/main.command.reveal.persona-skills.slice-0.todo.current.md, docs/main.command.watch.cli-art.todo.current.md\nlane.state.src.current: none\nlane.state.tests.passed: none\nlane.state.tests.failed: none\nlane.separator.docs: .\nlane.separator.src: _\n", "lane.state.skippy2.current:")
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:50 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:46 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:43
+checkpoint snapshot includes active agent vault lanes: Test Failed at /home/runner/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:51
+  Expression: contains(snapshot_text, "lane.state.test-monkey.current:")
+   Evaluated: contains("\n== Checkpoint Snapshot ==\ngit.branch: a.0.2.8\ngit.head: 7d042c4 feat(lang): implement bounded queries, static graph checks and candidate packaging\ngit.worktree: dirty=2\nlane.state.docs.current: docs/main.command.reveal.persona-skills.slice-0.todo.current.md, docs/main.command.watch.cli-art.todo.current.md\nlane.state.src.current: none\nlane.state.tests.passed: none\nlane.state.tests.failed: none\nlane.separator.docs: .\nlane.separator.src: _\n", "lane.state.test-monkey.current:")
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:51 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:46 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:43
+checkpoint snapshot includes active agent vault lanes: Test Failed at /home/runner/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:52
+  Expression: contains(snapshot_text, "lane.state.git-monkey.current:")
+   Evaluated: contains("\n== Checkpoint Snapshot ==\ngit.branch: a.0.2.8\ngit.head: 7d042c4 feat(lang): implement bounded queries, static graph checks and candidate packaging\ngit.worktree: dirty=2\nlane.state.docs.current: docs/main.command.reveal.persona-skills.slice-0.todo.current.md, docs/main.command.watch.cli-art.todo.current.md\nlane.state.src.current: none\nlane.state.tests.passed: none\nlane.state.tests.failed: none\nlane.separator.docs: .\nlane.separator.src: _\n", "lane.state.git-monkey.current:")
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:52 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:46 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.recur-git.checkpoint.lanes.test.jl:43
+WARNING: redefinition of constant Main.RECUR_GIT_BIN. This may fail, cause incorrect answers, or produce other errors.
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/jl_Ere73n/.git/
+[master (root-commit) f064926] test fixture
+ 3 files changed, 3 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 fail.jl
+ create mode 100644 pass.jl
+recur-git test receipt: Test Failed at /home/runner/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:75
+  Expression: contains(snapshot_output, "lane.state.tests.passed: .recur\\tests\\main.command.tree.wildcard-current.test.$(head).passed.complete.md")
+   Evaluated: contains("\n== Checkpoint Snapshot ==\ngit.branch: master\ngit.head: f064926 test fixture\ngit.worktree: clean\nlane.state.docs.current: none\nlane.state.src.current: none\nlane.state.tests.passed: .recur/tests/main.command.tree.wildcard-current.test.f0649264f02e.passed.complete.md\nlane.state.tests.failed: .recur/tests/main.command.tree.wildcard-current.failure.test.f0649264f02e.failed.strange.md\nlane.separator.docs: .\nlane.separator.src: _\n", "lane.state.tests.passed: .recur\\tests\\main.command.tree.wildcard-current.test.f0649264f02e.passed.complete.md")
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] (::var"#630#631")(root::String)
+   @ Main ~/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:75
+ [3] mktempdir(fn::var"#630#631", parent::String; prefix::String)
+   @ Base.Filesystem ./file.jl:766
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem ./file.jl:762
+ [5] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:39 [inlined]
+ [6] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [7] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:39
+recur-git test receipt: Test Failed at /home/runner/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:76
+  Expression: contains(snapshot_output, "lane.state.tests.failed: .recur\\tests\\main.command.tree.wildcard-current.failure.test.$(head).failed.strange.md")
+   Evaluated: contains("\n== Checkpoint Snapshot ==\ngit.branch: master\ngit.head: f064926 test fixture\ngit.worktree: clean\nlane.state.docs.current: none\nlane.state.src.current: none\nlane.state.tests.passed: .recur/tests/main.command.tree.wildcard-current.test.f0649264f02e.passed.complete.md\nlane.state.tests.failed: .recur/tests/main.command.tree.wildcard-current.failure.test.f0649264f02e.failed.strange.md\nlane.separator.docs: .\nlane.separator.src: _\n", "lane.state.tests.failed: .recur\\tests\\main.command.tree.wildcard-current.failure.test.f0649264f02e.failed.strange.md")
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] (::var"#630#631")(root::String)
+   @ Main ~/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:76
+ [3] mktempdir(fn::var"#630#631", parent::String; prefix::String)
+   @ Base.Filesystem ./file.jl:766
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem ./file.jl:762
+ [5] macro expansion
+   @ ~/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:39 [inlined]
+ [6] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [7] top-level scope
+   @ ~/work/recur/recur/julia-tests/main.recur-git.test-receipt.test.jl:39
+
+============================================================
+  Testing: recur watch command
+============================================================
+  -> recur-watch --help
+  -> recur-watch 
+  -> recur-watch --filter **.current.md --dir /tmp/jl_pRTmVe
+  -> recur-watch --id docs-monkey --filter **.current.md --dir /tmp/jl_gDEj64 --poll-framing 1
+  -> recur watch status docs-monkey -d /tmp/jl_gDEj64
+  -> recur-watch --filter **.current.md --dir /tmp/jl_Tb0FIu/does-not-exist
+  -> recur-watch --filter **.current.md --dir /tmp/jl_a9uhvE --format json
+  -> recur-watch --filter **.current.md --dir /tmp/jl_y3OSrH --poll-framing 1
+  -> recur-watch --filter **.current.md --poll-framing 5s
+  -> recur-watch --id docs-monkey --filter **.current.md --dir /tmp/jl_xPBxnH --poll-framing 5s
+  -> recur watch status docs-monkey -d /tmp/jl_xPBxnH
+  -> recur-watch --filter **.current.md --poll-framing 0
+  -> recur-watch --filter **.current.md --poll-framing -1
+
+============================================================
+  Testing: recur psyche command
+============================================================
+  -> recur psyche --help
+  -> recur psyche --dir /tmp/jl_atcmmK
+  -> recur psyche --dir /tmp/jl_uL1SHv
+  -> recur psyche --dir /tmp/jl_5ximfa
+  -> recur psyche --dir /tmp/jl_s3mbnZ --format json
+psyche detects stale current files with stale-seconds threshold: Error During Test at /home/runner/work/recur/recur/julia-tests/main.recur.psyche.test.jl:167
+  Got exception outside of a @test
+  set_test_file_mtime is currently implemented only for Windows test hosts
+  Stacktrace:
+    [1] error(s::String)
+      @ Base ./error.jl:35
+    [2] set_test_file_mtime(path::String, unix_seconds::Float64)
+      @ Main ~/work/recur/recur/julia-tests/main.recur.psyche.test.jl:51
+    [3] macro expansion
+      @ ~/work/recur/recur/julia-tests/main.recur.psyche.test.jl:177 [inlined]
+    [4] macro expansion
+      @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+    [5] macro expansion
+      @ ~/work/recur/recur/julia-tests/main.recur.psyche.test.jl:168 [inlined]
+    [6] macro expansion
+      @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+    [7] top-level scope
+      @ ~/work/recur/recur/julia-tests/main.recur.psyche.test.jl:56
+    [8] include(fname::String)
+      @ Base.MainInclude ./client.jl:487
+    [9] macro expansion
+      @ ~/work/recur/recur/julia-tests/runtests.jl:90 [inlined]
+   [10] macro expansion
+      @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+   [11] top-level scope
+      @ ~/work/recur/recur/julia-tests/runtests.jl:44
+  -> recur psyche --dir /tmp/jl_6oJ6tc
+  -> recur psyche --dir /tmp/jl_Xq51ib
+  -> recur psyche --dir /tmp/jl_OY2tda --filter orphan-work --format json
+
+============================================================
+  Testing: recur trace-stats
+============================================================
+  -> recur trace-stats --help -d test_environment
+  PASS
+  -> recur trace-stats -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --sort-by latency -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --filter urgent-only -d test_environment
+  PASS
+  -> recur trace-stats --scope WideService --ext .cs --depth 6 --depth-guard hard-fail --json -d test_environment
+  PASS
+  -> recur trace-stats --scope WideService --ext .cs --depth 6 --depth-guard clamp --json -d test_environment
+  PASS
+  -> recur trace-stats --scope WideService --ext .cs --depth 6 --depth-guard hard-fail --force --json -d test_environment
+  PASS
+  -> recur trace-stats --scope LevelController.CreateWizard3.** --ext .cs --top 5 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --json -d test_environment
+  PASS
+  -> recur trace-stats --scope WideService --ext .cs --sort-by direct --top 1 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --sort-by transitive --top 3 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope CycleService --ext .cs --sort-by circular --top 1 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --sort-by depth --top 3 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --sort-by risk --top 3 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --filter circular-only --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --filter low-risk --json -d test_environment
+  PASS
+  -> <stdin> | recur trace-stats --scope ** --stdin --sort-by risk --json -d test_environment
+  PASS
+  -> recur trace-stats --scope DistinctCycleService --ext .cs --json -d test_environment
+  -> recur trace-stats --scope WideService --ext .cs --json -d test_environment
+  PASS
+  -> recur trace-stats --scope WideService --ext .cs --json -d test_environment
+  PASS
+  -> recur trace-stats --scope MediumService --ext .cs --json -d test_environment
+  PASS
+  -> recur trace-stats --scope HighService --ext .cs --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --sort-by transitive --top 2 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope ** --ext .cs --sort-by transitive --json -d test_environment
+  -> recur trace-stats --scope ** --ext .cs --sort-by transitive --top 3 --json -d test_environment
+  PASS
+  -> recur trace-stats --scope PerformanceService --ext .cs --json -d test_environment
+  PASS (7.55s)
+
+============================================================
+  Testing: recur trace-id
+============================================================
+  -> recur trace-id -d test_environment --help
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json -d test_environment
+  -> recur trace-id ulu.topic.dot.** --scope ** --ext .cs --json -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json -d test_environment
+  -> <stdin> | recur trace-id ulu.topic.dot.ownership.create --scope ** --stdin --ext .cs --depth 6 --depth-guard clamp --json -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --save-run --run-name ownership-create-primary -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --check-run --run-name ownership-create-primary -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --reuse-if-fresh --run-name ownership-create-primary -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --check-run --run-name ownership-create-primary -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --save-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --check-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --check-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --save-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --check-run --run-name transition.audit.order.42 -d test_environment
+  -> <piped> | recur merge --stdin --base pipeline.trace-id --sep . --json
+
+============================================================
+  Testing: recur trait
+============================================================
+  -> recur trait -d test_environment --help
+  -> recur init -d test_environment --force
+  -> recur trait -d test_environment set traversal_budget.max_depth 2
+  -> recur trait -d test_environment set traversal_budget.depth_guard clamp
+  -> recur trait -d test_environment get traversal_budget.max_depth
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --depth 6 --json -d test_environment
+  -> recur trait -d test_environment set traversal_budget.min_depth 2
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --depth 1 --json -d test_environment
+
+============================================================
+  Testing: Skippy adaptive comms demo
+============================================================
+  -> recur files skippy.** -d test_environment/skippy_demo
+  -> recur trace-id skippy.relationship.playful.precise.current --scope skippy.** --ext .txt --json -d test_environment/skippy_demo
+  -> recur trace-id skippy.case.separator.correction --scope skippy.** --ext .txt --json -d test_environment/skippy_demo
+  -> recur trace-id skippy.case.strong.insight --scope skippy.** --ext .txt --json -d test_environment/skippy_demo
+  -> recur trace-id skippy.case.release.admin --scope skippy.** --ext .txt --json -d test_environment/skippy_demo
+
+============================================================
+  Testing: Sudoku demo Phase 1
+============================================================
+  -> recur files sudoku.** -d test_sudoku
+  -> recur trace-id sudoku.r3.c5 --scope sudoku.** --ext .txt --json -d test_sudoku
+  -> recur trace-id sudoku.r3.c5 --scope sudoku.** --ext .txt --json -d test_sudoku
+  -> recur trace-id sudoku.r3.c5 --scope sudoku.** --ext .txt --json -d test_sudoku
+  -> recur trace-id sudoku.r3.c5 --scope sudoku.** --ext .txt --json -d test_sudoku
+  -> recur trace-id sudoku.r3.c5 --scope sudoku.** --ext .txt --json -d test_sudoku
+
+============================================================
+  Testing: Sudoku demo Phase 2
+============================================================
+Phase 2b: Puzzle fixture files exist on disk: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:265
+  Expression: isfile(joinpath(DEMO_PUZZLE_DIR, "sudoku.flow.r3c5.txt"))
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:265 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:263 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+  -> recur files sudoku.** -d /home/runner/work/recur/recur/julia-tests/../demos/sudoku/puzzles/easy-001
+Phase 2c: recur files sees puzzle files as sudoku.** hierarchy: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:276
+  Expression: length(paths) >= 2
+   Evaluated: 1 >= 2
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:276 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:270 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+Phase 2c: recur files sees puzzle files as sudoku.** hierarchy: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:278
+  Expression: any((p->begin
+            #= /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:278 =#
+            contains(p, "flow")
+        end), paths)
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:278 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:270 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+WARNING: replacing module Recur.
+Phase 2d: Recur.jl trace_id returns valid cascade for r3.c5: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:306
+  Expression: length(produce) >= 1
+   Evaluated: 0 >= 1
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:306 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:285 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+Phase 2d: Recur.jl trace_id returns valid cascade for r3.c5: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:307
+  Expression: length(consume) >= 1
+   Evaluated: 0 >= 1
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:307 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:285 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+Phase 2d: Recur.jl trace_id returns valid cascade for r3.c5: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:309
+  Expression: length(trigger) >= 1
+   Evaluated: 0 >= 1
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:309 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:285 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+WARNING: replacing module Recur.
+Phase 2e: Recur.jl files returns puzzle paths: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:317
+  Expression: length(paths) >= 2
+   Evaluated: 1 >= 2
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:317 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:314 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+Phase 2e: Recur.jl files returns puzzle paths: Test Failed at /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:319
+  Expression: any((p->begin
+            #= /home/runner/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:319 =#
+            contains(p, "flow")
+        end), paths)
+
+Stacktrace:
+ [1] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:673 [inlined]
+ [2] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:319 [inlined]
+ [3] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [4] macro expansion
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:314 [inlined]
+ [5] macro expansion
+   @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+ [6] top-level scope
+   @ ~/work/recur/recur/julia-tests/runtests.demo.sudoku.jl:247
+
+============================================================
+  Testing: Sudoku demo Phase 3
+============================================================
+WARNING: replacing module Generator.
+WARNING: replacing module Generator.
+WARNING: replacing module Generator.
+WARNING: replacing module Generator.
+WARNING: replacing module Recur.
+WARNING: replacing module Generator.
+WARNING: replacing module Recur.
+WARNING: replacing module Generator.
+WARNING: replacing module Recur.
+WARNING: replacing module Generator.
+WARNING: replacing module Recur.
+
+============================================================
+  Testing: Sudoku demo Phase 4
+============================================================
+WARNING: replacing module Engine.
+WARNING: replacing module Engine.
+WARNING: replacing module Engine.
+WARNING: replacing module Engine.
+WARNING: replacing module Engine.
+WARNING: replacing module Engine.
+WARNING: replacing module Generator.
+WARNING: replacing module Recur.
+WARNING: replacing module Engine.
+WARNING: replacing module Display.
+WARNING: replacing module Engine.
+WARNING: replacing module Display.
+WARNING: replacing module Generator.
+WARNING: replacing module Recur.
+Recur Complete Test Suite: Error During Test at /home/runner/work/recur/recur/julia-tests/runtests.jl:41
+  Got exception outside of a @test
+  LoadError: IOError: open("/home/runner/work/recur/recur/julia-tests/../target/release-safe/recur-watch.exe", 0, 0): no such file or directory (ENOENT)
+  Stacktrace:
+    [1] uv_error
+      @ ./libuv.jl:100 [inlined]
+    [2] open(path::String, flags::UInt8, mode::Int64)
+      @ Base.Filesystem ./filesystem.jl:121
+    [3] open
+      @ ./filesystem.jl:113 [inlined]
+    [4] sendfile(src::String, dst::String)
+      @ Base.Filesystem ./file.jl:998
+    [5] cp(src::String, dst::String; force::Bool, follow_symlinks::Bool)
+      @ Base.Filesystem ./file.jl:386
+    [6] cp(src::String, dst::String)
+      @ Base.Filesystem ./file.jl:378
+    [7] top-level scope
+      @ ~/work/recur/recur/julia-tests/main.demo.sudoku.watch.test.jl:20
+    [8] include(fname::String)
+      @ Base.MainInclude ./client.jl:487
+    [9] macro expansion
+      @ ~/work/recur/recur/julia-tests/runtests.jl:103 [inlined]
+   [10] macro expansion
+      @ /opt/hostedtoolcache/julia/1.10.12/x64/share/julia/stdlib/v1.10/Test/src/Test.jl:1582 [inlined]
+   [11] top-level scope
+      @ ~/work/recur/recur/julia-tests/runtests.jl:44
+  in expression starting at /home/runner/work/recur/recur/julia-tests/main.demo.sudoku.watch.test.jl:20
+Test Summary:                                                       | Pass  Fail  Error  Broken  Total     Time
+Recur Complete Test Suite                                           | 3679    16      3      73   3771  6m16.4s
+  recur files command                                               |   36                    4     40     0.2s
+  recur find command                                                |   38                          38     0.1s
+  recur tree command                                                |   16                    2     18     0.1s
+  recur tree wildcard current                                       |    7                           7     0.2s
+  recur related command                                             |   11                          11     0.1s
+  recur children command                                            |   11                          11     0.1s
+  recur id command                                                  |    2                    4      6     0.1s
+  recur stats command                                               |   22                          22     0.1s
+  recur merge command                                               |   19                          19     0.2s
+  Real pipeline compatibility                                       |   44                          44     6.5s
+  recur unflatten command (IMPROVEMENT15, expected broken)          |                        16     16     0.1s
+  recur callers command                                             |   25                          25     0.2s
+  recur callees command                                             |   24                   10     34     0.5s
+  recur trace command                                               |   81                    9     90     1.8s
+  recur dogfooding hierarchy tests                                  |   29                          29     0.1s
+  recur --stdin flag                                                |   80                          80     0.6s
+    stdin with files command                                        |   34                          34     0.3s
+      basic stdin filtering                                         |   22                          22     0.1s
+      stdin with empty input                                        |    2                           2     0.1s
+      stdin vs filesystem comparison                                |    4                           4     0.1s
+      stdin with --count flag                                       |    2                           2     0.0s
+      stdin with --json flag                                        |    4                           4     0.0s
+    stdin with find command                                         |    2                           2     0.0s
+    stdin with stats command                                        |    2                           2     0.0s
+    stdin with tree command                                         |    2                           2     0.0s
+    stdin with related command                                      |    2                           2     0.0s
+    stdin with children command                                     |    2                           2     0.0s
+    stdin with id command                                           |    1                           1     0.0s
+    stdin with callers command                                      |    2                           2     0.0s
+    stdin with callees command                                      |    2                           2     0.0s
+    stdin with trace command                                        |    2                           2     0.1s
+    stdin with Git workflows                                        |   15                          15     0.0s
+      git ls-files simulation                                       |    5                           5     0.0s
+      git diff --name-only simulation                               |    4                           4     0.0s
+      git diff --cached --name-only simulation                      |    2                           2     0.0s
+      git show --name-only simulation                               |    2                           2     0.0s
+      complex git pipeline simulation                               |    2                           2     0.0s
+    stdin error handling                                            |   14                          14     0.1s
+      stdin with invalid paths                                      |    2                           2     0.0s
+      stdin with mixed valid/invalid paths                          |    2                           2     0.0s
+      stdin with whitespace paths                                   |    4                           4     0.0s
+      stdin with windows paths                                      |    1                           1     0.0s
+      stdin with relative paths                                     |    2                           2     0.0s
+      stdin with large input                                        |    2                           2     0.1s
+      stdin with special characters                                 |    1                           1     0.0s
+  recur init command                                                |   33                          33     0.2s
+  recur reveal command                                              |   31                          31     0.4s
+  reveal artifact types                                             |  123                         123     1.9s
+  recur watch query command                                         |   28                          28     0.1s
+  recur version command                                             |   17                          17     0.1s
+  recur-version command                                             |   19                          19     0.1s
+  recur capability command                                          |   25                          25     0.2s
+  warp-status-v1 fixture contract                                   |   32                          32     0.1s
+  recur warp status                                                 |   69     2      1             72     1.9s
+    optimum                                                         |   23                          23     0.0s
+    sub-optimum                                                     |   23                          23     0.1s
+    blocked                                                         |   23                          23     0.0s
+    config-override                                                 |          2      1              3     1.8s
+  recur warp bubble composition                                     |   32                          32     0.1s
+  Warp recursive ring topology                                      |   44                          44     5.6s
+  recur-warp evolution                                              |   18                          18     0.3s
+  recur-warp collapse                                               |   22                          22     0.4s
+  recur-warp Slice completion                                       |   22                          22     0.2s
+  recur warp command structure                                      |   28                          28     0.1s
+  Whole-map prerequisites and stale contracts                       |   16                          16     0.7s
+  External evidence and checked map gates                           |   54                          54     1.4s
+  Policy-aware lifecycle receipt                                    |   12                          12     0.1s
+  Warp policy in reveal                                             |   11                          11     0.2s
+  Warp evidence integrity: suffix diagnosis                         |   15                          15     0.1s
+  Warp inventory CLI                                                |   36                          36     1.4s
+  Project-aware discovery policy and scope                          |   29                          29     0.7s
+  Discovery evidence scope and real repository root                 |   10                          10     0.4s
+  Warp documentation reconciliation (red-first)                     |   54                          54     0.9s
+  Companion suffix policy safety                                    |   81                          81     1.0s
+  Warp beginner commands                                            |   85                          85     1.0s
+  Warp remains ordinary searchable hierarchy                        |   54                          54     0.4s
+  Warp identity and optional preservation policy                    |   41                          41     0.5s
+  Identity policy edge cases                                        |  103                         103     1.2s
+  Warp list trait-style human presentation                          |   35                          35     0.4s
+  List rings, duplicate scopes, escaping and qualified counts       |   23                          23     0.3s
+  recur lane command                                                |   38                          38     0.2s
+  main.lang parser and compact views                                |   16                          16     0.3s
+  main.lang exact shared boundaries                                 |    7                           7     0.0s
+  main.lang algorithms                                              |    7                           7     0.4s
+  main.lang contracts and lanes                                     |    5                           5     0.2s
+  main.lang randomized algorithm evidence                           |  750                         750     0.0s
+  main.lang JSON surface                                            |    2                           2     0.4s
+  main.lang CLI bindings                                            |    3                           3     0.2s
+  main.lang query and companion contract                            |   18                          18     0.0s
+  main.lang watch coordination design contract                      |   14                          14     0.0s
+  Recur Lang baseline pure CLI                                      |   15                          15     0.3s
+  form validation source freezes explicit result routing            |    6                           6     0.0s
+  form validation parser and graph contracts (expected broken)      |                         1      1     0.0s
+  retry await source freezes bounded asynchronous control flow      |    8                           8     0.0s
+  retry await parser contract (expected broken)                     |                         1      1     0.0s
+  pathing source freezes the formal parallel graph                  |   22                          22     0.1s
+  pathing source freezes the first tech-tree game slice             |   26                          26     0.0s
+  pathing source freezes the layered prototype-map slice            |   27                          27     0.0s
+  pathing parser and static graph contracts (expected broken)       |    1                   13     14     0.2s
+  pathing deterministic execution contracts (expected broken)       |                         9      9     0.2s
+  Lane coordination via trace-id                                    |   28                          28     0.7s
+  recur-git checkpoint lane coverage                                |          4                     4     0.8s
+    checkpoint snapshot includes active agent vault lanes           |          4                     4     0.8s
+  recur-git test receipt                                            |   12     2                    14     1.9s
+  recur watch command                                               |   43                          43     0.3s
+  recur psyche command                                              |   24            1             25     0.3s
+    psyche help prints usage                                        |    4                           4     0.0s
+    psyche on clean vault returns exit 0 with no findings           |    2                           2     0.0s
+    psyche detects orphan status without work file                  |    2                           2     0.0s
+    psyche detects missing capsule in agent vault                   |    2                           2     0.0s
+    psyche json format emits parseable findings                     |    4                           4     0.0s
+    psyche detects stale current files with stale-seconds threshold |                 1              1     0.2s
+    psyche detects missing last-run after thrust                    |    3                           3     0.0s
+    psyche detects orphan work without status file                  |    3                           3     0.0s
+    psyche filter json isolates one v2 finding kind                 |    4                           4     0.1s
+  recur trace-stats command                                         |   97                          97  5m14.1s
+  recur trace-id command (IMPROVEMENT8)                             |   88                    3     91     0.8s
+  recur trait command                                               |   21                    1     22     0.1s
+  Capability traits                                                 |   65                          65     0.6s
+  Prompt discovery contract                                         |  379                         379     4.9s
+  Demo: Skippy Adaptive Comms + trace-id                            |   35                          35     0.3s
+  Demo: Sudoku + trace-id (Phase 1 — File Protocol)                 |   32                          32     0.1s
+  Demo: Sudoku Phase 2 — Recur.jl wrapper + puzzle fixture          |   12     8                    20     0.4s
+    Phase 2a: Recur.jl module exists and loads                      |    2                           2     0.0s
+    Phase 2b: Puzzle fixture files exist on disk                    |    3     1                     4     0.0s
+    Phase 2c: recur files sees puzzle files as sudoku.** hierarchy  |    3     2                     5     0.1s
+    Phase 2d: Recur.jl trace_id returns valid cascade for r3.c5     |    3     3                     6     0.1s
+    Phase 2e: Recur.jl files returns puzzle paths                   |    1     2                     3     0.1s
+  Demo: Sudoku Phase 3 — Generator.jl                               |   53                          53     1.9s
+  Demo: Sudoku Phase 4 — Engine.jl + Display.jl + Game.jl           |   39                          39     0.9s
+  Sudoku playable generation                                        |  139                         139     2.5s
+
+============================================================
+  Cleaning up test environment
+============================================================
+ERROR: LoadError: Some tests did not pass: 3679 passed, 16 failed, 3 errored, 73 broken.
+in expression starting at /home/runner/work/recur/recur/julia-tests/runtests.jl:39

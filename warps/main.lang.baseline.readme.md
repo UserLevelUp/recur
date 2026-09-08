@@ -1,6 +1,6 @@
 # Recur Lang baseline for a.0.2.8
 
-Status: planned; six pending slices, no implementation acceptance recorded.
+Status: all six slices accepted with declared evidence; inspect the live Warp and verification record.
 Warp: `main.lang.baseline`.
 
 Deliver the first useful Recur Lang query experience: select a bounded part of
@@ -15,12 +15,13 @@ belongs in `recur-lang`, including read-only advice and workflow selection.
 - `recur-lang warp` already provides a bounded receipt-backed transition.
 - WIR1 and CIR1 exist in `src/recur_lang_ir.rs` and
   `src/recur_lang_concurrent_ir.rs`; they are distinct versioned boundaries.
-- Core `recur lang` is still a proposed CLI family.
-- `main.improvement.30.static-graph` is an existing pending prerequisite Warp.
+- Core `recur lang list/show/report/check` implements the bounded query contract
+  in `docs/main.command.lang.query.readme.md`.
+- `main.improvement.30.static-graph` is the prerequisite Warp.
   It owns the shared analyzer over CIR1. This baseline consumes its result;
   it does not duplicate its implementation slices or inherit acceptance.
 - The Julia language demos supply reference behavior within their documented
-  prototype limits. They are not proof that the proposed Rust query CLI ships.
+  prototype limits. Candidate archive smoke checks establish the shipped CLI boundary.
 
 ## Slices
 
@@ -39,12 +40,12 @@ SGR1 prerequisite is a review gate, not an automatically enforced dependency
 merely because metadata names it. Inspect the child projection and its exact
 contract before accepting slice-1.
 
-## First action
+## Query and reassess
 
-Read the contract, inspect current binaries/source, and capture the existing
-Rust/Julia baseline. Freeze the bounded source-version support and initial
-command schema in slice-0. Resume the existing static-graph Warp for analyzer
-implementation before baseline slice-1 can be accepted.
+Read `main.lang.baseline.verification.md` for the source candidate, observed tests,
+archive checksums and per-gate applicability. Use the live projection to distinguish
+recorded declared acceptance from independently checked external evidence. Changes
+to the source/schema boundary require reassessing the affected gates.
 
 ```powershell
 recur reveal main.lang.baseline

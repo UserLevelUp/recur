@@ -3,9 +3,9 @@
   "warp_id": "main.improvement.30.static-graph",
   "goal": "Produce one deterministic, read-only static graph report over ConcurrentIr under the existing SGR1 acceptance contract.",
   "release_target": "a.0.2.8",
-  "planning_status": "draft",
-  "contract_document": "main.improvement.30.static-graph.todo.current.md",
-  "current_slice": "slice-0",
+  "planning_status": "accepted-with-declared-evidence",
+  "contract_document": "main.improvement.30.static-graph.contract.complete.md",
+  "current_slice": "slice-final",
   "required_slices": [
     {
       "slice_id": "slice-0",

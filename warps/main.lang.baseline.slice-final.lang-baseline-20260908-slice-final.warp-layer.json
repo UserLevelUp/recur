@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.baseline",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.lang.baseline.slice-final:v1",
+  "attempt_id": "lang-baseline-20260908-slice-final",
+  "result_state": "accepted",
+  "result_hash": "commit:cc7adee:lang-baseline-v1",
+  "evidence": {
+    "packaged-lang-smoke": [
+      "main.lang.baseline.evidence/chocolatey-smoke.json"
+    ],
+    "regression-and-companion-boundary": [
+      "main.lang.baseline.verification.md"
+    ]
+  },
+  "reason": null
+}

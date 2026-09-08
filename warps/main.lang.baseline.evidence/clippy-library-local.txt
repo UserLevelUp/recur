@@ -1,0 +1,406 @@
+   Compiling serde_core v1.0.228
+   Compiling serde v1.0.228
+    Checking regex-automata v0.4.13
+    Checking serde_spanned v0.6.9
+    Checking toml_datetime v0.6.11
+    Checking bstr v1.12.1
+    Checking toml_edit v0.22.27
+    Checking globset v0.4.18
+    Checking once_cell v1.21.3
+    Checking either v1.15.0
+    Checking tempfile v3.24.0
+    Checking serde_yaml v0.9.34+deprecated
+   Compiling recur v0.2.8 (C:\src\recur)
+    Checking rayon v1.11.0
+    Checking csv v1.4.0
+    Checking serde_json v1.0.149
+    Checking ignore v0.4.25
+    Checking toml v0.8.23
+    Checking regex v1.12.2
+warning: this `else { if .. }` block can be collapsed
+   --> src\tree.rs:177:16
+    |
+177 |           } else {
+    |  ________________^
+178 | |             if is_last {
+179 | |                 ("+-- ", "    ")
+180 | |             } else {
+...   |
+183 | |         };
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#collapsible_else_if
+    = note: `#[warn(clippy::collapsible_else_if)]` on by default
+help: collapse nested if block
+    |
+177 ~         } else if is_last {
+178 +             ("+-- ", "    ")
+179 +         } else {
+180 +             ("|-- ", "|   ")
+181 ~         };
+    |
+
+warning: use of `format!` to build up a string from an iterator
+   --> src\capability_traits.rs:137:5
+    |
+137 | /     CAPABILITIES
+138 | |         .iter()
+139 | |         .map(|c| {
+140 | |             format!(
+...   |
+144 | |         })
+145 | |         .collect()
+    | |__________________^
+    |
+help: call `fold` instead
+   --> src\capability_traits.rs:139:10
+    |
+139 |         .map(|c| {
+    |          ^^^
+help: ... and use the `write!` macro here
+   --> src\capability_traits.rs:140:13
+    |
+140 | /             format!(
+141 | |                 "\n[traits.{}]\npreference = \"unspecified\"\nnotes = \"\"\n",
+142 | |                 c.name
+143 | |             )
+    | |_____________^
+    = note: this can be written more efficiently by appending to a `String` directly
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect
+    = note: `#[warn(clippy::format_collect)]` on by default
+
+warning: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do
+  --> src\output.rs:34:40
+   |
+34 |     pub fn print_file(&mut self, path: &PathBuf) {
+   |                                        ^^^^^^^^ help: change this to: `&Path`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg
+   = note: `#[warn(clippy::ptr_arg)]` on by default
+
+warning: unnecessary `if let` since only the `Ok` variant of the iterator element is used
+   --> src\search.rs:95:9
+    |
+95  |           for entry in walker {
+    |           ^            ------ help: try: `walker.into_iter().flatten()`
+    |  _________|
+    | |
+96  | |             if let Ok(entry) = entry {
+97  | |                 // Skip hidden files/directories if requested
+98  | |                 if !self.options.include_hidden {
+...   |
+112 | |         }
+    | |_________^
+    |
+help: ...and remove the `if let` statement in the for loop
+   --> src\search.rs:96:13
+    |
+96  | /             if let Ok(entry) = entry {
+97  | |                 // Skip hidden files/directories if requested
+98  | |                 if !self.options.include_hidden {
+99  | |                     if let Some(name) = entry.file_name().to_str() {
+...   |
+111 | |             }
+    | |_____________^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_flatten
+    = note: `#[warn(clippy::manual_flatten)]` on by default
+
+warning: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do
+   --> src\search.rs:117:32
+    |
+117 |     fn match_path(&self, path: &PathBuf, pattern: &HierarchyPattern) -> Option<PathBuf> {
+    |                                ^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg
+help: change this to
+    |
+117 ~     fn match_path(&self, path: &Path, pattern: &HierarchyPattern) -> Option<PathBuf> {
+118 |         let filename = path.file_name()?.to_str()?;
+...
+141 |         if pattern.matches(&hier_name) {
+142 ~             Some(path.to_path_buf())
+    |
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+   --> src\search.rs:279:61
+    |
+279 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+    |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+   --> src\search.rs:279:46
+    |
+279 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                              ^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+    = note: `#[warn(clippy::lines_filter_map_ok)]` on by default
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:300:62
+    |
+300 | ...                   all_lines[start_before..line_num].iter().cloned().collect();
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+    = note: `#[warn(clippy::iter_cloned_collect)]` on by default
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:305:63
+    |
+305 | ...                   all_lines[line_num + 1..end_after].iter().cloned().collect();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+   --> src\search.rs:345:61
+    |
+345 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+    |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+   --> src\search.rs:345:46
+    |
+345 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                              ^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:354:62
+    |
+354 | ...                   all_lines[start_before..line_num].iter().cloned().collect();
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:359:63
+    |
+359 | ...                   all_lines[line_num + 1..end_after].iter().cloned().collect();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+   --> src\search.rs:407:61
+    |
+407 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+    |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+   --> src\search.rs:407:46
+    |
+407 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                              ^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:418:66
+    |
+418 | ...                   all_lines[start_before..line_num].iter().cloned().collect();
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:423:67
+    |
+423 | ...                   all_lines[line_num + 1..end_after].iter().cloned().collect();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+   --> src\search.rs:544:61
+    |
+544 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+    |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+   --> src\search.rs:544:46
+    |
+544 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                              ^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:562:62
+    |
+562 | ...                   all_lines[start_before..line_num].iter().cloned().collect();
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:566:63
+    |
+566 | ...                   all_lines[line_num + 1..end_after].iter().cloned().collect();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+   --> src\search.rs:655:61
+    |
+655 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+    |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+   --> src\search.rs:655:46
+    |
+655 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                              ^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+
+warning: this `map_or` can be simplified
+   --> src\search.rs:725:48
+    |
+725 | ...                   if just_entered && cap.get(0).map_or(false, |m| m.start() < skip_before)
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: use is_some_and instead: `cap.get(0).is_some_and(|m| m.start() < skip_before)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_map_or
+    = note: `#[warn(clippy::unnecessary_map_or)]` on by default
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:736:66
+    |
+736 | ...                   all_lines[start_before..line_num].iter().cloned().collect();
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\search.rs:740:67
+    |
+740 | ...                   all_lines[line_num + 1..end_after].iter().cloned().collect();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: this function has too many arguments (9/7)
+   --> src\search.rs:907:5
+    |
+907 | /     fn trace_recursive(
+908 | |         &mut self,
+909 | |         function: &str,
+910 | |         scope: &crate::parser::HierarchyPattern,
+...   |
+916 | |         call_site: Option<TraceCallSite>,
+917 | |     ) -> anyhow::Result<TraceNode> {
+    | |__________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments
+    = note: `#[warn(clippy::too_many_arguments)]` on by default
+
+warning: this expression creates a reference which is immediately dereferenced by the compiler
+    --> src\search.rs:1236:80
+     |
+1236 | ...                   let (is_hierarchical, depth) = file_hierarchy_info(&file_path);
+     |                                                                          ^^^^^^^^^^ help: change this to: `file_path`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrow
+     = note: `#[warn(clippy::needless_borrow)]` on by default
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+    --> src\search.rs:1271:49
+     |
+1271 |         let lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+     |                                                 ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+     |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+    --> src\search.rs:1271:34
+     |
+1271 |         let lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+     |                                  ^^^^^^^^^^^^^^
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+
+warning: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do
+    --> src\search.rs:1302:30
+     |
+1302 | fn file_hierarchy_info(path: &PathBuf) -> (bool, usize) {
+     |                              ^^^^^^^^ help: change this to: `&Path`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg
+
+warning: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do
+    --> src\search.rs:1352:36
+     |
+1352 | fn visit_key(function: &str, path: &PathBuf, line_number: usize) -> String {
+     |                                    ^^^^^^^^ help: change this to: `&Path`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg
+
+warning: parameter is only used in recursion
+   --> src\tree.rs:164:10
+    |
+164 |         &self,
+    |          ^^^^
+    |
+note: parameter used here
+   --> src\tree.rs:200:13
+    |
+200 |             self.format_child(output, child, &new_prefix, is_last_child, unicode);
+    |             ^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#only_used_in_recursion
+    = note: `#[warn(clippy::only_used_in_recursion)]` on by default
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+   --> src\trait\content_search.rs:127:61
+    |
+127 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+    |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+   --> src\trait\content_search.rs:127:46
+    |
+127 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                              ^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\trait\content_search.rs:148:62
+    |
+148 | ...                   all_lines[start_before..line_num].iter().cloned().collect();
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\trait\content_search.rs:153:63
+    |
+153 | ...                   all_lines[line_num + 1..end_after].iter().cloned().collect();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: `filter_map()` will run forever if the iterator repeatedly produces an `Err`
+   --> src\trait\content_search.rs:202:61
+    |
+202 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^ help: replace with: `map_while(Result::ok)`
+    |
+note: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error
+   --> src\trait\content_search.rs:202:46
+    |
+202 |                 let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();
+    |                                              ^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\trait\content_search.rs:211:62
+    |
+211 | ...                   all_lines[start_before..line_num].iter().cloned().collect();
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable
+   --> src\trait\content_search.rs:216:63
+    |
+216 | ...                   all_lines[line_num + 1..end_after].iter().cloned().collect();
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `.to_vec()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect
+
+warning: `recur` (lib) generated 33 warnings (run `cargo clippy --fix --lib -p recur` to apply 17 suggestions)
+    Finished `dev` profile [unoptimized] target(s) in 7.70s

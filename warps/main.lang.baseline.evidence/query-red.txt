@@ -1,0 +1,63 @@
+Recur Lang baseline pure CLI: Test Failed at C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:14
+  Expression: code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:4
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:14 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Recur Lang baseline pure CLI: Test Failed at C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:24
+  Expression: code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:4
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:24 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Recur Lang baseline pure CLI: Test Failed at C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:34
+  Expression: occursin("LANG003", output)
+   Evaluated: occursin("LANG003", "")
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:4
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:34 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Recur Lang baseline pure CLI: Test Failed at C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:37
+  Expression: code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::var"#2#3"{var"#query#query##0"{String}})(root::String)
+   @ Main C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:37
+ [3] mktempdir(fn::var"#2#3"{var"#query#query##0"{String}}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:4
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:35 [inlined]
+Test Summary:                | Pass  Fail  Total  Time
+Recur Lang baseline pure CLI |    1     4      5  1.6s
+RNG of the outermost testset: Random.Xoshiro(0x190a18847407c6d3, 0xd96f0a1257d00ef9, 0xece8a9f32944a3cf, 0x606c0c1e89e9c098, 0xe8d6dd510f336af1)
+ERROR: LoadError: Some tests did not pass: 1 passed, 4 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\julia-tests\main.command.lang.baseline.test.jl:3

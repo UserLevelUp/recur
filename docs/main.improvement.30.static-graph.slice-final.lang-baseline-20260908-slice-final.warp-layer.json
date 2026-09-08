@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.improvement.30.static-graph",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.improvement.30.static-graph.slice-final:v1",
+  "attempt_id": "lang-baseline-20260908-slice-final",
+  "result_state": "accepted",
+  "result_hash": "commit:7d042c4:sgr1-v1",
+  "evidence": {
+    "sgr1-regression-and-contract-acceptance": [
+      "main.improvement.30.static-graph.verification.md"
+    ]
+  },
+  "reason": null
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.baseline",
+  "slice_id": "slice-4",
+  "contract_hash": "contract:main.lang.baseline.slice-4:v1",
+  "attempt_id": "lang-baseline-20260908-slice-4",
+  "result_state": "accepted",
+  "result_hash": "commit:7d042c4:lang-query-v1",
+  "evidence": {
+    "scope-eventness-and-diagnostics": [
+      "main.lang.baseline.verification.md"
+    ]
+  },
+  "reason": null
+}

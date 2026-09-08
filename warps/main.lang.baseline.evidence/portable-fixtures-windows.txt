@@ -1,0 +1,49 @@
+  -> recur warp status demo.project.good -d C:\src\recur\julia-tests\fixtures\warp-status-v1\optimum --json
+  -> recur warp explain demo.project.good -d C:\src\recur\julia-tests\fixtures\warp-status-v1\optimum --json
+  -> recur warp next demo.project.good -d C:\src\recur\julia-tests\fixtures\warp-status-v1\optimum --json
+  -> recur warp status demo.project.needs -d C:\src\recur\julia-tests\fixtures\warp-status-v1\sub-optimum --json
+  -> recur warp explain demo.project.needs -d C:\src\recur\julia-tests\fixtures\warp-status-v1\sub-optimum --json
+  -> recur warp next demo.project.needs -d C:\src\recur\julia-tests\fixtures\warp-status-v1\sub-optimum --json
+  -> recur warp status demo.project.blocked -d C:\src\recur\julia-tests\fixtures\warp-status-v1\blocked --json
+  -> recur warp explain demo.project.blocked -d C:\src\recur\julia-tests\fixtures\warp-status-v1\blocked --json
+  -> recur warp next demo.project.blocked -d C:\src\recur\julia-tests\fixtures\warp-status-v1\blocked --json
+  -> recur warp status demo.project.custom -d C:\src\recur\julia-tests\fixtures\warp-status-v1\config-override --json
+  -> recur warp explain demo.project.custom -d C:\src\recur\julia-tests\fixtures\warp-status-v1\config-override --json
+  -> recur warp next demo.project.custom -d C:\src\recur\julia-tests\fixtures\warp-status-v1\config-override --json
+Test Summary:     | Pass  Total  Time
+recur warp status |   92     92  0.2s
+
+============================================================
+  Testing: recur-git checkpoint lane coverage
+============================================================
+  -> recur-git checkpoint --snapshot
+Test Summary:                      | Pass  Total  Time
+recur-git checkpoint lane coverage |    9      9  0.2s
+Initialized empty Git repository in C:/Users/marcn/AppData/Local/Temp/jl_S24xXz/.git/
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fail.jl', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pass.jl', LF will be replaced by CRLF the next time Git touches it
+[master (root-commit) 242478b] test fixture
+ 3 files changed, 3 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 fail.jl
+ create mode 100644 pass.jl
+Test Summary:          | Pass  Total  Time
+recur-git test receipt |   14     14  1.9s
+
+============================================================
+  Testing: recur psyche command
+============================================================
+  -> recur psyche --help
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_URsj2j
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_Dg1tIf
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_vKgY4t
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_ATUwKP --format json
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_isU4jn --stale-seconds 60
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_Ah2bDd
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_rq5wVM
+  -> recur psyche --dir C:\Users\marcn\AppData\Local\Temp\jl_IhrPcv --filter orphan-work --format json
+Test Summary:        | Pass  Total  Time
+recur psyche command |   27     27  0.4s
+Test Summary:                          | Pass  Total  Time
+demo.sudoku.watch cross-loop ping-pong |    3      3  1.6s

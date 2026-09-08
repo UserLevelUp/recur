@@ -1,0 +1,159 @@
+{
+  "blocked": [],
+  "completed_slices": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-final"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 4,
+    "pending": 0,
+    "required": 4,
+    "stale_contract": 0
+  },
+  "covered": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-final"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.improvement.30.static-graph.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "baseline-and-report-contract",
+      "satisfied": true,
+      "slice_id": "slice-0",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.improvement.30.static-graph.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "source-bound-deterministic-topology",
+      "satisfied": true,
+      "slice_id": "slice-1",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.improvement.30.static-graph.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "positive-and-negative-soundness-findings",
+      "satisfied": true,
+      "slice_id": "slice-2",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.improvement.30.static-graph.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "sgr1-regression-and-contract-acceptance",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "declared"
+    }
+  ],
+  "goal": "Produce one deterministic, read-only static graph report over ConcurrentIr under the existing SGR1 acceptance contract.",
+  "layers": [
+    "slice-0@lang-baseline-20260908-slice-0",
+    "slice-1@lang-baseline-20260908-slice-1",
+    "slice-2@lang-baseline-20260908-slice-2",
+    "slice-final@lang-baseline-20260908-slice-final"
+  ],
+  "manifest": "main.improvement.30.static-graph.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "//?/C:/src/recur/docs",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-and-report-contract"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-0",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "source-bound-deterministic-topology"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-1",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "positive-and-negative-soundness-findings"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-2",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-final:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "sgr1-regression-and-contract-acceptance"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-final",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [
+    "Declared current_slice 'slice-final' is no longer ready; selection not inferred."
+  ],
+  "warp_id": "main.improvement.30.static-graph"
+}

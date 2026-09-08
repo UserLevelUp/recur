@@ -50,8 +50,8 @@ The dated snapshot below remains historical.
 
 - `30`
   the broader Recur Lang proposal remains incremental; the static graph report
-  has the active focused cursor at
-  `docs/main.improvement.30.static-graph.todo.current.md`, while the living
+  is accepted at
+  `docs/main.improvement.30.static-graph.contract.complete.md`, while the living
   master work report remains visible at
   `docs/main.improvement.30.live-grid.todo.tracking.md`
 
@@ -87,7 +87,7 @@ Useful current adjacent lanes:
 
 - `docs/main.command.tests.progress.current.md`
 - `docs/main.command.trace-id.run.todo.current.md`
-- `docs/main.improvement.30.static-graph.todo.current.md`
+- `docs/main.improvement.30.static-graph.contract.complete.md`
 - `docs/main.improvement.pre27and28.todo.current.md`
 - `docs/main.demo.skippy.trace-id.todo.current.md`
 - `docs/main.demo.sudoku.trace-id.todo.current.md`

@@ -1,0 +1,36 @@
+Test Summary:                      | Pass  Total  Time
+main.lang parser and compact views |   16     16  0.4s
+Test Summary:                     | Pass  Total  Time
+main.lang exact shared boundaries |    7      7  0.1s
+Test Summary:        | Pass  Total  Time
+main.lang algorithms |    7      7  0.5s
+Test Summary:                 | Pass  Total  Time
+main.lang contracts and lanes |    5      5  0.2s
+Test Summary:                           | Pass  Total  Time
+main.lang randomized algorithm evidence |  750    750  0.1s
+Test Summary:          | Pass  Total  Time
+main.lang JSON surface |    2      2  0.3s
+Test Summary:          | Pass  Total  Time
+main.lang CLI bindings |    3      3  0.1s
+Test Summary:                          | Pass  Total  Time
+main.lang query and companion contract |   18     18  0.0s
+Test Summary:                                | Pass  Total  Time
+main.lang watch coordination design contract |   14     14  0.0s
+Test Summary:                                          | Pass  Total  Time
+form validation source freezes explicit result routing |    6      6  0.0s
+Test Summary:                                                | Broken  Total  Time
+form validation parser and graph contracts (expected broken) |      1      1  0.0s
+Test Summary:                                                | Pass  Total  Time
+retry await source freezes bounded asynchronous control flow |    8      8  0.0s
+Test Summary:                                 | Broken  Total  Time
+retry await parser contract (expected broken) |      1      1  0.0s
+Test Summary:                                    | Pass  Total  Time
+pathing source freezes the formal parallel graph |   22     22  0.1s
+Test Summary:                                         | Pass  Total  Time
+pathing source freezes the first tech-tree game slice |   26     26  0.0s
+Test Summary:                                          | Pass  Total  Time
+pathing source freezes the layered prototype-map slice |   27     27  0.0s
+Test Summary:                                               | Pass  Broken  Total  Time
+pathing parser and static graph contracts (expected broken) |    1      13     14  0.3s
+Test Summary:                                               | Broken  Total  Time
+pathing deterministic execution contracts (expected broken) |      9      9  0.2s

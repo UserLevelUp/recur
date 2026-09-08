@@ -1,0 +1,258 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a08039-4f19-7640-ae2d-b80f4e45260e",
+  "completed_slices": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-3",
+    "slice-4",
+    "slice-final"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 6,
+    "pending": 0,
+    "required": 6,
+    "stale_contract": 0
+  },
+  "covered": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-3",
+    "slice-4",
+    "slice-final"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "baseline-and-cli-contract",
+      "satisfied": true,
+      "slice_id": "slice-0",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "static-graph-prerequisite-reviewed",
+      "satisfied": true,
+      "slice_id": "slice-1",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "source-bound-model-projection",
+      "satisfied": true,
+      "slice_id": "slice-1",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "pure-list-show",
+      "satisfied": true,
+      "slice_id": "slice-2",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "lossless-header-body-footer",
+      "satisfied": true,
+      "slice_id": "slice-3",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "scope-eventness-and-diagnostics",
+      "satisfied": true,
+      "slice_id": "slice-4",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "regression-and-companion-boundary",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.lang.baseline.evidence/chocolatey-smoke.json",
+          "status": "declared"
+        }
+      ],
+      "gate": "packaged-lang-smoke",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "declared"
+    }
+  ],
+  "goal": "Deliver the bounded Recur Lang baseline for a.0.2.8: pure scoped queries and compact header/body/footer explanations, exact contracts and graph checks, with opinionated behavior in recur-lang.",
+  "layers": [
+    "slice-0@lang-baseline-20260908-slice-0",
+    "slice-1@lang-baseline-20260908-slice-1",
+    "slice-2@lang-baseline-20260908-slice-2",
+    "slice-3@lang-baseline-20260908-slice-3",
+    "slice-4@lang-baseline-20260908-slice-4",
+    "slice-final@lang-baseline-20260908-slice-final"
+  ],
+  "manifest": "main.lang.baseline.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "//?/C:/src/recur/warps",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.lang.baseline.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-and-cli-contract"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a08039-4f19-7f09-be59-0c7226dfe9f9",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.baseline.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "static-graph-prerequisite-reviewed",
+        "source-bound-model-projection"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-1",
+      "slice_uuid": "01a0803c-4aae-70e2-8245-ee804544bfb2",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.baseline.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "pure-list-show"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-2",
+      "slice_uuid": "01a0803c-4aae-70e2-8245-ee81585181fc",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.baseline.slice-3:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "lossless-header-body-footer"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-3",
+      "slice_uuid": "01a0803c-4aae-70e2-8245-ee8249646b49",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.baseline.slice-4:v1",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "scope-eventness-and-diagnostics"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-4",
+      "slice_uuid": "01a0803c-4aae-70e2-8245-ee83fe95581a",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.baseline.slice-final:v1",
+      "depends_on": [
+        "slice-4"
+      ],
+      "evidence_gates": [
+        "regression-and-companion-boundary",
+        "packaged-lang-smoke"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a08039-4f19-7e90-9386-b384acf566ca",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [
+    "Declared current_slice 'slice-final' is no longer ready; selection not inferred."
+  ],
+  "warp_id": "main.lang.baseline"
+}

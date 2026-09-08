@@ -1,10 +1,12 @@
 # Improvement 30: Static Graph Report v1
 
-Status: `todo.current`
-Priority: `active bounded implementation slice`
+Status: `contract.complete`
+Priority: `accepted bounded contract`
 Parent: `README.CORE.IMPROVEMENT30.md`
 Consumes: `main.improvement.30.concurrent-ir.contract.complete`
 Date: 2026-07-24
+Accepted: 2026-09-08, after implementation commit `7d042c4`.
+Evidence: `main.improvement.30.static-graph.verification.md` and the live Warp layers.
 Fixture: `demos/main.lang/main.lang.skippy-watch-coordination.recur`
 
 ## Manual Warp
@@ -18,7 +20,7 @@ E0(main.improvement.30.static-graph.todo.current)
 This Eventness transition remains manual. A parser, report, or passing test is
 evidence for completion; none may rename its own lifecycle artifact.
 
-## Starting Eventness
+## Starting Eventness (historical contract baseline)
 
 `WIR1` and `CIR1` are complete contracts. `CIR1` now provides source-hashed,
 source-spanned, typed facts for five lanes, projected WorkOrders, WorkReceipt

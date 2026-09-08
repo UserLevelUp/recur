@@ -1,6 +1,6 @@
 # Improvement 30: Recur Lang Coordination Contracts
 
-Status: `todo.future-plan` (umbrella proposal; static-graph sub-lane is current)
+Status: `todo.future-plan` (umbrella proposal; static graph accepted, baseline queries implemented)
 Date: 2026-07-24
 
 ## Objective
@@ -21,7 +21,7 @@ and integration state easy to query and difficult to accidentally ignore.
 ## Canonical Proposal
 
 - `README.CORE.IMPROVEMENT30.md`
-- `docs/main.improvement.30.static-graph.todo.current.md`
+- `docs/main.improvement.30.static-graph.contract.complete.md`
 - `docs/main.improvement.30.live-grid.todo.tracking.md`
 
 ## Current Posture
@@ -39,9 +39,10 @@ and integration state easy to query and difficult to accidentally ignore.
   intended compact flow, watcher topology, lane state machine, work orders,
   receipts, joins, and bounded repair loop.
 - It does not yet provide production lane coordination, durable multi-lane
-  receipts, target-language compilation, or static circular-reference reports.
-- The umbrella remains incremental. The static graph report is the active
-  focused cursor. The living master work report remains tracked as the product
+  receipts or target-language compilation. SGR1 now reports static cycles,
+  unreachable lanes and unsatisfied joins within CIR1; pure baseline queries expose it.
+- The umbrella remains incremental. Inspect `main.lang.baseline` for query
+  acceptance. The living master work report remains tracked as the product
   destination without activating its snapshot or live view prematurely.
 
 ## Product Boundary
@@ -78,7 +79,7 @@ standardizes on a three-tier anatomy:
 
 The single current implementation update is:
 
-- `docs/main.improvement.30.static-graph.todo.current.md`
+- `docs/main.improvement.30.static-graph.contract.complete.md`
 
 Freeze `SGR1` as one deterministic, read-only dependency and wait report over
 the accepted concurrent IR. It must expose shared soundness facts without
@@ -157,7 +158,7 @@ recur files "main.command.lang.**" -d docs/
 - `docs/main.command.lang.readme.md`
 - `README.CORE.EVENTNESS.md`
 - `docs/main.improvement.30.contract.watch-coordination-v0.todo.future-plan.md`
-- `docs/main.improvement.30.static-graph.todo.current.md`
+- `docs/main.improvement.30.static-graph.contract.complete.md`
 - `docs/main.improvement.30.live-grid.todo.tracking.md`
 - `docs/main.recur.purity.decision.md`
 - `docs/main.improvement.delivery-loop.recurring.md`
@@ -174,8 +175,8 @@ defines: recur-lang.coordinator companion lane state receipt validation and ACK/
 defines: recur.lang.subsystem.composition accepted child models contract into versioned blocks with separate parent integration Eventness
 consumes: README.CORE.IMPROVEMENT30 canonical Recur Lang coordination proposal
 consumes: main.recur.purity.decision core recur query and companion actor split
-produces: main.improvement.30.discovery Recur queries for the active static-graph cursor and tracked live-grid destination
+produces: main.improvement.30.discovery Recur queries for accepted static graphs and the tracked live-grid destination
 triggers: main.improvement.30.contract future versioned coordination IR and JSON schema
-triggers: main.improvement.30.static-graph.todo.current cycle reachability join and wait report over CIR1
+consumes: main.improvement.30.static-graph.contract.complete cycle reachability join and wait report over CIR1
 triggers: main.improvement.30.dogfooding future Recur Rust algorithm validation lane
 ```

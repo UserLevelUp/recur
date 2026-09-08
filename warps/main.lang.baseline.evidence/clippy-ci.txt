@@ -1,0 +1,1119 @@
+[1m[32m    Checking[0m memchr v2.7.6
+[1m[32m    Checking[0m libc v0.2.180
+[1m[32m    Checking[0m serde_core v1.0.228
+[1m[32m    Checking[0m cfg-if v1.0.4
+[1m[32m    Checking[0m crossbeam-utils v0.8.21
+[1m[32m    Checking[0m regex-syntax v0.8.8
+[1m[32m    Checking[0m aho-corasick v1.1.4
+[1m[32m    Checking[0m anstyle v1.0.13
+[1m[32m    Checking[0m crossbeam-epoch v0.9.18
+[1m[32m    Checking[0m itoa v1.0.17
+[1m[32m    Checking[0m utf8parse v0.2.2
+[1m[32m    Checking[0m typenum v1.20.1
+[1m[32m    Checking[0m anstyle-parse v0.2.7
+[1m[32m    Checking[0m crossbeam-deque v0.8.6
+[1m[32m    Checking[0m colorchoice v1.0.4
+[1m[32m    Checking[0m log v0.4.29
+[1m[32m    Checking[0m equivalent v1.0.2
+[1m[32m    Checking[0m hashbrown v0.16.1
+[1m[32m    Checking[0m regex-automata v0.4.13
+[1m[32m    Checking[0m generic-array v0.14.7
+[1m[32m    Checking[0m serde v1.0.228
+[1m[32m    Checking[0m bitflags v2.10.0
+[1m[32m    Checking[0m anstyle-query v1.1.5
+[1m[32m    Checking[0m same-file v1.0.6
+[1m[32m    Checking[0m is_terminal_polyfill v1.70.2
+[1m[32m    Checking[0m either v1.15.0
+[1m[32m    Checking[0m anstream v0.6.21
+[1m[32m    Checking[0m walkdir v2.5.0
+[1m[32m    Checking[0m indexmap v2.13.0
+[1m[32m    Checking[0m zmij v1.0.18
+[1m[32m    Checking[0m clap_lex v0.7.7
+[1m[32m    Checking[0m strsim v0.11.1
+[1m[32m    Checking[0m serde_json v1.0.149
+[1m[32m    Checking[0m clap_builder v4.5.56
+[1m[32m    Checking[0m serde_spanned v0.6.9
+[1m[32m    Checking[0m toml_datetime v0.6.11
+[1m[32m    Checking[0m rayon-core v1.13.0
+[1m[32m    Checking[0m crypto-common v0.1.7
+[1m[32m    Checking[0m block-buffer v0.10.4
+[1m[32m    Checking[0m inotify-sys v0.1.5
+[1m[32m    Checking[0m linux-raw-sys v0.11.0
+[1m[32m    Checking[0m toml_write v0.1.2
+[1m[32m    Checking[0m bitflags v1.3.2
+[1m[32m    Checking[0m winnow v0.7.14
+[1m[32m    Checking[0m bstr v1.12.1
+[1m[32m    Checking[0m regex v1.12.2
+[1m[32m    Checking[0m linux-raw-sys v0.4.15
+[1m[32m    Checking[0m once_cell v1.21.3
+[1m[32m    Checking[0m ryu v1.0.23
+[1m[32m    Checking[0m globset v0.4.18
+[1m[32m    Checking[0m clap v4.5.56
+[1m[32m    Checking[0m rustix v1.1.3
+[1m[32m    Checking[0m inotify v0.9.6
+[1m[32m    Checking[0m rustix v0.38.44
+[1m[32m    Checking[0m rayon v1.11.0
+[1m[32m    Checking[0m digest v0.10.7
+[1m[32m    Checking[0m toml_edit v0.22.27
+[1m[32m    Checking[0m getrandom v0.3.4
+[1m[32m    Checking[0m mio v0.8.11
+[1m[32m    Checking[0m filetime v0.2.27
+[1m[32m    Checking[0m csv-core v0.1.13
+[1m[32m    Checking[0m crossbeam-channel v0.5.15
+[1m[32m    Checking[0m fastrand v2.3.0
+[1m[32m    Checking[0m cpufeatures v0.2.17
+[1m[32m    Checking[0m unsafe-libyaml v0.2.11
+[1m[32m   Compiling[0m recur v0.2.8 (/home/runner/work/recur/recur)
+[1m[32m    Checking[0m notify v6.1.1
+[1m[32m    Checking[0m sha2 v0.10.9
+[1m[32m    Checking[0m serde_yaml v0.9.34+deprecated
+[1m[32m    Checking[0m tempfile v3.24.0
+[1m[32m    Checking[0m thiserror v1.0.69
+[1m[32m    Checking[0m csv v1.4.0
+[1m[32m    Checking[0m toml v0.8.23
+[1m[32m    Checking[0m terminal_size v0.3.0
+[1m[32m    Checking[0m anyhow v1.0.100
+[1m[32m    Checking[0m ignore v0.4.25
+[1m[32m    Checking[0m atty v0.2.14
+[1m[32m    Checking[0m quick-xml v0.37.5
+[1m[32m    Checking[0m termcolor v1.4.1
+[1m[32m    Checking[0m num-traits v0.2.19
+[1m[32m    Checking[0m zerocopy v0.8.37
+[1m[32m    Checking[0m plotters-backend v0.3.7
+[1m[32m    Checking[0m predicates-core v1.0.9
+[1m[32m    Checking[0m ciborium-io v0.2.2
+[1m[32m    Checking[0m plotters-svg v0.3.7
+[1m[32m    Checking[0m itertools v0.10.5
+[1m[32m    Checking[0m float-cmp v0.10.0
+[1m[32m    Checking[0m normalize-line-endings v0.3.0
+[1m[32m    Checking[0m cast v0.3.0
+[0m[1m[33mwarning[0m[0m[1m: this `else { if .. }` block can be collapsed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/tree.rs:177:16[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m177[0m[0m [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m        } else {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m ________________^[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            if is_last {[0m
+[0m[1m[38;5;12m179[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                ("+-- ", "    ")[0m
+[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            } else {[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m183[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        };[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#collapsible_else_if[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::collapsible_else_if)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: collapse nested if block[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m177[0m[0m [0m[0m[38;5;10m~ [0m[0m        } else [0m[0m[38;5;10mif is_last {[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[38;5;10m+             ("+-- ", "    ")[0m
+[0m[1m[38;5;12m179[0m[0m [0m[0m[38;5;10m+         } else {[0m
+[0m[1m[38;5;12m180[0m[0m [0m[0m[38;5;10m+             ("|-- ", "|   ")[0m
+[0m[1m[38;5;12m181[0m[0m [0m[0m[38;5;10m~         }[0m[0m;[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[1m[32m    Checking[0m difflib v0.4.0
+[1m[32m    Checking[0m termtree v0.5.1
+[1m[32m    Checking[0m predicates-tree v1.0.12
+[1m[32m    Checking[0m predicates v3.1.3
+[1m[32m    Checking[0m plotters v0.3.7
+[1m[32m    Checking[0m criterion-plot v0.5.0
+[1m[32m    Checking[0m tinytemplate v1.2.1
+[1m[32m    Checking[0m is-terminal v0.4.17
+[1m[32m    Checking[0m wait-timeout v0.2.1
+[1m[32m    Checking[0m oorandom v11.1.5
+[1m[32m    Checking[0m anes v0.1.6
+[1m[32m    Checking[0m assert_cmd v2.1.2
+[0m[1m[33mwarning[0m[0m[1m: use of `format!` to build up a string from an iterator[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/capability_traits.rs:137:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m137[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m    CAPABILITIES[0m
+[0m[1m[38;5;12m138[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        .iter()[0m
+[0m[1m[38;5;12m139[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        .map(|c| {[0m
+[0m[1m[38;5;12m140[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            format!([0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m144[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        })[0m
+[0m[1m[38;5;12m145[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        .collect()[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|__________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: call `fold` instead[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/capability_traits.rs:139:10[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m139[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        .map(|c| {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;14m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: ... and use the `write!` macro here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/capability_traits.rs:140:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m140[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m/[0m[0m [0m[0m            format!([0m
+[0m[1m[38;5;12m141[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|[0m[0m [0m[0m                "\n[traits.{}]\npreference = \"unspecified\"\nnotes = \"\"\n",[0m
+[0m[1m[38;5;12m142[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|[0m[0m [0m[0m                c.name[0m
+[0m[1m[38;5;12m143[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|[0m[0m [0m[0m            )[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|_____________^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this can be written more efficiently by appending to a `String` directly[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::format_collect)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/output.rs:34:40[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m34[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn print_file(&mut self, path: &PathBuf) {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                        [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: change this to: `&Path`[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::ptr_arg)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: unnecessary `if let` since only the `Ok` variant of the iterator element is used[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:95:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m95[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m   [0m[0m        for entry in walker {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[33m^[0m[0m            [0m[0m[1m[38;5;12m------[0m[0m [0m[0m[1m[38;5;12mhelp: try: `walker.into_iter().flatten()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m _________|[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m96[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            if let Ok(entry) = entry {[0m
+[0m[1m[38;5;12m97[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                // Skip hidden files/directories if requested[0m
+[0m[1m[38;5;12m98[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                if !self.options.include_hidden {[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m112[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: ...and remove the `if let` statement in the for loop[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:96:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m96[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m/[0m[0m [0m[0m            if let Ok(entry) = entry {[0m
+[0m[1m[38;5;12m97[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|[0m[0m [0m[0m                // Skip hidden files/directories if requested[0m
+[0m[1m[38;5;12m98[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|[0m[0m [0m[0m                if !self.options.include_hidden {[0m
+[0m[1m[38;5;12m99[0m[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|[0m[0m [0m[0m                    if let Some(name) = entry.file_name().to_str() {[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[38;5;14m|[0m
+[0m[1m[38;5;12m111[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|[0m[0m [0m[0m            }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;14m|_____________^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_flatten[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::manual_flatten)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:117:32[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m117[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn match_path(&self, path: &PathBuf, pattern: &HierarchyPattern) -> Option<PathBuf> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                [0m[0m[1m[33m^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m117[0m[0m [0m[0m[38;5;10m~ [0m[0m    fn match_path(&self, path: [0m[0m[38;5;10m&Path[0m[0m, pattern: &HierarchyPattern) -> Option<PathBuf> {[0m
+[0m[1m[38;5;12m118[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         let filename = path.file_name()?.to_str()?;[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m141[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         if pattern.matches(&hier_name) {[0m
+[0m[1m[38;5;12m142[0m[0m [0m[0m[38;5;10m~ [0m[0m            Some([0m[0m[38;5;10mpath.to_path_buf()[0m[0m)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:279:61[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m279[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:279:46[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m279[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::lines_filter_map_ok)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:300:62[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m300[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[start_before..line_num].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::iter_cloned_collect)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:305:63[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m305[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[line_num + 1..end_after].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:345:61[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m345[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:345:46[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m345[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:354:62[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m354[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[start_before..line_num].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:359:63[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m359[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[line_num + 1..end_after].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:407:61[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m407[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:407:46[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m407[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:418:66[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m418[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[start_before..line_num].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:423:67[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m423[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[line_num + 1..end_after].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:544:61[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m544[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:544:46[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m544[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:562:62[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m562[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[start_before..line_num].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:566:63[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m566[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[line_num + 1..end_after].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:655:61[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m655[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:655:46[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m655[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this `map_or` can be simplified[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:725:48[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m725[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   if just_entered && cap.get(0).map_or(false, |m| m.start() < skip_before)[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                          [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: use is_some_and instead: `cap.get(0).is_some_and(|m| m.start() < skip_before)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_map_or[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::unnecessary_map_or)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:736:66[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m736[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[start_before..line_num].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:740:67[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m740[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[line_num + 1..end_after].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (9/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:907:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m907[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m    fn trace_recursive([0m
+[0m[1m[38;5;12m908[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        &mut self,[0m
+[0m[1m[38;5;12m909[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        function: &str,[0m
+[0m[1m[38;5;12m910[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        scope: &crate::parser::HierarchyPattern,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m916[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        call_site: Option<TraceCallSite>,[0m
+[0m[1m[38;5;12m917[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ) -> anyhow::Result<TraceNode> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|__________________________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::too_many_arguments)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this expression creates a reference which is immediately dereferenced by the compiler[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:1236:80[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1236[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   let (is_hierarchical, depth) = file_hierarchy_info(&file_path);[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                                                          [0m[0m[1m[33m^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: change this to: `file_path`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrow[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::needless_borrow)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:1271:49[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1271[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                                 [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:1271:34[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1271[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        let lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                  [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:1302:30[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1302[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn file_hierarchy_info(path: &PathBuf) -> (bool, usize) {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                              [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: change this to: `&Path`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m    [0m[0m[1m[38;5;12m--> [0m[0msrc/search.rs:1352:36[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1352[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn visit_key(function: &str, path: &PathBuf, line_number: usize) -> String {[0m
+[0m     [0m[0m[1m[38;5;12m|[0m[0m                                    [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: change this to: `&Path`[0m
+[0m     [0m[0m[1m[38;5;12m|[0m
+[0m     [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+
+[0m[1m[33mwarning[0m[0m[1m: parameter is only used in recursion[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/tree.rs:164:10[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m164[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        &self,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: parameter used here[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/tree.rs:200:13[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m200[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            self.format_child(output, child, &new_prefix, is_last_child, unicode);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m             [0m[0m[1m[38;5;10m^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#only_used_in_recursion[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::only_used_in_recursion)]` on by default[0m
+
+[1m[32m    Checking[0m half v2.7.1
+[1m[32m    Checking[0m ciborium-ll v0.2.2
+[1m[32m    Checking[0m ciborium v0.2.2
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:127:61[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m127[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:127:46[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m127[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:148:62[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m148[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[start_before..line_num].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:153:63[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m153[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[line_num + 1..end_after].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `filter_map()` will run forever if the iterator repeatedly produces an `Err`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:202:61[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m202[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                             [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: replace with: `map_while(Result::ok)`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;10mnote[0m[0m: this expression returning a `std::io::Lines` may produce an infinite number of `Err` in case of a read error[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:202:46[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m202[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let all_lines: Vec<String> = reader.lines().filter_map(|l| l.ok()).collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                              [0m[0m[1m[38;5;10m^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#lines_filter_map_ok[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:211:62[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m211[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[start_before..line_num].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `iter().cloned().collect()` on a slice to create a `Vec`. Calling `to_vec()` is both faster and more readable[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/content_search.rs:216:63[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m216[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m...[0m[0m                   all_lines[line_num + 1..end_after].iter().cloned().collect();[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                         [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: try: `.to_vec()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#iter_cloned_collect[0m
+
+[1m[33mwarning[0m[1m:[0m `recur` (lib) generated 33 warnings (run `cargo clippy --fix --lib -p recur` to apply 17 suggestions)
+[1m[32m    Checking[0m criterion v0.5.1
+[0m[1m[33mwarning[0m[0m[1m: this `if` statement can be collapsed[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_flatten_xml.rs:151:9[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m151[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m        if max_depth == 0 || current_depth < max_depth {[0m
+[0m[1m[38;5;12m152[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m            if !node.children.is_empty() {[0m
+[0m[1m[38;5;12m153[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                flatten_xml_tree([0m
+[0m[1m[38;5;12m154[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m                    &node.children,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m162[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m        }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#collapsible_if[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::collapsible_if)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: collapse nested if block[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m151[0m[0m [0m[0m[38;5;10m~ [0m[0m        [0m[0m[38;5;10mif (max_depth == 0 || current_depth < max_depth) && !node.children.is_empty() {[0m
+[0m[1m[38;5;12m152[0m[0m [0m[0m[38;5;10m+             flatten_xml_tree([0m
+[0m[1m[38;5;12m153[0m[0m [0m[0m[38;5;10m+                 &node.children,[0m
+[0m[1m[38;5;12m154[0m[0m [0m[0m[38;5;10m+                 &path,[0m
+[0m[1m[38;5;12m155[0m[0m [0m[0m[38;5;10m+                 separator,[0m
+[0m[1m[38;5;12m156[0m[0m [0m[0m[38;5;10m+                 max_depth,[0m
+[0m[1m[38;5;12m157[0m[0m [0m[0m[38;5;10m+                 current_depth + 1,[0m
+[0m[1m[38;5;12m158[0m[0m [0m[0m[38;5;10m+                 entries,[0m
+[0m[1m[38;5;12m159[0m[0m [0m[0m[38;5;10m+             );[0m
+[0m[1m[38;5;12m160[0m[0m [0m[0m[38;5;10m+         }[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (9/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_version_impl.rs:476:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m476[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn scan_csv_version([0m
+[0m[1m[38;5;12m477[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    root: &Path,[0m
+[0m[1m[38;5;12m478[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    artifact: &CurrentArtifact,[0m
+[0m[1m[38;5;12m479[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    version: &VersionFile,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m485[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    manifest: &ManifestInfo,[0m
+[0m[1m[38;5;12m486[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<Option<QueryEvidence>> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|__________________________________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::too_many_arguments)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: manual case-insensitive ASCII comparison[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_version_impl.rs:487:8[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m487[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    if artifact.format.to_ascii_lowercase() != "csv" {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_ignore_case_cmp[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::manual_ignore_case_cmp)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: consider using `.eq_ignore_ascii_case()` instead[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m487[0m[0m [0m[0m[1m[38;5;12m| [0m[0m    if [0m[0m[38;5;10m!artifact.format.eq_ignore_ascii_case("csv")[0m[0m {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[38;5;10m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[0m[1m[33mwarning[0m[0m[1m: manual case-insensitive ASCII comparison[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_version_impl.rs:549:12[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m549[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        if artifact.format.to_ascii_lowercase() != "csv" {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_ignore_case_cmp[0m
+[0m[1m[38;5;14mhelp[0m[0m: consider using `.eq_ignore_ascii_case()` instead[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m549[0m[0m [0m[0m[1m[38;5;12m| [0m[0m        if [0m[0m[38;5;10m!artifact.format.eq_ignore_ascii_case("csv")[0m[0m {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[38;5;10m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[0m[1m[33mwarning[0m[0m[1m: use of `format!` to build up a string from an iterator[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/recur_warp_create.rs:90:23[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m90[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let hex: String = bytes.iter().map(|b| format!("{b:02x}")).collect();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                       [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: call `fold` instead[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/recur_warp_create.rs:90:36[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m90[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let hex: String = bytes.iter().map(|b| format!("{b:02x}")).collect();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                    [0m[0m[1m[38;5;14m^^^[0m
+[0m[1m[38;5;14mhelp[0m[0m: ... and use the `write!` macro here[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/recur_warp_create.rs:90:44[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m90[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    let hex: String = bytes.iter().map(|b| format!("{b:02x}")).collect();[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m                                            [0m[0m[1m[38;5;14m^^^^^^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: this can be written more efficiently by appending to a `String` directly[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#format_collect[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::format_collect)]` on by default[0m
+
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur-version") generated 3 warnings (run `cargo clippy --fix --bin "recur-version"` to apply 2 suggestions)
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur-warp") generated 1 warning
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (8/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/recur_git_main.rs:170:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m170[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn execute_checkpoint([0m
+[0m[1m[38;5;12m171[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    emit_parallel: bool,[0m
+[0m[1m[38;5;12m172[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    append_parallel: bool,[0m
+[0m[1m[38;5;12m173[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    checkpoint_id: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    run_julia_tests: bool,[0m
+[0m[1m[38;5;12m179[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::too_many_arguments)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this manual char comparison can be written more succinctly[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/recur_git_main.rs:397:16[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m397[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    stem.split(|c| c == '.' || c == '_' || c == '-')[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider using an array of `char`: `['.', '_', '-']`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_pattern_char_comparison[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::manual_pattern_char_comparison)]` on by default[0m
+
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur-git") generated 2 warnings (run `cargo clippy --fix --bin "recur-git"` to apply 1 suggestion)
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur-git" test) generated 2 warnings (2 duplicates)
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur-version" test) generated 3 warnings (3 duplicates)
+[0m[1m[33mwarning[0m[0m[1m: variant `Element` is never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_flatten_impl.rs:32:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m31[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum EntryKind {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12mvariant in this enum[0m
+[0m[1m[38;5;12m32[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Element,[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (11/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_callees_impl.rs:12:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    function: String,[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    scope: String,[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::too_many_arguments)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (11/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_callers_impl.rs:12:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    function: String,[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    scope: String,[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (11/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_files_impl.rs:12:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    pattern: String,[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ext: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (13/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_files_impl.rs:47:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m47[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute_with_separators([0m
+[0m[1m[38;5;12m48[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    pattern: String,[0m
+[0m[1m[38;5;12m49[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m50[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ext: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m60[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m61[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: called `unwrap` on `replace_default` after checking its variant with `is_some`[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_files_impl.rs:150:33[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m141[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m            let original_path = if replace_default.is_some() {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[38;5;12m----------------------------[0m[0m [0m[0m[1m[38;5;12mhelp: try: `if let Some(<item>) = replace_default`[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m150[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                                replace_default.unwrap(),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                 [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_unwrap[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::unnecessary_unwrap)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (8/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_files_impl.rs:177:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m177[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn find_files_for_separator([0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    pattern_str: &str,[0m
+[0m[1m[38;5;12m179[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: &PathBuf,[0m
+[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ext: Option<&str>,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m185[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    separator: char,[0m
+[0m[1m[38;5;12m186[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<Vec<PathBuf>> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_________________________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_files_impl.rs:179:10[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m179[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    dir: &PathBuf,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::ptr_arg)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m179[0m[0m [0m[0m[38;5;10m~ [0m[0m    dir: [0m[0m[38;5;10m&Path[0m[0m,[0m
+[0m[1m[38;5;12m180[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     ext: Option<&str>,[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m197[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         let mut options = SearchOptions {[0m
+[0m[1m[38;5;12m198[0m[0m [0m[0m[38;5;10m~ [0m[0m            root: [0m[0m[38;5;10mdir.to_path_buf()[0m[0m,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (11/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_files_impl.rs:215:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m215[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn execute_single_separator([0m
+[0m[1m[38;5;12m216[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    pattern: String,[0m
+[0m[1m[38;5;12m217[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m218[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ext: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m226[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m227[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_files_impl.rs:315:35[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m315[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn normalize_path_separator(path: &PathBuf, from_sep: char, to_sep: char) -> PathBuf {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                   [0m[0m[1m[33m^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m315[0m[0m [0m[0m[38;5;10m~ [0m[0mfn normalize_path_separator(path: [0m[0m[38;5;10m&Path[0m[0m, from_sep: char, to_sep: char) -> PathBuf {[0m
+[0m[1m[38;5;12m316[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     // If separators are the same, no normalization needed[0m
+[0m[1m[38;5;12m317[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     if from_sep == to_sep {[0m
+[0m[1m[38;5;12m318[0m[0m [0m[0m[38;5;10m~ [0m[0m        return [0m[0m[38;5;10mpath.to_path_buf()[0m[0m;[0m
+[0m[1m[38;5;12m319[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     }[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m338[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         // Reconstruct path with normalized filename[0m
+[0m[1m[38;5;12m339[0m[0m [0m[0m[38;5;10m~ [0m[0m        let mut normalized_path = [0m[0m[38;5;10mpath.to_path_buf()[0m[0m;[0m
+[0m[1m[38;5;12m340[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         normalized_path.set_file_name(normalized_filename);[0m
+[0m[1m[38;5;12m341[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         normalized_path[0m
+[0m[1m[38;5;12m342[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     } else {[0m
+[0m[1m[38;5;12m343[0m[0m [0m[0m[38;5;10m~ [0m[0m        [0m[0m[38;5;10mpath.to_path_buf()[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (11/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_find_impl.rs:12:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    query: String,[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    scope: String,[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (8/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_flatten_impl.rs:175:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m175[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m176[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    file: Option<PathBuf>,[0m
+[0m[1m[38;5;12m177[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    stdin: bool,[0m
+[0m[1m[38;5;12m178[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    format: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m183[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m184[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (9/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_id_impl.rs:12:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    pattern: String,[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ext: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m22[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this is an outer doc comment and does not apply to the parent module or crate[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_merge_impl.rs:1:1[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0m///! merge command implementation[0m
+[0m[1m[38;5;12m2[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///![0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///! Merges hierarchical results from multiple pattern/separator pairs into unified view.[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m///! Follows Unix philosophy: explicit composition over automatic conversion.[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_____________________________________________________________________________^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#suspicious_doc_comments[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::suspicious_doc_comments)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: use an inner doc comment to document the parent module or crate[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m1[0m[0m [0m[0m[38;5;10m+ //! merge command implementation[0m
+[0m[1m[38;5;12m2[0m[0m [0m[0m[38;5;10m+ //![0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[38;5;10m+ //! Merges hierarchical results from multiple pattern/separator pairs into unified view.[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[38;5;10m+ //! Follows Unix philosophy: explicit composition over automatic conversion.[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (12/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_merge_impl.rs:23:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    patterns: Vec<String>,[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    separators: Vec<char>,[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    inputs: Vec<PathBuf>,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    use_stdin: bool,[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (8/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_merge_impl.rs:124:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m124[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn execute_file_mode([0m
+[0m[1m[38;5;12m125[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    inputs: Vec<PathBuf>,[0m
+[0m[1m[38;5;12m126[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    separators: Vec<char>,[0m
+[0m[1m[38;5;12m127[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    base: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m132[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    json: bool,[0m
+[0m[1m[38;5;12m133[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: the variable `source_idx` is used as a loop counter[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_merge_impl.rs:217:5[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m217[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    for result in stream {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: consider using: `for (source_idx, result) in stream.enumerate()`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#explicit_counter_loop[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::explicit_counter_loop)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_merge_impl.rs:409:10[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m409[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    dir: &PathBuf,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m409[0m[0m [0m[0m[38;5;10m~ [0m[0m    dir: [0m[0m[38;5;10m&Path[0m[0m,[0m
+[0m[1m[38;5;12m410[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     max_depth: Option<usize>,[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m422[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     let options = SearchOptions {[0m
+[0m[1m[38;5;12m423[0m[0m [0m[0m[38;5;10m~ [0m[0m        root: [0m[0m[38;5;10mdir.to_path_buf()[0m[0m,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_merge_impl.rs:453:35[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m453[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn normalize_path_separator(path: &PathBuf, from_sep: char, to_sep: char) -> PathBuf {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                   [0m[0m[1m[33m^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m453[0m[0m [0m[0m[38;5;10m~ [0m[0mfn normalize_path_separator(path: [0m[0m[38;5;10m&Path[0m[0m, from_sep: char, to_sep: char) -> PathBuf {[0m
+[0m[1m[38;5;12m454[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     if from_sep == to_sep {[0m
+[0m[1m[38;5;12m455[0m[0m [0m[0m[38;5;10m~ [0m[0m        return [0m[0m[38;5;10mpath.to_path_buf()[0m[0m;[0m
+[0m[1m[38;5;12m456[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     }[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m470[0m[0m [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m471[0m[0m [0m[0m[38;5;10m~ [0m[0m        let mut normalized_path = [0m[0m[38;5;10mpath.to_path_buf()[0m[0m;[0m
+[0m[1m[38;5;12m472[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         normalized_path.set_file_name(normalized_filename);[0m
+[0m[1m[38;5;12m473[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         normalized_path[0m
+[0m[1m[38;5;12m474[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     } else {[0m
+[0m[1m[38;5;12m475[0m[0m [0m[0m[38;5;10m~ [0m[0m        [0m[0m[38;5;10mpath.to_path_buf()[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_merge_impl.rs:558:36[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m558[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn file_matches_base_pattern(path: &PathBuf, base_pattern: &str) -> bool {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                    [0m[0m[1m[33m^^^^^^^^[0m[0m [0m[0m[1m[33mhelp: change this to: `&Path`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this expression creates a reference which is immediately dereferenced by the compiler[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_reveal_impl.rs:161:69[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m161[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m                let (ordered_fields, extra_fields) = arrange_fields(&fields, &policy.order_steps);[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                                                     [0m[0m[1m[33m^^^^^^^[0m[0m [0m[0m[1m[33mhelp: change this to: `fields`[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_borrow[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::needless_borrow)]` on by default[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (8/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_stats_impl.rs:15:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    pattern: String,[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    level: Option<usize>,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: large size difference between variants[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_trace_id_impl.rs:102:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m102[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0menum TraceIdSavedJson {[0m
+[0m[1m[38;5;12m103[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    Single(TraceIdPayload),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m     [0m[0m[1m[38;5;12m----------------------[0m[0m [0m[0m[1m[38;5;12mthe largest variant contains at least 320 bytes[0m
+[0m[1m[38;5;12m104[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    Multi(Vec<TraceIdRecord>),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m     [0m[0m[1m[38;5;12m-------------------------[0m[0m [0m[0m[1m[38;5;12mthe second-largest variant contains at least 24 bytes[0m
+[0m[1m[38;5;12m105[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m}[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_^[0m[0m [0m[0m[1m[33mthe entire enum is at least 320 bytes[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#large_enum_variant[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::large_enum_variant)]` on by default[0m
+[0m[1m[38;5;14mhelp[0m[0m: consider boxing the large fields to reduce the total size of the enum[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m103[0m[0m [0m[0m[1m[38;5;12m| [0m[0m    Single([0m[0m[38;5;10mBox<TraceIdPayload>[0m[0m),[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[38;5;10m~~~~~~~~~~~~~~~~~~~[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (17/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_trace_id_impl.rs:311:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m311[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m312[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    pattern: String,[0m
+[0m[1m[38;5;12m313[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    scope: String,[0m
+[0m[1m[38;5;12m314[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m328[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m329[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur-warp" test) generated 1 warning (1 duplicate)
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (18/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_trace_impl.rs:22:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m22[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    function: String,[0m
+[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    scope: String,[0m
+[0m[1m[38;5;12m25[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m40[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    color: bool,[0m
+[0m[1m[38;5;12m41[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (14/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_trace_stats_impl.rs:161:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m161[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m162[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    scope: String,[0m
+[0m[1m[38;5;12m163[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m164[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    ext: Option<String>,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m175[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    json_output: bool,[0m
+[0m[1m[38;5;12m176[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (18/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_trace_stats_impl.rs:404:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m404[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn print_json([0m
+[0m[1m[38;5;12m405[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    stats: &[FunctionStat],[0m
+[0m[1m[38;5;12m406[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    scope: &str,[0m
+[0m[1m[38;5;12m407[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: &Path,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m422[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    force: bool,[0m
+[0m[1m[38;5;12m423[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (8/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_tree_impl.rs:12:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute([0m
+[0m[1m[38;5;12m13[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    base: String,[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m15[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    max_depth: Option<usize>,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    mut json: bool,[0m
+[0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (10/7)[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_tree_impl.rs:34:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m34[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mpub fn execute_with_separators([0m
+[0m[1m[38;5;12m35[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    base: String,[0m
+[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    max_depth: Option<usize>,[0m
+[0m[1m[38;5;12m...[0m[0m  [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m44[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    mut json: bool,[0m
+[0m[1m[38;5;12m45[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_tree_impl.rs:154:10[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m154[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    dir: &PathBuf,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m154[0m[0m [0m[0m[38;5;10m~ [0m[0m    dir: [0m[0m[38;5;10m&Path[0m[0m,[0m
+[0m[1m[38;5;12m155[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     max_depth: Option<usize>,[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m182[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         let options = SearchOptions {[0m
+[0m[1m[38;5;12m183[0m[0m [0m[0m[38;5;10m~ [0m[0m            root: [0m[0m[38;5;10mdir.to_path_buf()[0m[0m,[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (8/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_tree_impl.rs:223:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m223[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn execute_single_separator([0m
+[0m[1m[38;5;12m224[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    base: String,[0m
+[0m[1m[38;5;12m225[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    dir: PathBuf,[0m
+[0m[1m[38;5;12m226[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    max_depth: Option<usize>,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m231[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    json: bool,[0m
+[0m[1m[38;5;12m232[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<()> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|_______________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[0m[1m[33mwarning[0m[0m[1m: writing `&PathBuf` instead of `&Path` involves a new object where a slice will do[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_tree_impl.rs:309:35[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m309[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn normalize_path_separator(path: &PathBuf, from_sep: char, to_sep: char) -> PathBuf {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m                                   [0m[0m[1m[33m^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_arg[0m
+[0m[1m[38;5;14mhelp[0m[0m: change this to[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m309[0m[0m [0m[0m[38;5;10m~ [0m[0mfn normalize_path_separator(path: [0m[0m[38;5;10m&Path[0m[0m, from_sep: char, to_sep: char) -> PathBuf {[0m
+[0m[1m[38;5;12m310[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     // If separators are the same, no normalization needed[0m
+[0m[1m[38;5;12m311[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     if from_sep == to_sep {[0m
+[0m[1m[38;5;12m312[0m[0m [0m[0m[38;5;10m~ [0m[0m        return [0m[0m[38;5;10mpath.to_path_buf()[0m[0m;[0m
+[0m[1m[38;5;12m313[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     }[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m332[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         // Reconstruct path with normalized filename[0m
+[0m[1m[38;5;12m333[0m[0m [0m[0m[38;5;10m~ [0m[0m        let mut normalized_path = [0m[0m[38;5;10mpath.to_path_buf()[0m[0m;[0m
+[0m[1m[38;5;12m334[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         normalized_path.set_file_name(normalized_filename);[0m
+[0m[1m[38;5;12m335[0m[0m [0m[0m[1m[38;5;12m|[0m[0m         normalized_path[0m
+[0m[1m[38;5;12m336[0m[0m [0m[0m[1m[38;5;12m|[0m[0m     } else {[0m
+[0m[1m[38;5;12m337[0m[0m [0m[0m[38;5;10m~ [0m[0m        [0m[0m[38;5;10mpath.to_path_buf()[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+
+[0m[1m[33mwarning[0m[0m[1m: this function has too many arguments (9/7)[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_version_impl.rs:476:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m476[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m/[0m[0m [0m[0mfn scan_csv_version([0m
+[0m[1m[38;5;12m477[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    root: &Path,[0m
+[0m[1m[38;5;12m478[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    artifact: &CurrentArtifact,[0m
+[0m[1m[38;5;12m479[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    version: &VersionFile,[0m
+[0m[1m[38;5;12m...[0m[0m   [0m[0m[1m[33m|[0m
+[0m[1m[38;5;12m485[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m    manifest: &ManifestInfo,[0m
+[0m[1m[38;5;12m486[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|[0m[0m [0m[0m) -> anyhow::Result<Option<QueryEvidence>> {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m|__________________________________________^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#too_many_arguments[0m
+
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur") generated 36 warnings (2 duplicates) (run `cargo clippy --fix --bin "recur"` to apply 2 suggestions)
+[0m[1m[33mwarning[0m[0m[1m: items after a test module[0m
+[0m   [0m[0m[1m[38;5;12m--> [0m[0msrc/main_command_tree_impl.rs:291:1[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m291[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mmod tests {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m^^^^^^^^^[0m
+[0m[1m[38;5;12m...[0m
+[0m[1m[38;5;12m309[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mfn normalize_path_separator(path: &PathBuf, from_sep: char, to_sep: char) -> PathBuf {[0m
+[0m    [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[0m    [0m[0m[1m[38;5;12m|[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#items_after_test_module[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::items_after_test_module)]` on by default[0m
+[0m    [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: [0m[0mmove the items to before the test module was defined[0m
+
+[0m[1m[33mwarning[0m[0m[1m: `assert!(true)` will be optimized out by the compiler[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0msrc/trait/separator_merge.rs:66:9[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m66[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m        assert!(true);[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m         [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: remove it[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#assertions_on_constants[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(clippy::assertions_on_constants)]` on by default[0m
+
+[1m[33mwarning[0m[1m:[0m `recur` (bin "recur" test) generated 37 warnings (36 duplicates) (run `cargo clippy --fix --bin "recur" --tests` to apply 1 suggestion)
+[1m[33mwarning[0m[1m:[0m `recur` (lib test) generated 34 warnings (33 duplicates)
+[1m[32m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 16.64s

@@ -1,0 +1,9 @@
+   Compiling recur v0.2.8 (C:\src\recur\target\lang-before)
+error[E0432]: unresolved import `crate::recur_lang_graph`
+  --> src\lib.rs:33:16
+   |
+33 |     use crate::recur_lang_graph::analyze;
+   |                ^^^^^^^^^^^^^^^^ could not find `recur_lang_graph` in the crate root
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `recur` (lib test) due to 1 previous error

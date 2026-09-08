@@ -1,6 +1,6 @@
 {
   "bubble_uuid": "01a08039-4f19-7640-ae2d-b80f4e45260e",
-  "current_slice": "slice-0",
+  "current_slice": "slice-final",
   "goal": "Deliver the bounded Recur Lang baseline for a.0.2.8: pure scoped queries and compact header/body/footer explanations, exact contracts and graph checks, with opinionated behavior in recur-lang.",
   "invariants": [
     "Recur Lang is the tightest formal boundary within a selected scope; surrounding Recur artifacts remain flexible.",
@@ -87,7 +87,7 @@
   "schema": "warp-bubble-map-v1",
   "warp_id": "main.lang.baseline",
   "release_target": "a.0.2.8",
-  "planning_status": "implementation-pending",
+  "planning_status": "accepted-with-declared-evidence",
   "contract_document": "warps/main.lang.baseline.contract.md",
   "prerequisite_warps": [
     {

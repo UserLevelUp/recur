@@ -1,0 +1,4 @@
+Requested version a.0.2.8
+Normalized package version 0.2.8
+Created C:\src\recur\target\lang-final\choco\recur.0.2.8.nupkg
+SHA256 4064E91DF2C8C3AB792DB9B5D966270CFFD9E4196A1B3A1F3DA690CF6334D034

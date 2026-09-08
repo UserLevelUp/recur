@@ -1,0 +1,1 @@
+PASS: packed version, URL/checksum binding and five companion install/uninstall shims
