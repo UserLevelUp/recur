@@ -92,6 +92,7 @@ try
         include("main.command.trace-id.test.jl")     # IMPROVEMENT8 - trace-id MVP contract tests (expected broken)
         include("main.command.trait.test.jl")        # Trait config command + traversal budget placeholders
         include("main.command.trait.capabilities.test.jl") # Built-in capability metadata and preferences
+        include("main.command.prompt.discovery.test.jl") # Shared app prompts and bounded decision evidence
         include("main.demo.skippy.trace-id.test.jl") # Demo: Skippy adaptive comms + trace-id protocol
         include("runtests.demo.sudoku.jl")           # Demo: Sudoku + trace-id Phase 1+2 (file protocol + Recur.jl)
         include("runtests.demo.sudoku.phase3.jl")    # Demo: Sudoku Phase 3 (Generator.jl — flow files + cascades)

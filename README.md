@@ -262,6 +262,25 @@ recur trace-id "ulu.topic.dot.**" --scope "**" --ext ".cs" --json
 git diff --name-only origin/main...HEAD | recur trace-id "ulu.topic.dot.**" --scope "**" --stdin --ext ".cs" --json
 ```
 
+### `recur prompt` - discover app prompts and prepare evidence
+
+Warp bundles naming, slicing and recovery instructions. Discover them without
+initializing a project, then add an intent to prepare bounded local evidence:
+
+```bash
+recur prompt warp
+recur prompt warp.naming
+recur prompt warp.naming --intent "Add retry support" --scope main.command --json
+recur-warp llm prompt
+recur trait prompt warp
+```
+
+Project definitions in `[prompts.registry]` override bundled defaults; setting
+`[prompts] app_defaults = false` opts out. Reveal capsules can list `prompt.ids`.
+These commands prepare data for an agent; they do not call a model or apply its
+suggestions. See [the prompt contract](docs/main.command.prompt.discovery.readme.md)
+for configuration, source validation, evidence budgets and projection limitations.
+
 ### `recur trait` - manage trait settings in project config
 `recur trait` reads/writes trait settings in `.recur/config.toml`.
 Run `recur init` before setting values. Built-in capability traits can be listed

@@ -20,8 +20,18 @@ pub const CAPABILITIES: &[CapabilityTrait] = &[
         name: "warp",
         status: "implemented",
         description: "Slice coordination, evidence and Eventness projections.",
-        commands: &["recur warp", "recur-warp"],
-        configuration: &["warp.discovery", "warp.suffixes"],
+        commands: &[
+            "recur warp",
+            "recur-warp",
+            "recur prompt warp",
+            "recur-warp llm prompt",
+        ],
+        configuration: &[
+            "warp.discovery",
+            "warp.suffixes",
+            "prompts.app_defaults",
+            "prompts.registry",
+        ],
         effect: EFFECT,
     },
     CapabilityTrait {

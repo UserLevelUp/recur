@@ -28,10 +28,18 @@ struct Cli {
     /// Output as JSON
     #[arg(long, global = true)]
     json: bool,
+    /// Explicit hierarchy separator for prompt context queries
+    #[arg(long, global = true)]
+    sep: Vec<String>,
 }
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Discover app prompts and prepare evidence; does not call an LLM
+    Llm {
+        #[command(subcommand)]
+        command: LlmCommand,
+    },
     /// Install missing editable defaults. Removal policy is configuration only:
     /// no removal command or Git snapshot/ref enforcement is provided.
     Init {
@@ -105,6 +113,12 @@ enum Commands {
         #[arg(long)]
         confirm: bool,
     },
+}
+
+#[derive(Subcommand)]
+enum LlmCommand {
+    /// List Warp prompts or inspect a selected prompt
+    Prompt(recur::prompt::PromptArgs),
 }
 
 #[derive(Serialize)]
@@ -189,6 +203,14 @@ fn main() {
         }
     };
     let result = match cli.command {
+        Commands::Llm {
+            command: LlmCommand::Prompt(mut args),
+        } => {
+            if args.selector.is_none() {
+                args.selector = Some("warp".into());
+            }
+            recur::prompt::execute(&root, &args, &cli.sep, cli.json)
+        }
         Commands::Init { dry_run } => recur_warp_init::init(&root, dry_run).and_then(|output| {
             if cli.json {
                 println!("{}", serde_json::to_string_pretty(&output)?);

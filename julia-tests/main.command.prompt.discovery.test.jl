@@ -52,9 +52,8 @@ function blocked(root,code,args...)
     @test snapshot(root)==before
 end
 
-# Red-first executable contract. Deliberately NOT included in runtests.jl until
-# implemented; guards prevent parse cascades while @test ok keeps missing CLI red.
-@testset "Prompt discovery contract (standalone red-first)" begin
+# Executable contract; guards prevent parse cascades without hiding CLI failures.
+@testset "Prompt discovery contract" begin
     @testset "Opinionated apps provide defaults without modifying the project" begin
         mktempdir() do root
             before=snapshot(root)
@@ -267,5 +266,7 @@ end
             @test snapshot(root)==before
         end
     end
+include("main.command.prompt.defaults.cases.jl")
+include("main.command.prompt.edges.cases.jl")
 end
 end

@@ -5,6 +5,7 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 ## Naming
 
 - `main.improvement.<n>.complete.md` = completed improvement record
+- `main.improvement.<n>.closed.md` = closed/superseded decision, not implementation completion
 - `main.improvement.<n>.todo.future-plan.md` = future-plan / parked improvement
 - `main.improvement.<n>.<topic>.todo.current.md` = active focused cursor
 - `main.improvement.<n>.<topic>.todo.tracking.md` = preserved downstream
@@ -12,7 +13,19 @@ This note keeps improvement posture visible in the `main.improvement.*` tree.
 - `main.improvement.<n>.<topic>.complete.md` = completed sub-lane under an improvement
 - `main.improvement.<n>.<topic>.readme.core.md` = concept or core reference without by-itself implying active state
 
-## Current Snapshot (2026-07-24)
+## Additions (2026-09-07)
+
+- [31: Skill discovery — closed](main.improvement.31.closed.md):
+  superseded by hierarchical artifacts and the reveal route; no standalone skill Warp.
+- [32: Agent discovery — closed](main.improvement.32.closed.md):
+  also superseded by the shared reveal route; coordination ideas remain design history.
+
+Both standalone proposals are closed, not implemented. Combined reveal scope and
+implementation will be decided later, after current Warp and Recur Lang work;
+neither entry adds an active cursor or receipt.
+The dated snapshot below remains historical.
+
+## Historical Snapshot (2026-07-24)
 
 ### Complete
 

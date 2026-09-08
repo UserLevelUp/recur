@@ -50,6 +50,14 @@ Read its verification record for that qualification. Prompt discovery (including
 app-provided defaults/project overrides) and reveal persona-skills are separate
 planned bubbles with standalone red tests, not implemented command surfaces.
 
+Prompt discovery was subsequently implemented and verified on 2026-09-06: core
+`recur prompt`, trait aliases, `recur-warp llm prompt`, bundled defaults, project
+overrides and bounded packets now ship in source. The prompt suite is included
+in the full runner (3584 passed, 73 known-broken with the conservative Julia flags
+above); Cargo passed 185 tests with 7 ignored doc tests. See
+docs/main.command.prompt.discovery.verification.md for evidence and limitations.
+Provider invocation/model evaluation and reveal persona-skills remain separate.
+
 The proposed work model is warp -> slice -> work name -> hierarchical tags -> UUID.
 Readable hierarchy is the address; UUID is stable identity. Tags classify purpose;
 dependencies constrain execution. Work-item semantics, semantic merge/split,

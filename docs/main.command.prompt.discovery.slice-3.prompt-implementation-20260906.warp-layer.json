@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.prompt.discovery",
+  "slice_id": "slice-3",
+  "contract_hash": "contract:main.command.prompt.discovery.slice-3:v2",
+  "attempt_id": "prompt-implementation-20260906",
+  "result_state": "accepted",
+  "result_hash": "sha256:04b04b466e74f891d4fe7b0fdbca09f88dc196cd67a882c03a19f5581e0d6479",
+  "evidence": {
+    "bounded-context-packets": [
+      "main.command.prompt.discovery.slice-3.complete.md"
+    ]
+  },
+  "reason": null
+}

@@ -1,11 +1,11 @@
 //! Read-only eventness warp status queries.
 
-use anyhow::Context;
-use clap::Subcommand;
-use recur::warp_bubble::{
+use crate::warp_bubble::{
     validate_warp_ring_map, WarpBubbleMap, WarpRequiredSlice, WarpRingDomain, WarpRingMap,
     WarpRingSubscription, WarpSliceLayer, MAP_VIEW_SCHEMA, MERGE_SCHEMA, SLICE_LAYER_SCHEMA,
 };
+use anyhow::Context;
+use clap::Subcommand;
 use serde::Serialize;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -15,7 +15,7 @@ use walkdir::{DirEntry, WalkDir};
 
 const SCHEMA: &str = "warp-status-v1";
 #[cfg(test)]
-use recur::warp_bubble::BUBBLE_MAP_SCHEMA;
+use crate::warp_bubble::BUBBLE_MAP_SCHEMA;
 
 #[derive(Subcommand)]
 pub enum WarpSubcommand {
@@ -83,7 +83,7 @@ pub enum WarpSubcommand {
     Config,
 }
 
-type SuffixPolicy = recur::warp_policy::WarpPolicy;
+type SuffixPolicy = crate::warp_policy::WarpPolicy;
 
 #[derive(Clone, Serialize)]
 struct WarpFile {
@@ -124,7 +124,7 @@ struct WarpNextAction {
 
 #[derive(Serialize)]
 struct WarpStatusOutput {
-    gate_evidence: Vec<recur::warp_evidence::GateAssessment>,
+    gate_evidence: Vec<crate::warp_evidence::GateAssessment>,
     recorded_state: String,
     evidence_status: String,
     contract_status: String,
@@ -180,7 +180,7 @@ struct WarpConfigOutput {
     complete_suffixes: Vec<String>,
     interesting_suffixes: Vec<String>,
     blocked_suffixes: Vec<String>,
-    removal: recur::warp_policy::WarpRemovalPolicy,
+    removal: crate::warp_policy::WarpRemovalPolicy,
     removal_guards_enforced: bool,
 }
 
@@ -213,7 +213,7 @@ struct WarpProjectionIssue {
 struct WarpMergeOutput {
     evidence_status: String,
     contract_status: String,
-    gate_evidence: Vec<recur::warp_evidence::GateAssessment>,
+    gate_evidence: Vec<crate::warp_evidence::GateAssessment>,
     schema: &'static str,
     warp_id: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -318,10 +318,10 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
         WarpSubcommand::Fingerprint { paths } => {
             let mut files = BTreeMap::new();
             for path in paths {
-                let resolved = recur::warp_evidence::contained_file(&root, &path)?;
+                let resolved = crate::warp_evidence::contained_file(&root, &path)?;
                 files.insert(
                     path,
-                    recur::warp_evidence::fingerprint(&fs::read(resolved)?),
+                    crate::warp_evidence::fingerprint(&fs::read(resolved)?),
                 );
             }
             println!(
@@ -336,10 +336,10 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
             path,
             allow_skipped,
         } => {
-            let result = recur::warp_evidence::assess(
+            let result = crate::warp_evidence::assess(
                 &root,
                 &format!("evidence:{path}"),
-                &recur::warp_evidence::GateRule {
+                &crate::warp_evidence::GateRule {
                     kind: String::new(),
                     allow_skipped,
                 },
@@ -477,7 +477,7 @@ fn bubble_progress(root: &Path, warp: &str) -> anyhow::Result<serde_json::Value>
 
 fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_json::Value> {
     let root = fs::canonicalize(root)?;
-    let policy = recur::warp_discovery::DiscoveryPolicy::load(&root, scan_all)?;
+    let policy = crate::warp_discovery::DiscoveryPolicy::load(&root, scan_all)?;
     let mut candidates: BTreeMap<(String, PathBuf), BTreeSet<String>> = BTreeMap::new();
     for scan_root in &policy.roots {
         for entry in WalkDir::new(scan_root)
@@ -730,7 +730,7 @@ fn collapse_plan(root: &Path, lane: &str) -> anyhow::Result<WarpCollapsePlanOutp
 fn config(root: &Path) -> anyhow::Result<WarpConfigOutput> {
     let policy = load_suffix_policy(root)?;
     Ok(WarpConfigOutput {
-        removal: recur::warp_policy::WarpRemovalPolicy::load(root)?,
+        removal: crate::warp_policy::WarpRemovalPolicy::load(root)?,
         removal_guards_enforced: false,
         schema: "warp-config-v1",
         root: root.display().to_string(),
@@ -1188,7 +1188,7 @@ fn load_bubble_map_scoped(
 }
 
 fn validate_bubble_map(map: &WarpBubbleMap, warp: &str, path: &Path) -> anyhow::Result<()> {
-    recur::warp_bubble::validate_bubble_map(map, warp, path)
+    crate::warp_bubble::validate_bubble_map(map, warp, path)
 }
 
 fn load_warp_layers(root: &Path, warp: &str) -> anyhow::Result<Vec<LocatedWarpLayer>> {
@@ -1258,6 +1258,55 @@ fn load_warp_layers_scoped(
     Ok(layers)
 }
 
+/// Compose only explicitly supplied map/layer snapshots for a bounded caller.
+/// Checked gates are refused here: their transitive evidence needs its own budget.
+pub fn project_snapshot(
+    root: &Path,
+    manifest: &str,
+    map_bytes: &[u8],
+    layers: &[(String, Vec<u8>)],
+) -> anyhow::Result<serde_json::Value> {
+    let map: WarpBubbleMap = serde_json::from_slice(map_bytes)?;
+    crate::warp_bubble::validate_bubble_map(&map, &map.warp_id, &root.join(manifest))?;
+    anyhow::ensure!(map.required_slices.iter().all(|s| s.evidence_mode != "checked"), "Checked gate projection requires additional evidence; inspect recur warp show with the full evidence root");
+    let mut located = Vec::new();
+    for (path, bytes) in layers {
+        if !Path::new(path)
+            .file_name()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .starts_with(&format!("{}.", map.warp_id))
+        {
+            continue;
+        }
+        let layer: WarpSliceLayer = serde_json::from_slice(bytes)?;
+        anyhow::ensure!(
+            layer.warp_id == map.warp_id,
+            "Warp layer identity does not match its filename: {path}"
+        );
+        if layer.warp_id == map.warp_id {
+            anyhow::ensure!(
+                layer.schema == SLICE_LAYER_SCHEMA
+                    && !layer.slice_id.trim().is_empty()
+                    && !layer.attempt_id.trim().is_empty()
+                    && !layer.contract_hash.trim().is_empty(),
+                "Invalid Warp layer: {path}"
+            );
+            anyhow::ensure!(!layer.evidence.values().flatten().any(|r| r.starts_with("evidence:")), "External gate evidence requires additional bounded sources; inspect recur warp show with the full evidence root");
+            located.push(LocatedWarpLayer {
+                path: path.clone(),
+                layer,
+            });
+        }
+    }
+    Ok(serde_json::to_value(compose_bubble(
+        root,
+        manifest.into(),
+        map,
+        located,
+    ))?)
+}
+
 fn compose_bubble(
     root: &Path,
     manifest: String,
@@ -1325,7 +1374,7 @@ fn compose_bubble(
             .cloned()
             .unwrap_or_default();
         if located.is_empty() {
-            gate_evidence.extend(recur::warp_evidence::gates(
+            gate_evidence.extend(crate::warp_evidence::gates(
                 root,
                 required,
                 &BTreeMap::new(),
@@ -1362,14 +1411,14 @@ fn compose_bubble(
             .iter()
             .filter(|item| {
                 !item.layer.result_hash.trim().is_empty()
-                    && recur::warp_evidence::gates(root, required, &item.layer.evidence)
+                    && crate::warp_evidence::gates(root, required, &item.layer.evidence)
                         .iter()
                         .all(|g| g.satisfied)
             })
             .copied()
             .collect::<Vec<_>>();
         for item in &current {
-            gate_evidence.extend(recur::warp_evidence::gates(
+            gate_evidence.extend(crate::warp_evidence::gates(
                 root,
                 required,
                 &item.layer.evidence,
@@ -1491,7 +1540,7 @@ fn compose_bubble(
     ]);
     layer_ids.sort();
     WarpMergeOutput {
-        evidence_status: recur::warp_evidence::combined_status(
+        evidence_status: crate::warp_evidence::combined_status(
             gate_evidence.iter().map(|g| g.status.as_str()),
         )
         .into(),
@@ -1610,7 +1659,7 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
                     .cloned()
                     .unwrap_or_else(|| serde_json::json!({})),
             )?;
-            gate_evidence.extend(recur::warp_evidence::gates(root, &declared, &evidence));
+            gate_evidence.extend(crate::warp_evidence::gates(root, &declared, &evidence));
         }
         if file_contains_blocker(&text) {
             *state_groups.entry("blocked".to_string()).or_insert(0) += 1;
@@ -1739,7 +1788,7 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
             "no-completion-record"
         }
         .into(),
-        evidence_status: recur::warp_evidence::combined_status(
+        evidence_status: crate::warp_evidence::combined_status(
             gate_evidence.iter().map(|g| g.status.as_str()),
         )
         .into(),

@@ -38,7 +38,7 @@ mod main_command_trace_stats_impl;
 mod main_command_trait_impl;
 mod main_command_tree_impl;
 mod main_command_version_impl;
-mod main_command_warp_impl;
+use recur::warp_query as main_command_warp_impl;
 mod main_command_watch_query_impl;
 
 #[derive(Parser)]
@@ -80,6 +80,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Discover capability prompts or prepare bounded evidence for an intent
+    Prompt {
+        #[command(flatten)]
+        args: recur::prompt::PromptArgs,
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+    },
     /// Find files matching a recursive hierarchical pattern
     ///
     /// Examples:
@@ -1128,8 +1135,9 @@ fn main() {
             )
         }
 
+        Commands::Prompt { args, dir } => recur::prompt::execute(&dir, &args, &cli.sep, cli.json),
         Commands::Trait { command, dir } => {
-            main_command_trait_impl::execute(command, dir, cli.json)
+            main_command_trait_impl::execute(command, dir, cli.json, &cli.sep)
         }
 
         Commands::Init {

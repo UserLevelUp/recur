@@ -21,3 +21,17 @@ The suite remains outside runtests.jl until implementation passes. Baseline pass
 check existing read-only behavior; they do not establish prompt functionality.
 
 produces: recur.prompt.discovery app-default precedence red-first contract revision
+
+## Initial default prompt scenarios (2026-09-06)
+
+Extended the same pending v2 acceptance scope with five decision fixtures and a
+freshness/narrowing case, included by the standalone discovery suite. No public
+schema or accepted receipt changed. Scenario rubrics describe future model
+evaluation; the automated tests check packet evidence and source behavior.
+
+Observed with the same Julia command above: exit 1; **57 passed, 39 failed,
+0 errors, 0 broken**. Log: `target/prompt-default-scenarios-baseline.log`.
+The six added failures are missing prompt-command success assertions. Assertions
+inside their success guards remain unexercised until implementation. The existing
+Warp inventory independently validates the recovery fixture as incomplete with
+one covered slice and one pending slice. No prompt implementation is claimed.

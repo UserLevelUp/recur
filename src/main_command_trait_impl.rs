@@ -15,6 +15,14 @@ const CONFIG_FILE: &str = "config.toml";
 
 #[derive(Subcommand, Debug)]
 pub enum TraitSubcommand {
+    /// Discover shared capability prompts or inspect one with optional intent
+    Prompt {
+        #[command(flatten)]
+        args: recur::prompt::PromptArgs,
+        /// Override the enclosing trait query directory
+        #[arg(short = 'd', long)]
+        dir: Option<PathBuf>,
+    },
     /// List configured traits plus built-in capability traits and their effective defaults
     List,
 
@@ -36,10 +44,18 @@ pub enum TraitSubcommand {
     },
 }
 
-pub fn execute(command: TraitSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
+pub fn execute(
+    command: TraitSubcommand,
+    dir: PathBuf,
+    json: bool,
+    separators: &[String],
+) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
 
     match command {
+        TraitSubcommand::Prompt { args, dir } => {
+            recur::prompt::execute(dir.as_deref().unwrap_or(&root), &args, separators, json)
+        }
         TraitSubcommand::List => list_traits(&root, json),
         TraitSubcommand::Explain { name } => explain_trait(&root, &name, json),
         TraitSubcommand::Get { key } => get_trait_value(&root, &key, json),
@@ -118,7 +134,8 @@ fn explain_trait(root: &Path, name: &str, json_output: bool) -> anyhow::Result<(
         "catalog":capability, "effective":config,
         "config_path":if path.is_file() {Some(path.display().to_string())} else {None},
         "source":if configured {"project-with-defaults"} else {"built-in-defaults"},
-        "mutation":"none"
+        "mutation":"none",
+        "prompts":recur::prompt::Registry::load(root)?.list(Some(&key[1]))["entries"]
     });
     if json_output {
         println!("{}", serde_json::to_string_pretty(&payload)?);
@@ -141,6 +158,7 @@ fn explain_trait(root: &Path, name: &str, json_output: bool) -> anyhow::Result<(
             payload["source"],
             serde_json::to_string_pretty(config)?
         );
+        println!("Prompts: {}", serde_json::to_string(&payload["prompts"])?);
     }
     Ok(())
 }

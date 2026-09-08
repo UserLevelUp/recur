@@ -1,7 +1,7 @@
 # Warp: discoverable capability prompts
 
-Status: planned. This bubble freezes contracts and red-first tests; it does not
-implement the commands below or call an LLM provider.
+Status: implemented and verified. The commands below
+prepare local prompt data and evidence; they do not call an LLM provider.
 
 Goal: let users and agents discover available prompts, inspect their instructions,
 and prepare evidence for deciding where work belongs in an existing hierarchy.
@@ -120,6 +120,23 @@ sources and the byte budget to serialized UTF-8 `context.items`; do not emit par
 JSON or exceed the budget. Report truncation/omissions deterministically. Prompt
 source is separately limited to 64 KiB. A tiny evidence budget can return an empty
 items array with `truncated: true`. Repeated queries over unchanged inputs match.
+The byte budget must allow at least the two bytes needed for `[]`; one byte returns
+`invalid_budget`. File reads are additionally capped at 1 MiB per source; oversized
+or non-UTF-8 evidence is omitted with diagnostics rather than partially quoted.
+
+Context uses configured lane separators (or explicit `--sep`), shared hierarchy
+parsing/tree construction, explicit trace-role declarations, Eventness policy and
+the existing Warp composition implementation. UUID metadata is not a trace role.
+Discovery honors configured Warp roots/exclusions and narrows to `-d`; hidden
+directories require an explicit query root. Source items are ordered by path and
+the prompt's declared context-kind order. Each item fingerprints its source bytes.
+
+Warp projections use co-located map/layer snapshots from selected sources. If
+collection is incomplete, or a projection requires transitive checked evidence,
+the map and selected receipts remain available but projection is null with a
+diagnostic. Use `recur warp show <id>` with the appropriate evidence root for the
+full checked assessment. Packet assembly never follows those references outside
+its source budget or silently upgrades declarations to checked evidence.
 
 The naming prompt should ask the consuming LLM to prefer existing parents/subjects,
 explain reuse versus a new subject, and return alternatives with evidence paths.
@@ -162,10 +179,18 @@ Final. Integrate green tests into runtests.jl, run Cargo/full Julia regressions,
    document actual behavior and record receipts. Preserve known-broken cases.
 
 Standalone initial contract: `julia-tests/main.command.prompt.discovery.test.jl`.
-Keep it outside runtests.jl while intentionally red; extend the remaining cases
-listed above during implementation. Do not weaken existing assertions or hide
-missing functionality behind `@test_broken`. No production implementation is part
-of this planning request.
+It includes `main.command.prompt.defaults.cases.jl`, with initial app-default
+scenarios and model-evaluation rubrics in `julia-tests/fixtures/prompt-defaults/`.
+These cover existing-name reuse, ambiguous placement, a non-main project root,
+UUID versus attention, vertical slicing and recovery from stale attention using
+an accepted receipt. Packet assertions require decision evidence, app source
+integrity, deterministic output, freshness, directory narrowing and byte budgets.
+The recovery fixture is also validated against the existing Warp inventory.
+These deterministic checks do not evaluate an LLM response; the rubrics reserve
+that separate usefulness evaluation without requiring exact prompt wording.
+The suite is now included in runtests.jl. It also includes policy, separator,
+scope, stale/conflicting/blocked receipt and external-evidence boundary cases.
+Original red-baseline records remain historical; they are not rewritten as passes.
 
 defines: recur.prompt.discovery shared capability prompt discovery and bounded context
 consumes: recur.trait.capabilities existing capability metadata

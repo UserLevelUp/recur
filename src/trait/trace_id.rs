@@ -93,6 +93,29 @@ fn parse_keywords(raw: &str) -> Vec<String> {
     out
 }
 
+/// Extract declared roles only. UUID metadata and prose mentions are not roles.
+pub fn explicit_roles(text: &str) -> Vec<serde_json::Value> {
+    let mut roles = Vec::new();
+    for (index, line) in text.lines().enumerate() {
+        let declaration = line
+            .trim_start()
+            .trim_start_matches(['/', '#', '*', ' ', '-']);
+        if let Some((label, value)) = declaration.split_once(':') {
+            let role = match label.trim() {
+                "defines" => "define",
+                "produces" => "produce",
+                "consumes" => "consume",
+                "triggers" => "trigger",
+                _ => continue,
+            };
+            if let Some(identifier) = value.split_whitespace().next() {
+                roles.push(serde_json::json!({"role":role,"identifier":identifier,"line_number":index+1,"line":line}));
+            }
+        }
+    }
+    roles
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

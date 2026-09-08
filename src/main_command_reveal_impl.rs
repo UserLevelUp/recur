@@ -57,6 +57,7 @@ struct RevealListOutput {
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 struct RevealShowOutput {
+    prompts: Vec<serde_json::Value>,
     eventness_policy: recur::warp_policy::WarpPolicy,
     #[serde(skip_serializing_if = "Option::is_none")]
     reconciliation: Option<serde_json::Value>,
@@ -121,6 +122,11 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
                     anyhow::bail!("warp.root escapes project root");
                 }
                 let output = RevealShowOutput {
+                    prompts: if let Some(ids) = field("prompt.ids") {
+                        recur::prompt::Registry::load(&root)?.references(ids)
+                    } else {
+                        Vec::new()
+                    },
                     reconciliation,
                     eventness_policy: recur::warp_policy::WarpPolicy::load(&eventness_root)?,
                     root: root.display().to_string(),
@@ -423,6 +429,9 @@ fn print_show_output(output: &RevealShowOutput, json: bool) -> Result<()> {
     }
 
     println!("Reveal for {}", output.lane);
+    if !output.prompts.is_empty() {
+        println!("  prompts: {}", serde_json::to_string(&output.prompts)?);
+    }
     println!(
         "  eventness policy: {}",
         serde_json::to_string(&output.eventness_policy)?

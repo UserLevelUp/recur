@@ -1,6 +1,5 @@
 {
   "bubble_uuid": "01a078b8-3c3d-76c0-bab3-76aeec4223d8",
-  "current_slice": "slice-1",
   "goal": "Discover capability prompts and assemble bounded hierarchy-aware context packets",
   "required_slices": [
     {
