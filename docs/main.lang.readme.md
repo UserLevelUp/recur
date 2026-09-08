@@ -5,6 +5,14 @@ Status: `brainstorming prototype`
 `main.lang` is the canonical hierarchy for the experimental language that
 describes Recur-native orchestration.
 
+Its purpose is to reduce cognitive load when reasoning about complex work:
+define exact input/output bundles once, follow compact local function symbols,
+and expand only the detail needed in the selected scope. `recur lang` is the
+pure focus/filter/explanation surface across header, body, footer and recorded
+Eventness. All opinionated language behavior, including recommendations and
+workflow policy, belongs in `recur-lang`. See the product-purpose contract in
+`docs/main.command.lang.readme.md` for the intended query acceptance criteria.
+
 The language is designed around:
 
 - exact input/output bundle contracts;

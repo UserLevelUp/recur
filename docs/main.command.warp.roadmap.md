@@ -1,7 +1,9 @@
-# Warp command roadmap — 2026-09-06
+# Warp command roadmap
 
 Current: read-only list/show/slices/map/merge/status/explain/next/config/evidence/fingerprint/
-collapse-plan; companion init/create/receipt/complete/evolve/collapse. Shared suffix policy
+collapse-plan; companion init/create/receipt/complete/evolve/collapse and llm prompt.
+Bare `recur warp` is equivalent to `recur warp list`; `list --all` includes
+completed projections. Shared suffix policy
 foundation is implemented locally. Existing behavior/tests remain the compatibility
 baseline. `merge` projects layers; it is not arbitrary project union.
 
@@ -11,12 +13,12 @@ JSON map, with goal and optional invariant/Slice-description metadata; multi-fil
 scaffolds are deferred. This avoids inventing a competing task graph or silently
 accepting placeholder work. Canonical map/layer filenames remain stable.
 
-Remaining foundational work, not implemented by that bounded Warp:
-
-Separate planned bubble: [capability prompt discovery](main.command.prompt.discovery.readme.md)
-adds shared app-provided prompt defaults with project overrides, list/show/context packets, trait and Warp
-adapters, and reveal references. Its standalone acceptance tests are intentionally
-red. Provider invocation and automatic application of proposed names are deferred.
+Implemented: [capability prompt discovery](main.command.prompt.discovery.readme.md)
+provides shared app defaults with project overrides, list/show/context packets,
+trait and Warp adapters, and reveal references. Its acceptance suite is integrated
+in the normal Julia runner; see [verification](main.command.prompt.discovery.verification.md).
+`recur prompt warp` and `recur-warp llm prompt` discover effective definitions;
+they do not invoke a model or automatically apply proposed names.
 
 Separate planned bubble: [reveal persona skills](main.command.reveal.persona-skills.readme.md)
 extends recur init defaults and proposes recur-reveal profile setup/context packets.
@@ -28,6 +30,8 @@ Completed locally with all six slices accepted:
 Its integrated tests cover init, automatic UUIDv7 bubble/slice identities, optional
 preservation configuration and trait-style human list presentation. Deletion
 enforcement remains deferred. List JSON and query semantics stay stable.
+
+Remaining foundational work:
 
 - Semantic repartition: many source bubbles to many destinations, stable identity,
   hierarchical tags, explicit contract/dependency revisions and lineage. Freeze

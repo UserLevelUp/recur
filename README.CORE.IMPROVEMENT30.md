@@ -105,6 +105,32 @@ needs the next capability.
 
 QUICK ORIENTATION PURPOSE
 -------------------------
+The product purpose is to reduce the mental effort of understanding complex
+work. A reader should not have to carry long parameter lists and return-value
+lists through every step of a workflow. Bind those details to exact named
+contracts once, then use compact local function letters and explicit input and
+output symbols to follow the composition. Expand the selected symbol when its
+details matter; contraction must preserve the exact underlying contracts.
+
+Recur Lang is the tightest level of formalism within Recur. Exact contracts and
+checkable graph relationships apply inside the selected language scope; the
+surrounding names, files, capsules, trace lineage and Eventness remain flexible.
+Adopting this local formal boundary does not require formalizing the whole project.
+
+`recur lang` provides pure queries that focus, filter and describe this model.
+Combine the selected language scope with recorded Eventness to narrow the
+functionality under inspection, while retaining boundary references and any
+dependency path needed to explain a finding. Organize the answer as header
+(contracts and symbol meanings), body (functional connections), and footer
+(checks, Eventness and supporting evidence).
+
+All opinionated Recur Lang behavior belongs in `recur-lang`, including choosing
+or recommending a workflow, repair, prioritization or transition, even if the
+operation is a read-only proposal. Core queries may explain declared rules,
+validate formal relationships and expose recorded facts; they do not select
+what the user ought to do. This is a design boundary for forthcoming commands,
+not a claim that the full query surface already ships.
+
 Recur Lang is intentionally a quick, compact language for an AI, human, or
 other intelligence to sketch and inspect a semantic functional model before
 implementation detail buries the logical flow. Its abbreviations are a
@@ -120,6 +146,11 @@ compact semantic flow
   -> adjust the smallest affected flow or contract
   -> re-check one non-circular model
 ```
+
+Prefer a single local letter for each function in the selected bounded view,
+such as `f(a)` or `f(b)`, with its familiar description and exact scoped identity
+available in the header or on expansion. A letter is a compact reference, not
+a replacement for identity or a globally unique function name.
 
 The language must stay concise enough for rapid iteration while remaining
 precise enough that a change cannot silently introduce a circular dependency,

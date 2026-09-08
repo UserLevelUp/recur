@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.web-lab",
+  "slice_id": "level-05",
+  "contract_hash": "fnv1a64:04f11618c6700bb3",
+  "attempt_id": "20260908T065355765498Z",
+  "result_state": "accepted",
+  "result_hash": "fnv1a64:48c1bd30f515e3b9",
+  "evidence": {
+    "browser": [
+      "evidence:evidence/20260908T065355765498Z/05.evidence.json"
+    ]
+  },
+  "reason": null
+}

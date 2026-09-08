@@ -1,0 +1,28 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "Playwright Python 1.62.0; Chromium 152.0.7977.76",
+  "project": "main",
+  "configuration": "level-01; headless; 1100x850; loopback API",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "executed_at_unix": 1788851136,
+  "result_artifact": "evidence/20260908T070526711986Z/01.result.json",
+  "result_fingerprint": "fnv1a64:c04ea24553cb251f",
+  "source": {
+    "revision": "e3f77417666cc0af3ba828e6b3f4c65dde7f09fa",
+    "dirty": true,
+    "files": {
+      "apps/01/.recur/config.toml": "fnv1a64:7d30fd75e172f4f7",
+      "apps/01/main.contract.md": "fnv1a64:4872bac3ec99126e",
+      "apps/01/main.html": "fnv1a64:65d6192547add797",
+      "main.build.py": "fnv1a64:cf79000c411f94a5",
+      "main.server.jl": "fnv1a64:eb9e258c8bcf29f0",
+      "main.server.test.jl": "fnv1a64:9d5d76d9d00339b7",
+      "main.server.process.py": "fnv1a64:7778fe7c7bfd872d",
+      "main.test.py": "fnv1a64:dbac949c35cf1022",
+      "requirements.txt": "fnv1a64:f8d59d494d305291",
+      "Project.toml": "fnv1a64:b69e6c251a17ddad",
+      "Manifest.toml": "fnv1a64:2d54fbbfa19e91bb"
+    }
+  }
+}

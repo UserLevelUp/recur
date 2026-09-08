@@ -11,17 +11,38 @@ when relevant. Paths below are repository-relative, not relative to this install
 skill. If those references are absent in an external project, inspect its local
 capsules and CLI help instead of inventing the Recur development layout.
 
-Use recur reveal recur-expert and recur warp to discover context; use warp show/
-slices for the selected bubble. Read that bubble's map/readme, then its focused
-tests. Prefer a matching local target/release-safe binary when installed help lags;
-do not build or install merely to answer an orientation question if source suffices.
+Use `recur reveal recur-expert` and `recur warp` to discover context.
+`recur warp` is equivalent to `recur warp list`: both list remaining declared
+bubbles and rings. Use `recur warp list --all` to include completed work, then
+`recur warp show <id>` and `recur warp slices <id>` for a selected bubble.
+Pass `-d <root>` for the intended project/evidence root; read its map/readme and
+focused tests. `list --scan-all` bypasses configured discovery roots/exclusions;
+use it only when wider discovery is needed.
 
-Core recur warp queries declarations and computes qualified progress. recur-warp
-authors/manages data and policy where its commands are implemented. Read current
+Check the executable's help for the requested operation. Installed and local
+`target/release-safe` binaries can expose different commands with the same version
+string. Prefer the matching local binary when installed help lags; do not build
+or install merely to answer an orientation question if source suffices.
+
+Core `recur warp` queries declarations and computes qualified progress.
+`status`, `explain`, `next` and `collapse-plan` inspect lane attention;
+`map` and `merge` inspect declared maps and compose acceptance layers.
+`recur-warp` is the separate writer: `init`, `create`, `receipt`, `complete`,
+`evolve` and `collapse` manage defaults, maps and lifecycle artifacts. Inspect
+each command's preview/confirmation contract before writing. Read current
 help/source before treating roadmap commands as available. Reveal outputs pointers;
 it neither loads skills nor executes commands or grants authority.
 
-For typed artifact discovery, use `recur reveal --type <type>`. Explicit
+For external test evidence, `recur warp evidence <manifest> -d <root>` checks
+structured results and explicitly listed input fingerprints without rerunning
+the producer. `checked` does not establish test sufficiency or dependency closure.
+Use the project runner to produce observations, then bind evidence to the slice's
+gates with `recur-warp complete`. Keep child verification and parent integration
+acceptance separate. See docs/main.command.warp.readme.md for evidence contracts.
+
+For typed artifact discovery, use `recur reveal --type <type>` when exposed by
+the selected executable's help; this is implemented in source/local builds but
+an installed binary may lag. Explicit
 `artifact.type` metadata wins over optional `[reveal.types.prefixes]` hints;
 inspect the reported source/status/diagnostics and retain untyped legacy capsules.
 Types are extensible; hierarchy and Eventness remain the address and attention

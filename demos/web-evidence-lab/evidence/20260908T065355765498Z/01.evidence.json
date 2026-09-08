@@ -1,0 +1,24 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "Playwright Python 1.62.0; Chromium 152.0.7977.76",
+  "project": "main",
+  "configuration": "level-01; headless; 1100x850; loopback API",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "executed_at_unix": 1788850436,
+  "result_artifact": "evidence/20260908T065355765498Z/01.result.json",
+  "result_fingerprint": "fnv1a64:c04ea24553cb251f",
+  "source": {
+    "revision": "e3f77417666cc0af3ba828e6b3f4c65dde7f09fa",
+    "dirty": true,
+    "files": {
+      "apps/01/.recur/config.toml": "fnv1a64:7d30fd75e172f4f7",
+      "apps/01/main.contract.md": "fnv1a64:4872bac3ec99126e",
+      "apps/01/main.html": "fnv1a64:65d6192547add797",
+      "main.build.py": "fnv1a64:cf79000c411f94a5",
+      "main.server.py": "fnv1a64:9f54398a771511ef",
+      "main.test.py": "fnv1a64:82a7bfeda5aa940d",
+      "requirements.txt": "fnv1a64:f8d59d494d305291"
+    }
+  }
+}

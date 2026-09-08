@@ -1,0 +1,646 @@
+{
+  "configured_trace": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "trace-id",
+      "main.greeting.sent",
+      "--scope",
+      "main.**",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.052,
+    "stdout": "{\n  \"request\": {\n    \"pattern\": \"main.greeting.sent\",\n    \"scope\": \"main.**\",\n    \"dir\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\",\n    \"ext\": null,\n    \"format\": \"summary\",\n    \"stdin\": false,\n    \"ignore_case\": false,\n    \"separator\": \".\",\n    \"depth_requested\": 2,\n    \"depth_effective\": 2,\n    \"depth_cap\": 5,\n    \"depth_guard\": \"hard-fail\",\n    \"force\": false,\n    \"json\": true\n  },\n  \"identifier\": \"main.greeting.sent\",\n  \"define\": [\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.contract.md\",\n      \"line_number\": 2,\n      \"line\": \"            Consumes: main.greeting.sent a successful greeting string, dispatched by the parent.\",\n      \"edge_type\": \"define\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.view.js\",\n      \"line_number\": 1,\n      \"line\": \"// consumes: main.greeting.sent accepted greeting event\",\n      \"edge_type\": \"define\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.view.js\",\n      \"line_number\": 9,\n      \"line\": \"                  bus.addEventListener('main.greeting.sent', event => { items = append(items, event.detail); draw(); });\",\n      \"edge_type\": \"define\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.js\",\n      \"line_number\": 12,\n      \"line\": \"// produces: main.greeting.sent parent publishes accepted greeting\",\n      \"edge_type\": \"define\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.js\",\n      \"line_number\": 23,\n      \"line\": \"                    bus.dispatchEvent(new CustomEvent('main.greeting.sent', {detail:message}));\",\n      \"edge_type\": \"define\"\n    }\n  ],\n  \"produce\": [\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.js\",\n      \"line_number\": 12,\n      \"line\": \"// produces: main.greeting.sent parent publishes accepted greeting\",\n      \"edge_type\": \"produce\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.js\",\n      \"line_number\": 23,\n      \"line\": \"                    bus.dispatchEvent(new CustomEvent('main.greeting.sent', {detail:message}));\",\n      \"edge_type\": \"produce\"\n    }\n  ],\n  \"consume\": [\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.contract.md\",\n      \"line_number\": 2,\n      \"line\": \"            Consumes: main.greeting.sent a successful greeting string, dispatched by the parent.\",\n      \"edge_type\": \"consume\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.view.js\",\n      \"line_number\": 1,\n      \"line\": \"// consumes: main.greeting.sent accepted greeting event\",\n      \"edge_type\": \"consume\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.view.js\",\n      \"line_number\": 9,\n      \"line\": \"                  bus.addEventListener('main.greeting.sent', event => { items = append(items, event.detail); draw(); });\",\n      \"edge_type\": \"consume\"\n    },\n    {\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.js\",\n      \"line_number\": 14,\n      \"line\": \"                form.addEventListener('submit', async event => {\",\n      \"edge_type\": \"consume\"\n    }\n  ],\n  \"trigger\": []\n}\n",
+    "stderr": "",
+    "json": {
+      "request": {
+        "pattern": "main.greeting.sent",
+        "scope": "main.**",
+        "dir": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace",
+        "ext": null,
+        "format": "summary",
+        "stdin": false,
+        "ignore_case": false,
+        "separator": ".",
+        "depth_requested": 2,
+        "depth_effective": 2,
+        "depth_cap": 5,
+        "depth_guard": "hard-fail",
+        "force": false,
+        "json": true
+      },
+      "identifier": "main.greeting.sent",
+      "define": [
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.contract.md",
+          "line_number": 2,
+          "line": "            Consumes: main.greeting.sent a successful greeting string, dispatched by the parent.",
+          "edge_type": "define"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.view.js",
+          "line_number": 1,
+          "line": "// consumes: main.greeting.sent accepted greeting event",
+          "edge_type": "define"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.view.js",
+          "line_number": 9,
+          "line": "                  bus.addEventListener('main.greeting.sent', event => { items = append(items, event.detail); draw(); });",
+          "edge_type": "define"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.js",
+          "line_number": 12,
+          "line": "// produces: main.greeting.sent parent publishes accepted greeting",
+          "edge_type": "define"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.js",
+          "line_number": 23,
+          "line": "                    bus.dispatchEvent(new CustomEvent('main.greeting.sent', {detail:message}));",
+          "edge_type": "define"
+        }
+      ],
+      "produce": [
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.js",
+          "line_number": 12,
+          "line": "// produces: main.greeting.sent parent publishes accepted greeting",
+          "edge_type": "produce"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.js",
+          "line_number": 23,
+          "line": "                    bus.dispatchEvent(new CustomEvent('main.greeting.sent', {detail:message}));",
+          "edge_type": "produce"
+        }
+      ],
+      "consume": [
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.contract.md",
+          "line_number": 2,
+          "line": "            Consumes: main.greeting.sent a successful greeting string, dispatched by the parent.",
+          "edge_type": "consume"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.view.js",
+          "line_number": 1,
+          "line": "// consumes: main.greeting.sent accepted greeting event",
+          "edge_type": "consume"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.view.js",
+          "line_number": 9,
+          "line": "                  bus.addEventListener('main.greeting.sent', event => { items = append(items, event.detail); draw(); });",
+          "edge_type": "consume"
+        },
+        {
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.js",
+          "line_number": 14,
+          "line": "                form.addEventListener('submit', async event => {",
+          "edge_type": "consume"
+        }
+      ],
+      "trigger": []
+    }
+  },
+  "final_files": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "files",
+      "main.**",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.025,
+    "stdout": "[\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.acceptance.complete.md\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.contract.md\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.api.client.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.contract.md\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.delivery.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.locale.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.model.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.view.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.contract.md\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.model.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.view.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.html\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.navigation.router.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.preferences.store.js\",\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.style.css\"\n]\n",
+    "stderr": "",
+    "json": [
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.acceptance.complete.md",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.contract.md",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.api.client.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.contract.md",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.delivery.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.locale.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.model.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.view.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.contract.md",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.model.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.view.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.html",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.navigation.router.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.preferences.store.js",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.style.css"
+    ]
+  },
+  "tree_depth_1": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "tree",
+      "main",
+      "--depth",
+      "1",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.03,
+    "stdout": "{\n  \"name\": \"main\",\n  \"children\": [\n    {\n      \"name\": \"acceptance\",\n      \"children\": [\n        {\n          \"name\": \"complete\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.acceptance.complete.md\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"contract\",\n      \"children\": [],\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.contract.md\"\n    },\n    {\n      \"name\": \"greeting\",\n      \"children\": [\n        {\n          \"name\": \"api\",\n          \"children\": [\n            {\n              \"name\": \"client\",\n              \"children\": [],\n              \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.api.client.js\"\n            }\n          ],\n          \"path\": null\n        },\n        {\n          \"name\": \"contract\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.contract.md\"\n        },\n        {\n          \"name\": \"delivery\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.delivery.js\"\n        },\n        {\n          \"name\": \"locale\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.locale.js\"\n        },\n        {\n          \"name\": \"model\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.model.js\"\n        },\n        {\n          \"name\": \"view\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.view.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"history\",\n      \"children\": [\n        {\n          \"name\": \"contract\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.contract.md\"\n        },\n        {\n          \"name\": \"model\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.model.js\"\n        },\n        {\n          \"name\": \"view\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.view.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"navigation\",\n      \"children\": [\n        {\n          \"name\": \"router\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.navigation.router.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"preferences\",\n      \"children\": [\n        {\n          \"name\": \"store\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.preferences.store.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"style\",\n      \"children\": [],\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.style.css\"\n    }\n  ],\n  \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.js\"\n}\n",
+    "stderr": "",
+    "json": {
+      "name": "main",
+      "children": [
+        {
+          "name": "acceptance",
+          "children": [
+            {
+              "name": "complete",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.acceptance.complete.md"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "contract",
+          "children": [],
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.contract.md"
+        },
+        {
+          "name": "greeting",
+          "children": [
+            {
+              "name": "api",
+              "children": [
+                {
+                  "name": "client",
+                  "children": [],
+                  "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.api.client.js"
+                }
+              ],
+              "path": null
+            },
+            {
+              "name": "contract",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.contract.md"
+            },
+            {
+              "name": "delivery",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.delivery.js"
+            },
+            {
+              "name": "locale",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.locale.js"
+            },
+            {
+              "name": "model",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.model.js"
+            },
+            {
+              "name": "view",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.view.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "history",
+          "children": [
+            {
+              "name": "contract",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.contract.md"
+            },
+            {
+              "name": "model",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.model.js"
+            },
+            {
+              "name": "view",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.view.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "navigation",
+          "children": [
+            {
+              "name": "router",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.navigation.router.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "preferences",
+          "children": [
+            {
+              "name": "store",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.preferences.store.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "style",
+          "children": [],
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.style.css"
+        }
+      ],
+      "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.js"
+    }
+  },
+  "tree_depth_2": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "tree",
+      "main",
+      "--depth",
+      "2",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.046,
+    "stdout": "{\n  \"name\": \"main\",\n  \"children\": [\n    {\n      \"name\": \"acceptance\",\n      \"children\": [\n        {\n          \"name\": \"complete\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.acceptance.complete.md\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"contract\",\n      \"children\": [],\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.contract.md\"\n    },\n    {\n      \"name\": \"greeting\",\n      \"children\": [\n        {\n          \"name\": \"api\",\n          \"children\": [\n            {\n              \"name\": \"client\",\n              \"children\": [],\n              \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.api.client.js\"\n            }\n          ],\n          \"path\": null\n        },\n        {\n          \"name\": \"contract\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.contract.md\"\n        },\n        {\n          \"name\": \"delivery\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.delivery.js\"\n        },\n        {\n          \"name\": \"locale\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.locale.js\"\n        },\n        {\n          \"name\": \"model\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.model.js\"\n        },\n        {\n          \"name\": \"view\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.view.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"history\",\n      \"children\": [\n        {\n          \"name\": \"contract\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.contract.md\"\n        },\n        {\n          \"name\": \"model\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.model.js\"\n        },\n        {\n          \"name\": \"view\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.view.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"navigation\",\n      \"children\": [\n        {\n          \"name\": \"router\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.navigation.router.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"preferences\",\n      \"children\": [\n        {\n          \"name\": \"store\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.preferences.store.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"style\",\n      \"children\": [],\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.style.css\"\n    }\n  ],\n  \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.js\"\n}\n",
+    "stderr": "",
+    "json": {
+      "name": "main",
+      "children": [
+        {
+          "name": "acceptance",
+          "children": [
+            {
+              "name": "complete",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.acceptance.complete.md"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "contract",
+          "children": [],
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.contract.md"
+        },
+        {
+          "name": "greeting",
+          "children": [
+            {
+              "name": "api",
+              "children": [
+                {
+                  "name": "client",
+                  "children": [],
+                  "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.api.client.js"
+                }
+              ],
+              "path": null
+            },
+            {
+              "name": "contract",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.contract.md"
+            },
+            {
+              "name": "delivery",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.delivery.js"
+            },
+            {
+              "name": "locale",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.locale.js"
+            },
+            {
+              "name": "model",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.model.js"
+            },
+            {
+              "name": "view",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.view.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "history",
+          "children": [
+            {
+              "name": "contract",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.contract.md"
+            },
+            {
+              "name": "model",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.model.js"
+            },
+            {
+              "name": "view",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.view.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "navigation",
+          "children": [
+            {
+              "name": "router",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.navigation.router.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "preferences",
+          "children": [
+            {
+              "name": "store",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.preferences.store.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "style",
+          "children": [],
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.style.css"
+        }
+      ],
+      "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.js"
+    }
+  },
+  "tree_depth_5": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "tree",
+      "main",
+      "--depth",
+      "5",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.022,
+    "stdout": "{\n  \"name\": \"main\",\n  \"children\": [\n    {\n      \"name\": \"acceptance\",\n      \"children\": [\n        {\n          \"name\": \"complete\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.acceptance.complete.md\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"contract\",\n      \"children\": [],\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.contract.md\"\n    },\n    {\n      \"name\": \"greeting\",\n      \"children\": [\n        {\n          \"name\": \"api\",\n          \"children\": [\n            {\n              \"name\": \"client\",\n              \"children\": [],\n              \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.api.client.js\"\n            }\n          ],\n          \"path\": null\n        },\n        {\n          \"name\": \"contract\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.contract.md\"\n        },\n        {\n          \"name\": \"delivery\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.delivery.js\"\n        },\n        {\n          \"name\": \"locale\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.locale.js\"\n        },\n        {\n          \"name\": \"model\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.model.js\"\n        },\n        {\n          \"name\": \"view\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.greeting.view.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"history\",\n      \"children\": [\n        {\n          \"name\": \"contract\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.contract.md\"\n        },\n        {\n          \"name\": \"model\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.model.js\"\n        },\n        {\n          \"name\": \"view\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.history.view.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"navigation\",\n      \"children\": [\n        {\n          \"name\": \"router\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.navigation.router.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"preferences\",\n      \"children\": [\n        {\n          \"name\": \"store\",\n          \"children\": [],\n          \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.preferences.store.js\"\n        }\n      ],\n      \"path\": null\n    },\n    {\n      \"name\": \"style\",\n      \"children\": [],\n      \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.style.css\"\n    }\n  ],\n  \"path\": \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\apps\\\\10\\\\main.js\"\n}\n",
+    "stderr": "",
+    "json": {
+      "name": "main",
+      "children": [
+        {
+          "name": "acceptance",
+          "children": [
+            {
+              "name": "complete",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.acceptance.complete.md"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "contract",
+          "children": [],
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.contract.md"
+        },
+        {
+          "name": "greeting",
+          "children": [
+            {
+              "name": "api",
+              "children": [
+                {
+                  "name": "client",
+                  "children": [],
+                  "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.api.client.js"
+                }
+              ],
+              "path": null
+            },
+            {
+              "name": "contract",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.contract.md"
+            },
+            {
+              "name": "delivery",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.delivery.js"
+            },
+            {
+              "name": "locale",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.locale.js"
+            },
+            {
+              "name": "model",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.model.js"
+            },
+            {
+              "name": "view",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.greeting.view.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "history",
+          "children": [
+            {
+              "name": "contract",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.contract.md"
+            },
+            {
+              "name": "model",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.model.js"
+            },
+            {
+              "name": "view",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.history.view.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "navigation",
+          "children": [
+            {
+              "name": "router",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.navigation.router.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "preferences",
+          "children": [
+            {
+              "name": "store",
+              "children": [],
+              "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.preferences.store.js"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "style",
+          "children": [],
+          "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.style.css"
+        }
+      ],
+      "path": "C:\\src\\recur\\demos\\web-evidence-lab\\apps\\10\\main.js"
+    }
+  },
+  "warp_inventory": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "warp",
+      "list",
+      "--all",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.059,
+    "stdout": "{\n  \"discovered\": 1,\n  \"discovery_policy\": {\n    \"exclude_dirs\": [\n      \".git\",\n      \"target\",\n      \"build\",\n      \"dist\",\n      \"node_modules\",\n      \"fixtures\"\n    ],\n    \"roots\": [\n      \"\\\\\\\\?\\\\C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\"\n    ],\n    \"scan_all\": false,\n    \"source\": \"defaults\"\n  },\n  \"entries\": [\n    {\n      \"contract_status\": \"checked-gates-satisfied\",\n      \"counts\": {\n        \"blocked\": 0,\n        \"conflicting\": 0,\n        \"covered\": 10,\n        \"pending\": 0,\n        \"required\": 10,\n        \"stale_contract\": 0\n      },\n      \"error\": null,\n      \"evidence_status\": \"checked\",\n      \"kind\": \"bubble\",\n      \"manifests\": [\n        \"main.web-lab.warp-map.json\"\n      ],\n      \"scope\": \"//?/C:/src/recur/demos/web-evidence-lab\",\n      \"state\": \"complete\",\n      \"warp_id\": \"main.web-lab\"\n    }\n  ],\n  \"errors\": 0,\n  \"filter\": \"all\",\n  \"listed\": 1,\n  \"root\": \"\\\\\\\\?\\\\C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\",\n  \"schema\": \"warp-list-v1\"\n}\n",
+    "stderr": "",
+    "json": {
+      "discovered": 1,
+      "discovery_policy": {
+        "exclude_dirs": [
+          ".git",
+          "target",
+          "build",
+          "dist",
+          "node_modules",
+          "fixtures"
+        ],
+        "roots": [
+          "\\\\?\\C:\\src\\recur\\demos\\web-evidence-lab"
+        ],
+        "scan_all": false,
+        "source": "defaults"
+      },
+      "entries": [
+        {
+          "contract_status": "checked-gates-satisfied",
+          "counts": {
+            "blocked": 0,
+            "conflicting": 0,
+            "covered": 10,
+            "pending": 0,
+            "required": 10,
+            "stale_contract": 0
+          },
+          "error": null,
+          "evidence_status": "checked",
+          "kind": "bubble",
+          "manifests": [
+            "main.web-lab.warp-map.json"
+          ],
+          "scope": "//?/C:/src/recur/demos/web-evidence-lab",
+          "state": "complete",
+          "warp_id": "main.web-lab"
+        }
+      ],
+      "errors": 0,
+      "filter": "all",
+      "listed": 1,
+      "root": "\\\\?\\C:\\src\\recur\\demos\\web-evidence-lab",
+      "schema": "warp-list-v1"
+    }
+  },
+  "eventness_current": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "files",
+      "main.history.**.current",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.029,
+    "stdout": "[\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.integration.current.md\"\n]\n",
+    "stderr": "",
+    "json": [
+      "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.integration.current.md"
+    ]
+  },
+  "eventness_strange": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "files",
+      "main.history.**.strange",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.028,
+    "stdout": "[\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.integration.strange.md\"\n]\n",
+    "stderr": "",
+    "json": [
+      "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.integration.strange.md"
+    ]
+  },
+  "eventness_complete": {
+    "argv": [
+      "C:\\src\\recur\\target\\release-safe\\recur.exe",
+      "files",
+      "main.history.**.complete",
+      "-d",
+      "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace",
+      "--json"
+    ],
+    "cwd": "C:\\src\\recur\\demos\\web-evidence-lab",
+    "exit_code": 0,
+    "seconds": 0.03,
+    "stdout": "[\n  \"C:\\\\src\\\\recur\\\\demos\\\\web-evidence-lab\\\\scratch\\\\20260908T065355765498Z\\\\configured-trace\\\\main.history.integration.complete.md\"\n]\n",
+    "stderr": "",
+    "json": [
+      "C:\\src\\recur\\demos\\web-evidence-lab\\scratch\\20260908T065355765498Z\\configured-trace\\main.history.integration.complete.md"
+    ]
+  }
+}

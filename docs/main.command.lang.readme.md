@@ -6,7 +6,10 @@ Date: 2026-07-23
 `recur lang` is the pure query surface for Recur language sources, symbols,
 contracts, lanes, slices, Warps, and runtime Eventness.
 
-`recur-lang` is the stateful execution companion. After an explicit confirmed
+`recur-lang` owns opinionated language behavior, including workflow suggestions,
+prioritization and repair proposals as well as stateful execution. A read-only
+recommendation still belongs to the companion when it chooses what ought to
+happen. After an explicit confirmed
 action, it performs the declared Recur Lang operation, advances the permitted
 state, and records durable ACK/NAK evidence. A human, AI, or coordinator may
 choose and authorize the next action, but `recur-lang` is the surface that does
@@ -19,7 +22,7 @@ target languages.
 
 ```text
 recur lang   = query, validate, expand, contract, trace, explain, exit
-recur-lang   = execute confirmed declared action, write state and ACK/NAK
+recur-lang   = opinionated guidance/policy; execute confirmed actions, write state and ACK/NAK
 recur-watch  = subscribe to filesystem events and report watcher state
 coordinator LLM = choose and authorize eligible next work from durable facts
 ```
@@ -33,6 +36,41 @@ recur-<topic>        = opinionated runner / writer / async actor
 
 Expansion and contraction in `recur lang` are read-only views over one
 canonical parsed model. They do not rewrite source files.
+
+## Product purpose: reduce the work the reader must hold in mind
+
+The query surface focuses, filters and describes functionality in a selected
+language scope. Recorded Eventness narrows which parts are interesting in that
+scope. The reader sees a compact mapping of exact inputs, functions and outputs
+instead of repeatedly carrying full parameter and return-value lists through
+every workflow connection.
+
+Use a single local letter for each function in a bounded view, such as `f(a)`.
+The header resolves its familiar meaning and exact input/output contracts; the
+body shows how the compact symbols connect; the footer exposes checks,
+Eventness and evidence. Symbols for bundles reference their complete definitions
+and can be expanded on demand. Compact notation must preserve canonical
+contract identity, aliases, joins and individual sub-input dependencies.
+
+Scope filtering must retain or reference incoming/outgoing boundaries. A hidden
+dependency cannot be silently dropped to make a graph look sound. Cycle and
+join diagnostics should identify the affected symbols and the explanatory path,
+allowing the reader to inspect just the relevant contracts. Formal validation
+helps reveal circular dependencies; it does not automatically redesign them.
+
+The following are acceptance requirements for the future pure query Warp:
+
+- Compact and expanded views resolve to the same contracts and graph.
+- One scoped function can be explained through header, body and footer without
+  dumping every unrelated function's parameter list.
+- Eventness filtering narrows attention without suppressing boundary references
+  or a relevant cycle path; omitted context is visible.
+- Complex joins use compact bundle references while expansion preserves each
+  producer-to-sub-input relationship.
+- Queries report declared facts and validation findings without choosing a
+  workflow, prescribing repairs or changing source/Eventness.
+
+These are design requirements, not claims of implemented CLI behavior.
 
 ## Relationship to `recur trace-id`
 

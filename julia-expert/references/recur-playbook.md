@@ -21,12 +21,15 @@ The same query-first workflow is portable to external projects (including Visual
 
 ## Fast Rehydration
 
-### Warp specialization (checkpoint df946cf, 2026-09-06)
+### Warp specialization
 
-For Warp work, start with `recur reveal recur-expert`, `recur warp`, and
-`recur warp slices <warp-id>`. Read docs/main.command.warp.readme.md and the
-selected bubble's map/readme before broader theory. Re-query live state rather
-than treating this dated checkpoint as the current completion state.
+For Warp work, start with `recur reveal recur-expert` and `recur warp` (equivalent
+to `recur warp list`). Both list remaining declarations; `recur warp list --all`
+includes completed work. Use `recur warp show <warp-id>` and
+`recur warp slices <warp-id>` with the appropriate `-d` evidence root.
+Read docs/main.command.warp.readme.md and the selected bubble's map/readme before
+broader theory. Re-query live state rather than treating dated receipts as the
+current completion state.
 
 Core `recur warp` is read-only inventory, projection and evidence inspection.
 The opinionated `recur-warp` companion authors data/structures and manages policy
@@ -34,29 +37,14 @@ and declared state where implemented. Calculated stats and qualified completion
 are not arbitrary writable status fields. Check local --help/source before using
 proposed commands; installed binaries may lag target/release-safe.
 
-At this checkpoint create/show/slices and companion policy are implemented.
-The pending main.command.warp.identity-policy bubble has baseline slice-0 accepted;
-slice-1 init, slice-2 UUIDs, slice-3 optional preservation config, slice-4 human
-list formatting and slice-final regression closeout remain unimplemented.
-Its identity-policy and list-format Julia suites are standalone intentionally red,
-not part of the passing full runner yet. Read the bubble's acceptance contract for
-additional cases; do not weaken tests or mark them broken to close the bubble.
-
-Subsequent local work on 2026-09-06 accepted all identity-policy slices: init,
-UUIDv7 metadata, optional removal policy and human list formatting now ship in
-source. The full Julia runner passed 3205 tests with 73 known-broken cases using
-`--startup-file=no -C generic -O0`; default Julia 1.12.0 suffered runtime crashes.
-Read its verification record for that qualification. Prompt discovery (including
-app-provided defaults/project overrides) and reveal persona-skills are separate
-planned bubbles with standalone red tests, not implemented command surfaces.
-
-Prompt discovery was subsequently implemented and verified on 2026-09-06: core
-`recur prompt`, trait aliases, `recur-warp llm prompt`, bundled defaults, project
-overrides and bounded packets now ship in source. The prompt suite is included
-in the full runner (3584 passed, 73 known-broken with the conservative Julia flags
-above); Cargo passed 185 tests with 7 ignored doc tests. See
-docs/main.command.prompt.discovery.verification.md for evidence and limitations.
-Provider invocation/model evaluation and reveal persona-skills remain separate.
+Identity-policy implementation includes init, UUIDv7 metadata, optional removal
+policy and human list formatting. Prompt discovery implements `recur prompt`,
+trait aliases, `recur-warp llm prompt`, bundled defaults, project overrides and
+bounded packets. These suites are integrated in the normal Julia runner; consult
+their verification records for historical commands, runtimes and results.
+See docs/main.command.prompt.discovery.verification.md for prompt evidence and
+limits. Provider invocation/model evaluation and reveal persona-skills profile
+packets remain separate planned work; inspect their live maps before resuming.
 
 The proposed work model is warp -> slice -> work name -> hierarchical tags -> UUID.
 Readable hierarchy is the address; UUID is stable identity. Tags classify purpose;

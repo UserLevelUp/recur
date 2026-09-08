@@ -1,0 +1,13 @@
+{
+  "schema": "warp-external-result-v1",
+  "kind": "test",
+  "outcome": "passed",
+  "exit_code": 0,
+  "tests": {
+    "discovered": 14,
+    "executed": 14,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0
+  }
+}

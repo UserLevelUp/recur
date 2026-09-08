@@ -1,0 +1,38 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "Playwright Python 1.62.0; Chromium 152.0.7977.76",
+  "project": "main",
+  "configuration": "level-09; headless; 1100x850; loopback API",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "executed_at_unix": 1788851156,
+  "result_artifact": "evidence/20260908T070526711986Z/09.result.json",
+  "result_fingerprint": "fnv1a64:594b2a1d9c76461b",
+  "source": {
+    "revision": "e3f77417666cc0af3ba828e6b3f4c65dde7f09fa",
+    "dirty": true,
+    "files": {
+      "apps/09/.recur/config.toml": "fnv1a64:7d30fd75e172f4f7",
+      "apps/09/main.contract.md": "fnv1a64:68a65aaaadbb3ec7",
+      "apps/09/main.greeting.api.client.js": "fnv1a64:793b25da22ea517b",
+      "apps/09/main.greeting.contract.md": "fnv1a64:ac75a0101c23731e",
+      "apps/09/main.greeting.delivery.js": "fnv1a64:8af2f2a4a2ffd6c0",
+      "apps/09/main.greeting.locale.js": "fnv1a64:0fc2da9db6623444",
+      "apps/09/main.greeting.model.js": "fnv1a64:bdcc068e2fdf6747",
+      "apps/09/main.greeting.view.js": "fnv1a64:1b8d06f4a3e7867c",
+      "apps/09/main.html": "fnv1a64:e9e24fb9d9825ee3",
+      "apps/09/main.js": "fnv1a64:f56544797b7725b7",
+      "apps/09/main.navigation.router.js": "fnv1a64:9fd8a6ac53eaf423",
+      "apps/09/main.preferences.store.js": "fnv1a64:070409e5b8ce6c2c",
+      "apps/09/main.style.css": "fnv1a64:7dea661cd992184b",
+      "main.build.py": "fnv1a64:cf79000c411f94a5",
+      "main.server.jl": "fnv1a64:eb9e258c8bcf29f0",
+      "main.server.test.jl": "fnv1a64:9d5d76d9d00339b7",
+      "main.server.process.py": "fnv1a64:7778fe7c7bfd872d",
+      "main.test.py": "fnv1a64:dbac949c35cf1022",
+      "requirements.txt": "fnv1a64:f8d59d494d305291",
+      "Project.toml": "fnv1a64:b69e6c251a17ddad",
+      "Manifest.toml": "fnv1a64:2d54fbbfa19e91bb"
+    }
+  }
+}

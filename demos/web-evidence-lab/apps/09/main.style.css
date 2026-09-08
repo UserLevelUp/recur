@@ -1,0 +1,6 @@
+body{font:18px/1.6 system-ui,sans-serif;background:#101923;color:#e9eef4;margin:0;padding:7vh 6vw}
+            main{max-width:760px;margin:auto}h1{font-size:2.6rem;line-height:1.1}a{color:#7ed8ce}nav{display:flex;gap:24px}
+            .eyebrow{color:#b5a3ee;letter-spacing:.2em}form{display:flex;gap:16px;flex-wrap:wrap;align-items:end}
+            label{display:grid;gap:6px}input,select,button{font:inherit;padding:9px;border-radius:8px;border:1px solid #50647a}
+            button{background:#b5a3ee;color:#101923;cursor:pointer}#greeting{font-size:2rem;color:#7ed8ce}#error{color:#ffb9a5}
+            footer{margin-top:60px}small{color:#b7c4d0}[hidden]{display:none}

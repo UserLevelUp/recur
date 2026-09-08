@@ -1,0 +1,35 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.improvement.30.static-graph",
+  "goal": "Produce one deterministic, read-only static graph report over ConcurrentIr under the existing SGR1 acceptance contract.",
+  "release_target": "a.0.2.8",
+  "planning_status": "draft",
+  "contract_document": "main.improvement.30.static-graph.todo.current.md",
+  "current_slice": "slice-0",
+  "required_slices": [
+    {
+      "slice_id": "slice-0",
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": ["baseline-and-report-contract"]
+    },
+    {
+      "slice_id": "slice-1",
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-1:v1",
+      "depends_on": ["slice-0"],
+      "evidence_gates": ["source-bound-deterministic-topology"]
+    },
+    {
+      "slice_id": "slice-2",
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-2:v1",
+      "depends_on": ["slice-1"],
+      "evidence_gates": ["positive-and-negative-soundness-findings"]
+    },
+    {
+      "slice_id": "slice-final",
+      "contract_hash": "contract:main.improvement.30.static-graph.slice-final:v1",
+      "depends_on": ["slice-2"],
+      "evidence_gates": ["sgr1-regression-and-contract-acceptance"]
+    }
+  ]
+}
