@@ -19,6 +19,15 @@ local profile setup and packet preparation, not the entire Improvement 29 vision
 
 ## Proposed editable defaults
 
+Integration note (2026-09-07): artifact classification is shared through
+`recur::reveal_artifact` and `[reveal.types]`, with core `recur reveal --type`.
+Reuse that classifier in this bubble's query integration; profile association
+must not infer type from incidental persona/agent/skill.path fields or introduce
+another classifier. Hierarchical capsules do not require a SKILL.md name for
+classification. This bubble's separate body-resolution and packet contract still
+requires its own assessment before broadening beyond its proposed SKILL.md registry.
+Existing profile contracts and receipts are unchanged.
+
 ```toml
 [reveal.personas.skippy]
 skills = ["recur-expert", "recur-warp"]

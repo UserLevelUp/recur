@@ -1,0 +1,68 @@
+{
+  "bubble_uuid": "01a07ebc-6d8e-704e-a02d-dc61a776f283",
+  "goal": "Discover and distinguish persona, agent, skill and custom reveal artifacts while preserving unopinionated read-only core queries",
+  "invariants": [
+    "Core queries are read-only and never activate artifacts.",
+    "Type vocabulary and hierarchy rules remain extensible.",
+    "Legacy untyped artifacts remain discoverable."
+  ],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.reveal.artifact-types.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-contract"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a07ebc-6d8e-7a67-9713-0c16220c3dd6"
+    },
+    {
+      "slice_id": "slice-1",
+      "contract_hash": "contract:main.command.reveal.artifact-types.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "classification"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-2",
+      "contract_hash": "contract:main.command.reveal.artifact-types.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "query-integration"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-3",
+      "contract_hash": "contract:main.command.reveal.artifact-types.slice-3:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "guidance-and-purity"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "contract_hash": "contract:main.command.reveal.artifact-types.slice-final:v1",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "regression-closeout"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a07ebc-6d8e-7ddd-b530-54cc69519053"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.reveal.artifact-types"
+}

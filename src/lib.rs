@@ -10,6 +10,7 @@ pub mod prompt;
 mod prompt_context;
 pub mod recur_lang_concurrent_ir;
 pub mod recur_lang_ir;
+pub mod reveal_artifact;
 pub mod search;
 pub mod tree;
 pub mod warp_bubble;

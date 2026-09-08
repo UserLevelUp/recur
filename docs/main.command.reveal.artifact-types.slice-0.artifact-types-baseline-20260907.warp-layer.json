@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.reveal.artifact-types",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.reveal.artifact-types.slice-0:v1",
+  "attempt_id": "artifact-types-baseline-20260907",
+  "result_state": "accepted",
+  "result_hash": "sha256:fefc03ff4737890daf42fd95238c37f39dffe5d9c70a438a5499050d2bc6bcfb",
+  "evidence": {
+    "baseline-contract": [
+      "main.command.reveal.artifact-types.baseline.md"
+    ]
+  },
+  "reason": null
+}

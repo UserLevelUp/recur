@@ -75,7 +75,19 @@ Use cargo test --locked and julia julia-tests/runtests.jl for regressions;
 use the selected main.command.warp.*.test.jl files for focused tests. Historical
 passing counts are evidence of a run, not proof about later artifacts.
 
-Reveal only prints capsule fields (including skill pointers). A skill-capable
+Artifact-type discovery was implemented on 2026-09-07. `recur reveal --type skill`
+filters resolved types; list/show reports metadata or configured-prefix provenance,
+untyped entries and conflicts. Prefix defaults remain project/companion data.
+Explicit `-d` now bounds discovery independently of nearest-config lookup; omitted
+`-d` retains project-root discovery. Read the artifact-types contract and
+verification record for selection rules, scope and acceptance evidence.
+For the 2026-09-07 artifact-types regression, the installed Julia 1.12.4 launcher
+at `C:/Users/marcn/AppData/Local/Microsoft/WindowsApps/julia.exe` passed the full
+runner with `--startup-file=no -C generic` and normal optimization. The older
+1.12.0 executable on PATH and several conservative configurations failed inside
+Julia. Use the recorded runtime as well as its flags when reproducing acceptance.
+
+Reveal prints capsule fields, classification and skill pointers. A skill-capable
 agent must separately load SKILL.md. It does not recursively load references,
 execute pull/verify commands, or grant implementation/commit/push/removal authority.
 See docs/main.command.reveal.readme.md and recur-expert/SKILL.md.

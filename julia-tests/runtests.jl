@@ -59,6 +59,7 @@ try
         include("main.command.stdin.test.jl")    # IMPROVEMENT6 - Git integration with --stdin flag
         include("main.command.init.test.jl")     # Init command: config generation, analyze mode, lane collision dedupe
         include("main.command.reveal.test.jl")   # IMPROVEMENT22 - lane-local reveal helpers
+        include("main.command.reveal.artifact-types.test.jl") # Shared typed artifacts, filtering and bounded discovery
         include("main.command.watch.test.jl")    # IMPROVEMENT23 - pure watcher-state query surface
         include("main.command.version.test.jl")  # IMPROVEMENT26 - pure version query + recur-version writer
         include("main.command.capability.test.jl")  # IMPROVEMENT28 - capability-card query surface

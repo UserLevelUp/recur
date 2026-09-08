@@ -80,6 +80,7 @@ pub struct RevealRankConfig {
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct RevealConfig {
+    pub types: crate::reveal_artifact::TypePolicy,
     pub mode: Option<String>,
     pub entry_suffix: Option<String>,
     pub trust: Option<String>,
@@ -228,7 +229,7 @@ impl RecurConfig {
                     traversal = Some(parse_traversal_section(section_table));
                 }
                 "reveal" => {
-                    reveal = Some(parse_reveal_section(section_table));
+                    reveal = Some(parse_reveal_section(section_table)?);
                 }
                 "traits" => {
                     traits = Some(parse_traits_section(section_table));
@@ -585,8 +586,13 @@ fn parse_reveal_rank_section(table: &toml::value::Table) -> RevealRankConfig {
     }
 }
 
-fn parse_reveal_section(table: &toml::value::Table) -> RevealConfig {
-    RevealConfig {
+fn parse_reveal_section(table: &toml::value::Table) -> Result<RevealConfig> {
+    Ok(RevealConfig {
+        types: table
+            .get("types")
+            .map(crate::reveal_artifact::TypePolicy::parse)
+            .transpose()?
+            .unwrap_or_default(),
         mode: table
             .get("mode")
             .and_then(|v| v.as_str())
@@ -616,7 +622,7 @@ fn parse_reveal_section(table: &toml::value::Table) -> RevealConfig {
             .get("rank")
             .and_then(|v| v.as_table())
             .map(parse_reveal_rank_section),
-    }
+    })
 }
 
 fn parse_trait_placeholder_section(table: &toml::value::Table) -> TraitPlaceholderConfig {

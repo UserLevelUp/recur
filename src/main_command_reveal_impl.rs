@@ -8,6 +8,7 @@ use recur::project_config::{
     DEFAULT_REVEAL_MODE, DEFAULT_REVEAL_ORDER_STEPS, DEFAULT_REVEAL_SKIP_PERSONA_IF_KNOWN,
     DEFAULT_REVEAL_TRUST,
 };
+use recur::reveal_artifact::{valid_type, ArtifactType, TypePolicy};
 use serde::Serialize;
 use std::collections::HashSet;
 use std::fs;
@@ -35,16 +36,21 @@ struct RevealEntry {
     lane: String,
     path: String,
     absolute_path: PathBuf,
+    fields: Vec<RevealField>,
+    artifact: ArtifactType,
+    separators: Vec<char>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 struct RevealEntrySummary {
     lane: String,
     path: String,
+    artifact: ArtifactType,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 struct RevealListOutput {
+    status: String,
     root: String,
     entry_suffix: String,
     mode: String,
@@ -57,6 +63,8 @@ struct RevealListOutput {
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 struct RevealShowOutput {
+    status: String,
+    artifact: ArtifactType,
     prompts: Vec<serde_json::Value>,
     eventness_policy: recur::warp_policy::WarpPolicy,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -79,24 +87,77 @@ enum RevealSelection {
     Found(RevealEntry),
     Ambiguous(Vec<RevealEntry>),
     Missing,
+    TypeMismatch,
 }
 
-pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
-    let requested_root = resolve_root(dir)?;
+pub fn execute(
+    lane: Option<String>,
+    dir: Option<PathBuf>,
+    artifact_type: Option<String>,
+    sep: &[String],
+    json: bool,
+) -> Result<()> {
+    if artifact_type
+        .as_deref()
+        .is_some_and(|kind| !valid_type(kind))
+    {
+        anyhow::bail!("Invalid --type: expected [A-Za-z][A-Za-z0-9_.-]*");
+    }
+    let separators: Vec<char> = sep
+        .iter()
+        .map(|s| {
+            let mut chars = s.chars();
+            match (chars.next(), chars.next()) {
+                (Some(c), None) if !c.is_whitespace() && c != '/' && c != '\\' => Ok(c),
+                _ => anyhow::bail!("--sep requires one non-path, non-whitespace character"),
+            }
+        })
+        .collect::<Result<_>>()?;
+    let explicit_root = dir.is_some();
+    let requested_root = resolve_root(dir.unwrap_or_else(|| PathBuf::from(".")))?.canonicalize()?;
+    if !requested_root.is_dir() {
+        anyhow::bail!("Reveal root must be a directory");
+    }
     let loaded = project_config::load_nearest(&requested_root)?;
-    let root = loaded
+    let config_root = loaded
         .as_ref()
-        .map(|config| config.project_root.clone())
-        .unwrap_or(requested_root);
+        .map(|c| c.project_root.clone())
+        .unwrap_or_else(|| requested_root.clone());
+    let root = if explicit_root {
+        requested_root
+    } else {
+        config_root.clone()
+    };
     let policy = EffectiveRevealPolicy::from_config(
         loaded.as_ref().and_then(|config| config.reveal.as_ref()),
     );
-    let entries = discover_reveal_entries(&root, &policy.entry_suffix)?;
+    let types = loaded
+        .as_ref()
+        .and_then(|c| c.reveal.as_ref())
+        .map(|r| r.types.clone())
+        .unwrap_or_default();
+    types.validate_separators(if separators.is_empty() {
+        &['.']
+    } else {
+        &separators
+    })?;
+    let entries = discover_reveal_entries(
+        &root,
+        &policy.entry_suffix,
+        &types,
+        loaded.as_ref(),
+        &separators,
+    )?;
 
     match lane {
-        Some(query) => match select_reveal_entry(&entries, &query, &policy.entry_suffix) {
+        Some(query) => match select_reveal_entry(
+            &entries,
+            &query,
+            &policy.entry_suffix,
+            artifact_type.as_deref(),
+        ) {
             RevealSelection::Found(entry) => {
-                let fields = parse_reveal_fields(&entry.absolute_path)?;
+                let fields = &entry.fields;
                 let (ordered_fields, extra_fields) = arrange_fields(&fields, &policy.order_steps);
                 let field = |name: &str| {
                     fields
@@ -105,7 +166,7 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
                         .map(|f| f.value.as_str())
                 };
                 let reconciliation = field("warp.id").map(|warp| {
-                    let evidence_root = root.join(field("warp.root").unwrap_or("."));
+                    let evidence_root = field("warp.root").map(|p| config_root.join(p)).unwrap_or_else(|| root.clone());
                     let result = (|| -> Result<serde_json::Value> {
                         let bounded = evidence_root.canonicalize()?;
                         if !bounded.starts_with(root.canonicalize()?) { anyhow::bail!("warp.root escapes project root"); }
@@ -115,13 +176,15 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
                         "warnings":[format!("reconciliation unavailable: {error:#}")], "mutation":"none"}))
                 });
                 let eventness_root = field("warp.root")
-                    .map(|relative| root.join(relative))
+                    .map(|relative| config_root.join(relative))
                     .unwrap_or_else(|| entry.absolute_path.parent().unwrap_or(&root).to_path_buf());
                 let eventness_root = eventness_root.canonicalize()?;
                 if !eventness_root.starts_with(root.canonicalize()?) {
                     anyhow::bail!("warp.root escapes project root");
                 }
                 let output = RevealShowOutput {
+                    status: "found".into(),
+                    artifact: entry.artifact.clone(),
                     prompts: if let Some(ids) = field("prompt.ids") {
                         recur::prompt::Registry::load(&root)?.references(ids)
                     } else {
@@ -144,12 +207,23 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
                 print_show_output(&output, json)?;
             }
             RevealSelection::Ambiguous(matches) => {
-                print_ambiguous_matches(&root, &query, &matches, json)?
+                print_selection_output(&root, &policy, "ambiguous", Some(&query), &matches, json)?
             }
-            RevealSelection::Missing => print_missing_match(&root, &query, &entries, json)?,
+            RevealSelection::Missing => {
+                let filtered: Vec<_> = entries
+                    .iter()
+                    .filter(|e| e.artifact.matches(artifact_type.as_deref()))
+                    .cloned()
+                    .collect();
+                print_selection_output(&root, &policy, "missing", Some(&query), &filtered, json)?;
+            }
+            RevealSelection::TypeMismatch => {
+                print_selection_output(&root, &policy, "type-mismatch", Some(&query), &[], json)?
+            }
         },
         None => {
             let output = RevealListOutput {
+                status: "listed".into(),
                 root: root.display().to_string(),
                 entry_suffix: policy.entry_suffix.clone(),
                 mode: policy.mode.clone(),
@@ -159,9 +233,11 @@ pub fn execute(lane: Option<String>, dir: PathBuf, json: bool) -> Result<()> {
                 order_steps: policy.order_steps.clone(),
                 entries: entries
                     .iter()
+                    .filter(|entry| entry.artifact.matches(artifact_type.as_deref()))
                     .map(|entry| RevealEntrySummary {
                         lane: entry.lane.clone(),
                         path: entry.path.clone(),
+                        artifact: entry.artifact.clone(),
                     })
                     .collect(),
             };
@@ -214,14 +290,23 @@ fn resolve_root(dir: PathBuf) -> Result<PathBuf> {
     Ok(std::env::current_dir()?.join(dir))
 }
 
-fn discover_reveal_entries(root: &Path, entry_suffix: &str) -> Result<Vec<RevealEntry>> {
+fn discover_reveal_entries(
+    root: &Path,
+    entry_suffix: &str,
+    types: &TypePolicy,
+    config: Option<&project_config::RecurConfig>,
+    explicit_separators: &[char],
+) -> Result<Vec<RevealEntry>> {
     let mut entries = Vec::new();
+    if entry_suffix.is_empty() {
+        anyhow::bail!("reveal.entry_suffix must not be empty");
+    }
 
     for entry in WalkDir::new(root)
         .into_iter()
-        .filter_entry(|entry| should_keep_reveal_walk_entry(entry.path()))
-        .filter_map(Result::ok)
+        .filter_entry(|entry| entry.depth() == 0 || should_keep_reveal_walk_entry(entry.path()))
     {
+        let entry = entry?;
         if !entry.file_type().is_file() {
             continue;
         }
@@ -232,6 +317,27 @@ fn discover_reveal_entries(root: &Path, entry_suffix: &str) -> Result<Vec<Reveal
         let Some(lane) = filename.strip_suffix(entry_suffix) else {
             continue;
         };
+        let absolute_path = entry.path().canonicalize()?;
+        if !absolute_path.starts_with(root) {
+            anyhow::bail!("Reveal artifact escapes discovery root");
+        }
+        let separators = if explicit_separators.is_empty() {
+            vec![config
+                .and_then(|c| c.separator_for_dir(entry.path().parent().unwrap_or(root)))
+                .unwrap_or('.')]
+        } else {
+            explicit_separators.to_vec()
+        };
+        types.validate_separators(&separators)?;
+        let fields = parse_reveal_fields(&absolute_path)?;
+        let artifact = types.classify(
+            lane,
+            &separators,
+            fields
+                .iter()
+                .filter(|f| f.key == "artifact.type")
+                .map(|f| f.value.as_str()),
+        );
 
         let relative = entry
             .path()
@@ -242,7 +348,10 @@ fn discover_reveal_entries(root: &Path, entry_suffix: &str) -> Result<Vec<Reveal
         entries.push(RevealEntry {
             lane: lane.to_string(),
             path: normalize_relative_path(&relative),
-            absolute_path: entry.path().to_path_buf(),
+            absolute_path,
+            fields,
+            artifact,
+            separators,
         });
     }
 
@@ -269,35 +378,39 @@ fn select_reveal_entry(
     entries: &[RevealEntry],
     query: &str,
     entry_suffix: &str,
+    artifact_type: Option<&str>,
 ) -> RevealSelection {
     let normalized = normalize_query(query, entry_suffix);
+    let path_query = query.trim().replace('\\', "/");
+    let path_query = path_query.strip_prefix("./").unwrap_or(&path_query);
 
     let exact_matches: Vec<RevealEntry> = entries
         .iter()
-        .filter(|entry| entry.lane == normalized || entry.path == normalized)
+        .filter(|entry| {
+            entry.lane == normalized
+                || entry.path == path_query
+                || entry.path.strip_suffix(entry_suffix) == Some(normalized.as_str())
+        })
         .cloned()
         .collect();
-    if exact_matches.len() == 1 {
-        return RevealSelection::Found(exact_matches[0].clone());
-    }
     if !exact_matches.is_empty() {
-        return RevealSelection::Ambiguous(exact_matches);
+        return select_filtered(exact_matches, artifact_type);
     }
 
     let suffix_matches: Vec<RevealEntry> = entries
         .iter()
         .filter(|entry| {
-            entry.lane.ends_with(&format!(".{}", normalized))
+            entry
+                .separators
+                .iter()
+                .any(|sep| entry.lane.ends_with(&format!("{}{}", sep, normalized)))
                 || entry.path.ends_with(&normalized)
                 || entry.path.ends_with(&format!("/{}", normalized))
         })
         .cloned()
         .collect();
-    if suffix_matches.len() == 1 {
-        return RevealSelection::Found(suffix_matches[0].clone());
-    }
     if !suffix_matches.is_empty() {
-        return RevealSelection::Ambiguous(suffix_matches);
+        return select_filtered(suffix_matches, artifact_type);
     }
 
     let fuzzy_matches: Vec<RevealEntry> = entries
@@ -305,14 +418,23 @@ fn select_reveal_entry(
         .filter(|entry| entry.lane.contains(&normalized) || entry.path.contains(&normalized))
         .cloned()
         .collect();
-    if fuzzy_matches.len() == 1 {
-        return RevealSelection::Found(fuzzy_matches[0].clone());
-    }
     if !fuzzy_matches.is_empty() {
-        return RevealSelection::Ambiguous(fuzzy_matches);
+        return select_filtered(fuzzy_matches, artifact_type);
     }
 
     RevealSelection::Missing
+}
+
+fn select_filtered(matches: Vec<RevealEntry>, artifact_type: Option<&str>) -> RevealSelection {
+    let mut filtered: Vec<_> = matches
+        .into_iter()
+        .filter(|e| e.artifact.matches(artifact_type))
+        .collect();
+    match filtered.len() {
+        0 => RevealSelection::TypeMismatch,
+        1 => RevealSelection::Found(filtered.remove(0)),
+        _ => RevealSelection::Ambiguous(filtered),
+    }
 }
 
 fn normalize_query(query: &str, entry_suffix: &str) -> String {
@@ -341,7 +463,7 @@ fn parse_reveal_fields(path: &Path) -> Result<Vec<RevealField>> {
 
         let key = trimmed[..index].trim();
         let raw_value = trimmed[index + 1..].trim();
-        if key.is_empty() || raw_value.is_empty() {
+        if key.is_empty() || (raw_value.is_empty() && key != "artifact.type") {
             continue;
         }
 
@@ -411,6 +533,7 @@ fn print_list_output(output: &RevealListOutput, json: bool) -> Result<()> {
     println!("Reveal entries under {}:", output.root);
     for entry in &output.entries {
         println!("  - {} => {}", entry.lane, entry.path);
+        print_artifact(&entry.artifact);
     }
     println!();
     println!(
@@ -429,6 +552,7 @@ fn print_show_output(output: &RevealShowOutput, json: bool) -> Result<()> {
     }
 
     println!("Reveal for {}", output.lane);
+    print_artifact(&output.artifact);
     if !output.prompts.is_empty() {
         println!("  prompts: {}", serde_json::to_string(&output.prompts)?);
     }
@@ -463,93 +587,108 @@ fn print_show_output(output: &RevealShowOutput, json: bool) -> Result<()> {
     Ok(())
 }
 
-fn print_ambiguous_matches(
-    root: &Path,
-    query: &str,
-    matches: &[RevealEntry],
-    json: bool,
-) -> Result<()> {
-    let payload = RevealListOutput {
-        root: root.display().to_string(),
-        entry_suffix: DEFAULT_REVEAL_ENTRY_SUFFIX.to_string(),
-        mode: DEFAULT_REVEAL_MODE.to_string(),
-        trust: DEFAULT_REVEAL_TRUST.to_string(),
-        max_threads: DEFAULT_REVEAL_MAX_THREADS,
-        skip_persona_if_known: DEFAULT_REVEAL_SKIP_PERSONA_IF_KNOWN,
-        order_steps: DEFAULT_REVEAL_ORDER_STEPS
-            .iter()
-            .map(|step| step.to_string())
-            .collect(),
-        entries: matches
-            .iter()
-            .map(|entry| RevealEntrySummary {
-                lane: entry.lane.clone(),
-                path: entry.path.clone(),
-            })
-            .collect(),
-    };
-
-    if json {
-        println!("{}", serde_json::to_string_pretty(&payload)?);
-        return Ok(());
+fn print_artifact(artifact: &ArtifactType) {
+    println!(
+        "    type: {} (status={}, source={})",
+        artifact.r#type.as_deref().unwrap_or("none"),
+        artifact.status,
+        artifact.source
+    );
+    for diagnostic in &artifact.diagnostics {
+        println!("    diagnostic: {}", diagnostic);
     }
-
-    println!("Multiple reveal files match '{}':", query);
-    for entry in &payload.entries {
-        println!("  - {} => {}", entry.lane, entry.path);
-    }
-    println!("Be more specific and try again.");
-
-    Ok(())
 }
 
-fn print_missing_match(
+fn print_selection_output(
     root: &Path,
-    query: &str,
+    policy: &EffectiveRevealPolicy,
+    status: &str,
+    query: Option<&str>,
     entries: &[RevealEntry],
     json: bool,
 ) -> Result<()> {
-    let payload = RevealListOutput {
+    let output = RevealListOutput {
+        status: status.into(),
         root: root.display().to_string(),
-        entry_suffix: DEFAULT_REVEAL_ENTRY_SUFFIX.to_string(),
-        mode: DEFAULT_REVEAL_MODE.to_string(),
-        trust: DEFAULT_REVEAL_TRUST.to_string(),
-        max_threads: DEFAULT_REVEAL_MAX_THREADS,
-        skip_persona_if_known: DEFAULT_REVEAL_SKIP_PERSONA_IF_KNOWN,
-        order_steps: DEFAULT_REVEAL_ORDER_STEPS
-            .iter()
-            .map(|step| step.to_string())
-            .collect(),
+        entry_suffix: policy.entry_suffix.clone(),
+        mode: policy.mode.clone(),
+        trust: policy.trust.clone(),
+        max_threads: policy.max_threads,
+        skip_persona_if_known: policy.skip_persona_if_known,
+        order_steps: policy.order_steps.clone(),
         entries: entries
             .iter()
-            .map(|entry| RevealEntrySummary {
-                lane: entry.lane.clone(),
-                path: entry.path.clone(),
+            .map(|e| RevealEntrySummary {
+                lane: e.lane.clone(),
+                path: e.path.clone(),
+                artifact: e.artifact.clone(),
             })
             .collect(),
     };
-
     if json {
-        println!("{}", serde_json::to_string_pretty(&payload)?);
+        println!("{}", serde_json::to_string_pretty(&output)?);
         return Ok(());
     }
-
-    println!("No reveal file matched '{}'.", query);
-    if payload.entries.is_empty() {
-        println!("No reveal files are present under {}.", payload.root);
-    } else {
-        println!("Known reveal entries:");
-        for entry in &payload.entries {
-            println!("  - {} => {}", entry.lane, entry.path);
-        }
+    let query = query.unwrap_or("");
+    match status {
+        "ambiguous" => println!("Multiple reveal files match '{}':", query),
+        "type-mismatch" => println!(
+            "Reveal query '{}' has no match of the requested type.",
+            query
+        ),
+        _ => println!("No reveal file matched '{}'.", query),
     }
-
+    for entry in &output.entries {
+        println!("  - {} => {}", entry.lane, entry.path);
+        print_artifact(&entry.artifact);
+    }
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn discovery_does_not_follow_directory_links_or_cycles() {
+        let root = tempfile::tempdir().unwrap();
+        let outside = tempfile::tempdir().unwrap();
+        fs::write(
+            root.path().join("local.recur.md"),
+            "artifact.type = skill\n",
+        )
+        .unwrap();
+        fs::write(
+            outside.path().join("external.recur.md"),
+            "artifact.type = agent\n",
+        )
+        .unwrap();
+        for (name, target) in [("escape", outside.path()), ("cycle", root.path())] {
+            let link = root.path().join(name);
+            #[cfg(windows)]
+            {
+                // Junctions exercise Windows reparse-point traversal without symlink privileges.
+                let output = std::process::Command::new("powershell")
+                    .args(["-NoProfile", "-NonInteractive", "-Command",
+                        "$ErrorActionPreference = 'Stop'; New-Item -ItemType Junction -Path $env:RECUR_TEST_LINK -Target $env:RECUR_TEST_TARGET | Out-Null"])
+                    .env("RECUR_TEST_LINK", &link).env("RECUR_TEST_TARGET", target)
+                    .output().unwrap();
+                assert!(
+                    output.status.success(),
+                    "{}",
+                    String::from_utf8_lossy(&output.stderr)
+                );
+            }
+            #[cfg(unix)]
+            std::os::unix::fs::symlink(target, &link).unwrap();
+        }
+        let canonical = root.path().canonicalize().unwrap();
+        let entries =
+            discover_reveal_entries(&canonical, ".recur.md", &TypePolicy::default(), None, &[])
+                .unwrap();
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].lane, "local");
+    }
 
     #[test]
     fn arrange_fields_prefers_gift_then_configured_order() {

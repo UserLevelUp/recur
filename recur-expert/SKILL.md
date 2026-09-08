@@ -21,6 +21,14 @@ authors/manages data and policy where its commands are implemented. Read current
 help/source before treating roadmap commands as available. Reveal outputs pointers;
 it neither loads skills nor executes commands or grants authority.
 
+For typed artifact discovery, use `recur reveal --type <type>`. Explicit
+`artifact.type` metadata wins over optional `[reveal.types.prefixes]` hints;
+inspect the reported source/status/diagnostics and retain untyped legacy capsules.
+Types are extensible; hierarchy and Eventness remain the address and attention
+layers. Explicit `-d` bounds discovery even when config is found above it.
+Classification does not load bodies or activate anything. Companion profile
+packets remain separate. See docs/main.command.reveal.artifact-types.contract.md.
+
 For naming, slicing or recovery assistance, discover the effective prompts through
 `recur prompt warp` or `recur-warp llm prompt`. Inspect one with
 `recur prompt warp.naming`; assemble instructions and evidence with, for example:

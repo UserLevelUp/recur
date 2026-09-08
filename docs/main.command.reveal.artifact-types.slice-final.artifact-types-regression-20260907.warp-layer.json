@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.reveal.artifact-types",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.reveal.artifact-types.slice-final:v1",
+  "attempt_id": "artifact-types-regression-20260907",
+  "result_state": "accepted",
+  "result_hash": "sha256:4adb02c69d216e01fe904252dbceff849363c68b083e51c3b19982dfff86e30f",
+  "evidence": {
+    "regression-closeout": [
+      "main.command.reveal.artifact-types.slice-final.complete.md"
+    ]
+  },
+  "reason": null
+}

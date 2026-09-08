@@ -609,9 +609,13 @@ enum Commands {
         /// Lane name or query (for example: main.command.trace-id)
         lane: Option<String>,
 
-        /// Starting directory or project root
-        #[arg(short = 'd', long, default_value = ".")]
-        dir: PathBuf,
+        /// Explicit discovery boundary; otherwise discover from the nearest project root
+        #[arg(short = 'd', long)]
+        dir: Option<PathBuf>,
+
+        /// Filter resolved artifact types (skill, persona, agent, or a custom type)
+        #[arg(long = "type", value_name = "TYPE")]
+        artifact_type: Option<String>,
     },
 
     /// Inspect `.recur` agent vault structure for missing or inconsistent files
@@ -1148,7 +1152,11 @@ fn main() {
 
         Commands::Lane { name, dir } => main_command_lane_impl::execute(name, dir, cli.json),
 
-        Commands::Reveal { lane, dir } => main_command_reveal_impl::execute(lane, dir, cli.json),
+        Commands::Reveal {
+            lane,
+            dir,
+            artifact_type,
+        } => main_command_reveal_impl::execute(lane, dir, artifact_type, &cli.sep, cli.json),
 
         Commands::Psyche {
             dir,
