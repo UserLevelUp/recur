@@ -25,7 +25,8 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - Reveal capsules for context recovery and lane-local handoff
 - Watcher-state queries through pure `recur watch`
 - Artifact version policy, manifest, and history queries through pure `recur version`
-- Optional companion binaries for active workflow runners (`recur-git`, `recur-watch`, `recur-version`, `recur-warp`, when included in release zip)
+- Scoped Recur Lang header/body/footer views and static dependency checks through pure `recur lang`
+- Bundled companions: `recur-git`, `recur-watch`, `recur-version`, `recur-warp`, and `recur-lang`
 - JSON output for tooling integration
 
 ## Commands
@@ -35,6 +36,9 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - `recur watch` - list, filter, and explain active watcher state
 - `recur version` - inspect artifact version policy, manifests, and preserved history
 - `recur warp map|merge|status` - inspect target Slice maps and composed completion coverage
+- `recur warp` or `recur warp list` - discover remaining bubbles (`--all` includes completed bubbles)
+- `recur lang list|show|report|check` - discover and inspect bounded WIR1/CIR1 fragments; bindings are never executed
+- `recur-lang warp` - dry-run or confirm a receipt-bound Warp transition; opinionated language behavior belongs to this companion
 - `recur files` - find files by hierarchical pattern
 - `recur find` - search text within a hierarchy scope
 - `recur tree` - visualize hierarchy as a tree

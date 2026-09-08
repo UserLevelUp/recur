@@ -21,6 +21,24 @@ The same query-first workflow is portable to external projects (including Visual
 
 ## Fast Rehydration
 
+### Recur Lang specialization
+
+`recur lang list -d <root> --json` inventories bounded language sources, retaining
+unsupported inputs as diagnostics. `recur lang show <source> --scope gcd.f -d
+<root>` explains a local function. `report` accepts `--scope`, `--eventness` and
+`--expand`; `check` exits 0 for static success within coverage, 1 for graph
+findings, and 2 for input errors. Relative source paths resolve under the explicit
+read root; language identities retain their authored dots regardless of filename
+separator preferences. Consult docs/main.command.lang.query.readme.md for exact
+schemas, default/custom Eventness suffixes and supported grammar.
+
+WIR1 and CIR1 remain distinct. SGR1 analyzes the entire selected CIR1 flow before
+filtering. Boundary references and cycle paths remain visible when lane detail is
+hidden. No query runs a binding or accepts a receipt. All opinionated language
+behavior belongs in `recur-lang`; its implemented action remains the confirmed,
+receipt-bound Warp transition. Inspect the live main.lang.baseline and
+main.improvement.30.static-graph bubbles for acceptance evidence.
+
 ### Warp specialization
 
 For Warp work, start with `recur reveal recur-expert` and `recur warp` (equivalent

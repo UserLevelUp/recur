@@ -112,6 +112,16 @@ pub fn parse_concurrent_ir(
     source_name: &str,
     flow_name: &str,
 ) -> Result<ConcurrentIr, ConcurrentDiagnostic> {
+    parse_structure(source, source_name, flow_name, true)
+}
+
+/// Same CIR1 parser, with topology validation deferred to SGR1 for query findings.
+pub(crate) fn parse_structure(
+    source: &str,
+    source_name: &str,
+    flow_name: &str,
+    validate: bool,
+) -> Result<ConcurrentIr, ConcurrentDiagnostic> {
     let declaration_pattern =
         Regex::new(r"(?m)^\s*recur\s+([0-9.]+)\s+coordination\s+([A-Za-z][A-Za-z0-9_]*)\s*$")
             .expect("valid coordination declaration regex");
@@ -203,7 +213,9 @@ pub fn parse_concurrent_ir(
         .collect::<Result<Vec<_>, _>>()?;
     let flow_source = parse_flow_source(source, flow_name)?;
     let flow = parse_flow(source, &flow_source, &port_lookup)?;
-    validate_concurrent_graph(&flow, &lanes, &coordinator_ports, &flow_source.span)?;
+    if validate {
+        validate_concurrent_graph(&flow, &lanes, &coordinator_ports, &flow_source.span)?;
+    }
 
     Ok(ConcurrentIr {
         schema: CONCURRENT_IR_SCHEMA,

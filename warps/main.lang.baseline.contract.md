@@ -1,8 +1,9 @@
 # Recur Lang baseline acceptance contract
 
-Planning contract: v1. Target release: a.0.2.8.
-Implementation is pending. Command signatures and result schemas below are the
-proposed initial boundary to freeze in slice-0; they are not current CLI help.
+Acceptance contract: v1. Target release: a.0.2.8.
+The slice-0 command/schema boundary is frozen in
+`docs/main.command.lang.query.readme.md`. Acceptance remains evidence-bound;
+inspect the live Warp projection and verification record.
 Paths are repository-relative unless a path is explicitly described otherwise.
 
 ## Product and ownership invariants

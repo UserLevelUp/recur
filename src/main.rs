@@ -703,6 +703,15 @@ enum Commands {
         dir: PathBuf,
     },
 
+    /// Pure, bounded Recur Lang discovery, contract views and static checks
+    Lang {
+        #[command(subcommand)]
+        command: recur::recur_lang_query::LangCommand,
+        /// Read root; relative sources resolve here and cannot escape it
+        #[arg(short = 'd', long, default_value = ".", global = true)]
+        dir: PathBuf,
+    },
+
     /// Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
     ///
     /// Converts any structured document into recur's universal hierarchy format.
@@ -1185,6 +1194,10 @@ fn main() {
             dir,
             cli.json,
         ),
+
+        Commands::Lang { command, dir } => {
+            process::exit(recur::recur_lang_query::execute(command, &dir, cli.json));
+        }
 
         Commands::Flatten {
             file,

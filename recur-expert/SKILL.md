@@ -81,6 +81,14 @@ eventness is attention/recorded state, not acceptance proof. UUID fields are not
 automatically trace roles. Tags classify; dependencies order execution. Semantic
 repartition is not the existing layer-composition merge operation.
 
+For Recur Lang, use `recur lang list -d <root>` and source-bound `show`, `report`
+or `check`; `show` requires `--scope`. Read docs/main.command.lang.query.readme.md
+for the implemented WIR1/CIR1 boundary and stable errors. Scope filtering retains
+boundary references and whole-flow SGR1 findings. Inspect coverage: a successful
+check validates only the declared fragment, never runtime execution or the whole
+document. Recorded Eventness is not checked receipt evidence. All opinionated
+language guidance and actions belong to `recur-lang`, including read-only advice.
+
 When implementation is requested, follow the selected slice contract, establish
 its test baseline, extend missing acceptance coverage and preserve legacy tests.
 Distinguish intentionally red standalone suites from the normal regression runner.

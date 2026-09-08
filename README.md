@@ -316,6 +316,26 @@ recur-version next care.subject.routine.proposed.current.csv
 recur-version save care.subject.routine.proposed.current.csv --slug item-a-discontinued
 ```
 
+### `recur lang` - focus and check exact language contracts
+
+Recur Lang supplies a tight formal boundary inside a selected scope. Its compact
+function letters and input/output bundles reduce repeated parameter lists while
+preserving exact contract identities. Core queries describe authored facts;
+opinionated guidance and actions belong to `recur-lang`.
+
+```sh
+recur lang list -d demos/main.lang --json
+recur lang show demos/main.lang/main.lang.algorithm-lab.recur --scope merge.f
+recur lang report demos/main.lang/main.lang.skippy-watch-coordination.recur --scope review_bird --expand
+recur lang check demos/main.lang/main.lang.skippy-watch-coordination.recur --json
+```
+
+Header, body and footer explain meanings/contracts, connections, and recorded
+Eventness/static findings. Checks cover the existing WIR1/CIR1 subsets; they do
+not validate the whole source or run its workers. Scope filtering retains graph
+boundaries and cycle findings. See the [query contract](docs/main.command.lang.query.readme.md)
+for supported syntax, Eventness filters and exit codes.
+
 ### `recur-lang warp` - advance one declared Eventness transition
 
 `recur-lang warp` defaults to a dry-run plan. A confirmed transition requires

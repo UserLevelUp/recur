@@ -7,6 +7,39 @@ use std::fmt;
 
 pub const WARP_IR_SCHEMA: &str = "recur-lang-warp-ir-v1";
 
+/// Discover declarations for the existing WIR1/CIR1 parsers; this does not
+/// validate a document or introduce another language grammar.
+pub(crate) fn query_declarations(
+    source: &str,
+) -> Result<(String, String, Vec<String>), IrDiagnostic> {
+    let pattern =
+        Regex::new(r"(?m)^\s*recur\s+([0-9.]+)\s+(class|coordination)\s+[A-Za-z][A-Za-z0-9_]*\s*$")
+            .unwrap();
+    let declarations: Vec<_> = pattern.captures_iter(source).collect();
+    if declarations.len() != 1 {
+        return Err(diagnostic(
+            "LANG006",
+            "Expected exactly one supported Recur declaration".into(),
+            None,
+        ));
+    }
+    let version = declarations[0][1].to_string();
+    let kind = declarations[0][2].to_string();
+    let names = if kind == "class" {
+        find_named_blocks(source, "scope", "LANG006")?
+            .iter()
+            .map(|b| b.name.clone())
+            .collect()
+    } else {
+        let flow =
+            Regex::new(r"(?m)^[ \t]*([A-Za-z][A-Za-z0-9_]*)[ \t]+(?:sync|async)[ \t]*:").unwrap();
+        flow.captures_iter(source)
+            .map(|c| c[1].to_string())
+            .collect()
+    };
+    Ok((version, kind, names))
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct SourceSpan {
     /// Zero-based byte offset, inclusive.

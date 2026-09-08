@@ -36,6 +36,11 @@ jobs:
           cd julia-tests
           RECUR_PROFILE=release-safe julia runtests.trace.jl
 
+      - name: Run Rust and language regressions
+        run: |
+          cargo test --locked
+          RECUR_BIN="$PWD/target/release-safe/recur" julia julia-tests/main.command.lang.baseline.test.jl
+
   build-windows:
     runs-on: windows-latest
     steps:
@@ -57,6 +62,9 @@ jobs:
             target/release-safe/recur.exe
             target/release-safe/recur-git.exe
             target/release-safe/recur-warp.exe
+            target/release-safe/recur-lang.exe
+            target/release-safe/recur-watch.exe
+            target/release-safe/recur-version.exe
 
   build-linux:
     runs-on: ubuntu-latest
@@ -79,6 +87,9 @@ jobs:
             target/release-safe/recur
             target/release-safe/recur-git
             target/release-safe/recur-warp
+            target/release-safe/recur-lang
+            target/release-safe/recur-watch
+            target/release-safe/recur-version
 
   docker:
     runs-on: ubuntu-latest

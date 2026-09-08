@@ -47,6 +47,7 @@ try {
 
     $nuspecPath = Join-Path $tempChoco "recur.nuspec"
     choco pack $nuspecPath --version $normalizedVersion --output-directory $outputDir | Out-Host
+    if ($LASTEXITCODE -ne 0) { throw "Chocolatey pack failed with exit code $LASTEXITCODE" }
 
     $packagePath = Join-Path $outputDir ("recur.$normalizedVersion.nupkg")
     Write-Host "Requested version $requestedVersion"
@@ -55,6 +56,11 @@ try {
     Write-Host "SHA256 $hash"
 } finally {
     if (Test-Path $tempRoot) {
-        Remove-Item -Path $tempRoot -Recurse -Force
+        $resolvedTemp = (Resolve-Path -LiteralPath $tempRoot).Path
+        $allowedTemp = [IO.Path]::GetFullPath((Join-Path $repoRoot '.tmp')) + [IO.Path]::DirectorySeparatorChar
+        if (-not $resolvedTemp.StartsWith($allowedTemp, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing cleanup outside the repository .tmp directory: $resolvedTemp"
+        }
+        Remove-Item -LiteralPath $resolvedTemp -Recurse -Force
     }
 }

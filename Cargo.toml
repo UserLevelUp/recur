@@ -135,6 +135,11 @@ section = "utils"
 priority = "optional"
 assets = [
     ["target/release/recur", "usr/bin/", "755"],
+    ["target/release/recur-lang", "usr/bin/", "755"],
+    ["target/release/recur-git", "usr/bin/", "755"],
+    ["target/release/recur-watch", "usr/bin/", "755"],
+    ["target/release/recur-version", "usr/bin/", "755"],
+    ["target/release/recur-warp", "usr/bin/", "755"],
     ["README.md", "usr/share/doc/recur/", "644"],
     ["LICENSE", "usr/share/doc/recur/", "644"],
     ["RECUR-TRIBUTE.md", "usr/share/doc/recur/", "644"],

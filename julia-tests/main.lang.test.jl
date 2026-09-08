@@ -168,7 +168,7 @@ end
         command_doc,
     )
     @test occursin(
-        "recur-lang   = execute confirmed declared action, write state and ACK/NAK",
+        "recur-lang   = opinionated guidance/policy; execute confirmed actions, write state and ACK/NAK",
         command_doc,
     )
     @test occursin("Expansion and contraction", command_doc)

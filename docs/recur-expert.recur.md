@@ -13,3 +13,5 @@ checkpoint = df946cf, 2026-09-06; re-query current state before resuming.
 do.not.disturb = No automatic command execution, Git operations, deletion, semantic merge/split or invented acceptance.
 ready.state = Inspect live Warp evidence; artifact-types adds shared classification and --type filtering, while reveal.persona-skills profile packets remain separate planned work.
 prompt.ids = warp.naming, warp.slicing, warp.recovery
+lang.query = recur lang list/show/report/check; explicit source and scope; inspect docs/main.command.lang.query.readme.md for WIR1/CIR1 coverage and SGR1 findings
+lang.boundary = Core queries remain pure; all opinionated language guidance/actions belong in recur-lang. A sound fragment is not whole-source or runtime acceptance.

@@ -17,6 +17,11 @@ $packageArgs = @{
 
 Install-ChocolateyZipPackage @packageArgs
 
+$recurLang = Join-Path $installDir 'recur-lang.exe'
+if (Test-Path $recurLang) {
+    Install-BinFile -Name 'recur-lang' -Path $recurLang
+}
+
 # Add shims for companion binaries if they exist in the zip
 $recurGit = Join-Path $installDir 'recur-git.exe'
 if (Test-Path $recurGit) {

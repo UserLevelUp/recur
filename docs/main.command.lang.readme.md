@@ -1,7 +1,13 @@
 # recur lang
 
-Status: `language design contract`
-Date: 2026-07-23
+Status: bounded query baseline implemented; broader language design remains proposed.
+Updated: 2026-09-08
+
+The shipped `list`, source-bound `show`, `report` and `check` surface is defined
+in [main.command.lang.query.readme.md](main.command.lang.query.readme.md).
+That contract takes precedence over the future-facing syntax examples below.
+WIR1 and CIR1 are distinct supported fragments; SGR1 supplies CIR1 graph checks.
+Runtime Eventness, feedback, imports and arbitrary expansions are not validated.
 
 `recur lang` is the pure query surface for Recur language sources, symbols,
 contracts, lanes, slices, Warps, and runtime Eventness.
@@ -58,7 +64,7 @@ join diagnostics should identify the affected symbols and the explanatory path,
 allowing the reader to inspect just the relevant contracts. Formal validation
 helps reveal circular dependencies; it does not automatically redesign them.
 
-The following are acceptance requirements for the future pure query Warp:
+The following guide the bounded pure query Warp and its later extensions:
 
 - Compact and expanded views resolve to the same contracts and graph.
 - One scoped function can be explained through header, body and footer without
@@ -70,7 +76,7 @@ The following are acceptance requirements for the future pure query Warp:
 - Queries report declared facts and validation findings without choosing a
   workflow, prescribing repairs or changing source/Eventness.
 
-These are design requirements, not claims of implemented CLI behavior.
+The query contract records which parts are implemented and their explicit limits.
 
 ## Relationship to `recur trace-id`
 
@@ -88,7 +94,7 @@ across source, documentation, tests, Eventness, and receipts without needing
 to understand their complete semantics. An absent match is not necessarily an
 error.
 
-`recur lang` parses a declared coordination boundary. It understands exact
+The broader design parses a declared coordination boundary. It aims to understand exact
 `i(...)` and `o(...)` contract identity, block dependencies, joins, waits,
 bounded feedback, lane write scopes, and required receipts. Within that
 closed-world boundary, a missing producer, mismatched input, invalid join, or
@@ -99,7 +105,7 @@ stable trace IDs. `trace-id` can then follow those IDs through implementation
 files that are intentionally outside the Recur Lang parser:
 
 ```text
-recur lang show game.path-monkey.f
+recur lang show demos/main.lang/main.lang.algorithm-lab.recur --scope gcd.f
 recur trace-id "game.pathing.route" --scope "**" -d .
 ```
 
@@ -109,7 +115,7 @@ and receipts across the repository. A future `recur lang trace` command would
 trace formal edges inside the parsed model; it would not replace the broader
 textual lineage scan.
 
-## Proposed query commands
+## Broader proposed query commands (not the shipped argument grammar)
 
 ```powershell
 recur lang list
