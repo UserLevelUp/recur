@@ -72,7 +72,7 @@ end
         snapshotted, snapshot_output, snapshot_error = run_recur_git(root, ["checkpoint", "--snapshot"])
         @test snapshotted
         @test snapshot_error == ""
-        @test contains(snapshot_output, "lane.state.tests.passed: .recur\\tests\\main.command.tree.wildcard-current.test.$head.passed.complete.md")
-        @test contains(snapshot_output, "lane.state.tests.failed: .recur\\tests\\main.command.tree.wildcard-current.failure.test.$head.failed.strange.md")
+        @test contains(snapshot_output, "lane.state.tests.passed: " * joinpath(".recur", "tests", "main.command.tree.wildcard-current.test.$head.passed.complete.md"))
+        @test contains(snapshot_output, "lane.state.tests.failed: " * joinpath(".recur", "tests", "main.command.tree.wildcard-current.failure.test.$head.failed.strange.md"))
     end
 end

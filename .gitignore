@@ -40,6 +40,11 @@ nul
 
 # Sudoku demo generated artifacts
 demos/sudoku/puzzles/*/sudoku.flow.r*c*.txt
+!demos/sudoku/puzzles/easy-001/sudoku.flow.r3c5.txt
+
+# Checked-in synthetic config required by the portable Warp status fixture.
+!julia-tests/fixtures/warp-status-v1/config-override/.recur/
+!julia-tests/fixtures/warp-status-v1/config-override/.recur/config.toml
 demos/sudoku/puzzles/*/sudoku.cascades.json
 demos/sudoku/html5/data/*/sudoku.flow.r*c*.txt
 demos/sudoku/html5/data/*/sudoku.cascades.json

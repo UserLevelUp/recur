@@ -17,8 +17,9 @@ const DEMO_TABLE_DIR = joinpath(DEMO_TEST_ROOT,"demos","sudoku","table")
 mkpath(dirname(DEMO_SCRIPT))
 cp(joinpath(@__DIR__,"..","demos","sudoku","julia","run_watch_demo.jl"),DEMO_SCRIPT)
 mkpath(joinpath(DEMO_TEST_ROOT,"target","release-safe"))
-cp(joinpath(@__DIR__,"..","target","release-safe","recur-watch.exe"),
-   joinpath(DEMO_TEST_ROOT,"target","release-safe","recur-watch.exe"))
+const DEMO_WATCH_NAME = "recur-watch" * (Sys.iswindows() ? ".exe" : "")
+const DEMO_WATCH_BIN = joinpath(DEMO_TEST_ROOT,"target","release-safe",DEMO_WATCH_NAME)
+cp(joinpath(dirname(RECUR_BIN),DEMO_WATCH_NAME), DEMO_WATCH_BIN)
 const DEMO_RUN_TIMEOUT_SECONDS = 30.0
 
 function run_demo_subprocess()
@@ -26,7 +27,7 @@ function run_demo_subprocess()
     stderr_path = tempname()
     stdout_io = open(stdout_path, "w")
     stderr_io = open(stderr_path, "w")
-    cmd = Cmd(Cmd(["julia", DEMO_SCRIPT]); dir=normpath(joinpath(@__DIR__, "..")))
+    cmd = addenv(Cmd(`$(Base.julia_cmd()) $DEMO_SCRIPT`; dir=DEMO_TEST_ROOT), "RECUR_WATCH_BIN" => DEMO_WATCH_BIN)
 
     process = run(pipeline(cmd, stdout=stdout_io, stderr=stderr_io); wait=false)
     close(stdout_io)

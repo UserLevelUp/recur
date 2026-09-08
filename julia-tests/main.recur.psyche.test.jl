@@ -48,7 +48,9 @@ function set_test_file_mtime(path::String, unix_seconds::Real)
             "\$path = '$escaped_path'; \$mtime = [DateTimeOffset]::FromUnixTimeSeconds($timestamp).UtcDateTime; [System.IO.File]::SetLastWriteTimeUtc(\$path, \$mtime)"
         run(`powershell -NoProfile -Command $ps_command`)
     else
-        error("set_test_file_mtime is currently implemented only for Windows test hosts")
+        times = Clong[timestamp, timestamp]
+        result = ccall(:utime, Cint, (Cstring, Ptr{Clong}), path, times)
+        result == 0 || error("Failed to set fixture modification time")
     end
 end
 

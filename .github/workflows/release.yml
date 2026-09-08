@@ -91,11 +91,13 @@ jobs:
         with:
           version: "1.10"
       - name: Rust regression and lint evidence
+        shell: bash
         run: |
           mkdir validation
           cargo test --locked 2>&1 | tee validation/rust.log
           cargo clippy --locked --all-targets 2>&1 | tee validation/clippy.log
       - name: Julia regression evidence
+        shell: bash
         run: |
           julia -e 'import Pkg; Pkg.add("JSON3")'
           RECUR_BIN="$PWD/target/debug/recur" RECUR_PROFILE=debug julia julia-tests/runtests.jl 2>&1 | tee validation/julia.log
