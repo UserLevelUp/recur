@@ -11,22 +11,26 @@ current candidate or a Chocolatey submission.
 
 ## Observed integration state
 
-On inspection, local `a.0.2.8` and `recur-lang` both pointed to `e3f7741`.
-The workspace remains on `recur-lang`. Existing Lang implementation and the
-committed Warp, prompt and reveal updates are therefore already in both local
-branch histories. Remote-tracking refs matched locally; no remote refresh was
-performed during this inspection.
+Commit `d291d65` added the Julia evidence lab, refreshed expert guidance and
+clarified the Recur Lang scope. It was pushed to `recur-lang`, then `a.0.2.8`
+was fast-forwarded and pushed to that same commit after fetching remote state.
+The workspace switched to `a.0.2.8` for the baseline Warp setup.
+Reassess branch heads and the working tree before release; this is a recorded
+integration checkpoint, not a live status assertion.
 
-Uncommitted expert guidance changes and `demos/web-evidence-lab/` still need
-review and inclusion with the intended release changes. Reassess branch heads
-and the working tree before integration; do not use this note as a live status.
+The refreshed demo run `20260908T085126685355Z` passed 80 browser checks and its
+Julia server suite passed 33 assertions. The board passed ten selections and
+31 artifact links. Lab attributes preserve the exact bytes covered by evidence
+fingerprints. These scoped checks do not establish Recur Lang release acceptance.
 
 ## Lang work
 
-Start with `main.improvement.30.static-graph.warp-map.json` and its readme.
-The map organizes the existing active contract into pending slices. Later pure
-queries, grid snapshots and coordination need their own bounded contracts;
-their inclusion in 0.2.8 is not decided by this record.
+Start with `warps/main.lang.baseline.warp-map.json` and its contract/readme.
+It covers the first pure query surface, compact header/body/footer explanation,
+scope and Eventness filtering, formal checks and packaged Lang smoke tests.
+It consumes `docs/main.improvement.30.static-graph.warp-map.json` as an existing
+prerequisite with separate parent acceptance. All baseline slices start pending.
+Grid snapshots, live coordination and broader language grammars remain later work.
 
 ## Packaging gaps observed
 

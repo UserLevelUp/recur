@@ -25,6 +25,11 @@ The language is designed around:
 
 The originating design notebook remains at `recur_language_start.md`.
 
+The a.0.2.8 baseline is tracked by `warps/main.lang.baseline.warp-map.json`.
+Read its contract/readme or run `recur reveal main.lang.baseline` from the
+repository root. This planned bubble consumes the existing static-graph Warp;
+it does not declare the query surface implemented.
+
 ## Artifact hierarchy
 
 ```text

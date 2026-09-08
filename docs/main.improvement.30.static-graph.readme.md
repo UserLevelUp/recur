@@ -52,7 +52,8 @@ existing contract and use a revised contract identity if its requirements change
 
 After SGR1, build separate bounded Warps from the existing design:
 
-1. Pure language queries: select the first useful commands from
+1. Pure language queries: `main.lang.baseline` now plans the bounded baseline
+   in `warps/main.lang.baseline.contract.md`. Select the first useful commands from
    `main.command.lang.readme.md` and project the shared model/report. Freeze
    scope plus Eventness filtering, header/body/footer explanation, compact
    function letters, lossless bundle expansion and visible boundary/cycle paths
