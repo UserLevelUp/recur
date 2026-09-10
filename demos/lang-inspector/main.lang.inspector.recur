@@ -1,0 +1,59 @@
+recur 0.1 class LangInspector
+
+# Intent: help a developer inspect a bounded Lang capability without losing
+# canonical contract names or mistaking declared state for runtime acceptance.
+# This is a specification for an LLM, not an executable implementation.
+header {
+  scope query {
+    i(a) := (root: Path, source: Path, scope: Text)
+    o(b) := (packet: QueryPacket)
+    q : i(a) -> o(b) ~ "Read a scoped WIR1 report from Recur; surface CLI and schema failures" by inspector.query_report
+  }
+  scope model {
+    i(b) := query.o(b)
+    o(c) := (view: InspectorView)
+    m : i(b) -> o(c) ~ "Derive function cards with exact local and canonical contracts; retain the original evidence packet" by inspector.build_view
+  }
+  scope view {
+    i(c) := model.o(c)
+    o(d) := (text: Text)
+    v : i(c) -> o(d) ~ "Display meanings, contract aliases, boundary edges, findings and coverage without claiming execution" by inspector.render_view
+  }
+}
+body {
+  query sync : i(a) -> q(a) -> o(b)
+  model sync : i(b) -> m(b) -> o(c)
+  view sync : i(c) -> v(c) -> o(d)
+  share query.o(b) -> model.i(b)
+  share model.o(c) -> view.i(c)
+
+  # Behavioral expectations interpreted by the implementer and tested in Julia:
+  # Use an injectable query adapter so fixtures need no process or network.
+  # Accept only recur-lang-query-v1 / recur-lang-warp-ir-v1 packets.
+  # Refuse missing fields and unsupported IR, rather than inventing meanings.
+  # Preserve authored card order and canonical aliases even for equal shapes.
+  # Keep the complete packet, including excluded coverage and evidence, in view.
+  # Rendering is deterministic plain text. Empty selection is explicit.
+  # An observed complete filename is recorded state, never passing acceptance.
+  # No query, model or rendering stage writes files or runs a declared binding.
+}
+footer {
+  event query {
+    consume demo.lang.inspector.request
+    produce demo.lang.inspector.packet
+    state demo.lang.inspector.query.complete
+  }
+  warp query : E0(demo.lang.inspector.query.todo.current) -> dE(query.q) -> Ef(demo.lang.inspector.query.complete)
+  event model {
+    consume demo.lang.inspector.packet
+    produce demo.lang.inspector.view
+    state demo.lang.inspector.model.complete
+  }
+  warp model : E0(demo.lang.inspector.model.todo.current) -> dE(model.m) -> Ef(demo.lang.inspector.model.complete)
+  event view {
+    consume demo.lang.inspector.view
+    produce demo.lang.inspector.text
+    state demo.lang.inspector.view.complete
+  }
+  warp view : E0(demo.lang.inspector.view.todo.current) -> dE(view.v) -> Ef(demo.lang.inspector.view.complete)
+}

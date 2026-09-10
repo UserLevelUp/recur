@@ -1,12 +1,12 @@
 {
   "schema": "warp-bubble-map-v1",
   "warp_id": "main.command.reveal.persona-skills",
-  "goal": "Configure persona skill profiles through recur init and a future opinionated recur-reveal companion, retaining pure core queries.",
+  "goal": "Make agents, personas and skills independently discoverable with explicit typed associations and bounded context preparation; retain pure core queries and separate discovery from loading or execution.",
   "current_slice": "slice-0",
   "required_slices": [
     {
       "slice_id": "slice-0",
-      "contract_hash": "contract:main.command.reveal.persona-skills.slice-0:v1",
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-0:v2",
       "depends_on": [],
       "evidence_gates": [
         "baseline-contract"
@@ -14,27 +14,27 @@
     },
     {
       "slice_id": "slice-1",
-      "contract_hash": "contract:main.command.reveal.persona-skills.slice-1:v1",
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-1:v2",
       "depends_on": [
         "slice-0"
       ],
       "evidence_gates": [
-        "editable-persona-defaults"
+        "editable-artifact-association-defaults"
       ]
     },
     {
       "slice_id": "slice-2",
-      "contract_hash": "contract:main.command.reveal.persona-skills.slice-2:v1",
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-2:v2",
       "depends_on": [
         "slice-1"
       ],
       "evidence_gates": [
-        "bounded-skill-resolution"
+        "bounded-artifact-association-resolution"
       ]
     },
     {
       "slice_id": "slice-3",
-      "contract_hash": "contract:main.command.reveal.persona-skills.slice-3:v1",
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-3:v2",
       "depends_on": [
         "slice-2"
       ],
@@ -44,7 +44,7 @@
     },
     {
       "slice_id": "slice-4",
-      "contract_hash": "contract:main.command.reveal.persona-skills.slice-4:v1",
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-4:v2",
       "depends_on": [
         "slice-3"
       ],
@@ -54,7 +54,7 @@
     },
     {
       "slice_id": "slice-final",
-      "contract_hash": "contract:main.command.reveal.persona-skills.slice-final:v1",
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-final:v2",
       "depends_on": [
         "slice-4"
       ],

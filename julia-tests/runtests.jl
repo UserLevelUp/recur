@@ -80,6 +80,7 @@ try
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
         include("main.command.lang.baseline.test.jl") # pure WIR1/CIR1 query surface
+        include("main.demo.lang-inspector.test.jl") # Lang specification -> mocks/models -> real self-query
         include("main.lang.form-validation.test.jl")  # red-first validation, refinement, and error-routing contract
         include("main.lang.retry-await.test.jl")  # red-first bounded retry and async await contract
         include("main.lang.pathing.test.jl")  # red-first fan-out, scatter, graph, and deterministic pathing contracts
