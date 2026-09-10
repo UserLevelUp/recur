@@ -41,6 +41,17 @@ main.improvement.30.static-graph bubbles for acceptance evidence.
 
 ### Warp specialization
 
+Reveal association workflow: core `recur reveal --type agent`, `--type persona`
+and `--type skill` inspect typed capsules and in-root configured records.
+Relationships are explicit and carry declaring sources and resolution status.
+Use `recur-reveal init --dry-run -d <root>` before a configuration retrofit;
+existing association tables are preserved whole, including empty opt-outs.
+`recur-reveal next <id> --type agent -d <root> --json` prepares bounded local
+context. `--max-files` and `--max-bytes` constrain collected bodies, not the initial
+metadata inventory. Blocked or truncated packets are incomplete; no command
+loads a persona into a host, installs skills, or executes capsule instructions.
+Read docs/main.command.reveal.persona-skills.contract.md for exact selection rules.
+
 For Warp work, start with `recur reveal recur-expert` and `recur warp` (equivalent
 to `recur warp list`). Both list remaining declarations; `recur warp list --all`
 includes completed work. Use `recur warp show <warp-id>` and
@@ -61,8 +72,8 @@ trait aliases, `recur-warp llm prompt`, bundled defaults, project overrides and
 bounded packets. These suites are integrated in the normal Julia runner; consult
 their verification records for historical commands, runtimes and results.
 See docs/main.command.prompt.discovery.verification.md for prompt evidence and
-limits. Provider invocation/model evaluation and reveal persona-skills profile
-packets remain separate planned work; inspect their live maps before resuming.
+limits. Provider invocation/model evaluation remains separate planned work.
+Reveal profile packets have their own main.command.reveal.persona-skills map.
 
 The proposed work model is warp -> slice -> work name -> hierarchical tags -> UUID.
 Readable hierarchy is the address; UUID is stable identity. Tags classify purpose;

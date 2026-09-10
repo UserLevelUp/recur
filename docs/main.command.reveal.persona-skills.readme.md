@@ -1,149 +1,88 @@
 # Warp: discover agents, personas and skills
 
-Scope revision v2, 2026-09-09: agents, personas and skills are independently
-discoverable artifacts. Persona skill configuration is one association mechanism,
-not the goal of the bubble. Keep the existing Warp ID and trace identity for
-continuity; all six slice contracts advance to v2 and remain unaccepted.
+Implementation target: a.0.2.8. Contract revision v2 broadens the original
+persona-only proposal to independently discoverable agents, personas and skills.
+The existing Warp ID and trace identity are retained. Acceptance is recorded in
+the live map/layers and the separate verification document, not implied here.
 
-Status: planned for later implementation. No companion or configuration behavior
-is implemented by this document. Independent from main.command.warp.identity-policy;
-reuse its init safety patterns when available, without changing that bubble's scope.
+## Command ownership
 
-## Current state and command boundary
+- `recur reveal` and the existing Reveal trait infrastructure discover and inspect
+  typed capsules, in-root configured records, and explicit associations.
+- `recur init` includes shared editable association defaults for a fresh project.
+- `recur-reveal init` adds missing association tables to an existing project;
+  `--dry-run` previews, and existing tables (including empty opt-outs) are preserved.
+- `recur-reveal next ID --type agent|persona -d ROOT --json` prepares bounded local
+  context. It does not activate a persona, install skills or execute instructions.
 
-The existing command is recur init, not a recur-init executable. It already writes
-[reveal] policy/order/merge/rank defaults. Extend that generator rather than
-inventing a second incompatible initialization path. Cargo.toml currently has no
-recur-reveal binary. Existing recur reveal prints capsule fields and optional Warp
-reconciliation; skill.path is presently only a printed pointer.
+There is no `recur reveal init` writer alias or separate agent-management runtime.
+Improvement 29's wider scheduling/execution proposal remains deferred.
 
-Under the target contract, core recur reveal remains read-only listing/showing of agents, personas and skills,
-their source identities and explicitly declared associations. The proposed
-recur-reveal companion manages opinionated profiles/config and prepares bounded
-context for a selected agent or persona, in line with Improvement 29. Discovery
-must also work for standalone skills and artifacts with no associations. This
-Warp covers local discovery, associations and packet preparation, not an agent
-runtime or the entire Improvement 29 vision.
-
-Ownership: reuse the Reveal command and trait infrastructure for discovery and
-inspection. `recur init` supplies project defaults; the proposed
-`recur-reveal init` owns opinionated retrofit configuration. No separate agent
-management system is introduced. `recur reveal init` is not part of this scope;
-any future convenience route to a writer needs its own explicit contract.
-
-## Discovery and association requirements
-
-- Reuse existing `recur reveal --type agent`, `--type persona` and `--type skill`
-  discovery. Explicit `artifact.type` and the shared configurable classifier
-  establish type; an incidental field, familiar name or prose does not.
-- Preserve separate identities for an agent, a persona and a skill even when
-  their names coincide. Do not require every agent to have a persona, every
-  persona to have skills, or every skill to belong to a profile.
-- Resolve explicit agent-to-persona, agent-to-skill and persona-to-skill
-  references. Show their declaring source and resolution status. No association
-  is inferred from filename proximity, matching names or similar descriptions.
-- Missing targets, ambiguous identities, wrong target types and conflicting
-  declarations stay visible. They must not silently select a substitute.
-- Listing/showing exposes metadata and pointers; it does not read every body,
-  activate a persona, load a skill, execute an agent or establish permission.
-- Packet preparation is a separate explicit operation. Bound its reads to the
-  project root and selected declarations, report fingerprints and omissions,
-  and never recursively expand arbitrary instructions. The v2 CLI and packet
-  schema must be frozen in slice-0 before implementing the broadened resolver.
-
-## Proposed editable defaults
-
-Integration note (2026-09-07): artifact classification is shared through
-`recur::reveal_artifact` and `[reveal.types]`, with core `recur reveal --type`.
-Reuse that classifier in this bubble's query integration; profile association
-must not infer type from incidental persona/agent/skill.path fields or introduce
-another classifier. Hierarchical capsules do not require a SKILL.md name for
-classification. This bubble's separate body-resolution and packet contract still
-requires its own assessment before broadening beyond its proposed SKILL.md registry.
-The v2 assessment must include agent/persona/skill capsules and explicit body
-pointers. Retain SKILL.md interoperability without making that filename the only
-way to discover a skill. Historical v1 observations do not accept this new scope.
+## Explicit associations
 
 ```toml
-# Proposed v2 association configuration; not implemented by this document.
 [reveal.agents.workshop]
+capsule = "agent.workshop"
 persona = "skippy"
 skills = ["recur-expert"]
 
 [reveal.personas.skippy]
-skills = ["recur-expert", "recur-warp"]
+skills = ["recur-expert"]
 guidance_level = "advanced"
 
 [reveal.skills.recur-expert]
 path = "recur-expert/SKILL.md"
-
-[reveal.skills.recur-warp]
-path = "recur-warp/SKILL.md"
 ```
 
-These are desired project-relative bindings, not assertions that new projects
-contain these files. Only recur-expert/SKILL.md currently exists here; a standalone
-recur-warp skill is future work. Missing references remain visibly unresolved.
-Advanced is a guidance preference, not a measured competence or permission level.
-Names, order, skill bindings and level are editable per persona/use case. The
-agent's identity is distinct from its persona. Freeze how these configuration
-records bind to typed capsules, including precedence/conflict handling, in
-slice-0; this example does not define a second artifact classifier.
+The `capsule` binding is optional and exact. If present, its type must match the
+record's registry. Without it, a config record is independently discoverable.
+Shared artifact classification remains in `reveal_artifact`; matching names or
+incidental persona/agent fields never establish capsule type or relationships.
+Default Skippy bindings also include `recur-warp/SKILL.md`, an unresolved example
+until the project supplies it. Available context does not mean accepted work.
 
-New recur init configurations include commented examples and default bindings.
-Existing recur init/--analyze/--force behavior stays compatible. Proposed
-recur-reveal init supplies a non-destructive retrofit: --dry-run previews, explicit
-init writes only missing defaults and repeats idempotently. Preserve user comments,
-custom profiles, explicit empty skill lists and unrelated config. Never modify
-user-global agent configuration or install skills as a side effect.
+```powershell
+recur reveal --type agent -d . --json
+recur reveal --type persona -d . --json
+recur reveal --type skill -d . --json
+recur-reveal init --dry-run -d . --json
+recur-reveal next skippy --type persona -d . --max-files 16 --max-bytes 65536 --json
+```
 
-The earlier proposal `recur-reveal next skippy --json` assembles a deterministic, read-only
-recur-reveal-packet-v1 packet with persona, ordered skill IDs, source paths,
-resolution status and diagnostics. Missing required skills yield state=blocked,
-structured JSON on stdout and nonzero exit. Resolved paths/fingerprints identify
-the exact local guidance offered; available does not mean loaded or executed.
-Do not recursively expand arbitrary references or shell-evaluate capsule fields.
-For v2, freeze unambiguous agent/persona selection, whether this proposed CLI
-changes, and how shared referenced skills are deduplicated while preserving
-association provenance. Do not treat the earlier packet example as the complete
-agent/persona/skill discovery contract.
+Core discovery exposes pointers and association diagnostics without reading
+referenced bodies. Packet preparation resolves the subject, its direct persona,
+and their declared skills. Shared skills appear once while every incoming
+association retains provenance. Missing, ambiguous, wrong-type and conflicting
+references remain visible. Bodies and metadata carry source fingerprints.
+
+Body budgets constrain collected body content, not the initial capsule/config
+metadata scan. Explicit `-d` prevents collecting parent profiles. Body paths
+resolve from the configuration's project root but must stay inside the requested
+read root, including after symlink resolution. No global or remote fallback.
+
+See [the frozen v2 contract](main.command.reveal.persona-skills.contract.md)
+for schemas, exact selection, exit codes, validation and configuration preservation.
 
 ## Slice acceptance matrix
 
-- Slice 0: inspect init/reveal, shared artifact classification and Improvement 29;
-  freeze v2 identity, association, selection, CLI/schema and read-bound contracts.
-  Include agents, personas, standalone skills, duplicate names across types,
-  missing/ambiguous/wrong-type references and empty associations. Establish new
-  red coverage and passing legacy reveal/init/artifact-type baselines.
-- Slice 1: typed agent/persona/skill config and shared editable defaults; test fresh init, nearest
-  project, custom Skippy, another persona, explicit opt-out, malformed types and
-  preservation/idempotency. No automatic personality activation.
-- Slice 2: bounded local artifact and explicit association resolution; test stable
-  order, duplicate IDs across and within types, agent-to-persona/skill and
-  persona-to-skill links, missing/ambiguous/wrong-type targets, conflicting sources,
-  standalone artifacts, SKILL.md and capsule body pointers, malformed bodies,
-  unknown agents/personas, path traversal and symlink escapes.
-  No implicit global lookup, downloads or execution. Paths resolve from config root.
-- Slice 3: companion setup and explicit agent/persona packet preparation under
-  the frozen v2 CLI; test dry-run/no-write packets, partial-write recovery,
-  user-file preservation, clear missing prerequisites and deterministic JSON.
-- Slice 4: core reveal lists/shows all three artifact types and reports explicit
-  associations, sources and unresolved references without activating them;
-  preserve legacy packet fields/capsule selection and tree/files/trace-id discovery.
-  Existing reveal skill-pointer test must still prove no recursive loading.
-- Final: integrate newly green tests into the normal runner; Cargo and full Julia
-  suites pass with known-broken cases unchanged; help/docs separate implemented
-  behavior from future agent-host activation. Accept slices only with evidence.
+| Slice | Gate | Evidence required |
+| --- | --- | --- |
+| 0 | baseline-contract | Frozen v2 contract, original red observations and legacy discovery/init baseline |
+| 1 | editable-artifact-association-defaults | Typed config, fresh init, custom/empty/inline tables, preservation and repeatability |
+| 2 | bounded-artifact-association-resolution | Explicit links, conflicts, missing/ambiguous/wrong types, ordered deduplication, body validation and root bounds |
+| 3 | opinionated-reveal-companion | Init preview/write, partial-setup recovery, inert deterministic packets, limits and structured errors |
+| 4 | query-integration | Pure typed discovery, source pointers and associations, legacy classifier/selection/hierarchy behavior |
+| final | regression-closeout | Integrated Cargo/Julia coverage, package wiring, expert guidance and observed evidence |
 
-The initial standalone test is julia-tests/main.command.reveal.persona-skills.test.jl.
-It is intentionally red and covers the older persona-only proposal, not v2
-acceptance. Extend it in slice-0 and extend coverage before each
-slice. No tests are marked broken to disguise absent functionality.
+Tests: `tests/reveal_profiles.rs` and
+`julia-tests/main.command.reveal.persona-skills.test.jl`. The Julia suite is now
+included in the normal runner. The earlier
+[test relevance audit](main.command.reveal.persona-skills.tests.md) records the
+pre-implementation gaps and baseline; consult final verification for closure.
 
-Deferred: host-specific skill activation, remote registries/installers, implicit
-execution of verify/pull commands, persona inheritance graphs, self-modifying
-persona feedback, full reveal-next scheduling and broad orchestration. No commit,
-push, cleanup or actual profile change is authorized by revealing a persona.
+Deferred: host-specific activation, remote registries/installers, executing
+verify/pull instructions, persona inheritance, self-modifying feedback and
+full reveal-next scheduling. Loading or revealing an artifact grants no authority.
 
 defines: recur.reveal.persona-skills local agent persona skill discovery explicit associations and bounded context packets
 consumes: main.improvement.29 existing reveal-next proposal

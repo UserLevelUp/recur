@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.reveal.persona-skills",
+  "slice_id": "slice-1",
+  "contract_hash": "contract:main.command.reveal.persona-skills.slice-1:v2",
+  "attempt_id": "reveal-v2-20260910-slice-1",
+  "result_state": "accepted",
+  "result_hash": "sha256:4fff3950732a7f2256632eac42963a85f155aa0be17a497389bb25d05b91aa21",
+  "evidence": {
+    "editable-artifact-association-defaults": [
+      "main.command.reveal.persona-skills.verification.md"
+    ]
+  },
+  "reason": null
+}

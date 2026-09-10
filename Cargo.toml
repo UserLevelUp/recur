@@ -61,6 +61,10 @@ path = "src/recur_lang_main.rs"
 name = "recur-warp"
 path = "src/recur_warp_main.rs"
 
+[[bin]]
+name = "recur-reveal"
+path = "src/recur_reveal_main.rs"
+
 [dependencies]
 # Error handling
 thiserror = "1.0"
@@ -140,6 +144,7 @@ assets = [
     ["target/release/recur-watch", "usr/bin/", "755"],
     ["target/release/recur-version", "usr/bin/", "755"],
     ["target/release/recur-warp", "usr/bin/", "755"],
+    ["target/release/recur-reveal", "usr/bin/", "755"],
     ["README.md", "usr/share/doc/recur/", "644"],
     ["LICENSE", "usr/share/doc/recur/", "644"],
     ["RECUR-TRIBUTE.md", "usr/share/doc/recur/", "644"],

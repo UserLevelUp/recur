@@ -28,6 +28,13 @@ recur reveal persona.skippy -d .recur --json
 
 ## Config
 
+Agent/persona/skill discovery also includes explicit configured records inside
+the query root. `associations` exposes declaring sources and target resolution.
+`recur init` supplies editable association defaults; `recur-reveal init` retrofits
+missing tables and `recur-reveal next` explicitly prepares local context bodies.
+See [the association and packet contract](main.command.reveal.persona-skills.contract.md).
+Core discovery does not load those bodies or activate their instructions.
+
 `recur reveal` reads the nearest `.recur/config.toml` when present.
 An explicit `-d` bounds discovery to that directory even if config is found above
 it. Without `-d`, discovery starts at the nearest project root (or working

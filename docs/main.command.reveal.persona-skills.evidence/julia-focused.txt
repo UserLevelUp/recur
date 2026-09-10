@@ -1,0 +1,6 @@
+Test Summary:                                       | Pass  Total  Time
+Reveal v2 independent agent persona skill discovery |   34     34  0.9s
+Test Summary:                               | Pass  Total  Time
+Reveal persona skill defaults and companion |   12     12  0.3s
+Test Summary:                                    | Pass  Total  Time
+Reveal v2 companion and pure association queries |   27     27  0.2s

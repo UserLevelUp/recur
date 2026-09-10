@@ -7,3 +7,5 @@ Uninstall-BinFile -Name 'recur-watch'
 Uninstall-BinFile -Name 'recur-version'
 Uninstall-BinFile -Name 'recur-warp'
 Uninstall-BinFile -Name 'recur-lang'
+
+Uninstall-BinFile -Name 'recur-reveal'

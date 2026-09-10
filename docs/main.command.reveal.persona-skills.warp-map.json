@@ -2,7 +2,6 @@
   "schema": "warp-bubble-map-v1",
   "warp_id": "main.command.reveal.persona-skills",
   "goal": "Make agents, personas and skills independently discoverable with explicit typed associations and bounded context preparation; retain pure core queries and separate discovery from loading or execution.",
-  "current_slice": "slice-0",
   "required_slices": [
     {
       "slice_id": "slice-0",
@@ -62,5 +61,8 @@
         "regression-closeout"
       ]
     }
-  ]
+  ],
+  "planning_status": "accepted-with-declared-evidence",
+  "release_target": "a.0.2.8",
+  "contract_document": "docs/main.command.reveal.persona-skills.contract.md"
 }

@@ -1,0 +1,17 @@
+{
+  "schema": "reveal-implementation-inputs-v1",
+  "hash_algorithm": "sha256",
+  "inputs": {
+    "src/reveal_profiles.rs": "f42e6b5d2962c1f0bc90b6e3d545dc88962eda84f303b0303e4b58c252f159d5",
+    "src/recur_reveal_main.rs": "efd7099df5da8c5c55cd336b50bc1f5a487fda4b85c8f5f9d9499eddb8bcc655",
+    "src/main_command_reveal_impl.rs": "a4de81e27550e0e3b27edc26a8bd675a4c9a4558833868aa87e44d8d54db4c91",
+    "src/project_config.rs": "b6397a2cccc3e9ab9b0da0e23e5febfc4ffa726ad8f93a6322d873dc576b9933",
+    "src/lib.rs": "bded6b4763a88f83907f068ca4c652ee75ba603865f6a1be0f5cf9fbd9b290b4",
+    "src/main.rs": "0d6887a7ebf61ce92cecaf44578013eb02653826a9a606852b5b903b9d25d66d",
+    "Cargo.toml": "ffabf4a9c6147c409da4c88ab6d3faf033f4636b7f88753024cfae39b3558a34",
+    "tests/reveal_profiles.rs": "9f569f89483b68c2f969f060f8a733ecee8a0252efc3f2c359dec299e4dc9955",
+    "julia-tests/main.command.reveal.persona-skills.test.jl": "2226f997a84fed8d395523054fef775844c646eb99b6149fbb8f490331b0abd1",
+    "julia-tests/runtests.jl": "418e27f24bc65031f7c2b4876a99c92e60650513c984ac4e809a97451a3bd825",
+    "docs/main.command.reveal.persona-skills.contract.md": "595443830e9a984fd2cf2c5689caca8be2e74bd9ed1fc382e16382806023f75b"
+  }
+}

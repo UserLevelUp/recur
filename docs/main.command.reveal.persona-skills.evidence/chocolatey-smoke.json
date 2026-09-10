@@ -1,0 +1,23 @@
+{
+  "schema": "recur-lang-chocolatey-smoke-v1",
+  "version": "0.2.8",
+  "archive_sha256": "5B46DF0F7BF60E8ADEF3854C91C90A142085775AA315C2C7473319E400C7D9BF",
+  "package_sha256": "56BEF2D08C3147AE92898F9D49330EC50853995851CC7AD35C9B1E65BE76C0E9",
+  "installed_shims": [
+    "recur-lang",
+    "recur-git",
+    "recur-watch",
+    "recur-version",
+    "recur-warp",
+    "recur-reveal"
+  ],
+  "uninstalled_shims": [
+    "recur-git",
+    "recur-watch",
+    "recur-version",
+    "recur-warp",
+    "recur-lang",
+    "recur-reveal"
+  ],
+  "helper_mode": "mocked; no installation or publication"
+}

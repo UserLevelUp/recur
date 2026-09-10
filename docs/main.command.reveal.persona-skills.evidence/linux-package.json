@@ -1,0 +1,1610 @@
+{
+  "schema": "recur-lang-package-smoke-v1",
+  "version": "0.2.8",
+  "platform": "x86_64-unknown-linux-gnu",
+  "archive": "recur-v0.2.8-x86_64-unknown-linux-gnu.tar.gz",
+  "sha256": "0f3a1695dcfd59c5bcb69e671bff3acba4495a4fb4cc6aacfd6298a5f838c96f",
+  "files": {
+    "README.md": "3d46e1fb8b3e6f052410c97fb8f9c1938a12c4132c653ee283d667daf19b3cbc",
+    "recur": "1cb4737bf4865d36a85f29ed9f35a04f63be7829e14643411f18e5cd1da6c12d",
+    "recur-git": "1bac00554a7cc26288ca8c27cf10dd1e9118a4201301512681c3fa28adb98c53",
+    "recur-lang": "c2b7a3d13f69e75f1703584138f4b55ad20caaf8e81dde955452cdcc460c5da4",
+    "recur-reveal": "25da2db12a647c71b8820781410991c071174e8ef25fee57bd4dab98f9875a57",
+    "recur-version": "8d3e68ae3d0e168bc489a2f95bce3d35a0bb1bc661f1e2048b503bd1fb94c5ed",
+    "recur-warp": "31d69dfa265e6773863493a7c967c2aa68fa2fe037d75fa76714b3cf36e9c72b",
+    "recur-watch": "ed52f9c9b5bed48523e3ba22e76c88fb8d6cc6d3f1742f74988645da7fc87084"
+  },
+  "source_inputs": {
+    "main.lang.algorithm-lab.recur": "8a743e506b65a9aa48468a3e8afe55faa07d27fd9df429f6271fb1a94c0362a7",
+    "main.lang.skippy-watch-coordination.recur": "1de17c2427de5840b1f35ba92ad7f88c14cb8f818b87c135e88bb8d60fbfe64f",
+    "persona.packaged.recur.md": "c68d991a432fc943606c8645704d2a660a49f58ea67db66ae48d0eeee5a28fbc"
+  },
+  "read_only_inventory": "unchanged",
+  "smoke": [
+    {
+      "binary": "recur",
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "recur 0.2.8"
+    },
+    {
+      "binary": "recur",
+      "arguments": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Hierarchy-aware code search for modern codebases\n\nNamed in tribute to Dennis Ritchie's early work on recursive program structure.\n\nUsage: recur [OPTIONS] <COMMAND>\n\nCommands:\n  prompt       Discover capability prompts or prepare bounded evidence for an intent\n  files        Find files matching a recursive hierarchical pattern\n  find         Search for text within hierarchically-scoped files (recursive)\n  tree         Show recursive hierarchy tree for files\n  related      Find files related to (siblings of) a given file in the hierarchy\n  children     Find files that are children of a hierarchy (recursive)\n  id           Search for hierarchical identifiers in file content (recursive)\n  stats        Show statistics for a hierarchy (files, lines, depth)\n  callers      Find all places where a function/method is called\n  callees      Find all functions/methods that a given function calls (callees/dependencies)\n  trace        Multi-level call graph visualization (trace execution/usage paths)\n  trace-stats  Analyze call graph complexity statistics\n  merge        Merge hierarchical results from multiple naming conventions\n  trait        Manage trait configuration in .recur/config.toml\n  init         Initialize or analyze project-local `.recur/config.toml`\n  lane         Scaffold or list named lane sub-roots\n  reveal       Reveal lane-local rehydration capsules (`*.recur.md`)\n  psyche       Inspect `.recur` agent vault structure for missing or inconsistent files\n  watch        Inspect watcher state written by `recur-watch`\n  version      Inspect artifact version policy, manifests, and preserved history\n  capability   Inspect root `.recur-*` capability cards\n  warp         List remaining Warp bubbles, or query eventness and residual pressure\n  lang         Pure, bounded Recur Lang discovery, contract views and static checks\n  flatten      Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths\n  help         Print this message or the help of the given subcommand(s)\n\nOptions:\n      --color                       Use color in output\n      --json                        Output as JSON\n      --sep <CHAR>                  Hierarchy separator character (default: '.') Use '_' for Rust modules, '-' for kebab-case, ':' for namespaces May be provided multiple times for multi-separator queries\n      --sep-replace-default <CHAR>  When using multiple separators, normalize output to this separator\n      --show-sep                    Show which separator was used for each file (e.g., [.] or [_])\n  -h, --help                        Print help\n  -V, --version                     Print version\n\nA quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help\n  recur reveal --help\n  recur capability --help\n  recur version --help"
+    },
+    {
+      "binary": "recur-git",
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "recur-git 0.2.8"
+    },
+    {
+      "binary": "recur-git",
+      "arguments": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Git/workflow extension for recur. Keeps recur pure hierarchy semantics.\n\nUsage: recur-git <COMMAND>\n\nCommands:\n  checkpoint    Capture a parallel-lane checkpoint entry (git + active todo leaves)\n  test-receipt  Run one bounded test target and write an immutable eventness receipt\n  help          Print this message or the help of the given subcommand(s)\n\nOptions:\n  -h, --help     Print help\n  -V, --version  Print version"
+    },
+    {
+      "binary": "recur-lang",
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "recur-lang 0.2.8"
+    },
+    {
+      "binary": "recur-lang",
+      "arguments": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Stateful companion for bounded Recur Lang coordination\n\nUsage: recur-lang <COMMAND>\n\nCommands:\n  warp  Plan or confirm one declared E0 -> dE -> Ef transition\n  help  Print this message or the help of the given subcommand(s)\n\nOptions:\n  -h, --help     Print help\n  -V, --version  Print version"
+    },
+    {
+      "binary": "recur-reveal",
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "recur-reveal 0.2.8"
+    },
+    {
+      "binary": "recur-reveal",
+      "arguments": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Local Reveal configuration and inert context packets\n\nUsage: recur-reveal [OPTIONS] <COMMAND>\n\nCommands:\n  init  Add only missing association tables; preserve existing configuration\n  next  Prepare local guidance without activating or executing it\n  help  Print this message or the help of the given subcommand(s)\n\nOptions:\n  -d, --dir <DIR>  [default: .]\n      --json       \n  -h, --help       Print help\n  -V, --version    Print version"
+    },
+    {
+      "binary": "recur-version",
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "recur-version 0.2.8"
+    },
+    {
+      "binary": "recur-version",
+      "arguments": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Save artifact versions and update Recur version manifests\n\nUsage: recur-version [OPTIONS] <COMMAND>\n\nCommands:\n  next  Print the next version token for a current artifact\n  save  Save a current artifact snapshot and update its manifest\n  help  Print this message or the help of the given subcommand(s)\n\nOptions:\n  -d, --dir <DIR>  Project root or directory containing `.recur/` [default: .]\n      --json       Output as JSON\n  -h, --help       Print help\n  -V, --version    Print version"
+    },
+    {
+      "binary": "recur-warp",
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "recur-warp 0.2.8"
+    },
+    {
+      "binary": "recur-warp",
+      "arguments": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Write confirmed Warp Slice completion layers\n\nUsage: recur-warp [OPTIONS] <COMMAND>\n\nCommands:\n  llm       Discover app prompts and prepare evidence; does not call an LLM\n  init      Install missing editable defaults. Removal policy is configuration only: no removal command or Git snapshot/ref enforcement is provided\n  create    Preview a configured bubble map; --confirm creates it without overwriting\n  receipt   Preview a policy-aware lifecycle receipt; --confirm records a declaration\n  complete  Plan or persist one accepted Slice completion layer\n  evolve    Plan or persist a superseding Warp bubble after an explosion\n  collapse  Plan or execute archival of unambiguous completed eventness\n  help      Print this message or the help of the given subcommand(s)\n\nOptions:\n  -d, --dir <DIR>  Project root containing the Warp bubble map [default: .]\n      --json       Output as JSON\n      --sep <SEP>  Explicit hierarchy separator for prompt context queries\n  -h, --help       Print help\n  -V, --version    Print version"
+    },
+    {
+      "binary": "recur-watch",
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "result": "recur-watch 0.2.8"
+    },
+    {
+      "binary": "recur-watch",
+      "arguments": [
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Watch vault or project files for matching hierarchical events\n\nUsage: recur-watch [OPTIONS] --filter <PATTERN>\n\nOptions:\n      --id <ID>                     Watch runtime id used for .recur/watch status records\n      --filter <PATTERN>            Hierarchical pattern to subscribe to\n  -d, --dir <DIR>                   Root directory to watch [default: .]\n      --format <FORMAT>             Output format: oneline or json [default: oneline]\n      --poll-framing <SECONDS>      Poll interval in integer seconds; omit for filesystem-event streaming mode\n      --color                       Use color in output\n      --json                        Output as JSON\n      --sep <CHAR>                  Hierarchy separator character (default: '.') Use '_' for Rust modules, '-' for kebab-case, ':' for namespaces May be provided multiple times for multi-separator queries\n      --sep-replace-default <CHAR>  When using multiple separators, normalize output to this separator\n      --show-sep                    Show which separator was used for each file (e.g., [.] or [_])\n  -h, --help                        Print help\n  -V, --version                     Print version"
+    },
+    {
+      "binary": "recur",
+      "arguments": [
+        "lang",
+        "--help"
+      ],
+      "exit_code": 0,
+      "result": "Pure, bounded Recur Lang discovery, contract views and static checks\n\nUsage: recur lang [OPTIONS] <COMMAND>\n\nCommands:\n  list    Discover .recur sources under the read root, including unsupported inputs\n  show    Inspect one scoped function or lane; bindings are never executed\n  report  Explain header, body and footer; filter recorded Eventness without ranking\n  check   Check the supported fragment: exit 0 sound, 1 findings, 2 invalid input\n  help    Print this message or the help of the given subcommand(s)\n\nOptions:\n  -d, --dir <DIR>                   Read root; relative sources resolve here and cannot escape it [default: .]\n      --color                       Use color in output\n      --json                        Output as JSON\n      --sep <CHAR>                  Hierarchy separator character (default: '.') Use '_' for Rust modules, '-' for kebab-case, ':' for namespaces May be provided multiple times for multi-separator queries\n      --sep-replace-default <CHAR>  When using multiple separators, normalize output to this separator\n      --show-sep                    Show which separator was used for each file (e.g., [.] or [_])\n  -h, --help                        Print help"
+    },
+    {
+      "binary": "recur",
+      "arguments": [
+        "lang",
+        "show",
+        "main.lang.algorithm-lab.recur",
+        "--scope",
+        "merge.f",
+        "--json"
+      ],
+      "exit_code": 0,
+      "result": {
+        "body": {
+          "boundary_edges": [
+            {
+              "consumer": "merge.f",
+              "identity": "bubble.o(b)->merge.f",
+              "input": "merge.i(b)",
+              "producer": "bubble.o(b)",
+              "span": {
+                "end_byte": 480,
+                "end_line": 20,
+                "start_byte": 417,
+                "start_line": 19
+              }
+            }
+          ],
+          "edges": [
+            {
+              "consumer": "merge.f",
+              "identity": "bubble.o(b)->merge.f",
+              "input": "merge.i(b)",
+              "producer": "bubble.o(b)",
+              "span": {
+                "end_byte": 480,
+                "end_line": 20,
+                "start_byte": 417,
+                "start_line": 19
+              }
+            },
+            {
+              "consumer": "merge.o(c)",
+              "identity": "merge.f->merge.o(c)",
+              "output": "merge.o(c)",
+              "producer": "merge.f",
+              "span": {
+                "end_byte": 480,
+                "end_line": 20,
+                "start_byte": 417,
+                "start_line": 19
+              }
+            }
+          ],
+          "flows": [
+            {
+              "flow": {
+                "expression": "i(b) -> f(b) -> o(c)",
+                "mode": "sync",
+                "span": {
+                  "end_byte": 924,
+                  "end_line": 38,
+                  "start_byte": 886,
+                  "start_line": 38
+                }
+              },
+              "scope": "merge"
+            }
+          ]
+        },
+        "contracts": [
+          {
+            "canonical_identity": "bubble.o(b)",
+            "fields": [
+              {
+                "name": "values",
+                "type_name": "List<Int>"
+              }
+            ]
+          },
+          {
+            "canonical_identity": "merge.o(c)",
+            "fields": [
+              {
+                "name": "values",
+                "type_name": "List<Int>"
+              }
+            ]
+          }
+        ],
+        "coverage": {
+          "analysis": "selected WIR1 scopes",
+          "diagnostics": [
+            {
+              "code": "LANG101",
+              "message": "Only the named IR fragment is validated; excluded syntax and runtime behavior remain unvalidated",
+              "severity": "capability"
+            }
+          ],
+          "excluded": [
+            "Expansion bodies and worker semantics",
+            "Whole-document composition, unknown statements and nonselected flows",
+            "Runtime checks, receipt contents and execution"
+          ],
+          "whole_source_validated": false
+        },
+        "expanded": false,
+        "footer": {
+          "eventness_filter": null,
+          "eventness_vocabulary": [
+            "todo.current",
+            "todo",
+            "complete"
+          ],
+          "events": [
+            {
+              "checked_receipts": [],
+              "declared_events": [
+                {
+                  "edge": "consume",
+                  "identifier": "demo.algorithm.merge.input",
+                  "span": {
+                    "end_byte": 3220,
+                    "end_line": 121,
+                    "start_byte": 3179,
+                    "start_line": 120
+                  }
+                },
+                {
+                  "edge": "trigger",
+                  "identifier": "demo.algorithm.merge.run",
+                  "span": {
+                    "end_byte": 3258,
+                    "end_line": 122,
+                    "start_byte": 3221,
+                    "start_line": 122
+                  }
+                },
+                {
+                  "edge": "produce",
+                  "identifier": "demo.algorithm.merge.output",
+                  "span": {
+                    "end_byte": 3299,
+                    "end_line": 123,
+                    "start_byte": 3259,
+                    "start_line": 123
+                  }
+                },
+                {
+                  "edge": "state",
+                  "identifier": "demo.algorithm.merge.complete",
+                  "span": {
+                    "end_byte": 3343,
+                    "end_line": 125,
+                    "start_byte": 3300,
+                    "start_line": 124
+                  }
+                }
+              ],
+              "receipt_status": "not-supplied-or-validated",
+              "recorded": [],
+              "requested_transition": {
+                "current": "demo.algorithm.merge.todo.current",
+                "desired": "demo.algorithm.merge.complete",
+                "slice": "merge.f",
+                "span": {
+                  "end_byte": 3453,
+                  "end_line": 127,
+                  "start_byte": 3346,
+                  "start_line": 126
+                }
+              },
+              "scope": "merge"
+            }
+          ],
+          "execution": "not-run",
+          "findings": [],
+          "graph": null,
+          "validation": "sound-within-coverage"
+        },
+        "header": [
+          {
+            "binding": "sort.merge",
+            "identity": "merge.f",
+            "input": {
+              "canonical_identity": "bubble.o(b)",
+              "local_identity": "merge.i(b)",
+              "role": "input",
+              "symbol": "b"
+            },
+            "meaning": "Recursive merge sort",
+            "output": {
+              "canonical_identity": "merge.o(c)",
+              "local_identity": "merge.o(c)",
+              "role": "output",
+              "symbol": "c"
+            },
+            "scope": "merge",
+            "span": {
+              "end_byte": 480,
+              "end_line": 20,
+              "start_byte": 417,
+              "start_line": 19
+            },
+            "symbol": "f"
+          }
+        ],
+        "ir_schema": "recur-lang-warp-ir-v1",
+        "schema": "recur-lang-query-v1",
+        "scope": "merge.f",
+        "source": "main.lang.algorithm-lab.recur",
+        "source_hash": "fnv1a64:5025ba1848fd1272"
+      }
+    },
+    {
+      "binary": "recur",
+      "arguments": [
+        "lang",
+        "check",
+        "main.lang.skippy-watch-coordination.recur",
+        "--json"
+      ],
+      "exit_code": 0,
+      "result": {
+        "body": {
+          "boundary_edges": [
+            {
+              "consumer": "csharp_monkey",
+              "identity": "skippy.plan.o(b)orders[\"csharp_monkey\"]->csharp_monkey",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"csharp_monkey\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 3435,
+                "end_line": 137,
+                "start_byte": 2977,
+                "start_line": 127
+              }
+            },
+            {
+              "consumer": "web_monkey",
+              "identity": "skippy.plan.o(b)orders[\"web_monkey\"]->web_monkey",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"web_monkey\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 3859,
+                "end_line": 149,
+                "start_byte": 3441,
+                "start_line": 139
+              }
+            },
+            {
+              "consumer": "test_bird",
+              "identity": "skippy.plan.o(b)orders[\"test_bird\"]->test_bird",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"test_bird\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 4250,
+                "end_line": 161,
+                "start_byte": 3865,
+                "start_line": 151
+              }
+            },
+            {
+              "consumer": "review_bird",
+              "identity": "skippy.plan.o(b)orders[\"review_bird\"]->review_bird",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"review_bird\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 4780,
+                "end_line": 178,
+                "start_byte": 4256,
+                "start_line": 163
+              }
+            },
+            {
+              "consumer": "git_monkey",
+              "identity": "skippy.plan.o(b)orders[\"git_monkey\"]->git_monkey",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"git_monkey\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 5277,
+                "end_line": 194,
+                "start_byte": 4786,
+                "start_line": 180
+              }
+            },
+            {
+              "consumer": "skippy.decide",
+              "identity": "git_monkey.o(b)->skippy.decide",
+              "message": {
+                "contract": "WorkReceipt",
+                "identity": "git_monkey.o(b)",
+                "producer": "git_monkey",
+                "projection": null
+              },
+              "producer": "git_monkey",
+              "span": {
+                "end_byte": 5642,
+                "end_line": 208,
+                "start_byte": 5598,
+                "start_line": 207
+              }
+            }
+          ],
+          "edges": [
+            {
+              "consumer": "csharp_monkey",
+              "identity": "skippy.plan.o(b)orders[\"csharp_monkey\"]->csharp_monkey",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"csharp_monkey\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 3435,
+                "end_line": 137,
+                "start_byte": 2977,
+                "start_line": 127
+              }
+            },
+            {
+              "consumer": "web_monkey",
+              "identity": "skippy.plan.o(b)orders[\"web_monkey\"]->web_monkey",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"web_monkey\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 3859,
+                "end_line": 149,
+                "start_byte": 3441,
+                "start_line": 139
+              }
+            },
+            {
+              "consumer": "test_bird",
+              "identity": "skippy.plan.o(b)orders[\"test_bird\"]->test_bird",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"test_bird\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 4250,
+                "end_line": 161,
+                "start_byte": 3865,
+                "start_line": 151
+              }
+            },
+            {
+              "consumer": "review_bird",
+              "identity": "skippy.plan.o(b)orders[\"review_bird\"]->review_bird",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"review_bird\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 4780,
+                "end_line": 178,
+                "start_byte": 4256,
+                "start_line": 163
+              }
+            },
+            {
+              "consumer": "review_bird",
+              "identity": "csharp_monkey.o(b)->review_bird",
+              "message": {
+                "contract": "WorkReceipt",
+                "identity": "csharp_monkey.o(b)",
+                "producer": "csharp_monkey",
+                "projection": null
+              },
+              "producer": "csharp_monkey",
+              "span": {
+                "end_byte": 4780,
+                "end_line": 178,
+                "start_byte": 4256,
+                "start_line": 163
+              }
+            },
+            {
+              "consumer": "review_bird",
+              "identity": "web_monkey.o(b)->review_bird",
+              "message": {
+                "contract": "WorkReceipt",
+                "identity": "web_monkey.o(b)",
+                "producer": "web_monkey",
+                "projection": null
+              },
+              "producer": "web_monkey",
+              "span": {
+                "end_byte": 4780,
+                "end_line": 178,
+                "start_byte": 4256,
+                "start_line": 163
+              }
+            },
+            {
+              "consumer": "review_bird",
+              "identity": "test_bird.o(b)->review_bird",
+              "message": {
+                "contract": "WorkReceipt",
+                "identity": "test_bird.o(b)",
+                "producer": "test_bird",
+                "projection": null
+              },
+              "producer": "test_bird",
+              "span": {
+                "end_byte": 4780,
+                "end_line": 178,
+                "start_byte": 4256,
+                "start_line": 163
+              }
+            },
+            {
+              "consumer": "git_monkey",
+              "identity": "skippy.plan.o(b)orders[\"git_monkey\"]->git_monkey",
+              "message": {
+                "contract": "WorkOrder",
+                "identity": "skippy.plan.o(b)",
+                "producer": "skippy.plan",
+                "projection": "orders[\"git_monkey\"]"
+              },
+              "producer": "skippy.plan",
+              "span": {
+                "end_byte": 5277,
+                "end_line": 194,
+                "start_byte": 4786,
+                "start_line": 180
+              }
+            },
+            {
+              "consumer": "git_monkey",
+              "identity": "review_bird.o(b)->git_monkey",
+              "message": {
+                "contract": "WorkReceipt",
+                "identity": "review_bird.o(b)",
+                "producer": "review_bird",
+                "projection": null
+              },
+              "producer": "review_bird",
+              "span": {
+                "end_byte": 5277,
+                "end_line": 194,
+                "start_byte": 4786,
+                "start_line": 180
+              }
+            },
+            {
+              "consumer": "skippy.decide",
+              "identity": "git_monkey.o(b)->skippy.decide",
+              "message": {
+                "contract": "WorkReceipt",
+                "identity": "git_monkey.o(b)",
+                "producer": "git_monkey",
+                "projection": null
+              },
+              "producer": "git_monkey",
+              "span": {
+                "end_byte": 5642,
+                "end_line": 208,
+                "start_byte": 5598,
+                "start_line": 207
+              }
+            }
+          ],
+          "flows": [
+            {
+              "flow": {
+                "awaits": [
+                  {
+                    "next_consumer": "review_bird",
+                    "required": [
+                      {
+                        "contract": "WorkReceipt",
+                        "identity": "csharp_monkey.o(b)",
+                        "producer": "csharp_monkey",
+                        "projection": null
+                      },
+                      {
+                        "contract": "WorkReceipt",
+                        "identity": "web_monkey.o(b)",
+                        "producer": "web_monkey",
+                        "projection": null
+                      },
+                      {
+                        "contract": "WorkReceipt",
+                        "identity": "test_bird.o(b)",
+                        "producer": "test_bird",
+                        "projection": null
+                      }
+                    ],
+                    "span": {
+                      "end_byte": 5534,
+                      "end_line": 204,
+                      "start_byte": 5454,
+                      "start_line": 203
+                    }
+                  },
+                  {
+                    "next_consumer": "git_monkey",
+                    "required": [
+                      {
+                        "contract": "WorkReceipt",
+                        "identity": "review_bird.o(b)",
+                        "producer": "review_bird",
+                        "projection": null
+                      }
+                    ],
+                    "span": {
+                      "end_byte": 5587,
+                      "end_line": 206,
+                      "start_byte": 5545,
+                      "start_line": 205
+                    }
+                  },
+                  {
+                    "next_consumer": "skippy.decide",
+                    "required": [
+                      {
+                        "contract": "WorkReceipt",
+                        "identity": "git_monkey.o(b)",
+                        "producer": "git_monkey",
+                        "projection": null
+                      }
+                    ],
+                    "span": {
+                      "end_byte": 5642,
+                      "end_line": 208,
+                      "start_byte": 5598,
+                      "start_line": 207
+                    }
+                  }
+                ],
+                "expression": "i(a) -> skippy.plan(a) -> fork [csharp_monkey(a), web_monkey(a), test_bird(a)] -> await [csharp_monkey.o(b), web_monkey.o(b), test_bird.o(b)] -> review_bird(a) -> await review_bird.o(b) -> git_monkey(a) -> await git_monkey.o(b) -> skippy.decide(a) -> o(b)",
+                "fork_lanes": [
+                  "csharp_monkey",
+                  "web_monkey",
+                  "test_bird"
+                ],
+                "mode": "async",
+                "name": "solution",
+                "span": {
+                  "end_byte": 5659,
+                  "end_line": 209,
+                  "start_byte": 5333,
+                  "start_line": 199
+                }
+              },
+              "scope": "solution"
+            }
+          ]
+        },
+        "contracts": [
+          {
+            "canonical_identity": "WorkOrder",
+            "fields": [
+              {
+                "name": "run_id",
+                "type_name": "RunId"
+              },
+              {
+                "name": "round_id",
+                "type_name": "RoundId"
+              },
+              {
+                "name": "lane",
+                "type_name": "LaneId"
+              },
+              {
+                "name": "objective",
+                "type_name": "Text"
+              },
+              {
+                "name": "context",
+                "type_name": "List<Ref>"
+              },
+              {
+                "name": "allow_read",
+                "type_name": "List<PathPattern>"
+              },
+              {
+                "name": "allow_write",
+                "type_name": "List<PathPattern>"
+              },
+              {
+                "name": "allowed_tools",
+                "type_name": "List<ToolId>"
+              },
+              {
+                "name": "acceptance",
+                "type_name": "List<Criterion>"
+              },
+              {
+                "name": "depends_on",
+                "type_name": "List<ReceiptRef>"
+              },
+              {
+                "name": "reply_to",
+                "type_name": "FileRef"
+              },
+              {
+                "name": "source_hash",
+                "type_name": "Hash"
+              },
+              {
+                "name": "idempotency_key",
+                "type_name": "Text"
+              }
+            ]
+          },
+          {
+            "canonical_identity": "WorkReceipt",
+            "fields": [
+              {
+                "name": "run_id",
+                "type_name": "RunId"
+              },
+              {
+                "name": "round_id",
+                "type_name": "RoundId"
+              },
+              {
+                "name": "lane",
+                "type_name": "LaneId"
+              },
+              {
+                "name": "instruction_ref",
+                "type_name": "FileRef"
+              },
+              {
+                "name": "instruction_hash",
+                "type_name": "Hash"
+              },
+              {
+                "name": "verdict",
+                "type_name": "Verdict"
+              },
+              {
+                "name": "artifacts",
+                "type_name": "List<ArtifactRef>"
+              },
+              {
+                "name": "commits",
+                "type_name": "List<CommitRef>"
+              },
+              {
+                "name": "files_changed",
+                "type_name": "List<Path>"
+              },
+              {
+                "name": "tool_receipts",
+                "type_name": "List<ToolReceipt>"
+              },
+              {
+                "name": "questions",
+                "type_name": "List<Question>"
+              },
+              {
+                "name": "unresolved",
+                "type_name": "List<Issue>"
+              },
+              {
+                "name": "started_at",
+                "type_name": "Timestamp"
+              },
+              {
+                "name": "completed_at",
+                "type_name": "Timestamp"
+              }
+            ]
+          }
+        ],
+        "coverage": {
+          "analysis": "entire selected CIR1 flow, before filtering",
+          "diagnostics": [
+            {
+              "code": "LANG101",
+              "message": "Only the named IR fragment is validated; excluded syntax and runtime behavior remain unvalidated",
+              "severity": "capability"
+            }
+          ],
+          "excluded": [
+            "Coordinator input signatures and function bodies",
+            "Whole-document grammar, expansions, watch/runtime/grid/import/feedback sections",
+            "Lane Eventness and receipt validation (CIR1 has no lifecycle model)"
+          ],
+          "whole_source_validated": false
+        },
+        "expanded": false,
+        "footer": {
+          "eventness_filter": null,
+          "eventness_vocabulary": [
+            "todo.current",
+            "todo",
+            "complete"
+          ],
+          "events": [
+            {
+              "checked_receipts": [],
+              "receipt_status": "not-supplied-or-validated",
+              "recorded": [],
+              "requested_receipts": [
+                "dotnet.format",
+                "dotnet.test"
+              ],
+              "scope": "csharp_monkey"
+            },
+            {
+              "checked_receipts": [],
+              "receipt_status": "not-supplied-or-validated",
+              "recorded": [],
+              "requested_receipts": [
+                "npm.lint",
+                "npm.test",
+                "npm.build"
+              ],
+              "scope": "web_monkey"
+            },
+            {
+              "checked_receipts": [],
+              "receipt_status": "not-supplied-or-validated",
+              "recorded": [],
+              "requested_receipts": [
+                "focused.tests"
+              ],
+              "scope": "test_bird"
+            },
+            {
+              "checked_receipts": [],
+              "receipt_status": "not-supplied-or-validated",
+              "recorded": [],
+              "requested_receipts": [
+                "integration.tests",
+                "spec.review"
+              ],
+              "scope": "review_bird"
+            },
+            {
+              "checked_receipts": [],
+              "receipt_status": "not-supplied-or-validated",
+              "recorded": [],
+              "requested_receipts": [
+                "git.integration",
+                "branch.tests"
+              ],
+              "scope": "git_monkey"
+            }
+          ],
+          "execution": "not-run",
+          "findings": [],
+          "graph": {
+            "edges": [
+              {
+                "consumer": "csharp_monkey",
+                "message": {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "producer": "skippy.plan",
+                  "projection": "orders[\"csharp_monkey\"]"
+                },
+                "producer": "skippy.plan",
+                "span": {
+                  "end_byte": 3435,
+                  "end_line": 137,
+                  "start_byte": 2977,
+                  "start_line": 127
+                }
+              },
+              {
+                "consumer": "web_monkey",
+                "message": {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "producer": "skippy.plan",
+                  "projection": "orders[\"web_monkey\"]"
+                },
+                "producer": "skippy.plan",
+                "span": {
+                  "end_byte": 3859,
+                  "end_line": 149,
+                  "start_byte": 3441,
+                  "start_line": 139
+                }
+              },
+              {
+                "consumer": "test_bird",
+                "message": {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "producer": "skippy.plan",
+                  "projection": "orders[\"test_bird\"]"
+                },
+                "producer": "skippy.plan",
+                "span": {
+                  "end_byte": 4250,
+                  "end_line": 161,
+                  "start_byte": 3865,
+                  "start_line": 151
+                }
+              },
+              {
+                "consumer": "review_bird",
+                "message": {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "producer": "skippy.plan",
+                  "projection": "orders[\"review_bird\"]"
+                },
+                "producer": "skippy.plan",
+                "span": {
+                  "end_byte": 4780,
+                  "end_line": 178,
+                  "start_byte": 4256,
+                  "start_line": 163
+                }
+              },
+              {
+                "consumer": "review_bird",
+                "message": {
+                  "contract": "WorkReceipt",
+                  "identity": "csharp_monkey.o(b)",
+                  "producer": "csharp_monkey",
+                  "projection": null
+                },
+                "producer": "csharp_monkey",
+                "span": {
+                  "end_byte": 4780,
+                  "end_line": 178,
+                  "start_byte": 4256,
+                  "start_line": 163
+                }
+              },
+              {
+                "consumer": "review_bird",
+                "message": {
+                  "contract": "WorkReceipt",
+                  "identity": "web_monkey.o(b)",
+                  "producer": "web_monkey",
+                  "projection": null
+                },
+                "producer": "web_monkey",
+                "span": {
+                  "end_byte": 4780,
+                  "end_line": 178,
+                  "start_byte": 4256,
+                  "start_line": 163
+                }
+              },
+              {
+                "consumer": "review_bird",
+                "message": {
+                  "contract": "WorkReceipt",
+                  "identity": "test_bird.o(b)",
+                  "producer": "test_bird",
+                  "projection": null
+                },
+                "producer": "test_bird",
+                "span": {
+                  "end_byte": 4780,
+                  "end_line": 178,
+                  "start_byte": 4256,
+                  "start_line": 163
+                }
+              },
+              {
+                "consumer": "git_monkey",
+                "message": {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "producer": "skippy.plan",
+                  "projection": "orders[\"git_monkey\"]"
+                },
+                "producer": "skippy.plan",
+                "span": {
+                  "end_byte": 5277,
+                  "end_line": 194,
+                  "start_byte": 4786,
+                  "start_line": 180
+                }
+              },
+              {
+                "consumer": "git_monkey",
+                "message": {
+                  "contract": "WorkReceipt",
+                  "identity": "review_bird.o(b)",
+                  "producer": "review_bird",
+                  "projection": null
+                },
+                "producer": "review_bird",
+                "span": {
+                  "end_byte": 5277,
+                  "end_line": 194,
+                  "start_byte": 4786,
+                  "start_line": 180
+                }
+              },
+              {
+                "consumer": "skippy.decide",
+                "message": {
+                  "contract": "WorkReceipt",
+                  "identity": "git_monkey.o(b)",
+                  "producer": "git_monkey",
+                  "projection": null
+                },
+                "producer": "git_monkey",
+                "span": {
+                  "end_byte": 5642,
+                  "end_line": 208,
+                  "start_byte": 5598,
+                  "start_line": 207
+                }
+              }
+            ],
+            "entries": [
+              "csharp_monkey",
+              "web_monkey",
+              "test_bird"
+            ],
+            "findings": [],
+            "flow": "solution",
+            "ir_schema": "recur-lang-concurrent-ir-v1",
+            "nodes": [
+              {
+                "identity": "csharp_monkey",
+                "kind": "lane",
+                "span": {
+                  "end_byte": 3435,
+                  "end_line": 137,
+                  "start_byte": 2977,
+                  "start_line": 127
+                }
+              },
+              {
+                "identity": "web_monkey",
+                "kind": "lane",
+                "span": {
+                  "end_byte": 3859,
+                  "end_line": 149,
+                  "start_byte": 3441,
+                  "start_line": 139
+                }
+              },
+              {
+                "identity": "test_bird",
+                "kind": "lane",
+                "span": {
+                  "end_byte": 4250,
+                  "end_line": 161,
+                  "start_byte": 3865,
+                  "start_line": 151
+                }
+              },
+              {
+                "identity": "review_bird",
+                "kind": "lane",
+                "span": {
+                  "end_byte": 4780,
+                  "end_line": 178,
+                  "start_byte": 4256,
+                  "start_line": 163
+                }
+              },
+              {
+                "identity": "git_monkey",
+                "kind": "lane",
+                "span": {
+                  "end_byte": 5277,
+                  "end_line": 194,
+                  "start_byte": 4786,
+                  "start_line": 180
+                }
+              },
+              {
+                "identity": "skippy.plan",
+                "kind": "coordinator",
+                "span": {
+                  "end_byte": 2603,
+                  "end_line": 110,
+                  "start_byte": 2566,
+                  "start_line": 110
+                }
+              },
+              {
+                "identity": "skippy.decide",
+                "kind": "coordinator",
+                "span": {
+                  "end_byte": 2893,
+                  "end_line": 122,
+                  "start_byte": 2869,
+                  "start_line": 122
+                }
+              }
+            ],
+            "orchestration_sound": true,
+            "reachable": [
+              "csharp_monkey",
+              "web_monkey",
+              "test_bird",
+              "review_bird",
+              "git_monkey",
+              "skippy.decide"
+            ],
+            "schema": "recur-lang-static-graph-report-v1",
+            "source": "main.lang.skippy-watch-coordination.recur",
+            "source_hash": "fnv1a64:f95494ea4deacc73",
+            "waits": [
+              {
+                "consumer": "review_bird",
+                "identity": "solution.wait.1",
+                "required": [
+                  {
+                    "contract": "WorkReceipt",
+                    "identity": "csharp_monkey.o(b)",
+                    "producer": "csharp_monkey",
+                    "projection": null
+                  },
+                  {
+                    "contract": "WorkReceipt",
+                    "identity": "web_monkey.o(b)",
+                    "producer": "web_monkey",
+                    "projection": null
+                  },
+                  {
+                    "contract": "WorkReceipt",
+                    "identity": "test_bird.o(b)",
+                    "producer": "test_bird",
+                    "projection": null
+                  }
+                ],
+                "span": {
+                  "end_byte": 5534,
+                  "end_line": 204,
+                  "start_byte": 5454,
+                  "start_line": 203
+                }
+              },
+              {
+                "consumer": "git_monkey",
+                "identity": "solution.wait.2",
+                "required": [
+                  {
+                    "contract": "WorkReceipt",
+                    "identity": "review_bird.o(b)",
+                    "producer": "review_bird",
+                    "projection": null
+                  }
+                ],
+                "span": {
+                  "end_byte": 5587,
+                  "end_line": 206,
+                  "start_byte": 5545,
+                  "start_line": 205
+                }
+              },
+              {
+                "consumer": "skippy.decide",
+                "identity": "solution.wait.3",
+                "required": [
+                  {
+                    "contract": "WorkReceipt",
+                    "identity": "git_monkey.o(b)",
+                    "producer": "git_monkey",
+                    "projection": null
+                  }
+                ],
+                "span": {
+                  "end_byte": 5642,
+                  "end_line": 208,
+                  "start_byte": 5598,
+                  "start_line": 207
+                }
+              }
+            ]
+          },
+          "validation": "sound-within-coverage"
+        },
+        "header": [
+          {
+            "binding": null,
+            "identity": "csharp_monkey.f",
+            "input": {
+              "expression": "project skippy.plan.o(b).orders[\"csharp_monkey\"]",
+              "identity": "csharp_monkey.i(a)",
+              "members": [
+                {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "projection": "orders[\"csharp_monkey\"]"
+                }
+              ]
+            },
+            "meaning": "Implement the bounded C# and MVC slice",
+            "output": {
+              "contract": "WorkReceipt",
+              "identity": "csharp_monkey.o(b)",
+              "producer": "csharp_monkey",
+              "projection": null
+            },
+            "persona": "monkey",
+            "scope": "csharp_monkey",
+            "span": {
+              "end_byte": 3172,
+              "end_line": 132,
+              "start_byte": 3106,
+              "start_line": 131
+            },
+            "symbol": "f"
+          },
+          {
+            "binding": null,
+            "identity": "web_monkey.f",
+            "input": {
+              "expression": "project skippy.plan.o(b).orders[\"web_monkey\"]",
+              "identity": "web_monkey.i(a)",
+              "members": [
+                {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "projection": "orders[\"web_monkey\"]"
+                }
+              ]
+            },
+            "meaning": "Implement the bounded Angular or React slice",
+            "output": {
+              "contract": "WorkReceipt",
+              "identity": "web_monkey.o(b)",
+              "producer": "web_monkey",
+              "projection": null
+            },
+            "persona": "monkey",
+            "scope": "web_monkey",
+            "span": {
+              "end_byte": 3636,
+              "end_line": 144,
+              "start_byte": 3564,
+              "start_line": 143
+            },
+            "symbol": "f"
+          },
+          {
+            "binding": null,
+            "identity": "test_bird.f",
+            "input": {
+              "expression": "project skippy.plan.o(b).orders[\"test_bird\"]",
+              "identity": "test_bird.i(a)",
+              "members": [
+                {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "projection": "orders[\"test_bird\"]"
+                }
+              ]
+            },
+            "meaning": "Create adversarial and acceptance tests",
+            "output": {
+              "contract": "WorkReceipt",
+              "identity": "test_bird.o(b)",
+              "producer": "test_bird",
+              "projection": null
+            },
+            "persona": "bird-brain",
+            "scope": "test_bird",
+            "span": {
+              "end_byte": 4057,
+              "end_line": 156,
+              "start_byte": 3990,
+              "start_line": 155
+            },
+            "symbol": "f"
+          },
+          {
+            "binding": null,
+            "identity": "review_bird.f",
+            "input": {
+              "expression": "join(\r\n      project skippy.plan.o(b).orders[\"review_bird\"],\r\n      csharp_monkey.o(b),\r\n      web_monkey.o(b),\r\n      test_bird.o(b)\r\n    )",
+              "identity": "review_bird.i(a)",
+              "members": [
+                {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "projection": "orders[\"review_bird\"]"
+                },
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "csharp_monkey.o(b)",
+                  "projection": null
+                },
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "web_monkey.o(b)",
+                  "projection": null
+                },
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "test_bird.o(b)",
+                  "projection": null
+                }
+              ]
+            },
+            "meaning": "Attempt to falsify the combined implementation",
+            "output": {
+              "contract": "WorkReceipt",
+              "identity": "review_bird.o(b)",
+              "producer": "review_bird",
+              "projection": null
+            },
+            "persona": "bird-brain",
+            "scope": "review_bird",
+            "span": {
+              "end_byte": 4553,
+              "end_line": 173,
+              "start_byte": 4479,
+              "start_line": 172
+            },
+            "symbol": "f"
+          },
+          {
+            "binding": null,
+            "identity": "git_monkey.f",
+            "input": {
+              "expression": "join(\r\n      project skippy.plan.o(b).orders[\"git_monkey\"],\r\n      review_bird.o(b)\r\n    )",
+              "identity": "git_monkey.i(a)",
+              "members": [
+                {
+                  "contract": "WorkOrder",
+                  "identity": "skippy.plan.o(b)",
+                  "projection": "orders[\"git_monkey\"]"
+                },
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "review_bird.o(b)",
+                  "projection": null
+                }
+              ]
+            },
+            "meaning": "Integrate accepted lane commits on the task branch",
+            "output": {
+              "contract": "WorkReceipt",
+              "identity": "git_monkey.o(b)",
+              "producer": "git_monkey",
+              "projection": null
+            },
+            "persona": "monkey",
+            "scope": "git_monkey",
+            "span": {
+              "end_byte": 5032,
+              "end_line": 188,
+              "start_byte": 4954,
+              "start_line": 187
+            },
+            "symbol": "f"
+          }
+        ],
+        "ir_schema": "recur-lang-concurrent-ir-v1",
+        "schema": "recur-lang-query-v1",
+        "scope": null,
+        "source": "main.lang.skippy-watch-coordination.recur",
+        "source_hash": "fnv1a64:f95494ea4deacc73"
+      }
+    },
+    {
+      "binary": "recur-lang",
+      "arguments": [
+        "warp",
+        "main.lang.algorithm-lab.recur",
+        "gcd",
+        "--json"
+      ],
+      "exit_code": 0,
+      "result": {
+        "schema": "recur-lang-warp-plan-v1",
+        "ir_schema": "recur-lang-warp-ir-v1",
+        "source": "main.lang.algorithm-lab.recur",
+        "source_hash": "fnv1a64:5025ba1848fd1272",
+        "scope": "gcd",
+        "current": "demo.algorithm.gcd.todo.current",
+        "slice": "gcd.f",
+        "desired": "demo.algorithm.gcd.complete",
+        "dry_run": true,
+        "confirmation_required": true,
+        "required_receipt_schema": "recur-lang-warp-receipt-v1"
+      }
+    },
+    {
+      "binary": "recur-reveal",
+      "arguments": [
+        "init",
+        "-d",
+        "/mnt/c/src/recur/target/reveal-linux-packages/linux-fixture",
+        "--dry-run",
+        "--json"
+      ],
+      "exit_code": 0,
+      "result": {
+        "changed": true,
+        "dry_run": true,
+        "mutation": "none",
+        "path": "/mnt/c/src/recur/.recur/config.toml",
+        "preview": "# Warp output alternatives: docs/warps or .recur/warps\n# Generated by `recur init`\n\n[src]\ndir = \"src/\"\nsep = \"_\"\n\n# Explicit local associations; pointers are not installed or activated.\n[reveal.agents]\n\n[docs]\ndir = \"docs/\"\nsep = \".\"\n\n[reveal.personas.skippy]\nskills = [\"recur-expert\", \"recur-warp\"]\nguidance_level = \"advanced\"\n\n[julia-tests]\ndir = \"julia-tests/\"\nsep = \".\"\n\n[reveal.skills.recur-expert]\npath = \"recur-expert/SKILL.md\"\n\n[scripts]\ndir = \"scripts/\"\nsep = \"_\"\n\n[reveal.skills.recur-warp]\npath = \"recur-warp/SKILL.md\"\n\n[benches]\ndir = \"benches/\"\nsep = \"_\"\n\n[choco]\ndir = \"choco/\"\nsep = \".\"\n\n[demos]\ndir = \"demos/\"\nsep = \".\"\n\n[julia-expert]\ndir = \"julia-expert/\"\nsep = \"-\"\n\n[target2]\ndir = \"target2/\"\nsep = \"-\"\n\n[test-quick]\ndir = \"test-quick/\"\nsep = \"-\"\n\n[test-quick-2]\ndir = \"test_quick/\"\nsep = \".\"\n\n[test-stdin]\ndir = \"test_stdin/\"\nsep = \".\"\n\n[tmp-flatten-check]\ndir = \"tmp_flatten_check/\"\nsep = \".\"\n\n[tmp-multi-sep]\ndir = \"tmp_multi_sep/\"\nsep = \"_\"\n\n[tmp-recur-semantics-probe-01]\ndir = \"tmp_recur_semantics_probe_01/\"\nsep = \".\"\n\n[tmp-sep-spike]\ndir = \"tmp_sep_spike/\"\nsep = \"_\"\n\n[ulu-docs]\ndir = \"ulu_docs/\"\nsep = \"-\"\n\n[skippy]\ndir = \".recur/skippy/\"\nsep = \".\"\n\n[skippy1]\ndir = \".recur/skippy1/\"\nsep = \".\"\n\n[skippy2]\ndir = \".recur/skippy2/\"\nsep = \".\"\n\n[warp-merge]\ndir = \".recur/warp-merge/\"\nsep = \".\"\n\n[test-monkey]\ndir = \".recur/test-monkey/\"\nsep = \".\"\n\n[git-monkey]\ndir = \".recur/git-monkey/\"\nsep = \".\"\n\n[checkpoint]\nfile = \".recur/checkpoints.md\"\nroot_pattern = \"**\"\n\n[status]\ncurrent_suffix = \".current.md\"\ntodo_suffix = \".todo.md\"\ncomplete_suffix = \".complete.md\"\n\n[reveal]\nmode = \"single-thread\"\ncurrent_thread = \"main.improvement.21\"\nentry_suffix = \".recur.md\"\ntrust = \"config-first\"\nmax_threads = 1\nskip_persona_if_known = true\n\n[reveal.order]\nsteps = [\n  \"persona\",\n  \"agent\",\n  \"agenda\",\n  \"goals.now\",\n  \"schedule.next\",\n  \"pull.first\",\n  \"pull.then\",\n  \"verify\",\n  \"tool.escape\",\n  \"do.not.disturb\",\n  \"ready.state\",\n]\n\n[reveal.merge]\ndefault_role = \"additive\"\ndefault_handoff = \"verify passes and lane truth updated\"\ndefault_touch = \"declared-by-lane\"\n\n[reveal.rank]\nprefer_current = true\nprefer_trigger_event = true\nprefer_recurring = true\nprefer_complete = false\n\n[traversal]\nmax_depth = 5\ndepth_guard = \"hard-fail\"\n\n[traits.content_search]\nenabled = true\nmax_file_bytes = 1048576\nskip_binary_files = true\nnotes = \"Project-specific content search limits and binary handling policy.\"\n\n[traits.separator_merge]\nenabled = true\nnotes = \"Project-specific separator merge tuning placeholder.\"\n\n[traits.stdin]\nenabled = true\nexclude_missing = false\nresolve_relative_to_root = true\nnotes = \"Project-specific stdin path resolution and filtering policy.\"\n\n[traits.traversal_budget]\nenabled = true\nmax_depth = 5\ndepth_guard = \"hard-fail\"\nnotes = \"Preferred trait-level traversal budget overrides.\"\n\n[traits.trace_id]\nenabled = true\nproducer_keywords = \"publish,send,emit,enqueue\"\nconsumer_keywords = \"subscribe,queuebind,routingkey,consumer\"\ntrigger_keywords = \"register(,registerrule,register,routing pattern,*.\"\nnotes = \"Project-specific trace-id role classification keywords.\"\n\n[warp]\n\n[warp.creation]\ndirectory = \"warps\"\ntemplate = \".recur/warp-template.json\"\n\n[warp.removal]\nrequire_confirmation = true\nrequire_committed_snapshot = true\nrequire_preservation_ref = true\nrequire_pushed_ref = false\n",
+        "schema": "recur-reveal-init-v1"
+      }
+    },
+    {
+      "binary": "recur",
+      "arguments": [
+        "reveal",
+        "persona.packaged",
+        "--type",
+        "persona",
+        "-d",
+        "/mnt/c/src/recur/target/reveal-linux-packages/linux-fixture",
+        "--json"
+      ],
+      "exit_code": 0,
+      "result": {
+        "associations": [],
+        "status": "found",
+        "artifact": {
+          "type": "persona",
+          "source": "metadata",
+          "status": "resolved",
+          "diagnostics": []
+        },
+        "prompts": [],
+        "eventness_policy": {
+          "active": [
+            "current"
+          ],
+          "complete": [
+            "complete"
+          ],
+          "interesting": [
+            "strange"
+          ],
+          "blocked": [
+            "blocked"
+          ],
+          "source": "/mnt/c/src/recur/.recur/config.toml",
+          "field_sources": {
+            "active": "defaults",
+            "blocked": "defaults",
+            "complete": "defaults",
+            "interesting": "defaults"
+          }
+        },
+        "root": "/mnt/c/src/recur/target/reveal-linux-packages/linux-fixture",
+        "lane": "persona.packaged",
+        "path": "persona.packaged.recur.md",
+        "entry_suffix": ".recur.md",
+        "mode": "single-thread",
+        "trust": "config-first",
+        "max_threads": 1,
+        "skip_persona_if_known": true,
+        "order_steps": [
+          "persona",
+          "agent",
+          "agenda",
+          "goals.now",
+          "schedule.next",
+          "pull.first",
+          "pull.then",
+          "verify",
+          "tool.escape",
+          "do.not.disturb",
+          "ready.state"
+        ],
+        "ordered_fields": [
+          {
+            "key": "verify",
+            "value": "do-not-execute"
+          }
+        ],
+        "extra_fields": [
+          {
+            "key": "artifact.type",
+            "value": "persona"
+          }
+        ]
+      }
+    },
+    {
+      "binary": "recur-reveal",
+      "arguments": [
+        "next",
+        "persona.packaged",
+        "--type",
+        "persona",
+        "--json"
+      ],
+      "exit_code": 0,
+      "result": {
+        "artifacts": [
+          {
+            "hash": "sha256:c68d991a432fc943606c8645704d2a660a49f58ea67db66ae48d0eeee5a28fbc",
+            "id": "persona.packaged",
+            "path": "persona.packaged.recur.md",
+            "type": "persona"
+          }
+        ],
+        "associations": [],
+        "config_hash": null,
+        "config_source": null,
+        "context": {
+          "bytes": 48,
+          "max_bytes": 65536,
+          "max_files": 16,
+          "truncated": false
+        },
+        "diagnostics": [],
+        "execution": "not-run",
+        "mutation": "none",
+        "persona": "persona.packaged",
+        "schema": "recur-reveal-packet-v1",
+        "skills": [],
+        "sources": [
+          {
+            "body": "artifact.type = persona\nverify = do-not-execute\n",
+            "hash": "sha256:c68d991a432fc943606c8645704d2a660a49f58ea67db66ae48d0eeee5a28fbc",
+            "path": "persona.packaged.recur.md"
+          }
+        ],
+        "state": "ready",
+        "subject": {
+          "id": "persona.packaged",
+          "status": "available",
+          "type": "persona"
+        }
+      }
+    }
+  ]
+}

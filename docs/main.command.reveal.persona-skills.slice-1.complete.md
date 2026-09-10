@@ -1,3 +1,12 @@
+# slice-1: complete
+Status: complete
+
+Accepted 2026-09-10 against contract v2 and the gate editable-artifact-association-defaults.
+See main.command.reveal.persona-skills.verification.md and the corresponding
+reveal-v2-20260910 completion layer for observed evidence.
+
+## Historical planning record (superseded by acceptance above)
+
 # slice-1: editable-artifact-association-defaults
 Status: todo
 

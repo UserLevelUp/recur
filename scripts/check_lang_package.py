@@ -33,7 +33,7 @@ def main():
     windows = args.platform == "windows"
     assert windows == (os.name == "nt"), "Smoke tests must run natively"
     names = sorted(item["name"] + (".exe" if windows else "") for item in cargo["bin"])
-    assert len(names) == 6
+    assert len(names) == 7
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=True)
     stage = output / f"{args.platform}-staging"
@@ -66,6 +66,7 @@ def main():
         assert digest(stage / name) == digest(extracted / name)
     for filename in ["main.lang.algorithm-lab.recur", "main.lang.skippy-watch-coordination.recur"]:
         shutil.copy2(root / "demos/main.lang" / filename, fixture / filename)
+    (fixture / "persona.packaged.recur.md").write_text("artifact.type = persona\nverify = do-not-execute\n", encoding="utf-8")
     before = {p.name: digest(p) for p in fixture.iterdir()}
     smoke = []
 
@@ -88,6 +89,13 @@ def main():
     assert result["footer"]["graph"]["orchestration_sound"]
     result = run("recur-lang", "warp", "main.lang.algorithm-lab.recur", "gcd", "--json", structured=True)
     assert result["dry_run"] and result["confirmation_required"]
+    result = run("recur-reveal", "init", "-d", str(fixture), "--dry-run", "--json", structured=True)
+    assert result["mutation"] == "none"
+    result = run("recur", "reveal", "persona.packaged", "--type", "persona", "-d", str(fixture), "--json", structured=True)
+    assert result["artifact"]["type"] == "persona"
+    result = run("recur-reveal", "next", "persona.packaged", "--type", "persona", "--json", structured=True)
+    assert result["state"] == "ready" and result["execution"] == "not-run"
+    assert len(result["sources"]) == 1 and result["sources"][0]["hash"].startswith("sha256:")
     assert before == {p.name: digest(p) for p in fixture.iterdir()}, "Smoke test mutated its source root"
     report = {"schema": "recur-lang-package-smoke-v1", "version": version, "platform": platform,
               "archive": archive.name, "sha256": digest(archive),
@@ -95,7 +103,7 @@ def main():
               "source_inputs": before, "read_only_inventory": "unchanged", "smoke": smoke}
     receipt = output / f"{args.platform}-package-smoke.json"
     receipt.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"PASS {archive.name}: six binaries; extracted help/version, pure queries, companion dry run")
+    print(f"PASS {archive.name}: seven binaries; extracted help/version, pure queries, companion dry run")
     print(f"SHA256 {report['sha256']}")
     print(f"Receipt: {receipt}")
 

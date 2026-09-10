@@ -1,0 +1,33 @@
+recur 0.1 class Greeting
+
+# Retrospective specification of the existing Julia greeting API.
+# Only the behavior needing precise examples is formalized here.
+header {
+  scope greeting {
+    i(a) := (uri: RequestURI)
+    o(b) := (response: GreetingResponse)
+    g : i(a) -> o(b) ~ "Return a validated localized greeting or an invalid-name response" by MainServer.greeting
+  }
+}
+body {
+  greeting sync : i(a) -> g(a) -> o(b)
+
+  # Input: URI query parameters; absent name is empty, absent locale is en.
+  # Trim the name. Accept 1 through 40 characters as counted by Julia length,
+  # not UTF-8 bytes or user-perceived grapheme clusters.
+  # Exact locale es gives Hola; every other locale gives Hello.
+  # Valid input: status 200 and exactly {message: "Hello, NAME!"} or its
+  # Spanish equivalent. Invalid name: status 400 and {error: "Invalid name"}.
+  # Content-Type is application/json; charset=utf-8; Cache-Control is no-store.
+  # Request method validation and HEAD body suppression belong to the server
+  # transport, outside this function. No file writes or application state.
+  # These prose expectations need behavioral tests; Lang does not execute them.
+}
+footer {
+  event greeting {
+    consume main.greeting.api.request
+    produce main.greeting.api.response
+    state main.greeting.spec.complete
+  }
+  warp greeting : E0(main.greeting.spec.todo.current) -> dE(greeting.g) -> Ef(main.greeting.spec.complete)
+}

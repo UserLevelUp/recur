@@ -3,12 +3,12 @@
 //! This module maps to hierarchical name: main.command.reveal.impl
 
 use anyhow::{Context, Result};
-use recur::project_config::{
+use crate::project_config::{
     self, RevealConfig, DEFAULT_REVEAL_ENTRY_SUFFIX, DEFAULT_REVEAL_MAX_THREADS,
     DEFAULT_REVEAL_MODE, DEFAULT_REVEAL_ORDER_STEPS, DEFAULT_REVEAL_SKIP_PERSONA_IF_KNOWN,
     DEFAULT_REVEAL_TRUST,
 };
-use recur::reveal_artifact::{valid_type, ArtifactType, TypePolicy};
+use crate::reveal_artifact::{valid_type, ArtifactType, TypePolicy};
 use serde::Serialize;
 use std::collections::HashSet;
 use std::fs;
@@ -26,23 +26,24 @@ struct EffectiveRevealPolicy {
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-struct RevealField {
-    key: String,
-    value: String,
+pub(crate) struct RevealField {
+    pub(crate) key: String,
+    pub(crate) value: String,
 }
 
 #[derive(Debug, Clone)]
-struct RevealEntry {
-    lane: String,
-    path: String,
-    absolute_path: PathBuf,
-    fields: Vec<RevealField>,
-    artifact: ArtifactType,
-    separators: Vec<char>,
+pub(crate) struct RevealEntry {
+    pub(crate) lane: String,
+    pub(crate) path: String,
+    pub(crate) absolute_path: PathBuf,
+    pub(crate) fields: Vec<RevealField>,
+    pub(crate) artifact: ArtifactType,
+    pub(crate) separators: Vec<char>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 struct RevealEntrySummary {
+    associations: Vec<serde_json::Value>,
     lane: String,
     path: String,
     artifact: ArtifactType,
@@ -63,10 +64,11 @@ struct RevealListOutput {
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 struct RevealShowOutput {
+    associations: Vec<serde_json::Value>,
     status: String,
     artifact: ArtifactType,
     prompts: Vec<serde_json::Value>,
-    eventness_policy: recur::warp_policy::WarpPolicy,
+    eventness_policy: crate::warp_policy::WarpPolicy,
     #[serde(skip_serializing_if = "Option::is_none")]
     reconciliation: Option<serde_json::Value>,
     root: String,
@@ -141,13 +143,17 @@ pub fn execute(
     } else {
         &separators
     })?;
-    let entries = discover_reveal_entries(
+    let mut entries = discover_reveal_entries(
         &root,
         &policy.entry_suffix,
         &types,
         loaded.as_ref(),
         &separators,
     )?;
+
+    let registry = crate::reveal_profiles::Registry::from_entries(&root, loaded.as_ref(), &entries)?;
+    entries.extend(registry.configured_entries());
+    entries.sort_by(|a,b| a.lane.cmp(&b.lane).then(a.path.cmp(&b.path)));
 
     match lane {
         Some(query) => match select_reveal_entry(
@@ -170,7 +176,7 @@ pub fn execute(
                     let result = (|| -> Result<serde_json::Value> {
                         let bounded = evidence_root.canonicalize()?;
                         if !bounded.starts_with(root.canonicalize()?) { anyhow::bail!("warp.root escapes project root"); }
-                        crate::main_command_warp_impl::reconcile(&bounded, warp, field("observed.state"), field("readiness.slice"))
+                        crate::warp_query::reconcile(&bounded, warp, field("observed.state"), field("readiness.slice"))
                     })();
                     result.unwrap_or_else(|error| serde_json::json!({"schema":"warp-reconciliation-v1",
                         "warnings":[format!("reconciliation unavailable: {error:#}")], "mutation":"none"}))
@@ -183,15 +189,16 @@ pub fn execute(
                     anyhow::bail!("warp.root escapes project root");
                 }
                 let output = RevealShowOutput {
+                    associations: registry.associations(&entry),
                     status: "found".into(),
                     artifact: entry.artifact.clone(),
                     prompts: if let Some(ids) = field("prompt.ids") {
-                        recur::prompt::Registry::load(&root)?.references(ids)
+                        crate::prompt::Registry::load(&root)?.references(ids)
                     } else {
                         Vec::new()
                     },
                     reconciliation,
-                    eventness_policy: recur::warp_policy::WarpPolicy::load(&eventness_root)?,
+                    eventness_policy: crate::warp_policy::WarpPolicy::load(&eventness_root)?,
                     root: root.display().to_string(),
                     lane: entry.lane.clone(),
                     path: entry.path.clone(),
@@ -235,6 +242,7 @@ pub fn execute(
                     .iter()
                     .filter(|entry| entry.artifact.matches(artifact_type.as_deref()))
                     .map(|entry| RevealEntrySummary {
+                        associations: registry.associations(entry),
                         lane: entry.lane.clone(),
                         path: entry.path.clone(),
                         artifact: entry.artifact.clone(),
@@ -290,7 +298,7 @@ fn resolve_root(dir: PathBuf) -> Result<PathBuf> {
     Ok(std::env::current_dir()?.join(dir))
 }
 
-fn discover_reveal_entries(
+pub(crate) fn discover_reveal_entries(
     root: &Path,
     entry_suffix: &str,
     types: &TypePolicy,
@@ -534,6 +542,7 @@ fn print_list_output(output: &RevealListOutput, json: bool) -> Result<()> {
     for entry in &output.entries {
         println!("  - {} => {}", entry.lane, entry.path);
         print_artifact(&entry.artifact);
+        for edge in &entry.associations { println!("    association: {}", edge); }
     }
     println!();
     println!(
@@ -553,6 +562,7 @@ fn print_show_output(output: &RevealShowOutput, json: bool) -> Result<()> {
 
     println!("Reveal for {}", output.lane);
     print_artifact(&output.artifact);
+    for edge in &output.associations { println!("  association: {}", edge); }
     if !output.prompts.is_empty() {
         println!("  prompts: {}", serde_json::to_string(&output.prompts)?);
     }
@@ -619,6 +629,7 @@ fn print_selection_output(
         entries: entries
             .iter()
             .map(|e| RevealEntrySummary {
+                associations: Vec::new(),
                 lane: e.lane.clone(),
                 path: e.path.clone(),
                 artifact: e.artifact.clone(),

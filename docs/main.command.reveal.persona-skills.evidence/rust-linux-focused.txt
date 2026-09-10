@@ -1,0 +1,31 @@
+   Compiling recur v0.2.8 (/mnt/c/src/recur)
+warning: variant `Element` is never constructed
+  --> src/main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.07s
+     Running tests/reveal_profiles.rs (/home/ubu/recur-reveal-target/debug/deps/reveal_profiles-d19ae0a16a23f73a)
+
+running 11 tests
+test child_root_does_not_collect_parent_profiles ... ok
+test empty_profiles_and_type_collisions_are_explicit ... ok
+test config_rejects_malformed_associations_without_writes ... ok
+test references_report_missing_wrong_type_and_ambiguous ... ok
+test shared_skill_keeps_both_edges_and_one_body ... ok
+test explicit_capsule_binding_checks_type_and_conflicting_owners ... ok
+test symlink_body_and_config_escapes_are_refused ... ok
+test body_paths_and_skill_frontmatter_are_checked ... ok
+test budgets_refuse_incomplete_context_and_hashes_change ... ok
+test inline_config_is_valid_and_missing_shared_skills_are_deduplicated ... ok
+test init_preview_and_retry_preserve_custom_empty_tables_and_comments ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+

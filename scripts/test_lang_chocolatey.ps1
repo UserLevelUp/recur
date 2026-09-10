@@ -46,7 +46,7 @@ try {
 } finally {
     $env:chocolateyPackageVersion = $previousVersion
 }
-$expected = @('recur-git', 'recur-lang', 'recur-version', 'recur-warp', 'recur-watch')
+$expected = @('recur-git', 'recur-lang', 'recur-reveal', 'recur-version', 'recur-warp', 'recur-watch')
 if (-not $script:downloadChecked) { throw 'Download/checksum helper was not exercised' }
 if (($script:installed | Sort-Object) -join ',' -ne ($expected -join ',')) { throw 'Install shim set differs' }
 if (($script:uninstalled | Sort-Object) -join ',' -ne ($expected -join ',')) { throw 'Uninstall shim set differs' }
@@ -62,4 +62,4 @@ $report = [ordered]@{
     helper_mode = 'mocked; no installation or publication'
 }
 $report | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $work 'chocolatey-smoke.json')
-Write-Output 'PASS: packed version, URL/checksum binding and five companion install/uninstall shims'
+Write-Output 'PASS: packed version, URL/checksum binding and six companion install/uninstall shims'

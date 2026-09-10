@@ -56,6 +56,7 @@ Traditional tools (e.g., `grep`, `awk`, `find`) do not interpret these as *recur
   - recur-git depends on existing git binaries to already be installed
 - **`recur-lang`** - Confirmation-gated, receipt-backed Recur Lang Warp companion
 - **`recur-warp`** - Confirmation-gated Warp Slice completion-layer writer
+- **`recur-reveal`** - Editable local agent/persona/skill configuration and bounded context packets; no activation or execution
 - **`recur-watch`** - Active watcher/subscription runner that writes watcher status
 - **`recur-version`** - Artifact snapshot/manifest writer for version-eventness lanes
 

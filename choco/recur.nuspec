@@ -26,7 +26,7 @@ While tools like `grep` and `ripgrep` excel at fast text matching, they treat re
 - Watcher-state queries through pure `recur watch`
 - Artifact version policy, manifest, and history queries through pure `recur version`
 - Scoped Recur Lang header/body/footer views and static dependency checks through pure `recur lang`
-- Bundled companions: `recur-git`, `recur-watch`, `recur-version`, `recur-warp`, and `recur-lang`
+- Bundled companions: `recur-git`, `recur-watch`, `recur-version`, `recur-warp`, `recur-lang`, and `recur-reveal`
 - JSON output for tooling integration
 
 ## Commands

@@ -29,7 +29,7 @@ mod main_command_lane_impl;
 mod main_command_merge_impl;
 mod main_command_psyche_impl;
 mod main_command_related_impl;
-mod main_command_reveal_impl;
+use recur::reveal_query as main_command_reveal_impl;
 mod main_command_stats_impl;
 mod main_command_stats_stdin;
 mod main_command_trace_id_impl;

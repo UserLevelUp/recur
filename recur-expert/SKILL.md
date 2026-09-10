@@ -50,6 +50,15 @@ layers. Explicit `-d` bounds discovery even when config is found above it.
 Classification does not load bodies or activate anything. Companion profile
 packets remain separate. See docs/main.command.reveal.artifact-types.contract.md.
 
+For agent/persona/skill associations, inspect `recur reveal --type agent|persona|skill`
+and the reported config/capsule sources. Explicit registry IDs and capsule bindings
+are distinct; do not infer relationships from matching names. `recur-reveal init`
+previews with `--dry-run` and otherwise adds only missing association tables.
+`recur-reveal next ID --type agent|persona -d ROOT --json` prepares bounded local
+guidance. Inspect blocked references, fingerprints and `context.truncated` before
+using it. Available context is not activation or acceptance. See
+docs/main.command.reveal.persona-skills.contract.md for exact bounds and selection.
+
 For naming, slicing or recovery assistance, discover the effective prompts through
 `recur prompt warp` or `recur-warp llm prompt`. Inspect one with
 `recur prompt warp.naming`; assemble instructions and evidence with, for example:

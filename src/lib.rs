@@ -13,6 +13,9 @@ pub mod recur_lang_graph;
 pub mod recur_lang_ir;
 pub mod recur_lang_query;
 pub mod reveal_artifact;
+pub mod reveal_profiles;
+#[path = "main_command_reveal_impl.rs"]
+pub mod reveal_query;
 pub mod search;
 pub mod tree;
 pub mod warp_bubble;

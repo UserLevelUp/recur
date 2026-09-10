@@ -587,6 +587,7 @@ fn parse_reveal_rank_section(table: &toml::value::Table) -> RevealRankConfig {
 }
 
 fn parse_reveal_section(table: &toml::value::Table) -> Result<RevealConfig> {
+    crate::reveal_profiles::Profiles::parse(table)?;
     Ok(RevealConfig {
         types: table
             .get("types")
@@ -844,6 +845,7 @@ fn render_config_toml(lanes: &[LaneConfig]) -> String {
     content.push_str("prefer_trigger_event = true\n");
     content.push_str("prefer_recurring = true\n");
     content.push_str("prefer_complete = false\n");
+    content.push_str(crate::reveal_profiles::DEFAULTS);
     content.push_str("\n[traversal]\n");
     content.push_str("max_depth = 5\n");
     content.push_str("depth_guard = \"hard-fail\"\n");

@@ -1,0 +1,219 @@
+{
+  "blocked": [],
+  "completed_slices": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-3",
+    "slice-4",
+    "slice-final"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 6,
+    "pending": 0,
+    "required": 6,
+    "stale_contract": 0
+  },
+  "covered": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-3",
+    "slice-4",
+    "slice-final"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.command.reveal.persona-skills.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "baseline-contract",
+      "satisfied": true,
+      "slice_id": "slice-0",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.command.reveal.persona-skills.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "editable-artifact-association-defaults",
+      "satisfied": true,
+      "slice_id": "slice-1",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.command.reveal.persona-skills.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "bounded-artifact-association-resolution",
+      "satisfied": true,
+      "slice_id": "slice-2",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.command.reveal.persona-skills.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "opinionated-reveal-companion",
+      "satisfied": true,
+      "slice_id": "slice-3",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.command.reveal.persona-skills.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "query-integration",
+      "satisfied": true,
+      "slice_id": "slice-4",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "main.command.reveal.persona-skills.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "regression-closeout",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "declared"
+    }
+  ],
+  "goal": "Make agents, personas and skills independently discoverable with explicit typed associations and bounded context preparation; retain pure core queries and separate discovery from loading or execution.",
+  "layers": [
+    "slice-0@reveal-v2-20260910-slice-0",
+    "slice-1@reveal-v2-20260910-slice-1",
+    "slice-2@reveal-v2-20260910-slice-2",
+    "slice-3@reveal-v2-20260910-slice-3",
+    "slice-4@reveal-v2-20260910-slice-4",
+    "slice-final@reveal-v2-20260910-slice-final"
+  ],
+  "manifest": "main.command.reveal.persona-skills.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "//?/C:/src/recur/docs",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-0:v2",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-contract"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-0",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-1:v2",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "editable-artifact-association-defaults"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-1",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-2:v2",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "bounded-artifact-association-resolution"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-2",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-3:v2",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "opinionated-reveal-companion"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-3",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-4:v2",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "query-integration"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-4",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.reveal.persona-skills.slice-final:v2",
+      "depends_on": [
+        "slice-4"
+      ],
+      "evidence_gates": [
+        "regression-closeout"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-final",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [],
+  "warp_id": "main.command.reveal.persona-skills"
+}

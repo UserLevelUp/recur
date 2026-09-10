@@ -1,0 +1,78 @@
+{
+  "bubble_uuid": "01a08a58-6394-7cf8-be14-1fd5f3c242d7",
+  "current_slice": "slice-1",
+  "goal": "Use compact Lang contracts to grow the Julia evidence demos into a specification-first Recur capability, deriving tests and models before implementation.",
+  "release_target": "a.0.2.8",
+  "planning_status": "contracts-authored",
+  "contract_document": "warps/main.lang.dogfood.contract.md",
+  "invariants": [
+    "Lang is a scoped high-level specification interpreted by humans and LLMs.",
+    "New behavior has fixtures and tests before implementation; the greeting specification is retrospective.",
+    "Core recur lang remains pure; opinionated Lang CLI behavior belongs in recur-lang.",
+    "Preserve existing demo behavior and distinguish static coverage, recorded state and tested acceptance.",
+    "Reuse the existing inspector and WIR1 projection; no new parser or runtime is implied."
+  ],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.lang.dogfood.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-and-specification"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a08a58-6394-7fa0-81da-8e3491443b5e"
+    },
+    {
+      "contract_hash": "contract:main.lang.dogfood.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "greeting-boundary-fixtures"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-1",
+      "slice_uuid": "01a08a5b-3e88-75c8-8c8e-aadf3619b364"
+    },
+    {
+      "contract_hash": "contract:main.lang.dogfood.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "inspector-contract-and-red-tests"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-2",
+      "slice_uuid": "01a08a5b-3e88-707b-ba46-329860d04134"
+    },
+    {
+      "contract_hash": "contract:main.lang.dogfood.slice-3:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "server-inspector-integration"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-3",
+      "slice_uuid": "01a08a5b-3e88-7d2c-a998-7e16893a42f2"
+    },
+    {
+      "contract_hash": "contract:main.lang.dogfood.slice-final:v1",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "walkthrough-and-regression",
+        "lang-gap-assessment"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a08a58-6394-711e-ab0c-ebe7341fa920"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.dogfood"
+}
