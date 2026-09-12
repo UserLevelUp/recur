@@ -1,0 +1,16 @@
+Test Summary:                                       | Pass  Total  Time
+Lang inspector: specification before implementation |   33     33  0.2s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:                   | Pass  Total  Time
+main.server Julia HTTP contract |   33     33  0.8s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:                         | Pass  Total  Time
+Greeting specification boundary table |  111    111  0.7s
+Test Summary:                | Pass  Total  Time
+Catalog inspector frozen API |  103    103  0.1s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:                                     | Pass  Total  Time
+Catalog inspector real loopback and read boundary |   53     53  1.0s

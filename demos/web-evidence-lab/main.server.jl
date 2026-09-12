@@ -2,6 +2,7 @@
 module MainServer
 
 using HTTP, JSON3, Sockets
+include("main.lang.api.jl")
 
 const ROOT = realpath(@__DIR__)
 const MIME = Dict(
@@ -41,13 +42,16 @@ function static_file(path)
     response(200, read(resolved), MIME[extension])
 end
 
-function handler(request::HTTP.Request)
+function handler(request::HTTP.Request; lang_adapter=MainLangAPI.LangInspector.capture_query,
+                 lang_binary=MainLangAPI.DEFAULT_BINARY)
     request.method in ("GET", "HEAD") || return HTTP.Response(405, ["Allow" => "GET, HEAD"], "Method not allowed")
     result = try
         uri = HTTP.URI(request.target)
         path = HTTP.URIs.unescapeuri(uri.path)
         if path == "/api/greeting"
             greeting(uri)
+        elseif path == "/api/lang"
+            MainLangAPI.respond(uri; binary=lang_binary, adapter=lang_adapter)
         elseif path == "/api/server"
             response(200, JSON3.write((runtime="Julia", version=string(VERSION), project="main")), MIME[".json"])
         else

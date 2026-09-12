@@ -12,12 +12,29 @@ skill. If those references are absent in an external project, inspect its local
 capsules and CLI help instead of inventing the Recur development layout.
 
 Use `recur reveal recur-expert` and `recur warp` to discover context.
-`recur warp` is equivalent to `recur warp list`: both list remaining declared
-bubbles and rings. Use `recur warp list --all` to include completed work, then
-`recur warp show <id>` and `recur warp slices <id>` for a selected bubble.
-Pass `-d <root>` for the intended project/evidence root; read its map/readme and
-focused tests. `list --scan-all` bypasses configured discovery roots/exclusions;
-use it only when wider discovery is needed.
+Every primary command family provides a default or list mode acting as an instant
+radar screen for cognitive orientation:
+- `recur reveal` lists rehydration capsules, personas, agents, and skills.
+- `recur warp` (or `recur warp list`) lists remaining task bubbles, rings, and lanes.
+- `recur watch list` lists active watcher daemon subscriptions and status records.
+- `recur lang list` lists declared formal programs and coordination graphs.
+- `recur version` lists artifact version lanes and manifests.
+This radar pattern minimizes working-memory strain and context-switching friction
+(serving as an external cognitive cushion for inattentive focus/ADHD): inspect the
+board first, then zoom in.
+
+Use `recur warp list --all` to include completed work, then `recur warp show <id>`
+and `recur warp slices <id>` for a selected bubble. Pass `-d <root>` for the
+intended project/evidence root; read its map/readme and focused tests.
+`list --scan-all` bypasses configured discovery roots/exclusions; use it only
+when wider discovery is needed.
+
+Follow the progressive refinement funnel when exploring unfamiliar areas:
+1. Topography and attention: `recur tree`
+2. Artifact selection: `recur files` (using configured `--sep`)
+3. Declarative lineage and intent: `recur trace-id` (producers, consumers, triggers)
+4. Call graph and flow: `recur callers`, `recur callees`, `recur trace`
+5. Formal semantic contract: `recur lang` (the apex formal boundary)
 
 Check the executable's help for the requested operation. Installed and local
 `target/release-safe` binaries can expose different commands with the same version
@@ -86,9 +103,18 @@ acceptance. Packet tests do not evaluate model judgment. For implementation deta
 in this repository, read docs/main.command.prompt.discovery.readme.md and its tests.
 
 Preserve hierarchy and explicit trace-id roles alongside UUID metadata. Filename
-eventness is attention/recorded state, not acceptance proof. UUID fields are not
-automatically trace roles. Tags classify; dependencies order execution. Semantic
-repartition is not the existing layer-composition merge operation.
+eventness is attention/recorded state, not acceptance proof:
+- Expand attention into bounded `.current.md`, `.strange.md`, or `.blocked.md`
+  capsules when work is active, unfamiliar, or friction arises.
+- Collapse attention into `.complete.md`, `.recurring.md`, or warp-layer receipts
+  (`warp-layer.json`) when work settles, preventing context drag and visual clutter.
+- Maintain the architectural boundary: `recur` core remains a pure, deterministic
+  query surface. Local opinionated conventions, separators, and Eventness policies
+  live in `.recur/config.toml` (analyzed via `recur init --analyze`). Stateful
+  mutations, daemons, and transitions belong exclusively to companion tools
+  (`recur-warp`, `recur-watch`, `recur-git`, `recur-lang`, `recur-reveal`).
+UUID fields are not automatically trace roles. Tags classify; dependencies order execution.
+Semantic repartition is not the existing layer-composition merge operation.
 
 For Recur Lang, use `recur lang list -d <root>` and source-bound `show`, `report`
 or `check`; `show` requires `--scope`. Read docs/main.command.lang.query.readme.md
@@ -97,6 +123,11 @@ boundary references and whole-flow SGR1 findings. Inspect coverage: a successful
 check validates only the declared fragment, never runtime execution or the whole
 document. Recorded Eventness is not checked receipt evidence. All opinionated
 language guidance and actions belong to `recur-lang`, including read-only advice.
+
+For a worked tests-first WIR1 capability, inspect `main.lang.dogfood` under
+`warps` and `demos/web-evidence-lab/main.lang.walkthrough.md`. Its server catalog
+and inspector page reuse the existing query models; they do not add a grammar,
+execute bindings or turn recorded state into observed runtime evidence.
 
 When implementation is requested, follow the selected slice contract, establish
 its test baseline, extend missing acceptance coverage and preserve legacy tests.

@@ -2,7 +2,7 @@ RECUR IMPROVEMENT 30
 Recur Lang Coordination Contracts
 =================================
 Date: July 24, 2026
-Status: Active incremental implementation / IR foundation in progress
+Status: Bounded query baseline implemented; runtime-evidence Warp planned
 Author: Captured from Recur Lang and multi-intelligence orchestration design
 Definition: IR means Intermediate Representation.
 
@@ -158,8 +158,34 @@ an ambiguous join, or a mismatched contract. It helps coordination and
 understanding; it does not replace target-language implementations, tests, or
 external verification evidence.
 
-CURRENT IMPLEMENTATION CHECKPOINT
----------------------------------
+IMPLEMENTATION CHECKPOINTS
+-------------------------
+
+### Current planning checkpoint: 2026-09-12
+
+The live `main.lang.baseline` and `main.lang.dogfood` maps report complete with
+declared evidence. Their observations are not a claim that current artifacts
+have just passed all tests. Re-query the maps and applicable evidence when resuming.
+
+The next bounded Bubble is
+[main.lang.runtime-evidence](warps/main.lang.runtime-evidence.readme.md), with
+five pending slices and `slice-0` selected. Its
+[contract](warps/main.lang.runtime-evidence.contract.md) connects precise header
+contracts, body composition and footer Eventness to tests-first, source-bound
+evidence. General discovery through tree/files, trace-id, source traces and
+recorded context recovery precedes the selected Lang boundary; the plan
+distinguishes supported commands from proposed recall behavior.
+
+The first gate freezes associations, compatibility and a supported evidence-root
+layout. Later gates require checked implementation tests, explicit stale-evidence
+behavior and fresh-session recovery. Creating this Bubble accepts no slices and
+does not activate GRID0, live coordination or a new grammar.
+
+### Historical foundation checkpoint: 2026-07-24
+
+The original dependency order and status labels below are preserved as historical
+design context, not the current implementation cursor. Use the newer maps and
+query contract for current implementation coverage.
 
 Improvement 30 now has two manually completed, versioned IR boundaries:
 

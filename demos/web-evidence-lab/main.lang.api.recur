@@ -1,0 +1,47 @@
+recur 0.1 class CatalogInspector
+
+# Human-interpreted expectations: main.lang.api.contract.md. Tests precede routes.
+header {
+  scope select {
+    i(a) := (request: RequestURI)
+    o(b) := (selection: CatalogSelection)
+    s : i(a) -> o(b) ~ "Resolve only a server-owned capability and documented scope; reject invalid selection" by MainLangAPI.select
+  }
+  scope query {
+    i(b) := select.o(b)
+    o(c) := (packet: QueryPacket)
+    q : i(b) -> o(c) ~ "Read WIR1 through a configured argument-vector adapter; preserve source and diagnostics" by LangInspector.query_report
+  }
+  scope display {
+    i(c) := query.o(c)
+    o(d) := (response: InspectorResponse)
+    v : i(c) -> o(d) ~ "Present compact aliases and expandable evidence; distinguish static findings, recorded state and observed tests" by MainLangAPI.respond
+  }
+}
+body {
+  select sync : i(a) -> s(a) -> o(b)
+  query sync : i(b) -> q(b) -> o(c)
+  display sync : i(c) -> v(c) -> o(d)
+  share select.o(b) -> query.i(b)
+  share query.o(c) -> display.i(c)
+}
+footer {
+  event select {
+    consume main.lang.api.request
+    produce main.lang.api.selection
+    state main.lang.api.selection.spec.complete
+  }
+  warp select : E0(main.lang.api.selection.spec.todo.current) -> dE(select.s) -> Ef(main.lang.api.selection.spec.complete)
+  event query {
+    consume main.lang.api.selection
+    produce main.lang.api.packet
+    state main.lang.api.query.spec.complete
+  }
+  warp query : E0(main.lang.api.query.spec.todo.current) -> dE(query.q) -> Ef(main.lang.api.query.spec.complete)
+  event display {
+    consume main.lang.api.packet
+    produce main.lang.api.response
+    state main.lang.api.display.spec.complete
+  }
+  warp display : E0(main.lang.api.display.spec.todo.current) -> dE(display.v) -> Ef(main.lang.api.display.spec.complete)
+}

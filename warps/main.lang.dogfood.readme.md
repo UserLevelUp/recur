@@ -24,10 +24,21 @@ Read `main.lang.dogfood.contract.md` for the gates. Paths there are relative to
 the repository root. The existing ten examples are context, not ten mandatory
 rewrites. The existing `demos/lang-inspector` implementation is reused.
 
-Baseline slice-0 is accepted with declared evidence: 33 inspector assertions,
-33 server assertions, and the greeting specification's bounded static check.
-See `main.lang.dogfood.slice-0.verification.md`. Slice-1 is current; the new
-inspector endpoint and page are not implemented yet.
+All five slices are accepted with declared evidence; query the live map to reassess.
+The `/api/lang` catalog adapter and `/lang.html` page are implemented. The
+greeting remains unchanged, and both specifications keep header bundles,
+body symbol composition and footer events/state compact.
+
+Start with [the runnable walkthrough](../demos/web-evidence-lab/main.lang.walkthrough.md).
+The frozen API contract is [main.lang.api.contract.md](../demos/web-evidence-lab/main.lang.api.contract.md).
+Observed evidence is recorded per slice in `main.lang.dogfood.slice-*.verification.md`;
+the final run passed 4,133 Julia assertions with 73 expected-broken cases.
+Browser checks cover real queries, aliases, evidence separation and loading/empty/
+error states. See [the gap assessment](main.lang.dogfood.gap-assessment.md) for
+what this WIR1 example establishes and what remains outside its scope.
+
+Warp acceptance uses declared evidence references. The page itself supplies no
+runtime receipts and does not derive acceptance from a static check or filename.
 
 ```powershell
 & target/release-safe/recur.exe warp show main.lang.dogfood -d warps --json

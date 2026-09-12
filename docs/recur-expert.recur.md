@@ -15,5 +15,6 @@ ready.state = Inspect live Warp evidence; reveal discovers typed agents personas
 prompt.ids = warp.naming, warp.slicing, warp.recovery
 lang.query = recur lang list/show/report/check; explicit source and scope; inspect docs/main.command.lang.query.readme.md for WIR1/CIR1 coverage and SGR1 findings
 lang.boundary = Core queries remain pure; all opinionated language guidance/actions belong in recur-lang. A sound fragment is not whole-source or runtime acceptance.
+lang.dogfood = Inspect main.lang.dogfood -d warps and demos/web-evidence-lab/main.lang.walkthrough.md for the catalog inspector and tests-first WIR1 example.
 reveal.associations = Explicit config records and capsule bindings; inspect source and status rather than inferring relationships from names.
 reveal.packet = recur-reveal next ID --type agent|persona -d ROOT --json; inspect diagnostics context.truncated and source fingerprints.

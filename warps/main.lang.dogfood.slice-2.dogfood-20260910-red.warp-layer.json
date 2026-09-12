@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.dogfood",
+  "slice_id": "slice-2",
+  "contract_hash": "contract:main.lang.dogfood.slice-2:v1",
+  "attempt_id": "dogfood-20260910-red",
+  "result_state": "accepted",
+  "result_hash": "sha256:77aceb7fef95d770fb3fb4bc17fd46e6e747c791b029e65e716d5b5e9a516d6e",
+  "evidence": {
+    "inspector-contract-and-red-tests": [
+      "main.lang.dogfood.slice-2.verification.md"
+    ]
+  },
+  "reason": null
+}

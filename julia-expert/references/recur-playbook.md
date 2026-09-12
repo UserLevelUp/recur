@@ -39,6 +39,12 @@ behavior belongs in `recur-lang`; its implemented action remains the confirmed,
 receipt-bound Warp transition. Inspect the live main.lang.baseline and
 main.improvement.30.static-graph bubbles for acceptance evidence.
 
+For a worked WIR1 demo, query `recur warp show main.lang.dogfood -d warps`
+and read `demos/web-evidence-lab/main.lang.walkthrough.md`. The greeting fixture
+table is retrospective; catalog inspector tests preceded its adapter/routes.
+The page displays compact header/body/footer and expandable original query data,
+with recorded state, static findings and observed tests kept distinct.
+
 ### Warp specialization
 
 Reveal association workflow: core `recur reveal --type agent`, `--type persona`

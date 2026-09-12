@@ -1,9 +1,9 @@
 {
   "bubble_uuid": "01a08a58-6394-7cf8-be14-1fd5f3c242d7",
-  "current_slice": "slice-1",
+  "current_slice": null,
   "goal": "Use compact Lang contracts to grow the Julia evidence demos into a specification-first Recur capability, deriving tests and models before implementation.",
   "release_target": "a.0.2.8",
-  "planning_status": "contracts-authored",
+  "planning_status": "complete",
   "contract_document": "warps/main.lang.dogfood.contract.md",
   "invariants": [
     "Lang is a scoped high-level specification interpreted by humans and LLMs.",

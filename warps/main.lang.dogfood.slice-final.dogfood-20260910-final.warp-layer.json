@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.dogfood",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.lang.dogfood.slice-final:v1",
+  "attempt_id": "dogfood-20260910-final",
+  "result_state": "accepted",
+  "result_hash": "sha256:1196ab7c175f0c973652afa8f5cc635c20ae256300fc57fa7bba73e4d55765fa",
+  "evidence": {
+    "lang-gap-assessment": [
+      "main.lang.dogfood.gap-assessment.md"
+    ],
+    "walkthrough-and-regression": [
+      "main.lang.dogfood.slice-final.verification.md"
+    ]
+  },
+  "reason": null
+}
