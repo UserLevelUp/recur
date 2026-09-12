@@ -1,0 +1,20 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.34s
+     Running unittests src\recur_warp_main.rs (target\debug\deps\recur_warp-271181abb3013bb0.exe)
+
+running 1 test
+
+thread 'recur_warp_refresh::tests::interruption_and_matching_retry' (29252) panicked at src\recur_warp_refresh.rs:22:13:
+assertion failed: publish(r, "r.json", b"receipt",
+        |s| { if s == stage { anyhow::bail!("injected") } Ok(()) }).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test recur_warp_refresh::tests::interruption_and_matching_retry ... FAILED
+
+failures:
+
+failures:
+    recur_warp_refresh::tests::interruption_and_matching_retry
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--bin recur-warp`

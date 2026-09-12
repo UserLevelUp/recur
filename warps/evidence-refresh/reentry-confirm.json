@@ -1,0 +1,24 @@
+{
+  "execution": "not-run",
+  "path": "main.lang.checked-transition.evidence-refresh/refresh-reentry-20260912.json",
+  "record": {
+    "bubble_uuid": "01a094c5-6989-747b-924b-3585779f4a18",
+    "contract_hash": "contract:main.lang.checked-transition.slice-final:v1",
+    "from_hash": "fnv1a64:a34dc5208b4c0e6d",
+    "from_reference": "evidence:warps/checked-transition/final-reentry.evidence.json",
+    "gate": "drift-and-recovery",
+    "layer": "main.lang.checked-transition.slice-final.reentry-20260912.warp-layer.json",
+    "layer_hash": "fnv1a64:96c531000a4d1b0d",
+    "map": "main.lang.checked-transition.warp-map.json",
+    "policy_hash": "fnv1a64:3a212c1ffedfeb70",
+    "reason": "Observed 251-test regression after additive evidence-refresh changes; same contract and retained inputs",
+    "refresh_id": "refresh-reentry-20260912",
+    "schema": "warp-evidence-refresh-v1",
+    "slice_id": "slice-final",
+    "to_hash": "fnv1a64:18913d1b427a98d3",
+    "to_reference": "evidence:warps/evidence-refresh/integration.evidence.json",
+    "warp_id": "main.lang.checked-transition"
+  },
+  "schema": "recur-warp-refresh-v1",
+  "state": "written"
+}

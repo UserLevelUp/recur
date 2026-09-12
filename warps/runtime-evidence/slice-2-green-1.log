@@ -1,0 +1,97 @@
+limits.files: Error During Test at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:69
+  Got exception outside of a @test
+  ReadOnlyMemoryError()
+  Stacktrace:
+    [1] top-level scope
+      @ Base_compiler.jl:0
+    [2] top-level scope
+      @ dict.jl:701
+    [3] top-level scope
+      @ deepcopy.jl:155
+    [4] top-level scope
+      @ deepcopy.jl:156
+    [5] deepcopy(x::Any)
+      @ Base .\deepcopy.jl:29
+    [6] top-level scope
+      @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:75
+    [7] top-level scope
+      @ file.jl:941
+    [8] mktempdir(fn::Function, parent::String)
+      @ Base.Filesystem .\file.jl:937
+    [9] top-level scope
+      @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+   [10] macro expansion
+      @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+   [11] macro expansion
+      @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+   [12] top-level scope
+      @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:68
+   [13] top-level scope
+      @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:87
+   [14] macro expansion
+      @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+   [15] macro expansion
+      @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:149 [inlined]
+   [16] include(mod::Module, _path::String)
+      @ Base .\Base.jl:306
+   [17] exec_options(opts::Base.JLOptions)
+      @ Base .\client.jl:317
+   [18] _start()
+      @ Base .\client.jl:550
+Test Summary:                        | Pass  Error  Total   Time
+Runtime evidence behavioral contract |  156      1    157  10.3s
+  identity.valid                     |    4             4   1.8s
+  association.absent                 |    3             3   0.0s
+  association.declared               |    3             3   0.3s
+  identity.wrong-source              |    3             3   0.0s
+  identity.wrong-scope               |    3             3   0.0s
+  identity.wrong-slice_id            |    3             3   0.0s
+  identity.wrong-contract_hash       |    3             3   0.0s
+  identity.wrong-warp_id             |    3             3   0.0s
+  identity.alias                     |    3             3   0.0s
+  identity.transition                |    3             3   0.0s
+  identity.producer                  |    3             3   0.2s
+  identity.gates                     |    3             3   0.0s
+  association.duplicate              |    3             3   0.0s
+  association.schema                 |    3             3   0.0s
+  association.missing-field          |    3             3   0.0s
+  history.no-current                 |    3             3   0.2s
+  history.unknown-current            |    3             3   0.2s
+  history.duplicate                  |    3             3   0.0s
+  history.red-preserved              |    4             4   0.4s
+  history.red-current                |    3             3   0.4s
+  cases.missing                      |    3             3   0.2s
+  cases.failed                       |    3             3   0.3s
+  freshness.spec.recur               |    3             3   0.3s
+  freshness.implementation.jl        |    3             3   0.3s
+  freshness.cases.jl                 |    3             3   0.3s
+  freshness.config.toml              |    3             3   0.3s
+  freshness.runner.jl                |    3             3   0.3s
+  freshness.behavior.md              |    3             3   0.3s
+  freshness.packet-hash              |    3             3   0.3s
+  freshness.result                   |    3             3   0.3s
+  inputs.missing                     |    3             3   0.1s
+  counts.zero                        |    3             3   0.3s
+  counts.inconsistent                |    3             3   0.3s
+  counts.failed                      |    3             3   0.3s
+  counts.skipped                     |    3             3   0.3s
+  native-ack.missing-test            |    3             3   0.2s
+  native-ack.invalid-test            |    3             3   0.1s
+  containment.../outside.json        |    3             3   0.1s
+  containment.C:/outside.json        |    3             3   0.1s
+  containment.a/../evidence.json     |    3             3   0.1s
+  containment.a\evidence.json        |    3             3   0.1s
+  containment.symlink                |    3             3   0.1s
+  limits.json-bytes                  |    3             3   0.1s
+  limits.attempts                    |    3             3   0.0s
+  limits.cases                       |    3             3   0.0s
+  limits.associations                |    3             3   0.1s
+  containment.missing                |    3             3   0.1s
+  containment.directory              |    3             3   0.1s
+  limits.input-bytes                 |    3             3   0.2s
+  limits.files                       |           1      1   0.1s
+  purity.inert-commands              |    3             3   0.3s
+  acceptance.explicit                |    4             4   0.3s
+RNG of the outermost testset: Random.Xoshiro(0x1050209107750d7b, 0x91b258c59f394ff8, 0xd944681f9743501b, 0xa20dbe10dfdd8203, 0x721d65f5f8801bff)
+ERROR: LoadError: Some tests did not pass: 156 passed, 0 failed, 1 errored, 0 broken.
+in expression starting at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:85

@@ -47,6 +47,26 @@ with recorded state, static findings and observed tests kept distinct.
 
 ### Warp specialization
 
+Same-contract evidence renewal is `recur-warp refresh MAP LAYER --gate G --from
+evidence:OLD --to evidence:NEW --refresh-id ID --reason TEXT`, with an explicit
+preview/confirmation boundary. See docs/main.command.warp.evidence-refresh.readme.md.
+Run the relevant existing tests first; preserve old manifests and every input
+path. Current leaf evidence is separate from historical observations. Failed
+results and contract changes cannot be refreshed. Inspect the selected binary's
+help, then re-query show/merge with the full evidence root after confirmation.
+
+Checked WIR1 extension: `recur lang evidence SOURCE --scope FUNCTION --contract
+POLICY --receipt ATTEMPT -d ROOT` exposes bounded current external evidence.
+`recur-lang warp SOURCE FUNCTION --checked-contract POLICY --receipt ATTEMPT
+--eventness E0 -d ROOT` previews; `--confirm` writes and `--recover --confirm`
+resumes a matching interrupted attempt. See
+docs/main.command.lang.checked-transition.readme.md. Original query/legacy
+receipt semantics remain intact. No producer executes. Recorded history,
+current assessment and final transition ACK remain distinct. Resolve the
+selected executable's help and live map instead of inferring capability from
+its version. Use reveal/recorded recovery where recall is unavailable; inspect
+truncation and query full-root Warp progress separately when needed.
+
 Reveal association workflow: core `recur reveal --type agent`, `--type persona`
 and `--type skill` inspect typed capsules and in-root configured records.
 Relationships are explicit and carry declaring sources and resolution status.

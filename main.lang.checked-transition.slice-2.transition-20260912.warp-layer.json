@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.checked-transition",
+  "slice_id": "slice-2",
+  "contract_hash": "contract:main.lang.checked-transition.slice-2:v1",
+  "attempt_id": "transition-20260912",
+  "result_state": "accepted",
+  "result_hash": "fnv1a64:c142aba2e63a01df",
+  "evidence": {
+    "confirmed-transition": [
+      "evidence:warps/checked-transition/slice-2.evidence.json"
+    ]
+  },
+  "reason": null
+}

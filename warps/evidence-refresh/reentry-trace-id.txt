@@ -1,0 +1,3 @@
+trace-id 'recur.warp.evidence.refresh.**' -> 2 role sites in 2 files
+warps\main.command.warp.evidence-refresh.verification.md:55:defines: recur.warp.evidence.refresh.observed current tests and preserved history
+warps\main.command.warp.evidence-refresh.contract.md:92:defines: recur.warp.evidence.refresh.v1 explicit same-contract renewal

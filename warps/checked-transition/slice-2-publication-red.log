@@ -1,0 +1,19 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.28s
+     Running unittests src\recur_lang_main.rs (target\debug\deps\recur_lang-5670e025cfa8d906.exe)
+
+running 1 test
+
+thread 'recur_lang_checked_transition::tests::every_interruption_requires_explicit_bounded_recovery' (40436) panicked at src\recur_lang_checked_transition.rs:156:13:
+PreparedPublished never reached
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test recur_lang_checked_transition::tests::every_interruption_requires_explicit_bounded_recovery ... FAILED
+
+failures:
+
+failures:
+    recur_lang_checked_transition::tests::every_interruption_requires_explicit_bounded_recovery
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.19s
+
+error: test failed, to rerun pass `--bin recur-lang`

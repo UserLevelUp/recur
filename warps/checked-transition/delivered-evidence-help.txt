@@ -1,0 +1,20 @@
+Assess explicit WIR1 test evidence without executing its producer
+
+Usage: recur.exe lang evidence [OPTIONS] --scope <SCOPE> --contract <CONTRACT> <SOURCE>
+
+Arguments:
+  <SOURCE>  
+
+Options:
+      --scope <SCOPE>               
+      --contract <CONTRACT>         
+      --receipt <RECEIPT>           
+      --status <STATUS>             
+      --expand                      
+  -d, --dir <DIR>                   Read root; relative sources resolve here and cannot escape it [default: .]
+      --color                       Use color in output
+      --json                        Output as JSON
+      --sep <CHAR>                  Hierarchy separator character (default: '.') Use '_' for Rust modules, '-' for kebab-case, ':' for namespaces May be provided multiple times for multi-separator queries
+      --sep-replace-default <CHAR>  When using multiple separators, normalize output to this separator
+      --show-sep                    Show which separator was used for each file (e.g., [.] or [_])
+  -h, --help                        Print help

@@ -1,0 +1,86 @@
+{
+  "name": "main.lang.checked-transition",
+  "children": [
+    {
+      "name": "cases",
+      "children": [],
+      "path": "warps\\main.lang.checked-transition.cases.md"
+    },
+    {
+      "name": "contract",
+      "children": [],
+      "path": "warps\\main.lang.checked-transition.contract.md"
+    },
+    {
+      "name": "current",
+      "children": [],
+      "path": "warps\\main.lang.checked-transition.current.md"
+    },
+    {
+      "name": "readme",
+      "children": [],
+      "path": "warps\\main.lang.checked-transition.readme.md"
+    },
+    {
+      "name": "recur",
+      "children": [],
+      "path": "warps\\main.lang.checked-transition.recur.md"
+    },
+    {
+      "name": "slice-0",
+      "children": [
+        {
+          "name": "todo",
+          "children": [
+            {
+              "name": "current",
+              "children": [],
+              "path": "warps\\main.lang.checked-transition.slice-0.todo.current.md"
+            }
+          ],
+          "path": null
+        },
+        {
+          "name": "verification",
+          "children": [],
+          "path": "warps\\main.lang.checked-transition.slice-0.verification.md"
+        }
+      ],
+      "path": null
+    },
+    {
+      "name": "slice-1",
+      "children": [
+        {
+          "name": "verification",
+          "children": [],
+          "path": "warps\\main.lang.checked-transition.slice-1.verification.md"
+        }
+      ],
+      "path": null
+    },
+    {
+      "name": "slice-2",
+      "children": [
+        {
+          "name": "verification",
+          "children": [],
+          "path": "warps\\main.lang.checked-transition.slice-2.verification.md"
+        }
+      ],
+      "path": null
+    },
+    {
+      "name": "wire",
+      "children": [
+        {
+          "name": "contract",
+          "children": [],
+          "path": "warps\\main.lang.checked-transition.wire.contract.md"
+        }
+      ],
+      "path": null
+    }
+  ],
+  "path": null
+}

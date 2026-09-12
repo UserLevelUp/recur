@@ -9,6 +9,12 @@ That contract takes precedence over the future-facing syntax examples below.
 WIR1 and CIR1 are distinct supported fragments; SGR1 supplies CIR1 graph checks.
 Runtime Eventness, feedback, imports and arbitrary expansions are not validated.
 
+The additive WIR1 `lang evidence` query and explicit
+`recur-lang warp --checked-contract` mode are implemented in the local build.
+See [checked evidence and transitions](main.command.lang.checked-transition.readme.md)
+for current test evidence, exact confirmed writes and interruption recovery.
+Legacy Warp commands below retain their declared-receipt semantics.
+
 `recur lang` is the pure query surface for Recur language sources, symbols,
 contracts, lanes, slices, Warps, and runtime Eventness.
 

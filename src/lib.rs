@@ -12,6 +12,7 @@ pub mod recur_lang_concurrent_ir;
 pub mod recur_lang_graph;
 pub mod recur_lang_ir;
 pub mod recur_lang_query;
+pub mod recur_lang_evidence;
 pub mod reveal_artifact;
 pub mod reveal_profiles;
 #[path = "main_command_reveal_impl.rs"]
@@ -21,6 +22,7 @@ pub mod tree;
 pub mod warp_bubble;
 pub mod warp_discovery;
 pub mod warp_evidence;
+pub mod warp_refresh;
 pub mod warp_policy;
 #[path = "main_command_warp_impl.rs"]
 pub mod warp_query;

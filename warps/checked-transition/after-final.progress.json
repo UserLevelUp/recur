@@ -1,0 +1,206 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a094c5-6989-747b-924b-3585779f4a18",
+  "completed_slices": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-final"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 4,
+    "pending": 0,
+    "required": 4,
+    "stale_contract": 0
+  },
+  "covered": [
+    "slice-0",
+    "slice-1",
+    "slice-2",
+    "slice-final"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/main.lang.checked-transition.slice-0.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "contract-and-baseline",
+      "satisfied": true,
+      "slice_id": "slice-0",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 12 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/checked-transition/slice-1.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "assessment-and-query",
+      "satisfied": true,
+      "slice_id": "slice-1",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 16 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/checked-transition/slice-2.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "confirmed-transition",
+      "satisfied": true,
+      "slice_id": "slice-2",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 18 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/checked-transition/final-reentry.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "drift-and-recovery",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 89 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/checked-transition/final-regression.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "regression-and-reentry",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "checked"
+    }
+  ],
+  "goal": "Bind exact WIR1 scope and current checked test evidence to an explicit, recoverable recur-lang E0-to-Ef transition.",
+  "layers": [
+    "slice-0@baseline-20260912",
+    "slice-1@assessment-20260912",
+    "slice-2@transition-20260912",
+    "slice-final@reentry-20260912"
+  ],
+  "manifest": "main.lang.checked-transition.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "//?/C:/src/recur",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-and-baseline"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a094c5-6989-74ad-a1e5-138b82468ca5",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "assessment-and-query"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "assessment-and-query": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": false,
+      "slice_id": "slice-1",
+      "slice_uuid": "01a094c6-ccd7-7197-899d-188eee959450",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "confirmed-transition"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "confirmed-transition": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": false,
+      "slice_id": "slice-2",
+      "slice_uuid": "01a094c6-ccd7-7197-899d-188fe9573392",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-final:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "drift-and-recovery",
+        "regression-and-reentry"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "drift-and-recovery": {
+          "allow_skipped": false,
+          "kind": "test"
+        },
+        "regression-and-reentry": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": false,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a094c5-6989-7dd7-adac-64425581eb99",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [
+    "Declared current_slice 'slice-final' is no longer ready; selection not inferred."
+  ],
+  "warp_id": "main.lang.checked-transition"
+}

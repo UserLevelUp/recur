@@ -1,0 +1,29 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "observed Cargo test log; record_gate.py",
+  "project": "recur",
+  "configuration": "locked offline debug; CARGO_INCREMENTAL=0; explicit reviewed input scope",
+  "platform": "Windows x64",
+  "executed_at_unix": 1789203124,
+  "result_artifact": "warps/checked-transition/slice-1.result.json",
+  "result_fingerprint": "fnv1a64:55069bb73fe9e41f",
+  "source": {
+    "revision": null,
+    "dirty": true,
+    "files": {
+      "Cargo.lock": "fnv1a64:ebff8a63d968bef8",
+      "Cargo.toml": "fnv1a64:d6dfa3dea96d841d",
+      "src/lib.rs": "fnv1a64:70cf4c64b0dff607",
+      "src/recur_lang_evidence.rs": "fnv1a64:af3f5d37596f39d4",
+      "src/recur_lang_ir.rs": "fnv1a64:aeab55573f63fe6b",
+      "src/recur_lang_query.rs": "fnv1a64:9bf33cf3c11771e4",
+      "src/warp_evidence.rs": "fnv1a64:4759ca57df2f1851",
+      "tests/lang_checked.rs": "fnv1a64:15353b88513e7d1e",
+      "tests/lang_query.rs": "fnv1a64:bc61de1e374fb013",
+      "warps/checked-transition/record_gate.py": "fnv1a64:8afc15bcd2cfeff0",
+      "warps/checked-transition/slice-1-accepted-tests.log": "fnv1a64:36515348c0f2d1c9",
+      "warps/main.lang.checked-transition.wire.contract.md": "fnv1a64:4777421a5769f91d"
+    }
+  }
+}

@@ -57,6 +57,13 @@ Use the project runner to produce observations, then bind evidence to the slice'
 gates with `recur-warp complete`. Keep child verification and parent integration
 acceptance separate. See docs/main.command.warp.readme.md for evidence contracts.
 
+For source-stale accepted gate evidence under an unchanged contract, inspect
+`recur-warp refresh --help` and docs/main.command.warp.evidence-refresh.readme.md.
+Refresh uses explicit map/layer/gate and predecessor/replacement manifests;
+preview before confirmed immutable publication, then query live full-root progress.
+Retain predecessor input paths and historical results. It cannot replace failed
+results, weaken policy, resolve conflicting layers or evolve a contract.
+
 For typed artifact discovery, use `recur reveal --type <type>` when exposed by
 the selected executable's help; this is implemented in source/local builds but
 an installed binary may lag. Explicit
@@ -128,6 +135,18 @@ For a worked tests-first WIR1 capability, inspect `main.lang.dogfood` under
 `warps` and `demos/web-evidence-lab/main.lang.walkthrough.md`. Its server catalog
 and inspector page reuse the existing query models; they do not add a grammar,
 execute bindings or turn recorded state into observed runtime evidence.
+
+For checked WIR1 evidence, inspect `lang evidence --help` on the selected binary.
+Use one explicit qualified function, policy and attempt; original query-v1
+commands remain unchanged. `recur-lang warp --checked-contract` is opt-in and
+only writes with confirmation; interrupted work needs explicit recovery.
+Read docs/main.command.lang.checked-transition.readme.md and the live
+`recur warp show main.lang.checked-transition -d .` projection. Its map is at
+repository root; capsules are under warps. Preserve historical observations and
+distinguish producer claims, current input freshness and accepted status.
+Neither this mode nor the inspector runs bindings or closes Julia/browser gates.
+Check help before assuming recall exists: recover via reveal, recorded artifacts
+and bounded `prompt warp.recovery`, then re-query full-root Warp progress.
 
 When implementation is requested, follow the selected slice contract, establish
 its test baseline, extend missing acceptance coverage and preserve legacy tests.

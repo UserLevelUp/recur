@@ -1,0 +1,44 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.34s
+     Running unittests src\recur_warp_main.rs (target\debug\deps\recur_warp-271181abb3013bb0.exe)
+
+running 2 tests
+test recur_warp_refresh::tests::interruption_and_matching_retry ... ok
+test recur_warp_init::tests::failed_config_publication_rolls_back_template_and_staging_files ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\warp_refresh.rs (target\debug\deps\warp_refresh-e659482c075f62ec.exe)
+
+running 7 tests
+test other_evidence_and_contract_conflicts_remain_blockers ... ok
+test torn_staging_and_excess_history_are_bounded_blockers ... ok
+test traversal_and_transaction_junction_are_rejected ... ok
+test preview_confirm_restart_and_replay_preserve_history ... ok
+test chain_drift_forks_and_historical_tamper_fail_closed ... ok
+test orphan_cycle_changed_policy_and_result_conflict_are_not_hidden ... ok
+test invalid_replacements_and_originals_do_not_write ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.18s
+
+     Running tests\warp_refresh_bounds.rs (target\debug\deps\warp_refresh_bounds-cf25b46b1f807acc.exe)
+
+running 3 tests
+test publication_revalidation_and_history_inventory_boundaries ... ok
+test file_count_and_path_limits ... ok
+test exact_byte_and_aggregate_limits ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s
+

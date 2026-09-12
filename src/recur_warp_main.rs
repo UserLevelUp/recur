@@ -12,6 +12,7 @@ use std::process;
 use walkdir::{DirEntry, WalkDir};
 mod recur_warp_create;
 mod recur_warp_init;
+mod recur_warp_refresh;
 
 #[derive(Parser)]
 #[command(name = "recur-warp")]
@@ -35,6 +36,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Renew one stale external gate reference without rewriting accepted history
+    Refresh {
+        #[command(flatten)]
+        args: recur_warp_refresh::Args,
+        #[arg(long)]
+        confirm: bool,
+    },
     /// Discover app prompts and prepare evidence; does not call an LLM
     Llm {
         #[command(subcommand)]
@@ -203,6 +211,9 @@ fn main() {
         }
     };
     let result = match cli.command {
+        Commands::Refresh {args,confirm} => recur_warp_refresh::run(&root,&args,confirm).and_then(|value| {
+            println!("{}",serde_json::to_string_pretty(&value)?);Ok(())
+        }),
         Commands::Llm {
             command: LlmCommand::Prompt(mut args),
         } => {

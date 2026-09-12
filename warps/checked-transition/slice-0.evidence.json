@@ -1,0 +1,24 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "cargo test --locked: lang_query (3), warp_evidence::tests (1), recur-lang (7)",
+  "project": "recur",
+  "configuration": "debug focused baseline",
+  "platform": "Windows x64",
+  "executed_at_unix": 1789202670,
+  "result_artifact": "warps/checked-transition/slice-0.result.json",
+  "result_fingerprint": "fnv1a64:246d78b44597ad3b",
+  "source": {
+    "revision": null,
+    "dirty": true,
+    "files": {
+      "Cargo.toml": "fnv1a64:d6dfa3dea96d841d",
+      "Cargo.lock": "fnv1a64:ebff8a63d968bef8",
+      "src/warp_evidence.rs": "fnv1a64:084f0bf196fbbe79",
+      "src/recur_lang_query.rs": "fnv1a64:34ad2cecf8527eb1",
+      "src/recur_lang_ir.rs": "fnv1a64:aeab55573f63fe6b",
+      "src/recur_lang_main.rs": "fnv1a64:2534b07a099c9977",
+      "tests/lang_query.rs": "fnv1a64:bc61de1e374fb013"
+    }
+  }
+}

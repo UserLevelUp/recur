@@ -1,0 +1,10 @@
+{
+  "diagnostics": [
+    {
+      "code": "LANG001",
+      "detail": null,
+      "message": "Cannot read source main.lang.greet.recur: The system cannot find the file specified. (os error 2)"
+    }
+  ],
+  "schema": "recur-lang-error-v1"
+}

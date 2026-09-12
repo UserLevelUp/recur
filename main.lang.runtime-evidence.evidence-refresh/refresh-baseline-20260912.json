@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "refresh-baseline-20260912",
+  "map": "main.lang.runtime-evidence.warp-map.json",
+  "warp_id": "main.lang.runtime-evidence",
+  "bubble_uuid": "01a09477-2229-7956-a1ac-0fd826b4cf47",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.lang.runtime-evidence.slice-0:v1",
+  "policy_hash": "fnv1a64:ce0a94c4073ce33b",
+  "layer": "main.lang.runtime-evidence.slice-0.baseline-20260912.warp-layer.json",
+  "layer_hash": "fnv1a64:9a33df2f4a4e4af0",
+  "gate": "baseline-and-contract",
+  "from_reference": "evidence:warps/runtime-evidence/slice-0-rust.evidence.json",
+  "from_hash": "fnv1a64:d46a5c5db68c0f0f",
+  "to_reference": "evidence:warps/evidence-refresh/runtime-baseline.evidence.json",
+  "to_hash": "fnv1a64:df986425949919ab",
+  "reason": "Observed current 251-test Rust regression; retain baseline contract and every original input including local executable"
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "refresh-kernel-20260912",
+  "map": "main.lang.checked-transition.warp-map.json",
+  "warp_id": "main.lang.checked-transition",
+  "bubble_uuid": "01a094c5-6989-747b-924b-3585779f4a18",
+  "slice_id": "slice-1",
+  "contract_hash": "contract:main.lang.checked-transition.slice-1:v1",
+  "policy_hash": "fnv1a64:6a5001ef9c0daffc",
+  "layer": "main.lang.checked-transition.slice-1.assessment-20260912.warp-layer.json",
+  "layer_hash": "fnv1a64:70c7d6fd06d49ebf",
+  "gate": "assessment-and-query",
+  "from_reference": "evidence:warps/checked-transition/slice-1.evidence.json",
+  "from_hash": "fnv1a64:33c9cd68201dab9c",
+  "to_reference": "evidence:warps/evidence-refresh/integration.evidence.json",
+  "to_hash": "fnv1a64:18913d1b427a98d3",
+  "reason": "Observed 251-test regression after additive evidence-refresh changes; same contract and retained inputs"
+}

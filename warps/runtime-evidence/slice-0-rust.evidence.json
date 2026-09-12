@@ -1,0 +1,24 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "cargo 1.97.1; lang_query and warp_evidence::tests",
+  "project": "recur",
+  "configuration": "locked debug; explicit focused scope",
+  "platform": "Windows x64",
+  "executed_at_unix": 1789198270,
+  "result_artifact": "warps/runtime-evidence/slice-0-rust.result.json",
+  "result_fingerprint": "fnv1a64:1a8e90dcf3342f89",
+  "source": {
+    "revision": null,
+    "dirty": true,
+    "files": {
+      "Cargo.toml": "fnv1a64:d6dfa3dea96d841d",
+      "Cargo.lock": "fnv1a64:ebff8a63d968bef8",
+      "src/warp_evidence.rs": "fnv1a64:084f0bf196fbbe79",
+      "tests/lang_query.rs": "fnv1a64:bc61de1e374fb013",
+      "src/recur_lang_query.rs": "fnv1a64:34ad2cecf8527eb1",
+      "target/debug/recur.exe": "fnv1a64:57e0883e27189e36",
+      "warps/runtime-evidence/record_baseline.py": "fnv1a64:bd549e804f20dc67"
+    }
+  }
+}

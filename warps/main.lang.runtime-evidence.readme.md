@@ -1,6 +1,8 @@
 # Lang runtime evidence: precise specifications from E0 to Ef
 
-Date: 2026-09-12. Status: planned; implementation has not started.
+Date: 2026-09-12. Status: slices 0/1 accepted; isolated slice-2 loader unaccepted
+because full green runs hit Julia runtime faults. See
+[current handoff](main.lang.runtime-evidence.current.md).
 Release target: a.0.2.8, not authorization to publish or install anything.
 
 This is Option A from the Lang readiness assessment. It connects the compact
@@ -52,12 +54,14 @@ it introduces neither mathematical guarantees nor new Lang syntax.
 The [contract](main.lang.runtime-evidence.contract.md) defines the gates and
 non-goals. Begin at [slice-0](main.lang.runtime-evidence.slice-0.todo.current.md).
 No slice is accepted merely because this plan or a tests-first specification exists.
+The single live development map now resides at the repository root, allowing
+contained evidence references to actual source/test/configuration inputs.
 
 ## Discover and resume
 
 ```powershell
-recur warp show main.lang.runtime-evidence -d warps --json
-recur warp slices main.lang.runtime-evidence -d warps --json
+recur warp show main.lang.runtime-evidence -d . --json
+recur warp slices main.lang.runtime-evidence -d . --json
 recur reveal main.lang.runtime-evidence -d warps
 recur tree main.lang.runtime-evidence -d warps --sep .
 recur files "main.lang.runtime-evidence.**" -d warps --sep .

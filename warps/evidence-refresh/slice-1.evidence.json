@@ -1,0 +1,33 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "observed Cargo log; record_observation.py",
+  "project": "recur",
+  "configuration": "locked offline; CARGO_INCREMENTAL=0; explicit reviewed inputs",
+  "platform": "Windows x64",
+  "executed_at_unix": 1789205040,
+  "result_artifact": "warps/evidence-refresh/slice-1.result.json",
+  "result_fingerprint": "fnv1a64:d840ff31497e2120",
+  "source": {
+    "revision": null,
+    "dirty": true,
+    "files": {
+      ".gitattributes": "fnv1a64:5f5ca19e6377609a",
+      "Cargo.lock": "fnv1a64:ebff8a63d968bef8",
+      "Cargo.toml": "fnv1a64:d6dfa3dea96d841d",
+      "src/lib.rs": "fnv1a64:25b057ddeb93c4bc",
+      "src/main_command_warp_impl.rs": "fnv1a64:7626068c51c948b6",
+      "src/recur_lang_evidence.rs": "fnv1a64:af3f5d37596f39d4",
+      "src/recur_warp_main.rs": "fnv1a64:20b8979380d259bb",
+      "src/recur_warp_refresh.rs": "fnv1a64:ecc2564e22ae6260",
+      "src/warp_bubble.rs": "fnv1a64:42292d7e53d359a7",
+      "src/warp_evidence.rs": "fnv1a64:4759ca57df2f1851",
+      "src/warp_refresh.rs": "fnv1a64:dbe4cc7cf32649fe",
+      "tests/warp_refresh.rs": "fnv1a64:99e9c6d6d7c35792",
+      "tests/warp_refresh_bounds.rs": "fnv1a64:2f80c398889ad928",
+      "warps/evidence-refresh/record_observation.py": "fnv1a64:7e2396bb85e6af8e",
+      "warps/evidence-refresh/slice-1-final-tests.log": "fnv1a64:ae79595a02a8ff1a",
+      "warps/main.command.warp.evidence-refresh.contract.md": "fnv1a64:7b62e310391d7eb0"
+    }
+  }
+}

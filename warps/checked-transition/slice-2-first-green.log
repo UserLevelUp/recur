@@ -1,0 +1,40 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.08s
+     Running unittests src\recur_lang_main.rs (target\debug\deps\recur_lang-5670e025cfa8d906.exe)
+
+running 9 tests
+test tests::warp_requires_data_flow_to_match_the_declared_slice ... ok
+test tests::plan_reads_exact_declared_warp_and_does_not_mutate ... ok
+test tests::warp_requires_ef_to_be_a_declared_state_event ... ok
+test tests::stale_receipt_writes_nak_without_moving_eventness ... ok
+test tests::confirmed_warp_rejects_eventness_outside_the_bounded_root ... ok
+test tests::confirmed_warp_moves_exact_e0_to_ef_and_writes_ack ... ok
+test tests::receipt_from_an_unknown_ir_schema_writes_nak_without_moving_eventness ... ok
+test recur_lang_checked_transition::tests::changed_evidence_at_the_write_boundary_is_rejected ... ok
+test recur_lang_checked_transition::tests::every_interruption_requires_explicit_bounded_recovery ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.79s
+
+     Running tests\lang_checked_transition.rs (target\debug\deps\lang_checked_transition-92f074e70f03f2e1.exe)
+
+running 5 tests
+test drift_between_plan_and_confirm_rejects ... ok
+test existing_destinations_and_attempt_conflicts_do_not_overwrite ... ok
+test dry_run_confirm_and_exact_replay ... ok
+test evidence_rejections_preserve_e0 ... ok
+test accepted_history_does_not_hide_current_drift ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.12s
+

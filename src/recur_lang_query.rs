@@ -13,6 +13,8 @@ pub const QUERY_SCHEMA: &str = "recur-lang-query-v1";
 
 #[derive(Debug, Subcommand)]
 pub enum LangCommand {
+    /// Assess explicit WIR1 test evidence without executing its producer
+    Evidence(crate::recur_lang_evidence::EvidenceArgs),
     /// Discover .recur sources under the read root, including unsupported inputs
     List,
     /// Inspect one scoped function or lane; bindings are never executed
@@ -240,8 +242,16 @@ fn project(
     eventness: Option<&str>,
     expand: bool,
 ) -> Result<Value, Error> {
-    let (source, name) = binding;
     let vocabulary = state_vocabulary(root)?;
+    project_with_vocabulary(model, binding, root, files, scope, eventness, expand, vocabulary)
+}
+
+#[allow(clippy::too_many_arguments)] // shared projector; existing query contract stays unchanged
+fn project_with_vocabulary(
+    model: &Model, binding: (&str, &str), root: &Path, files: &[PathBuf],
+    scope: Option<&str>, eventness: Option<&str>, expand: bool, vocabulary: Vec<String>,
+) -> Result<Value, Error> {
+    let (source, name) = binding;
     if eventness.is_some_and(|s| !vocabulary.iter().any(|v| v == s)) {
         return Err(error(
             "LANG007",
@@ -430,6 +440,7 @@ fn query(command: LangCommand, root: &Path) -> Result<Value, Error> {
     }
     let files = candidates(&root)?;
     let (source, scope, eventness, expand) = match command {
+        LangCommand::Evidence(_) => unreachable!("handled before legacy discovery"),
         LangCommand::List => {
             let mut sources = Vec::new();
             for path in files
@@ -635,6 +646,12 @@ fn text_view(value: &Value) -> String {
 }
 
 pub fn execute(command: LangCommand, root: &Path, json_output: bool) -> i32 {
+    if let LangCommand::Evidence(args) = command {
+        let value = crate::recur_lang_evidence::assess(root, &args);
+        println!("{}", if json_output { serde_json::to_string_pretty(&value).unwrap() }
+            else { crate::recur_lang_evidence::text(&value) });
+        return crate::recur_lang_evidence::exit_code(&value);
+    }
     let checking = matches!(command, LangCommand::Check { .. });
     let (value, code) = match query(command, root) {
         Ok(value) => {
@@ -656,6 +673,17 @@ pub fn execute(command: LangCommand, root: &Path, json_output: bool) -> i32 {
     );
     code
 }
+
+/// Reuse the exact projector over already bounded input; no inventory or IO.
+pub(crate) fn evidence_packet(source: &str, name: &str, scope: &str, expand: bool,
+    vocabulary: Vec<String>) -> Result<Value, String> {
+    let model = parse(source, name, Some(scope)).map_err(|e| e.message)?;
+    if !matches!(model, Model::Warp(_)) { return Err("checked evidence requires WIR1".into()); }
+    project_with_vocabulary(&model, (source,name), Path::new("."), &[], Some(scope), None, expand, vocabulary)
+        .map_err(|e| e.message)
+}
+
+pub(crate) fn evidence_text(packet: &Value) -> String { text_view(packet) }
 
 #[cfg(test)]
 mod tests {

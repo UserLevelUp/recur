@@ -1,0 +1,12 @@
+[
+  "warps\\main.lang.checked-transition.cases.md",
+  "warps\\main.lang.checked-transition.contract.md",
+  "warps\\main.lang.checked-transition.current.md",
+  "warps\\main.lang.checked-transition.readme.md",
+  "warps\\main.lang.checked-transition.recur.md",
+  "warps\\main.lang.checked-transition.slice-0.todo.current.md",
+  "warps\\main.lang.checked-transition.slice-0.verification.md",
+  "warps\\main.lang.checked-transition.slice-1.verification.md",
+  "warps\\main.lang.checked-transition.slice-2.verification.md",
+  "warps\\main.lang.checked-transition.wire.contract.md"
+]

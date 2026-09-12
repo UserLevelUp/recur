@@ -1,0 +1,24 @@
+{
+  "execution": "not-run",
+  "path": "main.lang.runtime-evidence.evidence-refresh/refresh-baseline-20260912.json",
+  "record": {
+    "bubble_uuid": "01a09477-2229-7956-a1ac-0fd826b4cf47",
+    "contract_hash": "contract:main.lang.runtime-evidence.slice-0:v1",
+    "from_hash": "fnv1a64:d46a5c5db68c0f0f",
+    "from_reference": "evidence:warps/runtime-evidence/slice-0-rust.evidence.json",
+    "gate": "baseline-and-contract",
+    "layer": "main.lang.runtime-evidence.slice-0.baseline-20260912.warp-layer.json",
+    "layer_hash": "fnv1a64:9a33df2f4a4e4af0",
+    "map": "main.lang.runtime-evidence.warp-map.json",
+    "policy_hash": "fnv1a64:ce0a94c4073ce33b",
+    "reason": "Observed current 251-test Rust regression; retain baseline contract and every original input including local executable",
+    "refresh_id": "refresh-baseline-20260912",
+    "schema": "warp-evidence-refresh-v1",
+    "slice_id": "slice-0",
+    "to_hash": "fnv1a64:df986425949919ab",
+    "to_reference": "evidence:warps/evidence-refresh/runtime-baseline.evidence.json",
+    "warp_id": "main.lang.runtime-evidence"
+  },
+  "schema": "recur-warp-refresh-v1",
+  "state": "written"
+}

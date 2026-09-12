@@ -108,6 +108,18 @@ pub fn contained_file(root: &Path, relative: &str) -> Result<PathBuf> {
 }
 
 pub fn assess(root: &Path, reference: &str, rule: &GateRule) -> Assessment {
+    assess_with_reader(reference, rule, |path, _json| {
+        Ok(fs::read(contained_file(root, path)?)?)
+    })
+}
+
+/// The same result rules with caller-owned bounded reads. The reader must
+/// enforce its canonical root; no producer is invoked by this function.
+pub fn assess_with_reader(
+    reference: &str,
+    rule: &GateRule,
+    mut read: impl FnMut(&str, bool) -> Result<Vec<u8>>,
+) -> Assessment {
     let mut result = Assessment {
         reference: reference.into(),
         status: "declared".into(),
@@ -119,7 +131,7 @@ pub fn assess(root: &Path, reference: &str, rule: &GateRule) -> Assessment {
     };
     result.method =
         "external-result-artifact-and-scoped-content-fingerprints; producer not rerun".into();
-    match check(root, path, rule) {
+    match check(path, rule, &mut read) {
         Ok((state, reasons)) => {
             result.status = state.into();
             result.reasons = reasons;
@@ -132,8 +144,8 @@ pub fn assess(root: &Path, reference: &str, rule: &GateRule) -> Assessment {
     result
 }
 
-fn check(root: &Path, path: &str, rule: &GateRule) -> Result<(&'static str, Vec<String>)> {
-    let evidence: Evidence = serde_json::from_slice(&fs::read(contained_file(root, path)?)?)?;
+fn check(path: &str, rule: &GateRule, read: &mut impl FnMut(&str, bool) -> Result<Vec<u8>>) -> Result<(&'static str, Vec<String>)> {
+    let evidence: Evidence = serde_json::from_slice(&read(path, true)?)?;
     if evidence.schema != "warp-external-evidence-v1" {
         bail!("unsupported external evidence schema");
     }
@@ -171,13 +183,13 @@ fn check(root: &Path, path: &str, rule: &GateRule) -> Result<(&'static str, Vec<
     }
     let mut stale = Vec::new();
     for (file, expected) in &evidence.source.files {
-        match contained_file(root, file).and_then(|p| Ok(fingerprint(&fs::read(p)?))) {
+        match read(file, false).map(|bytes| fingerprint(&bytes)) {
             Ok(actual) if actual == *expected => {}
             Ok(_) => stale.push(format!("source changed: {file}")),
             Err(error) => stale.push(format!("source unavailable: {file}: {error}")),
         }
     }
-    let bytes = fs::read(contained_file(root, &evidence.result_artifact)?)?;
+    let bytes = read(&evidence.result_artifact, true)?;
     if fingerprint(&bytes) != evidence.result_fingerprint {
         stale.push("result artifact changed".into());
     }

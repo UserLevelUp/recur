@@ -1,0 +1,96 @@
+# Preserve actual fingerprinted checkout bytes across platforms and fast-forwards.
+# Historical evidence is byte-preserved; source entries retain their existing endings.
+/warps/** -text
+/*.warp-map.json -text
+/*.warp-layer.json -text
+/*.evidence-refresh/** -text
+/Cargo.lock text eol=crlf
+/Cargo.toml text eol=crlf
+/docs/main.command.lang.checked-transition.readme.md text eol=lf
+/docs/main.command.lang.query.readme.md -text
+/docs/main.command.lang.readme.md -text
+/docs/recur-expert.recur.md -text
+/julia-expert/references/recur-playbook.md -text
+/recur-expert/SKILL.md -text
+/src/capability_traits.rs text eol=crlf
+/src/lib.rs -text
+/src/main.rs text eol=crlf
+/src/main_command_callees_impl.rs text eol=crlf
+/src/main_command_callers_impl.rs text eol=crlf
+/src/main_command_capability_impl.rs text eol=crlf
+/src/main_command_children_impl.rs text eol=lf
+/src/main_command_files_impl.rs text eol=crlf
+/src/main_command_files_stdin.rs text eol=crlf
+/src/main_command_find_impl.rs text eol=crlf
+/src/main_command_flatten_csv.rs text eol=crlf
+/src/main_command_flatten_impl.rs text eol=crlf
+/src/main_command_flatten_json.rs text eol=crlf
+/src/main_command_flatten_toml.rs text eol=crlf
+/src/main_command_flatten_xml.rs text eol=crlf
+/src/main_command_flatten_yaml.rs text eol=crlf
+/src/main_command_id_impl.rs text eol=crlf
+/src/main_command_init_impl.rs text eol=crlf
+/src/main_command_lane_impl.rs text eol=crlf
+/src/main_command_merge_impl.rs text eol=crlf
+/src/main_command_psyche_impl.rs text eol=crlf
+/src/main_command_related_impl.rs text eol=lf
+/src/main_command_reveal_impl.rs text eol=crlf
+/src/main_command_stats_impl.rs text eol=crlf
+/src/main_command_stats_stdin.rs text eol=crlf
+/src/main_command_trace_id_impl.rs text eol=crlf
+/src/main_command_trace_impl.rs text eol=crlf
+/src/main_command_trace_stats_impl.rs text eol=crlf
+/src/main_command_trait_impl.rs text eol=crlf
+/src/main_command_tree_impl.rs text eol=crlf
+/src/main_command_version_impl.rs text eol=crlf
+/src/main_command_warp_impl.rs -text
+/src/main_command_watch_impl.rs -text
+/src/main_command_watch_query_impl.rs -text
+/src/output.rs text eol=crlf
+/src/parser.rs text eol=crlf
+/src/project_config.rs text eol=crlf
+/src/prompt.rs text eol=crlf
+/src/prompt_context.rs text eol=crlf
+/src/recur_git_main.rs text eol=crlf
+/src/recur_lang_checked_transition.rs text eol=lf
+/src/recur_lang_concurrent_ir.rs text eol=crlf
+/src/recur_lang_evidence.rs text eol=lf
+/src/recur_lang_graph.rs text eol=crlf
+/src/recur_lang_ir.rs text eol=crlf
+/src/recur_lang_main.rs text eol=lf
+/src/recur_lang_query.rs -text
+/src/recur_reveal_main.rs text eol=crlf
+/src/recur_version_main.rs text eol=crlf
+/src/recur_warp_create.rs text eol=crlf
+/src/recur_warp_init.rs text eol=crlf
+/src/recur_warp_main.rs -text
+/src/recur_warp_refresh.rs text eol=lf
+/src/recur_watch_main.rs text eol=crlf
+/src/reveal_artifact.rs text eol=crlf
+/src/reveal_profiles.rs text eol=crlf
+/src/search.rs text eol=crlf
+/src/trait/content_search.rs text eol=crlf
+/src/trait/mod.rs text eol=crlf
+/src/trait/separator.rs text eol=crlf
+/src/trait/separator_merge.rs text eol=crlf
+/src/trait/stdin.rs text eol=crlf
+/src/trait/text_encoding.rs text eol=crlf
+/src/trait/trace_id.rs text eol=crlf
+/src/trait/traversal_budget.rs text eol=crlf
+/src/tree.rs text eol=crlf
+/src/warp_bubble.rs text eol=crlf
+/src/warp_discovery.rs text eol=lf
+/src/warp_evidence.rs text eol=lf
+/src/warp_policy.rs text eol=crlf
+/src/warp_refresh.rs text eol=lf
+/tests/lang_checked.rs text eol=lf
+/tests/lang_checked_reentry.rs text eol=lf
+/tests/lang_checked_transition.rs text eol=lf
+/tests/lang_query.rs text eol=crlf
+/tests/reveal_profiles.rs text eol=crlf
+/tests/support/checked_fixture.rs text eol=lf
+/tests/warp_refresh.rs text eol=lf
+/tests/warp_refresh_bounds.rs text eol=lf
+/.gitattributes text eol=crlf
+/docs/main.command.warp.evidence-refresh.readme.md text eol=lf
+/docs/main.command.warp.evidence.readme.md text eol=lf

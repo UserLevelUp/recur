@@ -1,0 +1,8 @@
+//! Explicit checked-mode transition; callable red seam before writes are added.
+use anyhow::Result;
+use recur::recur_lang_evidence::{assess, EvidenceArgs};
+use serde_json::{json,Value};
+use std::path::Path;
+pub fn run(root:&Path,args:&EvidenceArgs,_eventness:Option<&Path>,_confirm:bool,_recover:bool)->Result<(Value,i32)> {
+    let mut report=assess(root,args);report["action"]=json!({"state":"planned"});Ok((report,0))
+}

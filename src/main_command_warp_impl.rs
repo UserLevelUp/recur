@@ -1411,17 +1411,19 @@ fn compose_bubble(
             .iter()
             .filter(|item| {
                 !item.layer.result_hash.trim().is_empty()
-                    && crate::warp_evidence::gates(root, required, &item.layer.evidence)
+                    && crate::warp_refresh::gates(root, &manifest, required, &item.path, &item.layer)
                         .iter()
                         .all(|g| g.satisfied)
             })
             .copied()
             .collect::<Vec<_>>();
         for item in &current {
-            gate_evidence.extend(crate::warp_evidence::gates(
+            gate_evidence.extend(crate::warp_refresh::gates(
                 root,
+                &manifest,
                 required,
-                &item.layer.evidence,
+                &item.path,
+                &item.layer,
             ));
         }
         let invalid_gates = gate_evidence

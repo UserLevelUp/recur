@@ -1,0 +1,36 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.16s
+     Running tests\lang_checked_reentry.rs (target\debug\deps\lang_checked_reentry-f039b2dc4691c88d.exe)
+
+running 4 tests
+
+thread 'compact_expanded_and_dry_run_keep_contracts_and_footer_facts_separate' (11260) panicked at tests\lang_checked_reentry.rs:219:9:
+assertion `left == right` failed: header
+  left: Array [Object {"binding": String("forbidden.runner"), "identity": String("build.f"), "input": Object {"canonical_identity": String("build.i(a)"), "local_identity": String("build.i(a)"), "role": String("input"), "symbol": String("a")}, "meaning": String("Build with explicit evidence"), "output": Object {"canonical_identity": String("build.o(b)"), "local_identity": String("build.o(b)"), "role": String("output"), "symbol": String("b")}, "scope": String("build"), "span": Object {"end_byte": Number(185), "end_line": Number(7), "start_byte": Number(109), "start_line": Number(6)}, "symbol": String("f")}]
+ right: Array [Object {"binding": String("forbidden.runner"), "identity": String("build.f"), "input": Object {"canonical_identity": String("build.i(a)"), "fields": Array [Object {"name": String("request"), "type_name": String("Text")}], "local_identity": String("build.i(a)"), "role": String("input"), "symbol": String("a")}, "meaning": String("Build with explicit evidence"), "output": Object {"canonical_identity": String("build.o(b)"), "fields": Array [Object {"name": String("artifact"), "type_name": String("Text")}], "local_identity": String("build.o(b)"), "role": String("output"), "symbol": String("b")}, "scope": String("build"), "span": Object {"end_byte": Number(185), "end_line": Number(7), "start_byte": Number(109), "start_line": Number(6)}, "symbol": String("f")}]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test compact_expanded_and_dry_run_keep_contracts_and_footer_facts_separate ... FAILED
+test red_observation_remains_queryable_after_distinct_green_acceptance ... ok
+test every_live_input_loses_current_acceptance_after_a_process_restart ... ok
+test fresh_processes_recover_every_recorded_interruption_state ... ok
+
+failures:
+
+failures:
+    compact_expanded_and_dry_run_keep_contracts_and_footer_facts_separate
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.76s
+
+error: test failed, to rerun pass `--test lang_checked_reentry`

@@ -1,0 +1,8 @@
+[
+  "warps\\main.command.warp.evidence-refresh.contract.md",
+  "warps\\main.command.warp.evidence-refresh.current.md",
+  "warps\\main.command.warp.evidence-refresh.readme.md",
+  "warps\\main.command.warp.evidence-refresh.recur.md",
+  "warps\\main.command.warp.evidence-refresh.slice-0.verification.md",
+  "warps\\main.command.warp.evidence-refresh.verification.md"
+]

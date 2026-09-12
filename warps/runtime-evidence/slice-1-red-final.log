@@ -1,0 +1,1026 @@
+identity.valid: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "checked"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+association.declared: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "declared"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.wrong-source: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.wrong-scope: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.wrong-slice_id: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.wrong-contract_hash: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.wrong-warp_id: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.alias: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.transition: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.producer: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+identity.gates: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+association.duplicate: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "ambiguous"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+association.schema: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+association.missing-field: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+history.no-current: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "declared"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+history.unknown-current: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+history.duplicate: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "ambiguous"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+history.red-preserved: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "checked"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+history.red-current: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "failed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+cases.missing: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+cases.failed: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "failed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.spec.recur: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.implementation.jl: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.cases.jl: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.config.toml: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.runner.jl: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.behavior.md: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.packet-hash: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+freshness.result: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "stale"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+inputs.missing: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "mismatched"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+counts.zero: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "failed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+counts.inconsistent: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "failed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+counts.failed: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "failed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+counts.skipped: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "failed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+native-ack.missing-test: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "declared"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+native-ack.invalid-test: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+containment.../outside.json: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+containment.C:/outside.json: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+containment.a/../evidence.json: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+containment.a\evidence.json: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+containment.symlink: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+limits.json-bytes: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+limits.attempts: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+limits.cases: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+limits.associations: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+containment.missing: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+containment.directory: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+limits.input-bytes: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+limits.files: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "malformed"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+purity.inert-commands: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "checked"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+acceptance.explicit: Test Failed at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+  Expression: report["status"] == expected
+   Evaluated: "absent" == "checked"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:78
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] top-level scope
+   @ file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+Test Summary:                        | Pass  Fail  Total  Time
+Runtime evidence behavioral contract |  105    51    156  2.0s
+  identity.valid                     |    2     1      3  0.3s
+  association.absent                 |    3            3  0.0s
+  association.declared               |    2     1      3  0.0s
+  identity.wrong-source              |    2     1      3  0.0s
+  identity.wrong-scope               |    2     1      3  0.0s
+  identity.wrong-slice_id            |    2     1      3  0.0s
+  identity.wrong-contract_hash       |    2     1      3  0.0s
+  identity.wrong-warp_id             |    2     1      3  0.0s
+  identity.alias                     |    2     1      3  0.0s
+  identity.transition                |    2     1      3  0.0s
+  identity.producer                  |    2     1      3  0.0s
+  identity.gates                     |    2     1      3  0.0s
+  association.duplicate              |    2     1      3  0.0s
+  association.schema                 |    2     1      3  0.0s
+  association.missing-field          |    2     1      3  0.0s
+  history.no-current                 |    2     1      3  0.0s
+  history.unknown-current            |    2     1      3  0.0s
+  history.duplicate                  |    2     1      3  0.0s
+  history.red-preserved              |    2     1      3  0.0s
+  history.red-current                |    2     1      3  0.0s
+  cases.missing                      |    2     1      3  0.0s
+  cases.failed                       |    2     1      3  0.0s
+  freshness.spec.recur               |    2     1      3  0.0s
+  freshness.implementation.jl        |    2     1      3  0.0s
+  freshness.cases.jl                 |    2     1      3  0.0s
+  freshness.config.toml              |    2     1      3  0.0s
+  freshness.runner.jl                |    2     1      3  0.0s
+  freshness.behavior.md              |    2     1      3  0.0s
+  freshness.packet-hash              |    2     1      3  0.0s
+  freshness.result                   |    2     1      3  0.0s
+  inputs.missing                     |    2     1      3  0.0s
+  counts.zero                        |    2     1      3  0.0s
+  counts.inconsistent                |    2     1      3  0.0s
+  counts.failed                      |    2     1      3  0.0s
+  counts.skipped                     |    2     1      3  0.0s
+  native-ack.missing-test            |    2     1      3  0.0s
+  native-ack.invalid-test            |    2     1      3  0.0s
+  containment.../outside.json        |    2     1      3  0.0s
+  containment.C:/outside.json        |    2     1      3  0.0s
+  containment.a/../evidence.json     |    2     1      3  0.0s
+  containment.a\evidence.json        |    2     1      3  0.0s
+  containment.symlink                |    2     1      3  0.0s
+  limits.json-bytes                  |    2     1      3  0.0s
+  limits.attempts                    |    2     1      3  0.0s
+  limits.cases                       |    2     1      3  0.0s
+  limits.associations                |    2     1      3  0.1s
+  containment.missing                |    2     1      3  0.0s
+  containment.directory              |    2     1      3  0.0s
+  limits.input-bytes                 |    2     1      3  0.2s
+  limits.files                       |    2     1      3  0.1s
+  purity.inert-commands              |    2     1      3  0.0s
+  acceptance.explicit                |    2     1      3  0.0s
+RNG of the outermost testset: Random.Xoshiro(0xcf4e76a5199baf35, 0xf3a51de14a9675ad, 0x6d6b2da0d4f29ba8, 0x84fa4629b08cef45, 0x702d9f90f5f6a567)
+ERROR: LoadError: Some tests did not pass: 105 passed, 51 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:85

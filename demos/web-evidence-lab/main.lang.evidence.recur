@@ -1,0 +1,34 @@
+recur 0.1 class RuntimeEvidence
+
+# Behavioral requirements: ../../warps/main.lang.runtime-evidence.association.contract.md
+header {
+  scope associate {
+    i(a) := (packet: QueryPacket, registry: AssociationRegistry)
+    o(b) := (selection: ExactAssociation)
+    a : i(a) -> o(b) ~ "Bind exact source, qualified scope, aliases, requirements and slice contract" by LangEvidence.assess
+  }
+  scope assess {
+    i(b) := associate.o(b)
+    o(c) := (report: EvidenceReport)
+    a : i(b) -> o(c) ~ "Assess explicit live inputs without executing producers; retain historical attempts and separate acceptance" by LangEvidence.assess
+  }
+}
+body {
+  associate sync : i(a) -> a(a) -> o(b)
+  assess sync : i(b) -> a(b) -> o(c)
+  share associate.o(b) -> assess.i(b)
+}
+footer {
+  event associate {
+    consume main.lang.runtime-evidence.specification
+    produce main.lang.runtime-evidence.association
+    state main.lang.runtime-evidence.association.complete
+  }
+  warp associate : E0(main.lang.runtime-evidence.association.todo.current) -> dE(associate.a) -> Ef(main.lang.runtime-evidence.association.complete)
+  event assess {
+    consume main.lang.runtime-evidence.association
+    produce main.lang.runtime-evidence.observation
+    state main.lang.runtime-evidence.observation.complete
+  }
+  warp assess : E0(main.lang.runtime-evidence.observation.todo.current) -> dE(assess.a) -> Ef(main.lang.runtime-evidence.observation.complete)
+}

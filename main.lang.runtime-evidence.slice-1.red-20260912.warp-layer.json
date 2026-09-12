@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.runtime-evidence",
+  "slice_id": "slice-1",
+  "contract_hash": "contract:main.lang.runtime-evidence.slice-1:v1",
+  "attempt_id": "red-20260912",
+  "result_state": "accepted",
+  "result_hash": "sha256:b420eeb0e95150d17f2e3842d6ea71b863c46607acee3ca66d6f584df1fc68ef",
+  "evidence": {
+    "red-first-fixtures": [
+      "warps/main.lang.runtime-evidence.slice-1.verification.md"
+    ]
+  },
+  "reason": null
+}

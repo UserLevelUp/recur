@@ -1,0 +1,145 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a094e5-3cea-7ff3-93d2-3ebc8aa3ea81",
+  "completed_slices": [
+    "slice-0",
+    "slice-1",
+    "slice-final"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 3,
+    "pending": 0,
+    "required": 3,
+    "stale_contract": 0
+  },
+  "covered": [
+    "slice-0",
+    "slice-1",
+    "slice-final"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/main.command.warp.evidence-refresh.slice-0.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "contract-and-red",
+      "satisfied": true,
+      "slice_id": "slice-0",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 16 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/evidence-refresh/slice-1.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "refresh-behavior",
+      "satisfied": true,
+      "slice_id": "slice-1",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 104 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/evidence-refresh/integration.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "regression",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "checked"
+    }
+  ],
+  "goal": "Refresh stale source-bound Warp gate evidence without rewriting accepted history or weakening contracts",
+  "layers": [
+    "slice-0@red-plan-20260912",
+    "slice-1@implementation-20260912",
+    "slice-final@regression-20260912"
+  ],
+  "manifest": "main.command.warp.evidence-refresh.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "//?/C:/src/recur",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.command.warp.evidence-refresh.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-and-red"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a094e5-3cea-7c50-b44e-88814f313e9e",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.evidence-refresh.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "refresh-behavior"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "refresh-behavior": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": false,
+      "slice_id": "slice-1",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.evidence-refresh.slice-final:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "regression"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "regression": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": false,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a094e5-3cea-7226-88be-a663ba024020",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [
+    "Declared current_slice 'slice-final' is no longer ready; selection not inferred."
+  ],
+  "warp_id": "main.command.warp.evidence-refresh"
+}

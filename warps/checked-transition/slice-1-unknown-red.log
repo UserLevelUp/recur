@@ -1,0 +1,39 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.23s
+     Running tests\lang_checked.rs (target\debug\deps\lang_checked-40cc7294bef817bf.exe)
+
+running 1 test
+CASE identity.valid: expected=checked actual=checked
+CASE identity.source: expected=mismatched actual=mismatched
+CASE identity.scope: expected=mismatched actual=mismatched
+CASE identity.alias: expected=mismatched actual=mismatched
+CASE identity.transition: expected=mismatched actual=mismatched
+CASE identity.local: expected=ambiguous actual=ambiguous
+CASE identity.unknown: expected=mismatched actual=mismatched
+CASE identity.unknown-function: expected=mismatched actual=malformed
+
+thread 'exact_identity_and_purity' (8616) panicked at tests\lang_checked.rs:155:5:
+identity.unknown-function: {"assessment":{"reasons":[{"code":"CE001","message":"Unknown language scope build.missing"}],"status":"malformed"},"checked_inputs":{"spéc.recur":"fnv1a64:d02a4ba291a2ff4a"},"execution":"not-run","observation":null,"packet":null,"qualification":"producer not rerun; case labels are producer claims; fingerprints detect changes, not authenticity or dependency closure","recorded_inventory":"not-scanned","schema":"recur-lang-evidence-report-v1","transition_status":{"accepted":false,"current_accepted":false}}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test exact_identity_and_purity ... FAILED
+
+failures:
+
+failures:
+    exact_identity_and_purity
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.15s
+
+error: test failed, to rerun pass `--test lang_checked`

@@ -1,0 +1,206 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a09477-2229-7956-a1ac-0fd826b4cf47",
+  "completed_slices": [
+    "slice-0",
+    "slice-1"
+  ],
+  "conflicts": [],
+  "contract_status": "unresolved",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 2,
+    "pending": 3,
+    "required": 5,
+    "stale_contract": 0
+  },
+  "covered": [
+    "slice-0",
+    "slice-1"
+  ],
+  "current_slice": "slice-2",
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun; immutable same-contract refresh chain",
+          "reasons": [
+            "scope: 91 explicitly named source files; dirty=true; revision is recorded provenance",
+            "original reference: evidence:warps/runtime-evidence/slice-0-rust.evidence.json; refreshes: refresh-baseline-20260912; current leaf: evidence:warps/evidence-refresh/runtime-baseline.evidence.json; historical source freshness is not current acceptance"
+          ],
+          "reference": "evidence:warps/evidence-refresh/runtime-baseline.evidence.json",
+          "status": "checked"
+        },
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/main.lang.runtime-evidence.slice-0.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "baseline-and-contract",
+      "satisfied": true,
+      "slice_id": "slice-0",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/main.lang.runtime-evidence.slice-1.verification.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "red-first-fixtures",
+      "satisfied": true,
+      "slice_id": "slice-1",
+      "status": "declared"
+    },
+    {
+      "evidence": [],
+      "gate": "scope-evidence-binding",
+      "satisfied": false,
+      "slice_id": "slice-2",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "inspector-evidence-presentation",
+      "satisfied": false,
+      "slice_id": "slice-3",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "integration-regression",
+      "satisfied": false,
+      "slice_id": "slice-final",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "reentry-and-staleness",
+      "satisfied": false,
+      "slice_id": "slice-final",
+      "status": "absent"
+    }
+  ],
+  "goal": "Connect compact Recur Lang header/body/footer specifications to tests-first, source-bound evidence from E0 to Ef.",
+  "layers": [
+    "slice-0@baseline-20260912",
+    "slice-1@red-20260912"
+  ],
+  "manifest": "main.lang.runtime-evidence.warp-map.json",
+  "pending": [
+    "slice-2",
+    "slice-3",
+    "slice-final"
+  ],
+  "ready_slices": [
+    "slice-2"
+  ],
+  "root": "//?/C:/src/recur",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-and-contract"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a09477-2229-784a-9d7a-0f8be6ac92f5",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "red-first-fixtures"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-1",
+      "slice_uuid": "01a09477-fbd7-7cc4-83f4-3d6b7a401f1d",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "scope-evidence-binding"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "scope-evidence-binding": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": true,
+      "slice_id": "slice-2",
+      "slice_uuid": "01a09477-fbd9-7d28-8fbe-e8d35e927881",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-3:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "inspector-evidence-presentation"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "inspector-evidence-presentation": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": false,
+      "slice_id": "slice-3",
+      "slice_uuid": "01a09477-fbd9-771a-869b-9cc7b080dc4f",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-final:v1",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "integration-regression",
+        "reentry-and-staleness"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "integration-regression": {
+          "allow_skipped": false,
+          "kind": "test"
+        },
+        "reentry-and-staleness": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "ready": false,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a09477-2229-7b03-a4cf-e596956ed153",
+      "state": "pending"
+    }
+  ],
+  "stale_contract": [],
+  "state": "incomplete",
+  "warnings": [],
+  "warp_id": "main.lang.runtime-evidence"
+}

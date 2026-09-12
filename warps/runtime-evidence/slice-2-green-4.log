@@ -1,0 +1,205 @@
+Precompiling packages...
+   1015.4 ms  ✓ Preferences
+   1025.0 ms  ✓ StructTypes
+    397.8 ms  ✓ PrecompileTools
+              ✗ Parsers
+Info Given JSON3 was explicitly requested, output will be shown live [0K
+[0Kfatal: error thrown and no exception handler available.
+[0KBoundsError(a=#<null>, i=#<null>)
+[0K_useref_setindex! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:607
+[0Ksetindex! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:639 [inlined]
+[0Krenumber_ssa2! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1352
+[0Kjfptr_renumber_ssa2NOT._23505 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+[0Ktojlinvoke86156 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+[0Kj_renumber_ssa2NOT._80360 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+[0Kprocess_node! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1601
+[0Kiterate_compact at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1955
+[0Kiterate at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1877 [inlined]
+[0Kcompact! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:2154
+[0Kcompact! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:2152 [inlined]
+[0Krun_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1013
+[0Krun_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1027 [inlined]
+[0Koptimize at .\../usr/share/julia/Compiler/src\optimize.jl:1002
+[0Kjfptr_optimize_81786 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+[0Kfinish_nocycle at .\../usr/share/julia/Compiler/src\typeinfer.jl:202
+[0Kjfptr_finish_nocycle_84310 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+[0Ktypeinf at .\../usr/share/julia/Compiler/src\abstractinterpretation.jl:4522
+[0Ktypeinf_ext at .\../usr/share/julia/Compiler/src\typeinfer.jl:1256
+[0Kjfptr_typeinf_ext_80939 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+[0K#compile!#173 at .\../usr/share/julia/Compiler/src\typeinfer.jl:1466
+[0Kcompile! at .\../usr/share/julia/Compiler/src\typeinfer.jl:1451 [inlined]
+[0Ktypeinf_ext_toplevel at .\../usr/share/julia/Compiler/src\typeinfer.jl:1551
+[0Kjfptr_typeinf_ext_toplevel_80951 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+[0Kjl_apply at C:/workdir/src\julia.h:2394 [inlined]
+[0Kjl_create_native_impl at C:/workdir/src\aotcompile.cpp:706
+[0Kjl_precompile_ at C:/workdir/src\precompile_utils.c:297
+[0Kjl_precompile_worklist at C:/workdir/src\precompile_utils.c:355 [inlined]
+[0Kijl_create_system_image at C:/workdir/src\staticdata.c:3558
+[0Kijl_write_compiler_output at C:/workdir/src\precompile.c:153
+[0Kijl_atexit_hook at C:/workdir/src\init.c:276
+[0Kjl_repl_entrypoint at C:/workdir/src\jlapi.c:1154
+[0KmainCRTStartup at C:/workdir/cli\loader_exe.c:58
+[0KBaseThreadInitThunk at C:\WINDOWS\System32\KERNEL32.DLL (unknown line)
+[0KRtlUserThreadStart at C:\WINDOWS\SYSTEM32\ntdll.dll (unknown line)
+[0KERROR: LoadError: Failed to precompile Parsers [69de0a69-1ddd-5017-9359-2bf0b02dc9f0] to "C:\\Users\\marcn\\.julia\\compiled\\v1.12\\Parsers\\jl_5AE2.tmp".
+[0KStacktrace:
+[0K  [1] error(s::String)
+[0K    @ Base .\error.jl:44
+[0K  [2] compilecache(pkg::Base.PkgId, path::String, internal_stderr::IO, internal_stdout::IO, keep_loaded_modules::Bool; flags::Cmd, cacheflags::Base.CacheFlags, reasons::Dict{String, Int64}, loadable_exts::Nothing)
+[0K    @ Base .\loading.jl:3393
+[0K  [3] top-level scope
+[0K    @ loading.jl:3271
+[0K  [4] top-level scope
+[0K    @ loading.jl:3271
+[0K  [5] (::Base.var"#__require_prelocked##0#__require_prelocked##1"{Base.PkgId, String, Dict{String, Int64}, Base.RefValue{Bool}})()
+[0K    @ Base .\loading.jl:2761
+[0K  [6] top-level scope
+[0K    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\FileWatching\src\pidfile.jl:96
+[0K  [7] #mkpidlock#7
+[0K    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\FileWatching\src\pidfile.jl:91 [inlined]
+[0K  [8] trymkpidlock(::Function, ::Vararg{Any}; kwargs::@Kwargs{stale_age::Int64})
+[0K    @ FileWatching.Pidfile C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\FileWatching\src\pidfile.jl:117
+[0K  [9] #invokelatest_gr#239
+[0K    @ .\reflection.jl:1297 [inlined]
+[0K [10] invokelatest_gr
+[0K    @ .\reflection.jl:1289 [inlined]
+[0K [11] maybe_cachefile_lock(f::Base.var"#__require_prelocked##0#__require_prelocked##1"{Base.PkgId, String, Dict{String, Int64}, Base.RefValue{Bool}}, pkg::Base.PkgId, srcpath::String; stale_age::Int64)
+[0K    @ Base .\loading.jl:3964
+[0K [12] maybe_cachefile_lock
+[0K    @ .\loading.jl:3961 [inlined]
+[0K [13] __require_prelocked(pkg::Base.PkgId, env::String)
+[0K    @ Base .\loading.jl:2735
+[0K [14] _require_prelocked(uuidkey::Base.PkgId, env::String)
+[0K    @ Base .\loading.jl:2560
+[0K [15] macro expansion
+[0K    @ .\loading.jl:2488 [inlined]
+[0K [16] macro expansion
+[0K    @ .\lock.jl:376 [inlined]
+[0K [17] __require(into::Module, mod::Symbol)
+[0K    @ Base .\loading.jl:2453
+[0K [18] require(into::Module, mod::Symbol)
+[0K    @ Base .\loading.jl:2429
+[0K [19] top-level scope
+[0K    @ C:\Users\marcn\.julia\packages\JSON3\rT1w2\src\JSON3.jl:3
+[0K [20] include(mod::Module, _path::String)
+[0K    @ Base .\Base.jl:306
+[0K [21] include_package_for_output(pkg::Base.PkgId, input::String, depot_path::Vector{String}, dl_load_path::Vector{String}, load_path::Vector{String}, concrete_deps::Vector{Pair{Base.PkgId, UInt128}}, source::Nothing)
+[0K    @ Base .\loading.jl:3106
+[0K [22] top-level scope
+[0K    @ stdin:5
+[0K [23] eval(m::Module, e::Any)
+[0K    @ Core .\boot.jl:489
+[0K [24] include_string(mapexpr::typeof(identity), mod::Module, code::String, filename::String)
+[0K    @ Base .\loading.jl:2952
+[0K [25] include_string
+[0K    @ .\loading.jl:2962 [inlined]
+[0K [26] exec_options(opts::Base.JLOptions)
+[0K    @ Base .\client.jl:315
+[0K [27] _start()
+[0K    @ Base .\client.jl:550
+[0Kin expression starting at C:\Users\marcn\.julia\packages\JSON3\rT1w2\src\JSON3.jl:1
+[0Kin expression starting at stdin:5
+              ✗ JSON3
+  3 dependencies successfully precompiled in 4 seconds. 6 already precompiled.
+
+ERROR: LoadError: The following 1 direct dependency failed to precompile:
+
+JSON3 
+
+Failed to precompile JSON3 [0f8b85d8-7281-11e9-16c2-39a750bddbf1] to "C:\\Users\\marcn\\.julia\\compiled\\v1.12\\JSON3\\jl_5A51.tmp".
+fatal: error thrown and no exception handler available.
+BoundsError(a=#<null>, i=#<null>)
+_useref_setindex! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:607
+setindex! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:639 [inlined]
+renumber_ssa2! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1352
+jfptr_renumber_ssa2NOT._23505 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+tojlinvoke86156 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+j_renumber_ssa2NOT._80360 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+process_node! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1601
+iterate_compact at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1955
+iterate at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1877 [inlined]
+compact! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:2154
+compact! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:2152 [inlined]
+run_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1013
+run_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1027 [inlined]
+optimize at .\../usr/share/julia/Compiler/src\optimize.jl:1002
+jfptr_optimize_81786 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+finish_nocycle at .\../usr/share/julia/Compiler/src\typeinfer.jl:202
+jfptr_finish_nocycle_84310 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+typeinf at .\../usr/share/julia/Compiler/src\abstractinterpretation.jl:4522
+typeinf_ext at .\../usr/share/julia/Compiler/src\typeinfer.jl:1256
+jfptr_typeinf_ext_80939 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+#compile!#173 at .\../usr/share/julia/Compiler/src\typeinfer.jl:1466
+compile! at .\../usr/share/julia/Compiler/src\typeinfer.jl:1451 [inlined]
+typeinf_ext_toplevel at .\../usr/share/julia/Compiler/src\typeinfer.jl:1551
+jfptr_typeinf_ext_toplevel_80951 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+jl_create_native_impl at C:/workdir/src\aotcompile.cpp:706
+jl_precompile_ at C:/workdir/src\precompile_utils.c:297
+jl_precompile_worklist at C:/workdir/src\precompile_utils.c:355 [inlined]
+ijl_create_system_image at C:/workdir/src\staticdata.c:3558
+ijl_write_compiler_output at C:/workdir/src\precompile.c:153
+ijl_atexit_hook at C:/workdir/src\init.c:276
+jl_repl_entrypoint at C:/workdir/src\jlapi.c:1154
+mainCRTStartup at C:/workdir/cli\loader_exe.c:58
+BaseThreadInitThunk at C:\WINDOWS\System32\KERNEL32.DLL (unknown line)
+RtlUserThreadStart at C:\WINDOWS\SYSTEM32\ntdll.dll (unknown line)
+ERROR: LoadError: Failed to precompile Parsers [69de0a69-1ddd-5017-9359-2bf0b02dc9f0] to "C:\\Users\\marcn\\.julia\\compiled\\v1.12\\Parsers\\jl_5AE2.tmp".
+Stacktrace:
+  [1] error(s::String)
+    @ Base .\error.jl:44
+  [2] compilecache(pkg::Base.PkgId, path::String, internal_stderr::IO, internal_stdout::IO, keep_loaded_modules::Bool; flags::Cmd, cacheflags::Base.CacheFlags, reasons::Dict{String, Int64}, loadable_exts::Nothing)
+    @ Base .\loading.jl:3393
+  [3] top-level scope
+    @ loading.jl:3271
+  [4] top-level scope
+    @ loading.jl:3271
+  [5] (::Base.var"#__require_prelocked##0#__require_prelocked##1"{Base.PkgId, String, Dict{String, Int64}, Base.RefValue{Bool}})()
+    @ Base .\loading.jl:2761
+  [6] top-level scope
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\FileWatching\src\pidfile.jl:96
+  [7] #mkpidlock#7
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\FileWatching\src\pidfile.jl:91 [inlined]
+  [8] trymkpidlock(::Function, ::Vararg{Any}; kwargs::@Kwargs{stale_age::Int64})
+    @ FileWatching.Pidfile C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\FileWatching\src\pidfile.jl:117
+  [9] #invokelatest_gr#239
+    @ .\reflection.jl:1297 [inlined]
+ [10] invokelatest_gr
+    @ .\reflection.jl:1289 [inlined]
+ [11] maybe_cachefile_lock(f::Base.var"#__require_prelocked##0#__require_prelocked##1"{Base.PkgId, String, Dict{String, Int64}, Base.RefValue{Bool}}, pkg::Base.PkgId, srcpath::String; stale_age::Int64)
+    @ Base .\loading.jl:3964
+ [12] maybe_cachefile_lock
+    @ .\loading.jl:3961 [inlined]
+ [13] __require_prelocked(pkg::Base.PkgId, env::String)
+    @ Base .\loading.jl:2735
+ [14] _require_prelocked(uuidkey::Base.PkgId, env::String)
+    @ Base .\loading.jl:2560
+ [15] macro expansion
+    @ .\loading.jl:2488 [inlined]
+ [16] macro expansion
+    @ .\lock.jl:376 [inlined]
+ [17] __require(into::Module, mod::Symbol)
+    @ Base .\loading.jl:2453
+ [18] require(into::Module, mod::Symbol)
+    @ Base .\loading.jl:2429
+ [19] top-level scope
+    @ C:\Users\marcn\.julia\packages\JSON3\rT1w2\src\JSON3.jl:3
+ [20] include(mod::Module, _path::String)
+    @ Base .\Base.jl:306
+ [21] include_package_for_output(pkg::Base.PkgId, input::String, depot_path::Vector{String}, dl_load_path::Vector{String}, load_path::Vector{String}, concrete_deps::Vector{Pair{Base.PkgId, UInt128}}, source::Nothing)
+    @ Base .\loading.jl:3106
+ [22] top-level scope
+    @ stdin:5
+ [23] eval(m::Module, e::Any)
+    @ Core .\boot.jl:489
+ [24] include_string(mapexpr::typeof(identity), mod::Module, code::String, filename::String)
+    @ Base .\loading.jl:2952
+ [25] include_string
+    @ .\loading.jl:2962 [inlined]
+ [26] exec_options(opts::Base.JLOptions)
+    @ Base .\client.jl:315
+ [27] _start()
+    @ Base .\client.jl:550
+in expression starting at C:\Users\marcn\.julia\packages\JSON3\rT1w2\src\JSON3.jl:1
+in expression starting at stdin:
+in expression starting at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:1

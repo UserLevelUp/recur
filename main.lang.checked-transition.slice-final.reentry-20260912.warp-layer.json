@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.checked-transition",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.lang.checked-transition.slice-final:v1",
+  "attempt_id": "reentry-20260912",
+  "result_state": "accepted",
+  "result_hash": "fnv1a64:dbdaf7f5ed6b6573",
+  "evidence": {
+    "drift-and-recovery": [
+      "evidence:warps/checked-transition/final-reentry.evidence.json"
+    ],
+    "regression-and-reentry": [
+      "evidence:warps/checked-transition/final-regression.evidence.json"
+    ]
+  },
+  "reason": null
+}

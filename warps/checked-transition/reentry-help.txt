@@ -1,0 +1,51 @@
+Hierarchy-aware code search for modern codebases
+
+Named in tribute to Dennis Ritchie's early work on recursive program structure.
+
+Usage: recur.exe [OPTIONS] <COMMAND>
+
+Commands:
+  prompt       Discover capability prompts or prepare bounded evidence for an intent
+  files        Find files matching a recursive hierarchical pattern
+  find         Search for text within hierarchically-scoped files (recursive)
+  tree         Show recursive hierarchy tree for files
+  related      Find files related to (siblings of) a given file in the hierarchy
+  children     Find files that are children of a hierarchy (recursive)
+  id           Search for hierarchical identifiers in file content (recursive)
+  stats        Show statistics for a hierarchy (files, lines, depth)
+  callers      Find all places where a function/method is called
+  callees      Find all functions/methods that a given function calls (callees/dependencies)
+  trace        Multi-level call graph visualization (trace execution/usage paths)
+  trace-stats  Analyze call graph complexity statistics
+  merge        Merge hierarchical results from multiple naming conventions
+  trait        Manage trait configuration in .recur/config.toml
+  init         Initialize or analyze project-local `.recur/config.toml`
+  lane         Scaffold or list named lane sub-roots
+  reveal       Reveal lane-local rehydration capsules (`*.recur.md`)
+  psyche       Inspect `.recur` agent vault structure for missing or inconsistent files
+  watch        Inspect watcher state written by `recur-watch`
+  version      Inspect artifact version policy, manifests, and preserved history
+  capability   Inspect root `.recur-*` capability cards
+  warp         List remaining Warp bubbles, or query eventness and residual pressure
+  lang         Pure, bounded Recur Lang discovery, contract views and static checks
+  flatten      Flatten structured files (XML, JSON, TOML, YAML, CSV) into hierarchical dot-paths
+  help         Print this message or the help of the given subcommand(s)
+
+Options:
+      --color                       Use color in output
+      --json                        Output as JSON
+      --sep <CHAR>                  Hierarchy separator character (default: '.') Use '_' for Rust modules, '-' for kebab-case, ':' for namespaces May be provided multiple times for multi-separator queries
+      --sep-replace-default <CHAR>  When using multiple separators, normalize output to this separator
+      --show-sep                    Show which separator was used for each file (e.g., [.] or [_])
+  -h, --help                        Print help
+  -V, --version                     Print version
+
+A quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.
+
+Homepage: https://github.com/userlevelup/recur
+
+Additional commands:
+  recur trace-id --help
+  recur reveal --help
+  recur capability --help
+  recur version --help

@@ -1,0 +1,73 @@
+
+Please submit a bug report with steps to reproduce this fault, and any error messages that follow (in their entirety). Thanks.
+Exception: EXCEPTION_ACCESS_VIOLATION at 0x7ffc0c5c8e93 -- is_enter_interpreter_frame at C:/workdir/src\stackwalk.c:36 [inlined]
+jl_unw_stepn at C:/workdir/src\stackwalk.c:161
+in expression starting at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:85
+is_enter_interpreter_frame at C:/workdir/src\stackwalk.c:36 [inlined]
+jl_unw_stepn at C:/workdir/src\stackwalk.c:161
+rec_backtrace at C:/workdir/src\stackwalk.c:227
+record_backtrace at C:/workdir/src\task.c:407
+ijl_throw at C:/workdir/src\task.c:796
+ijl_type_error_rt at C:/workdir/src\rtutils.c:121
+ijl_type_error at C:/workdir/src\rtutils.c:139
+process_node! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1538
+iterate_compact at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1955
+iterate at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1877 [inlined]
+adce_pass! at .\../usr/share/julia/Compiler/src/ssair\passes.jl:2147
+run_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1013
+run_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1027 [inlined]
+optimize at .\../usr/share/julia/Compiler/src\optimize.jl:1002
+jfptr_optimize_81786 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+finish_nocycle at .\../usr/share/julia/Compiler/src\typeinfer.jl:202
+jfptr_finish_nocycle_84310 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+typeinf at .\../usr/share/julia/Compiler/src\abstractinterpretation.jl:4522
+typeinf_ext at .\../usr/share/julia/Compiler/src\typeinfer.jl:1256
+typeinf_ext_toplevel at .\../usr/share/julia/Compiler/src\typeinfer.jl:1439 [inlined]
+typeinf_ext_toplevel at .\../usr/share/julia/Compiler/src\typeinfer.jl:1448
+jfptr_typeinf_ext_toplevel_80922 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+_jl_invoke at C:/workdir/src\gf.c:3995 [inlined]
+ijl_apply_generic at C:/workdir/src\gf.c:4214 [inlined]
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+jl_type_infer at C:/workdir/src\gf.c:466
+jl_compile_method_internal at C:/workdir/src\gf.c:3516
+_jl_invoke at C:/workdir/src\gf.c:4006 [inlined]
+ijl_apply_generic at C:/workdir/src\gf.c:4214
+deepcopy_internal at .\deepcopy.jl:156
+unknown function (ip: 000001eb052921c0) at (unknown file)
+deepcopy_internal at .\deepcopy.jl:156
+deepcopy at .\deepcopy.jl:29 [inlined]
+#11 at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:75
+#mktempdir#21 at .\file.jl:941
+mktempdir at .\file.jl:937 [inlined]
+mktempdir at .\file.jl:937 [inlined]
+macro expansion at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70 [inlined]
+macro expansion at C:\workdir\usr\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+#evidence_case#3 at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:70
+evidence_case at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:68
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+jl_interpret_toplevel_thunk at C:/workdir/src\interpreter.c:898
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:1035
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:975
+ijl_toplevel_eval at C:/workdir/src\toplevel.c:1047 [inlined]
+ijl_toplevel_eval_in at C:/workdir/src\toplevel.c:1092
+eval at .\boot.jl:489
+include_string at .\loading.jl:2952
+_include at .\loading.jl:3012
+include at .\Base.jl:306
+exec_options at .\client.jl:317
+_start at .\client.jl:550
+jfptr__start_59066 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+true_main at C:/workdir/src\jlapi.c:985
+jl_repl_entrypoint at C:/workdir/src\jlapi.c:1153
+mainCRTStartup at C:/workdir/cli\loader_exe.c:58
+BaseThreadInitThunk at C:\WINDOWS\System32\KERNEL32.DLL (unknown line)
+RtlUserThreadStart at C:\WINDOWS\SYSTEM32\ntdll.dll (unknown line)
+Allocations: 10586257 (Pool: 10586197; Big: 60); GC: 7

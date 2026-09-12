@@ -1,0 +1,28 @@
+warps/checked-transition/delivered-evidence-help.txt:6: trailing whitespace.
++  <SOURCE>  
+warps/checked-transition/delivered-evidence-help.txt:9: trailing whitespace.
++      --scope <SCOPE>               
+warps/checked-transition/delivered-evidence-help.txt:10: trailing whitespace.
++      --contract <CONTRACT>         
+warps/checked-transition/delivered-evidence-help.txt:11: trailing whitespace.
++      --receipt <RECEIPT>           
+warps/checked-transition/delivered-evidence-help.txt:12: trailing whitespace.
++      --status <STATUS>             
+warps/checked-transition/delivered-evidence-help.txt:13: trailing whitespace.
++      --expand                      
+warps/checked-transition/final-cargo-tests.log:346: new blank line at EOF.
+warps/checked-transition/final-reentry-tests.log:24: new blank line at EOF.
+warps/checked-transition/final-regression-tests.log:333: new blank line at EOF.
+warps/checked-transition/slice-1-accepted-tests.log:41: new blank line at EOF.
+warps/checked-transition/slice-1-green-final.log:41: new blank line at EOF.
+warps/checked-transition/slice-2-accepted-tests.log:46: new blank line at EOF.
+warps/checked-transition/slice-2-adversarial.log:45: new blank line at EOF.
+warps/checked-transition/slice-2-complete-tests.log:45: new blank line at EOF.
+warps/checked-transition/slice-2-first-green.log:40: new blank line at EOF.
+warps/evidence-refresh/final-cargo.log:369: new blank line at EOF.
+warps/evidence-refresh/final-regression.log:356: new blank line at EOF.
+warps/evidence-refresh/slice-1-expanded.log:43: new blank line at EOF.
+warps/evidence-refresh/slice-1-final-tests.log:44: new blank line at EOF.
+warps/evidence-refresh/slice-1-first.log:42: new blank line at EOF.
+warps/runtime-evidence/slice-2-green-4.log:107: trailing whitespace.
++JSON3 

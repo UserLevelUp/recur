@@ -1,0 +1,70 @@
+{
+  "bubble_uuid": "01a094c5-6989-747b-924b-3585779f4a18",
+  "current_slice": "slice-final",
+  "contract_document": "warps/main.lang.checked-transition.contract.md",
+  "planning_status": "planned",
+  "goal": "Bind exact WIR1 scope and current checked test evidence to an explicit, recoverable recur-lang E0-to-Ef transition.",
+  "invariants": [
+    "Preserve exact WIR1 contracts, qualified scopes, aliases and boundary edges; no new grammar.",
+    "Shared Rust assessment reuses warp_evidence; core queries remain pure and confirmed transitions belong to recur-lang.",
+    "Preserve legacy query and receipt behavior through explicit opt-in or versioning.",
+    "Tests precede new behavior; historical red observations are separate from checked green acceptance.",
+    "Evidence references name actual contained inputs; no snapshots as live-source substitutes.",
+    "Rejected evidence cannot advance E0; interrupted writes never produce a false success.",
+    "Current freshness, historical tests, recorded state and authorized transitions remain distinct.",
+    "This independent bubble neither supersedes nor accepts the outstanding runtime-evidence gates."
+  ],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-and-baseline"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a094c5-6989-74ad-a1e5-138b82468ca5"
+    },
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-1:v1",
+      "depends_on": ["slice-0"],
+      "evidence_gates": ["assessment-and-query"],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "assessment-and-query": {"kind": "test", "allow_skipped": false}
+      },
+      "slice_id": "slice-1",
+      "slice_uuid": "01a094c6-ccd7-7197-899d-188eee959450"
+    },
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-2:v1",
+      "depends_on": ["slice-1"],
+      "evidence_gates": ["confirmed-transition"],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "confirmed-transition": {"kind": "test", "allow_skipped": false}
+      },
+      "slice_id": "slice-2",
+      "slice_uuid": "01a094c6-ccd7-7197-899d-188fe9573392"
+    },
+    {
+      "contract_hash": "contract:main.lang.checked-transition.slice-final:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "drift-and-recovery",
+        "regression-and-reentry"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "drift-and-recovery": {"kind": "test", "allow_skipped": false},
+        "regression-and-reentry": {"kind": "test", "allow_skipped": false}
+      },
+      "slice_id": "slice-final",
+      "slice_uuid": "01a094c5-6989-7dd7-adac-64425581eb99"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.checked-transition"
+}

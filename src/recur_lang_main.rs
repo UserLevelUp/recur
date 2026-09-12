@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
+mod recur_lang_checked_transition;
 
 const WARP_PLAN_SCHEMA: &str = "recur-lang-warp-plan-v1";
 const WARP_RECEIPT_SCHEMA: &str = "recur-lang-warp-receipt-v1";
@@ -106,6 +107,12 @@ enum Command {
 
 #[derive(Args)]
 struct WarpArgs {
+    /// Explicit checked evidence contract; legacy receipt behavior remains the default
+    #[arg(long)]
+    checked_contract: Option<PathBuf>,
+    /// Resume only a matching interrupted checked transition
+    #[arg(long)]
+    recover: bool,
     /// Recur Lang source containing the declared Warp
     source: PathBuf,
 
@@ -566,6 +573,39 @@ fn run() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
         Command::Warp(arguments) => {
+            if let Some(contract) = arguments.checked_contract {
+                if arguments.id.is_some() {
+                    bail!("--id cannot be combined with --checked-contract");
+                }
+                let args = recur::recur_lang_evidence::EvidenceArgs {
+                    source: arguments.source,
+                    scope: arguments.scope,
+                    contract,
+                    receipt: arguments.receipt,
+                    status: None,
+                    expand: false,
+                };
+                let (value, code) = recur_lang_checked_transition::run(
+                    &arguments.dir,
+                    &args,
+                    arguments.eventness.as_deref(),
+                    arguments.confirm,
+                    arguments.recover,
+                )?;
+                if arguments.json {
+                    emit_json(&value)?;
+                } else {
+                    println!("{}", recur::recur_lang_evidence::text(&value));
+                    println!("Action: {}", value["action"]);
+                }
+                if code != 0 {
+                    std::process::exit(code);
+                }
+                return Ok(());
+            }
+            if arguments.recover {
+                bail!("--recover requires --checked-contract");
+            }
             if !arguments.confirm {
                 let plan = plan_warp(&arguments.dir, &arguments.source, &arguments.scope)?;
                 if arguments.json {

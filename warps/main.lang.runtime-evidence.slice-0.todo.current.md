@@ -1,6 +1,8 @@
 # Lang runtime evidence: baseline and contract
 
-Date: 2026-09-12. State: current planning; not accepted.
+Date: 2026-09-12. Historical planning task, subsequently accepted via recur-warp.
+See main.lang.runtime-evidence.slice-0.verification.md and the current handoff;
+this original task is retained for its starting observations.
 Warp: `main.lang.runtime-evidence`. Slice: `slice-0`.
 Contract: `contract:main.lang.runtime-evidence.slice-0:v1`.
 Gate: `baseline-and-contract` (declared planning observations).
@@ -38,7 +40,7 @@ writing implementation. See [the full contract](main.lang.runtime-evidence.contr
    and slice-1 begin; writing this file does not satisfy the gate.
 
 ```powershell
-recur warp show main.lang.runtime-evidence -d warps --json
+recur warp show main.lang.runtime-evidence -d . --json
 recur warp show main.web-lab -d demos/web-evidence-lab --json
 recur lang report main.lang.api.recur --scope query.q -d demos/web-evidence-lab
 cargo test --locked --test lang_query

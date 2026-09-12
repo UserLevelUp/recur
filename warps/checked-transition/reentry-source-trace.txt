@@ -1,0 +1,4 @@
+run_hook (recur_lang_checked_transition.rs:107) [flat]
+
+
+Summary: 0 direct callees, 0 transitive callees (depth 0)

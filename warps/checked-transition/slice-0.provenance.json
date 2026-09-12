@@ -1,0 +1,14 @@
+{
+  "observed_tests": 11,
+  "executed_commands": [
+    "cargo test --locked --test lang_query",
+    "cargo test --locked --lib warp_evidence::tests",
+    "cargo test --locked --bin recur-lang"
+  ],
+  "binaries": {
+    "C:/Users/marcn/.cargo/bin/recur.exe": "0c73312bbe08489efc36f4fb286d4c12e0e1c9f3ebfd393620a833e1ff1f47b0",
+    "C:/Users/marcn/.cargo/bin/recur-lang.exe": "97ba9d9fe120662449a701aad0c971e883d97f71430df4f551e697ef73a541e8",
+    "C:/Users/marcn/.cargo/bin/cargo.exe": "6f4bef66261261fcb43131be8720bab817d403a09edec7455c371974b90bdb7e",
+    "C:/src/recur/target/debug/recur.exe": "7f96ffb96094c455d279abc6a317f68d46c513eb253808f112cc7d400edea191"
+  }
+}

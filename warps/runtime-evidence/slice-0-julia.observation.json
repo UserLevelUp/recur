@@ -1,0 +1,29 @@
+{
+  "classification": "historical baseline observation; not a checked gate",
+  "runtime": "Julia 1.12.7 Windows x64",
+  "flags": "--startup-file=no -C generic --compile=min --project=demos/web-evidence-lab",
+  "entry": "include inspector test; include lang-dogfood test",
+  "exit_code": 0,
+  "passed": {
+    "inspector": 33,
+    "server": 33,
+    "greeting": 111,
+    "api": 103,
+    "loopback": 53
+  },
+  "inputs": {
+    "demos/web-evidence-lab/main.server.jl": "sha256:da7d28964109079bcaf36ccf6b34dde055e8bf2508f4e3aa2ffdc4045ccebb3d",
+    "demos/web-evidence-lab/main.server.test.jl": "sha256:e9ac8df8e4013822128a724ea98cdf22bd14f2ed10de6e6c53d48e3023b54dac",
+    "demos/web-evidence-lab/main.greeting.fixtures.test.jl": "sha256:731042bc8a35a39a13efab07bfdabf644d03f2da30ab99347eea19383490ec01",
+    "demos/web-evidence-lab/main.lang.api.jl": "sha256:781521354a2b33a8133aa9c9dbcddbca95d21403a952d5afe2bddbc1b8e3a972",
+    "demos/web-evidence-lab/main.lang.api.test.jl": "sha256:52ecd076072b4f1bdd24becb0f16ddd1b91e59964bc9fc6892defb4e3c4f649d",
+    "demos/web-evidence-lab/main.lang.api.recur": "sha256:d997b2d36969a56361f4454d4f439e98192b4ea58ccce70ed644fb32dc30eb5d",
+    "demos/web-evidence-lab/Project.toml": "sha256:76e40e4bb2000989fb67b0942319e93b41ab24c0b1a7a81223c548a7e741743c",
+    "demos/web-evidence-lab/Manifest.toml": "sha256:b391bb1f71cb77b8fbc8ad95db2a407781c410277ce8bb14facdd94d560caa53",
+    "demos/lang-inspector/main.lang.inspector.jl": "sha256:cddc31cb333eaccf6b34ccc842a831d8213d995ff9642976e1cb107e8f21ecdc",
+    "demos/lang-inspector/main.lang.inspector.recur": "sha256:5937074eb591bbcafd553c71fc41bac6e712e002bb859cc64c7bed3f0f2ea4df",
+    "julia-tests/main.demo.lang-inspector.test.jl": "sha256:2339c859fb542b7fdb306867f04d50ec8def910ced8a4a22bc8c10a5662feb57",
+    "julia-tests/main.demo.lang-dogfood.test.jl": "sha256:3fca1a2b2bac09e36e8a552b6bbdf23f7dee4d9b44bca8e07cfc2bc758ecdba5",
+    "target/release-safe/recur.exe": "sha256:0c73312bbe08489efc36f4fb286d4c12e0e1c9f3ebfd393620a833e1ff1f47b0"
+  }
+}

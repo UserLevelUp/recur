@@ -1,0 +1,27 @@
+Plan or confirm one declared E0 -> dE -> Ef transition
+
+Usage: recur-lang.exe warp [OPTIONS] <SOURCE> <SCOPE>
+
+Arguments:
+  <SOURCE>  Recur Lang source containing the declared Warp
+  <SCOPE>   Scope whose Warp should advance
+
+Options:
+      --checked-contract <CHECKED_CONTRACT>
+          Explicit checked evidence contract; legacy receipt behavior remains the default
+      --recover
+          Resume only a matching interrupted checked transition
+  -d, --dir <DIR>
+          Project root used to bound all reads and writes [default: .]
+      --eventness <EVENTNESS>
+          Exact current Eventness artifact whose stem must equal E0
+      --receipt <RECEIPT>
+          Versioned external receipt proving the dE slice
+      --confirm
+          Apply the bounded transition; without this flag the command is a dry run
+      --id <ID>
+          Stable status receipt id; defaults to the scope name
+      --json
+          Emit machine-readable JSON
+  -h, --help
+          Print help

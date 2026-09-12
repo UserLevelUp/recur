@@ -1,0 +1,15 @@
+//! Callable red seam for explicit gate refresh.
+use std::path::{Path,PathBuf};
+#[derive(clap::Args)]
+pub struct Args {
+    pub map:PathBuf,
+    pub layer:PathBuf,
+    #[arg(long)] pub gate:String,
+    #[arg(long)] pub from:String,
+    #[arg(long)] pub to:String,
+    #[arg(long)] pub refresh_id:String,
+    #[arg(long)] pub reason:String,
+}
+pub fn run(_root:&Path,_args:&Args,_confirm:bool)->anyhow::Result<serde_json::Value> {
+    Ok(serde_json::json!({"state":"planned"}))
+}

@@ -1,0 +1,41 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.91s
+     Running tests\lang_checked.rs (target\debug\deps\lang_checked-40cc7294bef817bf.exe)
+
+running 12 tests
+test compact_expanded_and_recorded_state_are_distinct ... ok
+test status_shape_and_current_artifact_are_verified ... ok
+test canonical_link_escape ... ok
+test exact_identity_and_purity ... ok
+test counts_cannot_be_forged ... ok
+test schema_and_required_scope ... ok
+test each_live_input_drift ... ok
+test attempt_relevance_and_history ... ok
+test source_and_collection_limits ... ok
+test rejected_paths_and_transitive_reads ... ok
+test exact_aggregate_and_file_count_limits ... ok
+test real_cli_and_remaining_byte_limits ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.28s
+
+     Running tests\lang_query.rs (target\debug\deps\lang_query-1a25d18636ac53ad.exe)
+
+running 3 tests
+test checks_distinguish_graph_findings_from_input_errors ... ok
+test default_eventness_is_an_observed_file_not_a_requested_transition ... ok
+test pure_queries_preserve_unicode_exact_inventory_and_scope_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+

@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.evidence-refresh",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.warp.evidence-refresh.slice-final:v1",
+  "attempt_id": "regression-20260912",
+  "result_state": "accepted",
+  "result_hash": "fnv1a64:91b41a6c0d5d5d5b",
+  "evidence": {
+    "regression": [
+      "evidence:warps/evidence-refresh/integration.evidence.json"
+    ]
+  },
+  "reason": null
+}

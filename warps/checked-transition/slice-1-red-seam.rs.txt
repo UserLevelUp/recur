@@ -1,0 +1,22 @@
+//! Checked evidence boundary. Initial callable red-test seam, no assessment yet.
+use clap::Args;
+use serde_json::{json, Value};
+use std::path::{Path, PathBuf};
+
+#[derive(Debug, Clone, Args)]
+pub struct EvidenceArgs {
+    pub source: PathBuf,
+    #[arg(long)]
+    pub scope: String,
+    #[arg(long)]
+    pub contract: PathBuf,
+    #[arg(long)]
+    pub receipt: Option<PathBuf>,
+    #[arg(long)]
+    pub status: Option<PathBuf>,
+    #[arg(long)]
+    pub expand: bool,
+}
+pub fn assess(_root: &Path, _args: &EvidenceArgs) -> Value {
+    json!({"schema":"recur-lang-evidence-report-v1","assessment":{"status":"absent"}})
+}

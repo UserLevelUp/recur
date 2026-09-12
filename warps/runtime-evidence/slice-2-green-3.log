@@ -1,0 +1,165 @@
+
+Please submit a bug report with steps to reproduce this fault, and any error messages that follow (in their entirety). Thanks.
+Exception: EXCEPTION_ACCESS_VIOLATION at 0x7ffc0c5858ba -- jl_array_ptr_ref at C:/workdir/src\julia.h:1435 [inlined]
+eval_body at C:/workdir/src\interpreter.c:480
+in expression starting at C:\src\recur\demos\web-evidence-lab\main.lang.evidence.test.jl:85
+jl_array_ptr_ref at C:/workdir/src\julia.h:1435 [inlined]
+eval_body at C:/workdir/src\interpreter.c:480
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+eval_body at C:/workdir/src\interpreter.c:558
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+mktempdir at .\file.jl:937
+mktempdir at .\file.jl:937
+jfptr_mktempdir_72171 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+jl_fptr_interpret_call at C:/workdir/src\interpreter.c:816
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+jl_interpret_toplevel_thunk at C:/workdir/src\interpreter.c:898
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:1035
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:975
+ijl_toplevel_eval at C:/workdir/src\toplevel.c:1047 [inlined]
+ijl_toplevel_eval_in at C:/workdir/src\toplevel.c:1092
+eval at .\boot.jl:489
+include_string at .\loading.jl:2952
+_include at .\loading.jl:3012
+include at .\Base.jl:306
+exec_options at .\client.jl:317
+_start at .\client.jl:550
+jfptr__start_59066 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+true_main at C:/workdir/src\jlapi.c:985
+jl_repl_entrypoint at C:/workdir/src\jlapi.c:1153
+mainCRTStartup at C:/workdir/cli\loader_exe.c:58
+BaseThreadInitThunk at C:\WINDOWS\System32\KERNEL32.DLL (unknown line)
+RtlUserThreadStart at C:\WINDOWS\SYSTEM32\ntdll.dll (unknown line)
+Allocations: 5765862 (Pool: 5765597; Big: 265); GC: 124

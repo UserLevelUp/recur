@@ -1,0 +1,42 @@
+{
+  "name": "main.command.warp.evidence-refresh",
+  "children": [
+    {
+      "name": "contract",
+      "children": [],
+      "path": "warps\\main.command.warp.evidence-refresh.contract.md"
+    },
+    {
+      "name": "current",
+      "children": [],
+      "path": "warps\\main.command.warp.evidence-refresh.current.md"
+    },
+    {
+      "name": "readme",
+      "children": [],
+      "path": "warps\\main.command.warp.evidence-refresh.readme.md"
+    },
+    {
+      "name": "recur",
+      "children": [],
+      "path": "warps\\main.command.warp.evidence-refresh.recur.md"
+    },
+    {
+      "name": "slice-0",
+      "children": [
+        {
+          "name": "verification",
+          "children": [],
+          "path": "warps\\main.command.warp.evidence-refresh.slice-0.verification.md"
+        }
+      ],
+      "path": null
+    },
+    {
+      "name": "verification",
+      "children": [],
+      "path": "warps\\main.command.warp.evidence-refresh.verification.md"
+    }
+  ],
+  "path": null
+}

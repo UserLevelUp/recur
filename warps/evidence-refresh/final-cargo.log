@@ -1,0 +1,369 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur" test) generated 1 warning (1 duplicate)
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.14s
+     Running unittests src\lib.rs (target\debug\deps\recur-9bd19e93c83590ac.exe)
+
+running 98 tests
+test project_config::tests::separator_for_dir_matches_lane_and_nested_paths ... ok
+test r#trait::separator::tests::parse_explicit_separators_takes_first_char_per_arg ... ok
+test r#trait::separator::tests::resolve_command_separators_prefers_explicit_cli_values ... ok
+test r#trait::separator_merge::tests::test_separator_merge_trait_exists ... ok
+test prompt::tests::human_output_escapes_terminal_controls ... ok
+test r#trait::stdin::tests::resolve_stdin_paths_excludes_missing_when_enabled ... ok
+test r#trait::separator::tests::parse_cli_separators_defaults_to_dot_when_empty ... ok
+test r#trait::separator::tests::parse_optional_separator_uses_first_char ... ok
+test r#trait::stdin::tests::test_filter_stdin_paths_basic ... ok
+test r#trait::stdin::tests::test_filter_stdin_paths_recursive_pattern ... ok
+test r#trait::stdin::tests::resolve_stdin_paths_keeps_missing_by_default ... ok
+test r#trait::stdin::tests::test_filter_stdin_paths_with_custom_separator ... ok
+test r#trait::stdin::tests::test_filter_stdin_paths_with_extensions ... ok
+test r#trait::text_encoding::tests::strip_utf8_bom_keeps_content_when_absent ... ok
+test r#trait::text_encoding::tests::strip_utf8_bom_removes_prefix_when_present ... ok
+test project_config::tests::parse_flexible_config_keeps_lanes_and_optional_sections ... ok
+test r#trait::text_encoding::tests::trait_normalize_utf8_bom_uses_shared_logic ... ok
+test r#trait::traversal_budget::tests::depth_budget_allows_force_override ... ok
+test r#trait::traversal_budget::tests::depth_budget_allows_within_limit ... ok
+test r#trait::traversal_budget::tests::depth_budget_clamps_in_clamp_mode ... ok
+test r#trait::traversal_budget::tests::depth_budget_fails_in_hard_fail_mode ... ok
+test r#trait::traversal_budget::tests::parse_depth_budget_mode_rejects_invalid_value ... ok
+test r#trait::traversal_budget::tests::parse_depth_budget_mode_accepts_supported_values ... ok
+test project_config::tests::discover_lanes_detects_common_project_layout ... ok
+test project_config::tests::analyze_project_reports_additions_and_separator_changes ... ok
+test r#trait::separator::tests::resolve_command_separators_falls_back_to_dot_without_config ... ok
+test recur_lang_concurrent_ir::tests::invalid_contract_field_cannot_be_silently_ignored ... ok
+test r#trait::content_search::tests::test_search_files_with_context ... ok
+test r#trait::stdin::tests::resolve_stdin_path_policy_uses_defaults_when_trait_disabled ... ok
+test r#trait::content_search::tests::test_search_files_case_insensitive ... ok
+test r#trait::content_search::tests::test_search_files_basic ... ok
+test r#trait::content_search::tests::resolve_content_search_policy_defaults_without_config ... ok
+test r#trait::separator::tests::resolve_command_separators_uses_lane_config_when_available ... ok
+test prompt::tests::catalog_integrity_and_provider_collisions ... ok
+test r#trait::content_search::tests::apply_content_search_policy_updates_search_options ... ok
+test r#trait::trace_id::tests::resolve_trace_id_policy_defaults_without_config ... ok
+test r#trait::traversal_budget::tests::resolve_depth_budget_policy_uses_defaults_without_config ... ok
+test r#trait::traversal_budget::tests::resolve_depth_budget_policy_ignores_zero_config_max_depth ... ok
+test r#trait::trace_id::tests::resolve_trace_id_policy_uses_defaults_when_trait_disabled ... ok
+test r#trait::traversal_budget::tests::resolve_depth_budget_policy_uses_legacy_when_trait_section_disabled ... ok
+test project_config::tests::init_project_creates_config_and_checkpoints ... ok
+test r#trait::traversal_budget::tests::resolve_depth_budget_policy_reads_trait_traversal_budget_section ... ok
+test r#trait::traversal_budget::tests::resolve_depth_budget_policy_prefers_trait_settings_over_legacy_traversal ... ok
+test r#trait::traversal_budget::tests::resolve_depth_budget_policy_prefers_config_values ... ok
+test r#trait::stdin::tests::resolve_stdin_path_policy_reads_trait_settings ... ok
+test r#trait::traversal_budget::tests::resolve_depth_budget_policy_cli_overrides_config_guard ... ok
+test r#trait::content_search::tests::resolve_content_search_policy_reads_trait_settings ... ok
+test reveal_artifact::tests::metadata_errors_cannot_be_rescued_by_prefixes ... ok
+test reveal_artifact::tests::prefix_specificity_uses_segments_and_supports_multiple_separators ... ok
+test reveal_query::tests::arrange_fields_prefers_gift_then_configured_order ... ok
+test reveal_query::tests::normalize_query_trims_suffix_and_relative_prefix ... ok
+test r#trait::trace_id::tests::resolve_trace_id_policy_reads_trait_settings ... ok
+test warp_bubble::tests::checked_maps_require_nonempty_work_and_gates ... ok
+test warp_bubble::tests::missing_parent_acceptance_remains_structurally_valid ... ok
+test warp_bubble::tests::complete_ring_fixture_deserializes_and_validates ... ok
+test r#trait::content_search::tests::test_search_files_regex ... ok
+test project_config::tests::init_project_deduplicates_colliding_lane_names ... ok
+test warp_bubble::tests::ring_validation_rejects_unknown_subscription_domains ... ok
+test warp_bubble::tests::ring_validation_rejects_zero_freshness_and_projection_depth ... ok
+test warp_query::tests::bubble_merge_is_completion_order_independent_and_idempotent ... ok
+test warp_query::tests::dependency_cycles_are_rejected_before_composition ... ok
+test warp_query::tests::incompatible_accepted_results_explode_the_bubble ... ok
+test warp_query::tests::recursive_ring_cycles_are_rejected ... ok
+test recur_lang_ir::tests::flow_contract_mismatch_has_a_stable_diagnostic_code ... ok
+test warp_query::tests::completed_child_without_parent_acceptance_is_blocked ... ok
+test warp_policy::tests::nearest_policy_and_longest_suffix ... ok
+test warp_query::tests::recursive_ring_depth_is_bounded ... ok
+test recur_lang_concurrent_ir::tests::missing_lane_policy_cannot_be_silently_ignored ... ok
+test recur_lang_ir::tests::freezes_versioned_ir_with_canonical_contracts_and_spans ... ok
+test recur_lang_ir::tests::undeclared_final_state_has_a_stable_diagnostic_code ... ok
+test warp_query::tests::stale_child_public_contract_explodes_parent_acceptance ... ok
+test prompt::tests::exact_bytes_size_utf8_and_missing_override ... ok
+test recur_lang_ir::tests::json_projection_uses_the_frozen_schema_and_span_shape ... ok
+test warp_query::tests::ring_rejects_domain_roots_outside_the_workspace ... ok
+test prompt::tests::directory_links_cannot_escape_even_when_source_missing ... ok
+test warp_query::tests::stale_subscription_blocks_otherwise_complete_ring ... ok
+test warp_evidence::tests::outcomes_freshness_and_scope ... ok
+test recur_lang_query::tests::refuses_foreign_model_and_version ... ok
+test prompt::tests::invalid_definition_types_and_portable_paths ... ok
+test recur_lang_concurrent_ir::tests::malformed_lane_policy_list_has_a_stable_diagnostic ... ok
+test recur_lang_ir::tests::missing_declarations_have_stable_cardinality_codes ... ok
+test recur_lang_query::tests::eventness_is_recorded_and_customizable ... ok
+test recur_lang_concurrent_ir::tests::freezes_lane_messages_fork_and_ordered_awaits ... ok
+test recur_lang_graph::tests::exact_fixture_and_repeatable_json ... ok
+test recur_lang_concurrent_ir::tests::omitted_fork_receipt_has_a_stable_diagnostic ... ok
+test recur_lang_concurrent_ir::tests::await_must_match_the_downstream_lane_dependencies ... ok
+test recur_lang_query::tests::exact_aliases_and_local_collisions ... ok
+test recur_lang_graph::tests::cycles_include_explanatory_path ... ok
+test recur_lang_concurrent_ir::tests::mixed_await_contracts_have_a_stable_diagnostic ... ok
+test recur_lang_concurrent_ir::tests::unknown_fork_lane_has_a_stable_diagnostic ... ok
+test recur_lang_concurrent_ir::tests::preserves_projected_orders_and_downstream_receipt_dependencies ... ok
+test recur_lang_graph::tests::self_cycle_unknown_entry_and_empty_wait_are_not_sound ... ok
+test recur_lang_query::tests::scoped_cycle_cannot_hide_global_failure ... ok
+test recur_lang_concurrent_ir::tests::normalized_json_is_deterministic ... ok
+test recur_lang_graph::tests::schema_and_exact_contract_mismatch_are_findings ... ok
+test recur_lang_graph::tests::missing_join_and_unreachable_lane_are_distinct ... ok
+test recur_lang_query::tests::fan_in_is_lossless_and_deterministic ... ok
+test reveal_query::tests::discovery_does_not_follow_directory_links_or_cycles ... ok
+
+test result: ok. 98 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+
+     Running unittests src\main.rs (target\debug\deps\recur-2e66c84db63afbc5.exe)
+
+running 84 tests
+test main_command_flatten_impl::tests::detect_csv_extensions ... ok
+test main_command_files_impl::tests::filter_by_min_depth_respects_relative_depth ... ok
+test main_command_flatten_impl::tests::json_array_of_objects ... ok
+test main_command_flatten_impl::tests::json_arrays_indexed ... ok
+test main_command_flatten_impl::tests::json_max_depth_limits_traversal ... ok
+test main_command_flatten_impl::tests::csv_rows_and_columns ... ok
+test main_command_flatten_impl::tests::detect_format_override ... ok
+test main_command_flatten_impl::tests::detect_toml_extensions ... ok
+test main_command_flatten_impl::tests::detect_yaml_extensions ... ok
+test main_command_capability_impl::tests::capability_name_accepts_card_filename_or_name ... ok
+test main_command_flatten_impl::tests::csv_custom_separator ... ok
+test main_command_flatten_impl::tests::json_nested_object ... ok
+test main_command_flatten_impl::tests::json_numbers ... ok
+test main_command_flatten_impl::tests::json_with_utf8_bom_parses ... ok
+test main_command_flatten_impl::tests::toml_arrays_indexed ... ok
+test main_command_flatten_impl::tests::json_simple_object ... ok
+test main_command_flatten_impl::tests::json_package_json_style ... ok
+test main_command_flatten_impl::tests::detect_json_extensions ... ok
+test main_command_flatten_impl::tests::toml_array_of_tables ... ok
+test main_command_flatten_impl::tests::detect_xml_extensions ... ok
+test main_command_flatten_impl::tests::toml_custom_separator ... ok
+test main_command_flatten_impl::tests::toml_booleans_numbers_datetime ... ok
+test main_command_flatten_impl::tests::toml_max_depth_limits_traversal ... ok
+test main_command_flatten_impl::tests::json_custom_separator ... ok
+test main_command_flatten_impl::tests::toml_simple_keys ... ok
+test main_command_flatten_impl::tests::toml_nested_table ... ok
+test main_command_flatten_impl::tests::xml_attributes ... ok
+test main_command_flatten_impl::tests::xml_cdata_treated_as_text ... ok
+test main_command_flatten_impl::tests::xml_and_json_produce_same_paths ... ok
+test main_command_flatten_impl::tests::xml_custom_separator ... ok
+test main_command_flatten_impl::tests::xml_empty_element ... ok
+test main_command_flatten_impl::tests::toml_and_json_produce_same_paths ... ok
+test main_command_flatten_impl::tests::json_booleans_and_null ... ok
+test main_command_flatten_impl::tests::xml_entities_decoded ... ok
+test main_command_flatten_impl::tests::xml_element_with_attrs_and_text ... ok
+test main_command_files_stdin::tests::parse_extensions_trims_and_skips_empty ... ok
+test main_command_flatten_impl::tests::xml_mixed_siblings_only_duplicates_indexed ... ok
+test main_command_flatten_impl::tests::xml_max_depth_limits_traversal ... ok
+test main_command_flatten_impl::tests::xml_namespace_prefix_preserved ... ok
+test main_command_flatten_impl::tests::xml_nested_elements ... ok
+test main_command_flatten_impl::tests::xml_nuspec_structure ... ok
+test main_command_flatten_impl::tests::xml_repeated_siblings_get_indexed ... ok
+test main_command_flatten_impl::tests::xml_self_closing_with_attrs ... ok
+test main_command_flatten_impl::tests::xml_simple_elements ... ok
+test main_command_flatten_impl::tests::xml_single_element_not_indexed ... ok
+test main_command_flatten_impl::tests::xml_whitespace_only_text_ignored ... ok
+test main_command_flatten_impl::tests::yaml_arrays_indexed ... ok
+test main_command_flatten_impl::tests::yaml_and_json_produce_same_paths ... ok
+test main_command_merge_impl::tests::extract_entries_from_trace_id_json_preserves_edge_type ... ok
+test main_command_flatten_impl::tests::yaml_nested_object ... ok
+test main_command_merge_impl::tests::stdin_json_stream_accepts_utf8_bom ... ok
+test main_command_merge_impl::tests::prepare_tree_input_files_roots_unmatched_files_under_base ... ok
+test main_command_merge_impl::tests::build_display_paths_with_edge_types_merges_normalized_duplicates ... ok
+test main_command_merge_impl::tests::tree_to_json_value_includes_edge_type_on_leaf_nodes ... ok
+test main_command_merge_impl::tests::tree_to_json_value_uses_original_path_alias_for_synthetic_roots ... ok
+test main_command_trace_id_impl::tests::build_record_depth_zero_keeps_define_only ... ok
+test main_command_trace_id_impl::tests::build_record_classifies_define_produce_consume_trigger ... ok
+test main_command_trace_id_impl::tests::glob_detection_matches_expected_patterns ... ok
+test main_command_trace_id_impl::tests::consume_classification_ignores_structural_noise_lines ... ok
+test main_command_trace_id_impl::tests::matched_identifier_extracts_slice ... ok
+test main_command_trace_id_impl::tests::sanitize_run_name_replaces_pathy_characters ... ok
+test main_command_trace_id_impl::tests::saved_json_single_turns_back_into_records ... ok
+test main_command_trace_id_impl::tests::symbol_extraction_and_role_detection_work_for_fixture_lines ... ok
+test main_command_trace_id_impl::tests::token_matching_avoids_partial_symbol_matches ... ok
+test main_command_trace_stats_impl::tests::parse_filter_accepts_spec_values ... ok
+test main_command_trace_stats_impl::tests::parse_filter_rejects_invalid_value ... ok
+test main_command_trace_stats_impl::tests::parse_output_format_accepts_spec_values ... ok
+test main_command_trace_stats_impl::tests::parse_output_format_rejects_invalid_value ... ok
+test main_command_trace_stats_impl::tests::parse_sort_by_accepts_spec_values ... ok
+test main_command_trace_stats_impl::tests::parse_sort_by_rejects_invalid_value ... ok
+test main_command_trace_stats_impl::tests::risk_level_thresholds_match_spec ... ok
+test main_command_trace_stats_impl::tests::skipped_names_excludes_keywords ... ok
+test main_command_trait_impl::tests::normalize_trait_key_accepts_shorthand_and_full_path ... ok
+test main_command_trait_impl::tests::normalize_trait_key_rejects_set_without_field ... ok
+test main_command_trait_impl::tests::parse_cli_value_infers_common_scalar_types ... ok
+test main_command_trait_impl::tests::set_and_get_value_path_roundtrip ... ok
+test main_command_tree_impl::tests::tree_base_for_pattern_stops_before_a_wildcard_segment ... ok
+test main_command_version_impl::tests::next_version_advances_letter_number_tokens ... ok
+test main_command_version_impl::tests::parses_current_artifact_name ... ok
+test main_command_watch_query_impl::tests::extracts_watch_id_from_status_filename ... ok
+test main_command_watch_query_impl::tests::filter_matches_virtual_state_name ... ok
+test main_command_watch_query_impl::tests::parses_key_value_state_fields ... ok
+test main_command_merge_impl::tests::load_files_from_json_file_accepts_utf8_bom ... ok
+test main_command_version_impl::tests::save_version_copies_snapshot_and_updates_manifest ... ok
+
+test result: ok. 84 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\recur_git_main.rs (target\debug\deps\recur_git-944e6c2fc8621dca.exe)
+
+running 5 tests
+test tests::build_current_pattern_appends_current_leaf ... ok
+test tests::extract_current_leaf_supports_status_suffix ... ok
+test tests::build_parallel_entry_contains_checkpoint_id ... ok
+test tests::normalize_root_pattern_for_separator_translates_dot_pattern ... ok
+test tests::default_checkpoint_id_has_prefix ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\recur_lang_main.rs (target\debug\deps\recur_lang-5670e025cfa8d906.exe)
+
+running 10 tests
+test tests::plan_reads_exact_declared_warp_and_does_not_mutate ... ok
+test tests::warp_requires_data_flow_to_match_the_declared_slice ... ok
+test tests::warp_requires_ef_to_be_a_declared_state_event ... ok
+test tests::stale_receipt_writes_nak_without_moving_eventness ... ok
+test tests::confirmed_warp_moves_exact_e0_to_ef_and_writes_ack ... ok
+test tests::confirmed_warp_rejects_eventness_outside_the_bounded_root ... ok
+test tests::receipt_from_an_unknown_ir_schema_writes_nak_without_moving_eventness ... ok
+test recur_lang_checked_transition::tests::changed_evidence_at_the_write_boundary_is_rejected ... ok
+test recur_lang_checked_transition::tests::recovery_rechecks_artifacts_evidence_and_staged_bytes ... ok
+test recur_lang_checked_transition::tests::every_interruption_requires_explicit_bounded_recovery ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.07s
+
+     Running unittests src\recur_reveal_main.rs (target\debug\deps\recur_reveal-b943c3a33c53b3d9.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\recur_version_main.rs (target\debug\deps\recur_version-7d7caa1ba59a483a.exe)
+
+running 3 tests
+test main_command_version_impl::tests::next_version_advances_letter_number_tokens ... ok
+test main_command_version_impl::tests::parses_current_artifact_name ... ok
+test main_command_version_impl::tests::save_version_copies_snapshot_and_updates_manifest ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\recur_warp_main.rs (target\debug\deps\recur_warp-271181abb3013bb0.exe)
+
+running 2 tests
+test recur_warp_refresh::tests::interruption_and_matching_retry ... ok
+test recur_warp_init::tests::failed_config_publication_rolls_back_template_and_staging_files ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\recur_watch_main.rs (target\debug\deps\recur_watch-f802eaab0a5570c4.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\lang_checked.rs (target\debug\deps\lang_checked-40cc7294bef817bf.exe)
+
+running 12 tests
+test compact_expanded_and_recorded_state_are_distinct ... ok
+test status_shape_and_current_artifact_are_verified ... ok
+test canonical_link_escape ... ok
+test exact_identity_and_purity ... ok
+test counts_cannot_be_forged ... ok
+test schema_and_required_scope ... ok
+test each_live_input_drift ... ok
+test attempt_relevance_and_history ... ok
+test source_and_collection_limits ... ok
+test rejected_paths_and_transitive_reads ... ok
+test exact_aggregate_and_file_count_limits ... ok
+test real_cli_and_remaining_byte_limits ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+
+     Running tests\lang_checked_reentry.rs (target\debug\deps\lang_checked_reentry-f039b2dc4691c88d.exe)
+
+running 4 tests
+test compact_expanded_and_dry_run_keep_contracts_and_footer_facts_separate ... ok
+test red_observation_remains_queryable_after_distinct_green_acceptance ... ok
+test every_live_input_loses_current_acceptance_after_a_process_restart ... ok
+test fresh_processes_recover_every_recorded_interruption_state ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.46s
+
+     Running tests\lang_checked_transition.rs (target\debug\deps\lang_checked_transition-92f074e70f03f2e1.exe)
+
+running 10 tests
+test immutable_inputs_cannot_alias_the_moving_artifact ... ok
+test drift_between_plan_and_confirm_rejects ... ok
+test transaction_junction_escape_is_rejected ... ok
+test exact_exit_codes_and_unrelated_bytes_are_preserved ... ok
+test accepted_history_does_not_hide_current_drift ... ok
+test wrong_eventness_and_unsafe_paths_cannot_move_files ... ok
+test existing_destinations_and_attempt_conflicts_do_not_overwrite ... ok
+test dry_run_confirm_and_exact_replay ... ok
+test evidence_rejections_preserve_e0 ... ok
+test existing_status_and_torn_staging_are_bounded_blockers ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.28s
+
+     Running tests\lang_query.rs (target\debug\deps\lang_query-1a25d18636ac53ad.exe)
+
+running 3 tests
+test checks_distinguish_graph_findings_from_input_errors ... ok
+test default_eventness_is_an_observed_file_not_a_requested_transition ... ok
+test pure_queries_preserve_unicode_exact_inventory_and_scope_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests\reveal_profiles.rs (target\debug\deps\reveal_profiles-dd9238ee9cc8d098.exe)
+
+running 10 tests
+test child_root_does_not_collect_parent_profiles ... ok
+test references_report_missing_wrong_type_and_ambiguous ... ok
+test shared_skill_keeps_both_edges_and_one_body ... ok
+test empty_profiles_and_type_collisions_are_explicit ... ok
+test budgets_refuse_incomplete_context_and_hashes_change ... ok
+test inline_config_is_valid_and_missing_shared_skills_are_deduplicated ... ok
+test config_rejects_malformed_associations_without_writes ... ok
+test explicit_capsule_binding_checks_type_and_conflicting_owners ... ok
+test init_preview_and_retry_preserve_custom_empty_tables_and_comments ... ok
+test body_paths_and_skill_frontmatter_are_checked ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests\warp_refresh.rs (target\debug\deps\warp_refresh-e659482c075f62ec.exe)
+
+running 7 tests
+test other_evidence_and_contract_conflicts_remain_blockers ... ok
+test torn_staging_and_excess_history_are_bounded_blockers ... ok
+test traversal_and_transaction_junction_are_rejected ... ok
+test preview_confirm_restart_and_replay_preserve_history ... ok
+test chain_drift_forks_and_historical_tamper_fail_closed ... ok
+test orphan_cycle_changed_policy_and_result_conflict_are_not_hidden ... ok
+test invalid_replacements_and_originals_do_not_write ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.81s
+
+     Running tests\warp_refresh_bounds.rs (target\debug\deps\warp_refresh_bounds-cf25b46b1f807acc.exe)
+
+running 3 tests
+test publication_revalidation_and_history_inventory_boundaries ... ok
+test file_count_and_path_limits ... ok
+test exact_byte_and_aggregate_limits ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+
+   Doc-tests recur
+
+running 7 tests
+test src\parser.rs - parser::HierarchicalName::with_separator (line 183) ... ignored
+test src\parser.rs - parser::HierarchyPattern::parse_with_separator (line 21) ... ignored
+test src\trait\content_search.rs - r#trait::content_search::ContentSearchCapable (line 77) ... ignored
+test src\trait\content_search.rs - r#trait::content_search::ContentSearchCapable::search_files (line 106) ... ignored
+test src\trait\content_search.rs - r#trait::content_search::ContentSearchCapable::search_files_regex (line 185) ... ignored
+test src\trait\stdin.rs - r#trait::stdin::StdinCapable (line 126) ... ignored
+test src\trait\stdin.rs - r#trait::stdin::StdinCapable::filter_stdin_paths (line 155) ... ignored
+
+test result: ok. 0 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

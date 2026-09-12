@@ -133,6 +133,15 @@ mechanisms. Their Markdown receipts can be declared references; checked mode
 requires an explicit normalized artifact/manifest, not an automatic conversion
 of a historical passing summary into fresh evidence.
 
+## Refreshing source-stale evidence
+
+The additive `recur-warp refresh MAP LAYER --gate G --from evidence:OLD
+--to evidence:NEW --refresh-id ID --reason TEXT` previews a same-contract renewal;
+`--confirm` publishes immutable lineage after current evidence checks. It preserves
+all old receipts and inputs, and cannot refresh failed results or changed contracts.
+Read [evidence refresh](main.command.warp.evidence-refresh.readme.md) for exact
+bounds, chain/retry rules and current query behavior.
+
 ## Reveal reconciliation
 
 Opt in with explicit capsule fields:

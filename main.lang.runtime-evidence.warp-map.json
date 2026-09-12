@@ -1,0 +1,77 @@
+{
+  "bubble_uuid": "01a09477-2229-7956-a1ac-0fd826b4cf47",
+  "contract_document": "warps/main.lang.runtime-evidence.contract.md",
+  "current_slice": "slice-2",
+  "goal": "Connect compact Recur Lang header/body/footer specifications to tests-first, source-bound evidence from E0 to Ef.",
+  "planning_status": "planned",
+  "release_target": "a.0.2.8",
+  "invariants": [
+    "Refine general hierarchy through files, declared lineage, source traces and context recovery before applying Lang precision to a selected scope.",
+    "Header declares exact contracts, body preserves functional connections, footer separates intended Eventness from observed evidence and acceptance.",
+    "New behavior is specified and tested before implementation; retain expected red observations and source-bound green results.",
+    "Reuse WIR1 query models and Warp evidence checks; no new parser, live coordinator or universal Eventness vocabulary.",
+    "Core queries remain read-only; reading evidence never executes bindings, runs tests or completes a slice.",
+    "Resolve manifest-local evidence containment before checked acceptance; do not equate declared receipts or archived snapshots with current source verification."
+  ],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline-and-contract"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a09477-2229-784a-9d7a-0f8be6ac92f5"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-1:v1",
+      "depends_on": ["slice-0"],
+      "evidence_gates": ["red-first-fixtures"],
+      "evidence_mode": "declared",
+      "slice_id": "slice-1",
+      "slice_uuid": "01a09477-fbd7-7cc4-83f4-3d6b7a401f1d"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-2:v1",
+      "depends_on": ["slice-1"],
+      "evidence_gates": ["scope-evidence-binding"],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "scope-evidence-binding": {"kind": "test", "allow_skipped": false}
+      },
+      "slice_id": "slice-2",
+      "slice_uuid": "01a09477-fbd9-7d28-8fbe-e8d35e927881"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-3:v1",
+      "depends_on": ["slice-2"],
+      "evidence_gates": ["inspector-evidence-presentation"],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "inspector-evidence-presentation": {"kind": "test", "allow_skipped": false}
+      },
+      "slice_id": "slice-3",
+      "slice_uuid": "01a09477-fbd9-771a-869b-9cc7b080dc4f"
+    },
+    {
+      "contract_hash": "contract:main.lang.runtime-evidence.slice-final:v1",
+      "depends_on": [
+        "slice-3"
+      ],
+      "evidence_gates": [
+        "integration-regression",
+        "reentry-and-staleness"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "integration-regression": {"kind": "test", "allow_skipped": false},
+        "reentry-and-staleness": {"kind": "test", "allow_skipped": false}
+      },
+      "slice_id": "slice-final",
+      "slice_uuid": "01a09477-2229-7b03-a4cf-e596956ed153"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.runtime-evidence"
+}

@@ -97,6 +97,19 @@ CIR1 has no lifecycle model: state filtering yields no lane detail and explicitl
 retains this limitation plus the full static analysis. Receipt contents are not
 read/accepted by these commands.
 
+## Additive checked evidence query
+
+`recur lang evidence SOURCE --scope FUNCTION --contract POLICY [--receipt ATTEMPT]
+[--status STATUS] [--expand] -d ROOT --json` returns the separately versioned
+`recur-lang-evidence-report-v1`. FUNCTION is qualified WIR1, with an explicit
+bounded policy and one attempt. This query assesses external results and actual
+input fingerprints without execution or recursive inventory. Its embedded
+query-v1 packet retains original contracts and fragment coverage; historical
+transition status is separate from current evidence. Original list/show/report/
+check behavior above is unchanged. Read the
+[checked transition contract](main.command.lang.checked-transition.readme.md)
+for path/byte limits, CE001–CE007 outcomes and the companion's opt-in writes.
+
 ## Deferred work
 
 No arbitrary worker execution, policy advice, repair, scheduling, runtime lane

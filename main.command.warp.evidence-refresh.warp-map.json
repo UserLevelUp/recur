@@ -1,0 +1,56 @@
+{
+  "bubble_uuid": "01a094e5-3cea-7ff3-93d2-3ebc8aa3ea81",
+  "current_slice": "slice-final",
+  "goal": "Refresh stale source-bound Warp gate evidence without rewriting accepted history or weakening contracts",
+  "invariants": [],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.warp.evidence-refresh.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-and-red"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a094e5-3cea-7c50-b44e-88814f313e9e"
+    },
+    {
+      "slice_id": "slice-1",
+      "contract_hash": "contract:main.command.warp.evidence-refresh.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_mode": "checked",
+      "evidence_gates": [
+        "refresh-behavior"
+      ],
+      "gate_rules": {
+        "refresh-behavior": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "contract_hash": "contract:main.command.warp.evidence-refresh.slice-final:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "regression"
+      ],
+      "evidence_mode": "checked",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a094e5-3cea-7226-88be-a663ba024020",
+      "gate_rules": {
+        "regression": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.evidence-refresh",
+  "contract_document": "warps/main.command.warp.evidence-refresh.contract.md"
+}

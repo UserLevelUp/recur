@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.evidence-refresh",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.warp.evidence-refresh.slice-0:v1",
+  "attempt_id": "red-plan-20260912",
+  "result_state": "accepted",
+  "result_hash": "observation:callable-red-v1",
+  "evidence": {
+    "contract-and-red": [
+      "warps/main.command.warp.evidence-refresh.slice-0.verification.md"
+    ]
+  },
+  "reason": null
+}

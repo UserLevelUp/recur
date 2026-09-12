@@ -1,0 +1,7 @@
+//! Bounded same-contract evidence refresh (tests-first read seam).
+use std::{collections::BTreeMap,path::Path};
+#[derive(Default)]
+pub struct Reads {pub hashes:BTreeMap<String,String>}
+impl Reads {
+    pub fn read(&mut self,root:&Path,path:&str,_json:bool)->anyhow::Result<Vec<u8>> {Ok(std::fs::read(root.join(path))?)}
+}

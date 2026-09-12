@@ -1,0 +1,190 @@
+{
+  "body": {
+    "boundary_edges": [],
+    "edges": [
+      {
+        "consumer": "greeting.g",
+        "identity": "greeting.i(a)->greeting.g",
+        "input": "greeting.i(a)",
+        "producer": "greeting.i(a)",
+        "span": {
+          "end_byte": 372,
+          "end_line": 10,
+          "start_byte": 256,
+          "start_line": 9
+        }
+      },
+      {
+        "consumer": "greeting.o(b)",
+        "identity": "greeting.g->greeting.o(b)",
+        "output": "greeting.o(b)",
+        "producer": "greeting.g",
+        "span": {
+          "end_byte": 372,
+          "end_line": 10,
+          "start_byte": 256,
+          "start_line": 9
+        }
+      }
+    ],
+    "flows": [
+      {
+        "flow": {
+          "expression": "i(a) -> g(a) -> o(b)",
+          "mode": "sync",
+          "span": {
+            "end_byte": 422,
+            "end_line": 13,
+            "start_byte": 383,
+            "start_line": 13
+          }
+        },
+        "scope": "greeting"
+      }
+    ]
+  },
+  "contracts": [
+    {
+      "canonical_identity": "greeting.i(a)",
+      "fields": [
+        {
+          "name": "uri",
+          "type_name": "RequestURI"
+        }
+      ]
+    },
+    {
+      "canonical_identity": "greeting.o(b)",
+      "fields": [
+        {
+          "name": "response",
+          "type_name": "GreetingResponse"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "analysis": "selected WIR1 scopes",
+    "diagnostics": [
+      {
+        "code": "LANG101",
+        "message": "Only the named IR fragment is validated; excluded syntax and runtime behavior remain unvalidated",
+        "severity": "capability"
+      }
+    ],
+    "excluded": [
+      "Expansion bodies and worker semantics",
+      "Whole-document composition, unknown statements and nonselected flows",
+      "Runtime checks, receipt contents and execution"
+    ],
+    "whole_source_validated": false
+  },
+  "expanded": true,
+  "footer": {
+    "eventness_filter": null,
+    "eventness_vocabulary": [
+      "todo.current",
+      "todo",
+      "complete"
+    ],
+    "events": [
+      {
+        "checked_receipts": [],
+        "declared_events": [
+          {
+            "edge": "consume",
+            "identifier": "main.greeting.api.request",
+            "span": {
+              "end_byte": 1228,
+              "end_line": 28,
+              "start_byte": 1190,
+              "start_line": 27
+            }
+          },
+          {
+            "edge": "produce",
+            "identifier": "main.greeting.api.response",
+            "span": {
+              "end_byte": 1267,
+              "end_line": 29,
+              "start_byte": 1229,
+              "start_line": 29
+            }
+          },
+          {
+            "edge": "state",
+            "identifier": "main.greeting.spec.complete",
+            "span": {
+              "end_byte": 1308,
+              "end_line": 31,
+              "start_byte": 1268,
+              "start_line": 30
+            }
+          }
+        ],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_transition": {
+          "current": "main.greeting.spec.todo.current",
+          "desired": "main.greeting.spec.complete",
+          "slice": "greeting.g",
+          "span": {
+            "end_byte": 1416,
+            "end_line": 32,
+            "start_byte": 1310,
+            "start_line": 32
+          }
+        },
+        "scope": "greeting"
+      }
+    ],
+    "execution": "not-run",
+    "findings": [],
+    "graph": null,
+    "validation": "sound-within-coverage"
+  },
+  "header": [
+    {
+      "binding": "MainServer.greeting",
+      "identity": "greeting.g",
+      "input": {
+        "canonical_identity": "greeting.i(a)",
+        "fields": [
+          {
+            "name": "uri",
+            "type_name": "RequestURI"
+          }
+        ],
+        "local_identity": "greeting.i(a)",
+        "role": "input",
+        "symbol": "a"
+      },
+      "meaning": "Return a validated localized greeting or an invalid-name response",
+      "output": {
+        "canonical_identity": "greeting.o(b)",
+        "fields": [
+          {
+            "name": "response",
+            "type_name": "GreetingResponse"
+          }
+        ],
+        "local_identity": "greeting.o(b)",
+        "role": "output",
+        "symbol": "b"
+      },
+      "scope": "greeting",
+      "span": {
+        "end_byte": 372,
+        "end_line": 10,
+        "start_byte": 256,
+        "start_line": 9
+      },
+      "symbol": "g"
+    }
+  ],
+  "ir_schema": "recur-lang-warp-ir-v1",
+  "schema": "recur-lang-query-v1",
+  "scope": "greeting.g",
+  "source": "main.greeting.recur",
+  "source_hash": "fnv1a64:9a4f9796c1e5d4ef"
+}
