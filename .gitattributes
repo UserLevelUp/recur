@@ -103,3 +103,6 @@
 /demos/lang-verification/** -text
 /julia-tests/main.command.lang.verification.test.jl -text
 /README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md -text
+/src/recur_lang_init.rs -text
+/demos/pathing/path_validation.jl -text
+/julia-tests/main.lang.pathing.test.jl -text

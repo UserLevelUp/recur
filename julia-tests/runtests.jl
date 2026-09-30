@@ -81,6 +81,9 @@ try
         include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
         include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
         include("main.command.lang.baseline.test.jl") # pure WIR1/CIR1 query surface
+        include("main.command.recur-lang.init.test.jl") # additive policy initialization and safe publication
+        include("main.command.lang.verification.test.jl") # independent query/evidence fault demonstrations
+        @test LangVerificationTests.main(String[]) == 0
         include("main.demo.lang-inspector.test.jl") # Lang specification -> mocks/models -> real self-query
         include("main.demo.lang-dogfood.test.jl") # Greeting fixtures and catalog inspector HTTP integration
         include("main.demo.holdem-lab.test.jl") # Progressive Lang contracts, Holdem runtime and intentional cycles

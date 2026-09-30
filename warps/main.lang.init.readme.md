@@ -1,14 +1,15 @@
 # Initialize recur-lang project policy
 
-Warp: `main.lang.init`. Status: planned, implementation not started.
+Warp: `main.lang.init`. Implementation and focused tests are present; query live
+acceptance separately. See [usage](../docs/main.command.lang.init.readme.md).
 
-Add `recur-lang init` using the existing companion initialization conventions.
+`recur-lang init` follows the existing companion initialization conventions.
 It installs a small `[recur-lang]` section into the nearest `.recur/config.toml`,
 with preview, preserved preferences/comments and harmless repeated invocation.
 Target language starts as `unspecified`; project authors can choose Julia, Rust
 or another target. Planning flags are inert until a future planner consumes them.
 
-The exact proposed CLI, defaults, output schema and acceptance gates are in
+The exact CLI, defaults, output schema and acceptance gates are in
 [the contract](main.lang.init.contract.md). The map retains companion-generated
 UUIDs. No acceptance receipt is created merely by writing this plan or observing
 the expected unsupported-command failure.
@@ -28,17 +29,17 @@ recur trace-id recur.lang.init.v1 --scope '**' -d . --format full
 
 $env:RECUR_BIN = (Get-Command recur).Source
 $env:RECUR_LANG_BIN = (Get-Command recur-lang).Source
-julia --startup-file=no -C generic --project=demos/web-evidence-lab julia-tests/main.command.recur-lang.init.test.jl
+julia --startup-file=no -O0 -C generic --project=demos/web-evidence-lab julia-tests/main.command.recur-lang.init.test.jl
 ```
 
-The last command is intentionally standalone and expected to fail until the
-feature is implemented. It writes only temporary test fixtures. Existing project
-configuration is not initialized by creating this Warp. Review the baseline
-record for the actual run and its limitations.
+The last command writes only temporary test fixtures. It is also included in the
+normal Julia regression runner after its focused pass. Existing project config
+is not initialized by creating this Warp. Historical red evidence remains intact.
 
 Useful implementation references:
 
-- `src/recur_lang_main.rs`: current companion exposes only `warp`.
+- `src/recur_lang_main.rs`: companion CLI exposes `init` and `warp`.
+- `src/recur_lang_init.rs`: additive policy rendering and staged publication.
 - `src/recur_warp_init.rs`: missing-key insertion, preview and staged publication.
 - `src/reveal_profiles.rs`: ancestor lookup, TOML preservation and concurrent-byte check.
 - `src/project_config.rs`: shared config discovery and policy/lane classification.

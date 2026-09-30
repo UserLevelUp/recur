@@ -219,6 +219,7 @@ impl RecurConfig {
             };
 
             match section.as_str() {
+                "recur-lang" => {}, // Companion policy is never a file-discovery lane.
                 "checkpoint" => {
                     checkpoint = Some(parse_checkpoint_section(section_table));
                 }

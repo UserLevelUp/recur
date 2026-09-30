@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.init",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.lang.init.slice-final:v1",
+  "attempt_id": "implemented-20260930",
+  "result_state": "accepted",
+  "result_hash": "observed:cargo257-julia5458-installed211",
+  "evidence": {
+    "docs-and-installed-smoke": [
+      "warps/main.lang.init.verification.md"
+    ],
+    "focused-and-legacy-regressions": [
+      "warps/main.lang.init.verification.md"
+    ]
+  },
+  "reason": null
+}

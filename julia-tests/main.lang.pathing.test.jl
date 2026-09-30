@@ -10,6 +10,8 @@ lands. An unexpected pass intentionally asks us to promote that assertion to
 """
 
 using Test
+include(joinpath(@__DIR__, "..", "demos", "pathing", "path_validation.jl"))
+using .PathValidation: every_path_is_contiguous
 
 if !isdefined(Main, :MainLang)
     include(joinpath(@__DIR__, "..", "demos", "main.lang", "main.lang.runtime.jl"))
@@ -121,31 +123,6 @@ function all_power_nodes_reachable(result)
             !isnothing(tile) && tile in visited
         end for power in powers
     )
-end
-
-function every_path_is_contiguous(result)
-    map = map_from_result(result)
-    graph = value_at(map, "graph")
-    paths = entries_at(map, "paths")
-    corridors = entries_at(graph, "corridors")
-    isempty(paths) && return false
-
-    edges = Set{Tuple{Tuple{Int,Int},Tuple{Int,Int}}}()
-    for edge in corridors
-        left = tile_key(value_at(edge, "from"))
-        right = tile_key(value_at(edge, "to"))
-        (isnothing(left) || isnothing(right)) && return false
-        push!(edges, (left, right))
-        push!(edges, (right, left))
-    end
-
-    for path in paths
-        tiles = [tile_key(tile) for tile in entries_at(path, "tiles")]
-        (length(tiles) >= 2 || any(isnothing, tiles)) && return false
-        all((tiles[index], tiles[index + 1]) in edges for index in 1:(length(tiles) - 1)) ||
-            return false
-    end
-    return true
 end
 
 function breadcrumbs_equal_unique_path_interiors(result)

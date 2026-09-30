@@ -9,6 +9,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 mod recur_lang_checked_transition;
+mod recur_lang_init;
 
 const WARP_PLAN_SCHEMA: &str = "recur-lang-warp-plan-v1";
 const WARP_RECEIPT_SCHEMA: &str = "recur-lang-warp-receipt-v1";
@@ -101,6 +102,15 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Initialize additive project-local Lang policy without executing a planner
+    Init {
+        #[arg(short = 'd', long = "dir", default_value = ".")]
+        dir: PathBuf,
+        #[arg(long)]
+        dry_run: bool,
+        #[arg(long)]
+        json: bool,
+    },
     /// Plan or confirm one declared E0 -> dE -> Ef transition
     Warp(WarpArgs),
 }
@@ -572,6 +582,19 @@ fn print_outcome(outcome: &WarpOutcome) {
 fn run() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
+        Command::Init { dir, dry_run, json } => {
+            match recur_lang_init::init(&dir, dry_run) {
+                Ok(value) => {
+                    if json { emit_json(&value)?; }
+                    else { println!("{}: {}", value["state"].as_str().unwrap(), value["config_path"].as_str().unwrap()); }
+                }
+                Err(e) => {
+                    if json { emit_json(&serde_json::json!({"schema":"recur-lang-init-error-v1","diagnostics":[{"code":e.code,"message":e.message}]}))?; }
+                    else { eprintln!("{e}"); }
+                    std::process::exit(2);
+                }
+            }
+        }
         Command::Warp(arguments) => {
             if let Some(contract) = arguments.checked_contract {
                 if arguments.id.is_some() {

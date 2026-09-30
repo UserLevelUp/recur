@@ -13,7 +13,7 @@ Juliaup resolves to 1.12.7 and completed the red run. Other machines should use
 their verified Julia 1.12-compatible executable and instantiate the web-lab
 project before running these commands.
 
-The final combined demonstration completed with `-O0`: 58 cases, 44 passing
+The original tests-first demonstration completed with `-O0`: 58 cases, 44 passing
 and 14 deliberately failing, with no errors/broken/empty cases. Normal
 optimization and `--compile=min` later faulted inside Julia; their logs are
 preserved separately. See the [observed baseline](../../warps/main.lang.verification.baseline.md).
@@ -67,8 +67,9 @@ but does not yet validate the archive contents or native CI.
 Product demonstrations use isolated temporary fixtures. Synthetic producer
 receipts test qualification; they never certify this repository. Deliberate
 product failures exit nonzero. The lab uses no Python, changes no implementation,
-starts no watcher and executes no Lang binding. The red suite stays outside the
-normal regression runner until green.
+starts no watcher and executes no Lang binding. All 58 cases now pass;
+the suite is included in `julia-tests/runtests.jl`; historical red
+observations remain unchanged.
 
 Other existing suite names: `baseline`, `language`, `inspector`, `dogfood`,
 `protomap`, `api`, `holdem`, and the expensive `holdem-exhaustive`. Listing a suite
@@ -87,8 +88,8 @@ preserve that fault separately from assertion failures.
 
 - [Verification contract](../../warps/main.lang.verification.contract.md):
   bounded repairs and explicit tests-first prerequisites for broader coverage.
-- [Init contract](../../warps/main.lang.init.contract.md): existing red suite,
-  demonstrated with `suite init`.
+- [Init contract](../../warps/main.lang.init.contract.md): additive configuration
+  initialization, demonstrated with `suite init`.
 - [Runtime evidence](../../warps/main.lang.runtime-evidence.contract.md): existing
   loader, then binding/UI/integration; acceptance is separate.
 - Advanced [identity](../../warps/main.lang.advanced.identity.contract.md),

@@ -254,6 +254,21 @@ fn run_hook(
             bail!("conflicting transaction request or changed recorded inputs");
         }
     }
+    // Both published records are evidence. An accepted record must not mask
+    // corrupt or incompatible prepared history (and vice versa).
+    for (path, name, state) in [
+        (&prepared_path, &prepared_name, "prepared"),
+        (&accepted_path, &accepted_name, "accepted"),
+    ] {
+        if exists(path)? {
+            let record: CheckedStatus = serde_json::from_slice(&reads.read(&root, name, true)?)?;
+            let mut matching = expected.clone();
+            matching.state = state.into();
+            if record != matching {
+                bail!("conflicting published transaction record: {name}");
+            }
+        }
+    }
     if exists(&ef)? {
         if (!exists(&prepared_path)? && !accepted)
             || fingerprint(&reads.read(&root, &after, false)?) != expected.artifact_hash

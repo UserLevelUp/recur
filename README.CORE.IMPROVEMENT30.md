@@ -161,7 +161,7 @@ external verification evidence.
 IMPLEMENTATION CHECKPOINTS
 -------------------------
 
-### Current planning checkpoint: 2026-09-29
+### Current implementation checkpoint: 2026-09-30
 
 Use the [Recur Lang remaining-work todo](README.CORE.IMPROVEMENT30.recur-lang.todo.md)
 to choose the next focus. It can hold a single checklist or link any number of
@@ -171,12 +171,13 @@ the named work is verified, record the evidence and append `.checked` before
 the overall Lang todo. This is an explicit Eventness convention, not automatic
 Warp acceptance; see [the naming policy](README.CORE.EVENTNESS.md#focused-todos-and-checked-residue).
 
-The selected companion increment is [main.lang.init](warps/main.lang.init.readme.md):
-initialize `[recur-lang]` in the existing `.recur/config.toml`, following current
-companion preservation and preview conventions. Its contract and standalone
-tests exist; the installed companion still exposes only `warp`. The initial
-suite observed 57 passing and 44 expected-failing assertions. Implementation
-and acceptance remain open in the [focused init todo](README.CORE.IMPROVEMENT30.recur-lang.init.todo.md).
+The companion increment [main.lang.init](warps/main.lang.init.readme.md) now
+implements `recur-lang init [-d ROOT] [--dry-run] [--json]`. It adds only missing
+`[recur-lang]` preferences to the nearest `.recur/config.toml`, preserves user
+choices/comments, and rejects invalid inputs without mutation. Preferences are
+inert until a future planner consumes them. See the
+[completed init focus](README.CORE.IMPROVEMENT30.recur-lang.init.todo.checked.md)
+and [implementation evidence](warps/main.lang.init.verification.md).
 
 The supplied branch analysis is tracked in the
 [baseline and evidence verification todo](README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md).
@@ -185,9 +186,10 @@ and unexecuted hypotheses, with acceptance criteria and stable trace identities.
 
 The [Hello World to Hold'em lab](demos/holdem-lab/main.holdem.readme.md) exercises
 progressive contracts, explicit joins and deliberately introduced cycles. Its
-clean focused run passed 527 assertions; later Julia process faults prevented
-a reliable full-regression result. Preserve that qualification when planning
-the remaining evidence and release work. Re-query live Warps rather than
+clean focused run passed 527 assertions. Earlier Julia faults remain recorded;
+the current Julia 1.12.7 `-O0 -C generic` full suite completed with 5,458 passes
+and 73 existing expected-broken cases. This does not establish exhaustive poker
+coverage or optimized-runtime stability. Re-query live Warps rather than
 inheriting acceptance from any checkpoint below.
 
 ### Historical planning checkpoint: 2026-09-12

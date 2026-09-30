@@ -132,6 +132,12 @@ check validates only the declared fragment, never runtime execution or the whole
 document. Recorded Eventness is not checked receipt evidence. All opinionated
 language guidance and actions belong to `recur-lang`, including read-only advice.
 
+`recur-lang init -d ROOT --dry-run --json` previews additive `[recur-lang]`
+preferences in the nearest project config; omit `--dry-run` to install them.
+Existing values/comments are preserved and invalid inputs do not publish.
+These preferences do not implement a planner. See docs/main.command.lang.init.readme.md
+and query `main.lang.init` for acceptance rather than inferring it from command availability.
+
 For a worked tests-first WIR1 capability, inspect `main.lang.dogfood` under
 `warps` and `demos/web-evidence-lab/main.lang.walkthrough.md`. Its server catalog
 and inspector page reuse the existing query models; they do not add a grammar,

@@ -16,6 +16,7 @@ prompt.ids = warp.naming, warp.slicing, warp.recovery
 warp.refresh = Inspect recur-warp refresh help and docs/main.command.warp.evidence-refresh.readme.md; source-stale same-contract renewal preserves history and requires current tests, explicit references and confirmation.
 lang.query = bare recur lang lists the source hierarchy with static status and recorded Eventness; list --json includes symbols; show/report/check use explicit source and scope; inspect docs/main.command.lang.query.readme.md for coverage and SGR1 findings
 lang.boundary = Core queries remain pure; all opinionated language guidance/actions belong in recur-lang. A sound fragment is not whole-source or runtime acceptance.
+lang.init = recur-lang init --dry-run --json previews additive project preferences; omit dry-run to install missing defaults. Preserve explicit settings and query main.lang.init for acceptance; no planner is executed.
 lang.checked = Inspect selected executable help, docs/main.command.lang.checked-transition.readme.md and recur warp show main.lang.checked-transition -d .; bounded evidence query and opt-in confirmed companion recovery preserve historical/current distinctions.
 recovery.boundary = Check help before recall; use reveal, recorded handoff and bounded prompt warp.recovery, inspecting truncation separately from live full-root acceptance.
 lang.dogfood = Inspect main.lang.dogfood -d warps and demos/web-evidence-lab/main.lang.walkthrough.md for the catalog inspector and tests-first WIR1 example.

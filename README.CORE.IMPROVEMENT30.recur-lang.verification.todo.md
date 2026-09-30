@@ -17,6 +17,14 @@ remaining tests and owning slice. A mapping does not close the checkbox.
 This focus can be split into any number of narrower `.todo.md` files; retain
 the trace identities and link each extracted checklist instead of duplicating it.
 
+## Implementation observation — 2026-09-30
+
+The selected pass repairs all 14 demonstrated failures; the focused suite now
+passes all 58 cases. Broader coverage checkboxes below stay open until their
+full criteria are demonstrated. See [implementation evidence](warps/main.lang.init.verification.md)
+for test counts, the installed candidate and explicit acceptance boundaries.
+The original review below remains historical context.
+
 ## Review basis and limits
 
 Source: Marc's supplied **Recur Lang branch implementation and coverage
@@ -30,7 +38,7 @@ historical. It ran no builds or tests and measured no numerical coverage.
 WIR1/CIR1, SGR1, source-bound queries, projections, legacy transitions,
 checked transitions and recovery already have implementations and tests.
 Preserve that work. A missing fresh gate is not a reason to reimplement it.
-The [init focus](README.CORE.IMPROVEMENT30.recur-lang.init.todo.md) remains a
+The [init focus](README.CORE.IMPROVEMENT30.recur-lang.init.todo.checked.md) remains a
 separate selected implementation increment.
 
 Local observations below distinguish reproduced CLI discrepancies, inspected

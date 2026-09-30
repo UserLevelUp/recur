@@ -1,0 +1,234 @@
+
+DEMO query.suffix.complete
+Test Summary:         | Pass  Total  Time
+query.suffix.complete |   10     10  1.7s
+
+DEMO query.suffix.todo_complete
+Test Summary:              | Pass  Total  Time
+query.suffix.todo_complete |   10     10  0.4s
+
+DEMO query.suffix._complete_md
+Test Summary:             | Pass  Total  Time
+query.suffix._complete_md |   10     10  0.4s
+
+DEMO query.suffix._todo_complete_md
+Test Summary:                  | Pass  Total  Time
+query.suffix._todo_complete_md |   10     10  0.3s
+
+DEMO query.cir.empty.eventness
+Test Summary:             | Pass  Total  Time
+query.cir.empty.eventness |    4      4  0.2s
+
+DEMO query.simultaneous.states
+Test Summary:             | Pass  Total  Time
+query.simultaneous.states |    5      5  0.2s
+
+DEMO query.invalid.inputs
+Test Summary:        | Pass  Total  Time
+query.invalid.inputs |    9      9  0.4s
+
+DEMO query.escape.and.executable.binding
+Test Summary:                       | Pass  Total  Time
+query.escape.and.executable.binding |   11     11  0.5s
+
+DEMO query.directory.link.boundary
+Test Summary:                 | Pass  Total  Time
+query.directory.link.boundary |    6      6  0.3s
+
+DEMO actor.arguments.confirm.without.receipt
+Test Summary:                           | Pass  Total  Time
+actor.arguments.confirm.without.receipt |    2      2  0.7s
+
+DEMO actor.arguments.recover.without.checked
+Test Summary:                           | Pass  Total  Time
+actor.arguments.recover.without.checked |    2      2  0.1s
+
+DEMO actor.arguments.checked.with.id
+Test Summary:                   | Pass  Total  Time
+actor.arguments.checked.with.id |    2      2  0.1s
+
+DEMO delivery.seven.binary.smoke
+Test Summary:               | Pass  Total  Time
+delivery.seven.binary.smoke |   28     28  3.6s
+
+DEMO graph.exact.oracle
+Test Summary:      | Pass  Total  Time
+graph.exact.oracle |   12     12  0.5s
+
+DEMO graph.fault.self
+Test Summary:    | Pass  Total  Time
+graph.fault.self |    7      7  0.2s
+
+DEMO graph.fault.dependency
+Test Summary:          | Pass  Total  Time
+graph.fault.dependency |    7      7  0.1s
+
+DEMO graph.fault.wait
+Test Summary:    | Pass  Total  Time
+graph.fault.wait |    5      5  0.1s
+
+DEMO graph.fault.missing.join
+Test Summary:            | Pass  Total  Time
+graph.fault.missing.join |    5      5  0.1s
+
+DEMO parser.comments.are.inert
+Test Summary:             | Pass  Total  Time
+parser.comments.are.inert |    3      3  0.2s
+
+DEMO parser.reject.duplicate.scope
+Test Summary:                 | Pass  Total  Time
+parser.reject.duplicate.scope |    3      3  0.1s
+
+DEMO parser.reject.missing.function
+Test Summary:                  | Pass  Total  Time
+parser.reject.missing.function |    3      3  0.1s
+
+DEMO parser.reject.wrong.flow.port
+Test Summary:                 | Pass  Total  Time
+parser.reject.wrong.flow.port |    3      3  0.1s
+
+DEMO parser.reject.undeclared.state
+Test Summary:                  | Pass  Total  Time
+parser.reject.undeclared.state |    3      3  0.1s
+
+DEMO parser.reject.unknown.producer
+Test Summary:                  | Pass  Total  Time
+parser.reject.unknown.producer |    3      3  0.1s
+
+DEMO parser.reject.missing.policy
+Test Summary:                | Pass  Total  Time
+parser.reject.missing.policy |    3      3  0.1s
+
+DEMO parser.unicode.spans.LF
+Test Summary:           | Pass  Total  Time
+parser.unicode.spans.LF |    6      6  0.2s
+
+DEMO parser.unicode.spans.CRLF
+Test Summary:             | Pass  Total  Time
+parser.unicode.spans.CRLF |    6      6  0.1s
+
+DEMO checked.control.preview.accept.replay
+Test Summary:                         | Pass  Total  Time
+checked.control.preview.accept.replay |   13     13  0.5s
+
+DEMO checked.status.source_hash
+Test Summary:              | Pass  Total  Time
+checked.status.source_hash |   12     12  0.5s
+
+DEMO checked.status.before
+Test Summary:         | Pass  Total  Time
+checked.status.before |   12     12  0.5s
+
+DEMO checked.status.after
+Test Summary:        | Pass  Total  Time
+checked.status.after |   12     12  0.5s
+
+DEMO checked.status.checked_inputs
+Test Summary:                 | Pass  Total  Time
+checked.status.checked_inputs |   12     12  0.5s
+
+DEMO checked.conflict.prepared.scope
+Test Summary:                   | Pass  Total  Time
+checked.conflict.prepared.scope |   12     12  0.5s
+
+DEMO checked.conflict.prepared.json
+Test Summary:                  | Pass  Total  Time
+checked.conflict.prepared.json |   12     12  0.5s
+
+DEMO checked.conflict.accepted.scope
+Test Summary:                   | Pass  Total  Time
+checked.conflict.accepted.scope |   12     12  0.5s
+
+DEMO checked.conflict.accepted.json
+Test Summary:                  | Pass  Total  Time
+checked.conflict.accepted.json |   12     12  0.5s
+
+DEMO checked.drift.spec_recur
+Test Summary:            | Pass  Total  Time
+checked.drift.spec_recur |   10     10  0.5s
+
+DEMO checked.drift.implementation_jl
+Test Summary:                   | Pass  Total  Time
+checked.drift.implementation_jl |   10     10  0.5s
+
+DEMO checked.drift.cases_jl
+Test Summary:          | Pass  Total  Time
+checked.drift.cases_jl |   10     10  0.5s
+
+DEMO checked.drift.config_toml
+Test Summary:             | Pass  Total  Time
+checked.drift.config_toml |   10     10  0.5s
+
+DEMO checked.drift.runner_jl
+Test Summary:           | Pass  Total  Time
+checked.drift.runner_jl |   10     10  0.5s
+
+DEMO checked.drift.behavior_md
+Test Summary:             | Pass  Total  Time
+checked.drift.behavior_md |   10     10  0.5s
+
+DEMO checked.drift.policy_json
+Test Summary:             | Pass  Total  Time
+checked.drift.policy_json |   10     10  0.5s
+
+DEMO checked.drift.result_json
+Test Summary:             | Pass  Total  Time
+checked.drift.result_json |   10     10  0.5s
+
+DEMO checked.drift.evidence_json
+Test Summary:               | Pass  Total  Time
+checked.drift.evidence_json |   10     10  0.5s
+
+DEMO checked.drift.attempt_json
+Test Summary:              | Pass  Total  Time
+checked.drift.attempt_json |   10     10  0.5s
+
+DEMO checked.attempt.id.80
+Test Summary:         | Pass  Total  Time
+checked.attempt.id.80 |    2      2  0.2s
+
+DEMO checked.attempt.id.81
+Test Summary:         | Pass  Total  Time
+checked.attempt.id.81 |    2      2  0.1s
+
+DEMO checked.attempt.id.dot
+Test Summary:          | Pass  Total  Time
+checked.attempt.id.dot |    2      2  0.1s
+
+DEMO checked.attempt.id.empty
+Test Summary:            | Pass  Total  Time
+checked.attempt.id.empty |    2      2  0.1s
+
+DEMO checked.attempt.id.unicode
+Test Summary:              | Pass  Total  Time
+checked.attempt.id.unicode |    2      2  0.1s
+
+DEMO path.oracle.adjacent
+Test Summary:        | Pass  Total  Time
+path.oracle.adjacent |    1      1  0.5s
+
+DEMO path.oracle.reverse
+Test Summary:       | Pass  Total  Time
+path.oracle.reverse |    1      1  0.0s
+
+DEMO path.oracle.disconnected
+Test Summary:            | Pass  Total  Time
+path.oracle.disconnected |    1      1  0.0s
+
+DEMO path.oracle.empty
+Test Summary:     | Pass  Total  Time
+path.oracle.empty |    1      1  0.1s
+
+DEMO path.oracle.singleton
+Test Summary:         | Pass  Total  Time
+path.oracle.singleton |    1      1  0.0s
+
+DEMO path.oracle.malformed
+Test Summary:         | Pass  Total  Time
+path.oracle.malformed |    1      1  0.0s
+
+DEMO catalog.every.todo.has.test.and.warp.mapping
+Test Summary:                                | Pass  Total  Time
+catalog.every.todo.has.test.and.warp.mapping |  183    183  0.3s
+
+Case results: {"passed":58,"error":0,"broken":0,"failed":0,"empty":0}; exit=0

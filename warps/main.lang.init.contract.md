@@ -1,6 +1,6 @@
 # recur-lang init v1
 
-Status: proposed implementation contract; standalone tests intentionally red.
+Status: implemented contract; original red observations are retained separately.
 Warp: `main.lang.init`. Scope is configuration initialization, not plan/scaffold
 generation, arbitrary execution, or a change to the Lang grammar.
 
@@ -110,7 +110,7 @@ pattern. Filesystem race acceptance cannot be inferred from sequential CLI tests
 Final gates require legacy core init, Warp init, Reveal init, Lang query and
 checked-transition tests, plus the main Julia suite and appropriate Cargo tests.
 Compiler/runtime faults are recorded as failed validation attempts, not passes.
-Do not wire the standalone red suite into `julia-tests/runtests.jl` until green.
+The originally standalone suite joins `julia-tests/runtests.jl` only after green.
 
 defines: recur.lang.init.v1 additive project-local opinionated policy initialization
 consumes: recur.lang.query.v1 pure-query boundary remains intact

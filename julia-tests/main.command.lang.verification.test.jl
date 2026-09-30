@@ -1,4 +1,4 @@
-# Standalone tests-first demonstrations. Intentionally outside runtests.jl until green.
+# Tests-first demonstrations, also exercised by the main regression runner.
 # defines: recur.lang.verification.tests executable baseline fault demonstrations
 module LangVerificationTests
 using Test, JSON3, SHA, Dates
@@ -375,17 +375,8 @@ for id in [repeat("a",80),repeat("a",81),".","", "José"]
     end
 end
 
-# Execute the current path helper itself, without running its unrelated future parser tests.
-module PathOracle end
-function load_path_oracle()
-    text=read(joinpath(REPO,"julia-tests/main.lang.pathing.test.jl"),String)
-    for (first,last) in [("function value_at(","function all_power_nodes_reachable("),
-                         ("function every_path_is_contiguous(","function breadcrumbs_equal_unique_path_interiors(")]
-        a=findfirst(first,text); b=findfirst(last,text)
-        @assert a !== nothing && b !== nothing
-        Base.include_string(PathOracle,text[a.start:prevind(text,b.start)],"current-pathing-helper.jl")
-    end
-end
+# Shared with the actual pathing suite; no corrected duplicate oracle in tests.
+include(joinpath(REPO,"demos/pathing/path_validation.jl"))
 function path_fixture(tiles; edge=true)
     a=Dict("x"=>0,"y"=>0); b=Dict("x"=>1,"y"=>0)
     Dict("map"=>Dict("graph"=>Dict("corridors"=>edge ? [Dict("from"=>a,"to"=>b)] : []),"paths"=>[Dict("tiles"=>tiles)]))
@@ -397,8 +388,7 @@ for (name,tiles,edge,expected) in [
     ("empty",[],true,false), ("singleton",[Dict("x"=>0,"y"=>0)],true,false),
     ("malformed",[Dict("x"=>0),Dict("x"=>1,"y"=>0)],true,false)]
     case("path.oracle." * name) do
-        load_path_oracle()
-        @test Base.invokelatest(PathOracle.every_path_is_contiguous,path_fixture(tiles;edge)) == expected
+        @test PathValidation.every_path_is_contiguous(path_fixture(tiles;edge)) == expected
     end
 end
 
@@ -456,7 +446,7 @@ function main(args=ARGS)
         try
             ts=@testset "$id" begin; f(); end
             c=Test.get_test_counts(ts)
-            result["passed"]=c.passes; result["broken"]=c.broken
+            result["passed"]=c.passes; result["failed"]=c.fails; result["errors"]=c.errors; result["broken"]=c.broken
         catch e
             if e isa Test.TestSetException
                 result["passed"]=e.pass; result["failed"]=e.fail; result["errors"]=e.error; result["broken"]=e.broken
@@ -476,6 +466,7 @@ function main(args=ARGS)
                          "companion"=>Dict("path"=>ACTOR,"sha256"=>bytes2hex(sha256(read(ACTOR))))),
         "inputs"=>Dict(p=>bytes2hex(sha256(read(joinpath(REPO,p)))) for p in [
             "julia-tests/main.command.lang.verification.test.jl", "julia-tests/main.lang.pathing.test.jl",
+            "demos/pathing/path_validation.jl",
             "demos/holdem-lab/main.holdem.01.hello.recur", "demos/holdem-lab/main.holdem.06.coordination.recur",
             "demos/lang-verification/main.lang.verification.ledger.json",
             "warps/main.lang.verification.warp-map.json",

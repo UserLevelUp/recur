@@ -1,4 +1,4 @@
-# Standalone red-first acceptance contract. Do not include in runtests.jl yet.
+# Red-first acceptance contract, promoted after the implementation passed.
 # consumes: recur.lang.init.v1 CLI policy installation and preservation
 module RecurLangInitContractTests
 using Test, TOML, JSON3
@@ -50,7 +50,7 @@ end
 const DEFAULT = Dict("schema_version"=>1,"target"=>"unspecified",
     "planning"=>Dict("specification_first"=>true,"prioritize_graph_findings"=>true,"include_test_plan"=>true))
 
-@testset "recur-lang init v1 (standalone; expected red before implementation)" begin
+@testset "recur-lang init v1" begin
     @testset "CLI discovery" begin
         result = invoke(ACTOR,"--help")
         @test result.code == 0

@@ -7,7 +7,7 @@ consumes: recur.lang.companion opinionated companion implementation context
 consumes: recur.eventness.todo stable todo identity and attention convention
 ```
 
-Status: open. Updated: 2026-09-29. Design parent:
+Status: open. Updated: 2026-09-30. Design parent:
 [Improvement 30](README.CORE.IMPROVEMENT30.md).
 
 Use this as one overall todo, or extract a bounded item into
@@ -27,9 +27,9 @@ formal Warp gate acceptance are separate; see
 consumes: recur.lang.work.remaining.init focused initialization todo
 consumes: recur.lang.init.v1 exact initialization contract
 
-- [ ] [Initialize project policy](README.CORE.IMPROVEMENT30.recur-lang.init.todo.md)
-  through `main.lang.init`. The contract/map/standalone red tests exist; implement
-  additive `[recur-lang]` defaults with preview and preservation first.
+- [x] [Initialize project policy](README.CORE.IMPROVEMENT30.recur-lang.init.todo.checked.md)
+  through `main.lang.init`: additive defaults, preview, preservation and safe
+  publication are implemented. See its evidence for current acceptance scope.
 
 ## Following increments
 
@@ -80,7 +80,9 @@ consumes: recur.lang.work.remaining.verification detailed branch-analysis follow
 - [ ] Recover a reproducible Julia validation run. The Hold'em lab observed a
   clean 527-assertion pass, then intermittent compiler/interpreter faults in
   later focused and full-suite runs. Exhaustive poker validation remains
-  unestablished. Read the [observations](demos/holdem-lab/main.holdem.observations.md).
+  unestablished. A current Julia 1.12.7 `-O0 -C generic` full run passed 5,458
+  assertions with 73 expected-broken cases; optimized-runtime stability and
+  exhaustive poker validation remain separate. Read the [observations](demos/holdem-lab/main.holdem.observations.md).
 
   defines: recur.lang.work.remaining.evidence.julia reproducible validation after runtime faults
 

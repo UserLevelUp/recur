@@ -498,6 +498,8 @@ fn examine(
     }
     report["external_assessment"] = json!(verdict);
     if let Some(status) = &args.status {
+        // Capture the complete assessment before reading mutable status/artifacts.
+        let assessed_inputs = reads.hashes.clone();
         let status_bytes = reads.read(root, relative(status)?, true)?;
         let record: CheckedStatus = serde_json::from_slice(&status_bytes)?;
         if record.schema != "recur-lang-checked-status-v1"
@@ -509,13 +511,24 @@ fn examine(
         }
         relative(Path::new(&record.before))?;
         relative(Path::new(&record.after))?;
+        let before = Path::new(&record.before);
+        let after_name = match before.extension().and_then(|s| s.to_str()) {
+            Some(ext) => format!("{}.{ext}", expected.desired),
+            None => expected.desired.clone(),
+        };
+        let expected_after = before.with_file_name(after_name);
         let matches = record.source == source
+            && record.source_hash == policy.source_hash
             && record.scope == args.scope
             && record.attempt_hash == fingerprint(&ab)
             && record.contract_hash == fingerprint(&pb)
             && record.receipt == receipt_path
             && record.contract == policy_path
-            && record.attempt_id == attempt.attempt_id;
+            && record.attempt_id == attempt.attempt_id
+            && before.file_stem().and_then(|s| s.to_str()) == Some(expected.current.as_str())
+            && Path::new(&record.after) == expected_after
+            && record.before != record.after
+            && record.checked_inputs.keys().eq(assessed_inputs.keys());
         check(
             report,
             matches,

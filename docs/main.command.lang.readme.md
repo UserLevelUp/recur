@@ -15,6 +15,11 @@ See [checked evidence and transitions](main.command.lang.checked-transition.read
 for current test evidence, exact confirmed writes and interruption recovery.
 Legacy Warp commands below retain their declared-receipt semantics.
 
+[`recur-lang init`](main.command.lang.init.readme.md) initializes editable
+`[recur-lang]` preferences in the nearest project config, with a pure preview,
+additive preservation and validation before staged publication. Preferences are
+inert until a future planner consumes them.
+
 `recur lang` is the pure query surface for Recur language sources, symbols,
 contracts, lanes, slices, Warps, and runtime Eventness.
 

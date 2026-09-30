@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.verification",
+  "slice_id": "slice-path",
+  "contract_hash": "contract:main.lang.verification.slice-path:v1",
+  "attempt_id": "implemented-20260930",
+  "result_state": "accepted",
+  "result_hash": "observed:lang-verification-58-pass",
+  "evidence": {
+    "path-oracle": [
+      "evidence:warps/lang-verification/implementation-20260930/verification.evidence.json"
+    ]
+  },
+  "reason": null
+}

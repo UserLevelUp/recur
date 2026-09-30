@@ -221,7 +221,13 @@ fn recorded(
     files.iter().filter_map(|path| {
         let stem = path.file_stem()?.to_str()?;
         if !identities.iter().any(|id| id == stem) { return None; }
-        let state = vocabulary.iter().find(|s| stem.ends_with(&format!(".{s}"))).cloned();
+        // Configured suffixes may include the file extension; preserve that
+        // vocabulary in the result while matching the authored identity stem.
+        let extension = path.extension().and_then(|e| e.to_str()).map(|e| format!(".{e}"));
+        let state = vocabulary.iter().filter(|s| {
+            let suffix = extension.as_deref().and_then(|ext| s.strip_suffix(ext)).unwrap_or(s);
+            !suffix.is_empty() && stem.ends_with(&format!(".{suffix}"))
+        }).max_by_key(|s| s.len()).cloned();
         Some(json!({"identity":stem,"path":path.strip_prefix(root).ok()?.to_string_lossy().replace('\\',"/"),"state":state,"evidence":"recorded-only"}))
     }).collect()
 }
@@ -459,7 +465,14 @@ fn query(command: LangCommand, root: &Path) -> Result<Value, Error> {
                         project(&model, (&text, &name), &root, &files, None, None, false)
                     });
                 sources.push(match result {
-                    Ok(value) => json!({"source":name,"source_hash":value["source_hash"],"ir_schema":value["ir_schema"],"status":value["footer"]["validation"],"symbols":value["header"].as_array().unwrap().iter().map(|h| &h["identity"]).collect::<Vec<_>>(),"coverage":value["coverage"],"findings":value["footer"]["findings"],"recorded_eventness":value["footer"]["events"].as_array().unwrap().iter().filter(|e| e["recorded"].is_array()).map(|e| json!({"scope":e["scope"],"records":e["recorded"]})).collect::<Vec<_>>()}),
+                    Ok(value) => {
+                        let recorded = if value["ir_schema"] == wir::WARP_IR_SCHEMA {
+                            value["footer"]["events"].as_array().unwrap().iter()
+                                .filter(|e| e["recorded"].is_array())
+                                .map(|e| json!({"scope":e["scope"],"records":e["recorded"]})).collect::<Vec<_>>()
+                        } else { Vec::new() };
+                        json!({"source":name,"source_hash":value["source_hash"],"ir_schema":value["ir_schema"],"status":value["footer"]["validation"],"symbols":value["header"].as_array().unwrap().iter().map(|h| &h["identity"]).collect::<Vec<_>>(),"coverage":value["coverage"],"findings":value["footer"]["findings"],"recorded_eventness":recorded})
+                    },
                     Err(e) => json!({"source":name,"status":"input-error","diagnostics":[{"code":e.code,"message":e.message,"detail":e.detail}]}),
                 });
             }

@@ -38,8 +38,11 @@ schemas, default/custom Eventness suffixes and supported grammar.
 WIR1 and CIR1 remain distinct. SGR1 analyzes the entire selected CIR1 flow before
 filtering. Boundary references and cycle paths remain visible when lane detail is
 hidden. No query runs a binding or accepts a receipt. All opinionated language
-behavior belongs in `recur-lang`; its implemented action remains the confirmed,
-receipt-bound Warp transition. Inspect the live main.lang.baseline and
+behavior belongs in `recur-lang`; its implemented actions include additive policy
+initialization and the confirmed, receipt-bound Warp transition. Preview editable
+defaults with `recur-lang init --dry-run --json`, then omit `--dry-run` to install
+them in the nearest project config. Preferences are inert; no planner executes.
+See docs/main.command.lang.init.readme.md. Inspect the live main.lang.baseline and
 main.improvement.30.static-graph bubbles for acceptance evidence.
 
 For a worked WIR1 demo, query `recur warp show main.lang.dogfood -d warps`

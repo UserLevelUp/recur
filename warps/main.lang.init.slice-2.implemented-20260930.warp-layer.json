@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.init",
+  "slice_id": "slice-2",
+  "contract_hash": "contract:main.lang.init.slice-2:v1",
+  "attempt_id": "implemented-20260930",
+  "result_state": "accepted",
+  "result_hash": "observed:init-publication-4-pass",
+  "evidence": {
+    "invalid-inputs-no-mutation": [
+      "evidence:warps/lang-verification/implementation-20260930/init.evidence.json"
+    ],
+    "publication-and-policy-isolation": [
+      "warps/main.lang.init.verification.md"
+    ]
+  },
+  "reason": null
+}

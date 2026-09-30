@@ -417,8 +417,12 @@ pub(crate) fn find_named_blocks<'a>(
     ))
     .expect("valid dynamic block regex");
     let mut blocks = Vec::new();
+    let code = code_positions(source);
     for captures in pattern.captures_iter(source) {
         let matched = captures.get(0).expect("capture zero exists");
+        if !code[matched.start()] {
+            continue;
+        }
         let opening = matched.end() - 1;
         let closing = find_closing_brace(source, opening).ok_or_else(|| {
             diagnostic(
@@ -436,6 +440,23 @@ pub(crate) fn find_named_blocks<'a>(
         });
     }
     Ok(blocks)
+}
+
+// Mark lexical code without rewriting the source, preserving UTF-8 byte spans.
+fn code_positions(source: &str) -> Vec<bool> {
+    let (mut string, mut escaped, mut comment) = (false, false, false);
+    source.bytes().map(|byte| {
+        let code = !string && !comment;
+        if comment {
+            if byte == b'\n' { comment = false; }
+        } else if string {
+            if escaped { escaped = false; }
+            else if byte == b'\\' { escaped = true; }
+            else if byte == b'"' { string = false; }
+        } else if byte == b'#' { comment = true; }
+        else if byte == b'"' { string = true; }
+        code
+    }).collect()
 }
 
 fn find_closing_brace(source: &str, opening: usize) -> Option<usize> {
