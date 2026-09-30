@@ -4,7 +4,7 @@ use crate::recur_lang_graph;
 use crate::recur_lang_ir::{self as wir, WarpIr};
 use clap::Subcommand;
 use serde_json::{json, Value};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
@@ -459,7 +459,7 @@ fn query(command: LangCommand, root: &Path) -> Result<Value, Error> {
                         project(&model, (&text, &name), &root, &files, None, None, false)
                     });
                 sources.push(match result {
-                    Ok(value) => json!({"source":name,"source_hash":value["source_hash"],"ir_schema":value["ir_schema"],"status":value["footer"]["validation"],"symbols":value["header"].as_array().unwrap().iter().map(|h| &h["identity"]).collect::<Vec<_>>(),"coverage":value["coverage"],"findings":value["footer"]["findings"]}),
+                    Ok(value) => json!({"source":name,"source_hash":value["source_hash"],"ir_schema":value["ir_schema"],"status":value["footer"]["validation"],"symbols":value["header"].as_array().unwrap().iter().map(|h| &h["identity"]).collect::<Vec<_>>(),"coverage":value["coverage"],"findings":value["footer"]["findings"],"recorded_eventness":value["footer"]["events"].as_array().unwrap().iter().filter(|e| e["recorded"].is_array()).map(|e| json!({"scope":e["scope"],"records":e["recorded"]})).collect::<Vec<_>>()}),
                     Err(e) => json!({"source":name,"status":"input-error","diagnostics":[{"code":e.code,"message":e.message,"detail":e.detail}]}),
                 });
             }
@@ -499,7 +499,68 @@ fn query(command: LangCommand, root: &Path) -> Result<Value, Error> {
     )
 }
 
+fn list_text(value: &Value) -> String {
+    let sources = value["sources"].as_array().unwrap();
+    if sources.is_empty() {
+        return "No .recur sources found under the read root.\nUse recur lang --help for commands.".into();
+    }
+    // Group by directory and the authored filename prefix, without assuming
+    // that `main` or a fixed number of segments defines a language identity.
+    let mut groups: BTreeMap<(&str, &str), Vec<(&str, &Value)>> = BTreeMap::new();
+    for source in sources {
+        let path = source["source"].as_str().unwrap();
+        let (dir, file) = path.rsplit_once('/').unwrap_or((".", path));
+        let stem = file.strip_suffix(".recur").unwrap_or(file);
+        let (prefix, suffix) = stem.rsplit_once('.').unwrap_or(("", stem));
+        groups.entry((dir, prefix)).or_default().push((suffix, source));
+    }
+    let mut out = format!("Recur Lang · {} sources\n", sources.len());
+    let mut previous_dir = None;
+    for ((dir, prefix), entries) in groups {
+        if previous_dir != Some(dir) {
+            out.push_str(&format!("\n{dir}/\n"));
+            previous_dir = Some(dir);
+        }
+        if !prefix.is_empty() {
+            out.push_str(&format!("  {prefix}\n"));
+        }
+        for (suffix, source) in entries {
+            let indent = if prefix.is_empty() { "  " } else { "    " };
+            let status = source["status"].as_str().unwrap_or("unknown");
+            out.push_str(&format!("{indent}{suffix}.recur  [static: {status}]"));
+            if status == "input-error" {
+                for diagnostic in source["diagnostics"].as_array().unwrap() {
+                    out.push_str(&format!(" {}: {}", diagnostic["code"].as_str().unwrap_or("?"), diagnostic["message"].as_str().unwrap_or("")));
+                }
+            } else {
+                let states: BTreeSet<_> = source["recorded_eventness"].as_array().unwrap().iter()
+                    .flat_map(|e| e["records"].as_array().unwrap())
+                    .map(|r| r["state"].as_str().unwrap_or("unclassified"))
+                    .collect();
+                let recorded = if source["ir_schema"] == cir::CONCURRENT_IR_SCHEMA {
+                    "unavailable (CIR1)".into()
+                } else if states.is_empty() {
+                    "none".into()
+                } else {
+                    states.into_iter().collect::<Vec<_>>().join(", ")
+                };
+                out.push_str(&format!("  [recorded: {recorded}]"));
+                if let Some(findings) = source["findings"].as_array().filter(|f| !f.is_empty()) {
+                    let codes: BTreeSet<_> = findings.iter().filter_map(|f| f["code"].as_str()).collect();
+                    out.push_str(&format!("  {}", codes.into_iter().collect::<Vec<_>>().join(", ")));
+                }
+            }
+            out.push('\n');
+        }
+    }
+    out.push_str("\nDiscovery and static checks only; recorded state is not runtime activity.\nUse recur lang show SOURCE --scope SYMBOL -d ROOT; lang list --json includes symbols.\n");
+    out
+}
+
 fn text_view(value: &Value) -> String {
+    if value["schema"] == "recur-lang-list-v1" {
+        return list_text(value);
+    }
     if value["schema"] != QUERY_SCHEMA {
         return serde_json::to_string_pretty(value).unwrap();
     }

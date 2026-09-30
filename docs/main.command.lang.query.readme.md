@@ -7,11 +7,26 @@ formalism inside a chosen boundary; it imposes no schema on surrounding Recur.
 ## Commands and read boundary
 
 ```text
+recur lang [-d ROOT] [--json]
 recur lang list [-d ROOT] [--json]
 recur lang show SOURCE --scope SYMBOL [--expand] [-d ROOT] [--json]
 recur lang report SOURCE [--scope SYMBOL] [--eventness SUFFIX] [--expand] [-d ROOT] [--json]
 recur lang check SOURCE [--scope SYMBOL] [-d ROOT] [--json]
 ```
+
+Bare `recur lang` defaults to `list`. Text output groups discovered programs by
+directory and filename prefix, keeping the final stem segment as the leaf. For
+example, `main.lang.algorithm-lab.recur` appears under `main.lang` with the leaf
+`algorithm-lab.recur`. No fixed prefix depth or mandatory `main` is assumed.
+Use `--help` for the command menu and `--json` for full symbols and diagnostics.
+
+This inventory includes all discovered sources, including unsupported sources and
+ones with no recorded state. Each readable program shows static status separately
+from recorded Eventness; it is not a list of running agents. WIR1 records use the
+same exact association and configured suffixes as `report`. Simultaneous recorded
+states remain visible. CIR1 has no lifecycle model, so its recorded state is
+unavailable. The additive `recorded_eventness` field in list-v1 contains each WIR1
+scope and its `records`; CIR1 has an empty array. Existing list fields are retained.
 
 `-d` defaults to the current directory. Relative SOURCE resolves there; absolute
 SOURCE must remain inside its canonical root. Symlink escapes fail. Discovery
@@ -105,8 +120,8 @@ read/accepted by these commands.
 bounded policy and one attempt. This query assesses external results and actual
 input fingerprints without execution or recursive inventory. Its embedded
 query-v1 packet retains original contracts and fragment coverage; historical
-transition status is separate from current evidence. Original list/show/report/
-check behavior above is unchanged. Read the
+transition status is separate from current evidence. The query commands retain
+their read boundaries and static-check semantics described above. Read the
 [checked transition contract](main.command.lang.checked-transition.readme.md)
 for path/byte limits, CE001–CE007 outcomes and the companion's opt-in writes.
 

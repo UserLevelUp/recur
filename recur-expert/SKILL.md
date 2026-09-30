@@ -17,7 +17,8 @@ radar screen for cognitive orientation:
 - `recur reveal` lists rehydration capsules, personas, agents, and skills.
 - `recur warp` (or `recur warp list`) lists remaining task bubbles, rings, and lanes.
 - `recur watch list` lists active watcher daemon subscriptions and status records.
-- `recur lang list` lists declared formal programs and coordination graphs.
+- `recur lang` (or `recur lang list`) lists the source hierarchy with static status
+  and recorded Eventness; `--json` includes exact symbols and diagnostics.
 - `recur version` lists artifact version lanes and manifests.
 This radar pattern minimizes working-memory strain and context-switching friction
 (serving as an external cognitive cushion for inattentive focus/ADHD): inspect the
@@ -123,7 +124,7 @@ eventness is attention/recorded state, not acceptance proof:
 UUID fields are not automatically trace roles. Tags classify; dependencies order execution.
 Semantic repartition is not the existing layer-composition merge operation.
 
-For Recur Lang, use `recur lang list -d <root>` and source-bound `show`, `report`
+For Recur Lang, use `recur lang -d <root>` and source-bound `show`, `report`
 or `check`; `show` requires `--scope`. Read docs/main.command.lang.query.readme.md
 for the implemented WIR1/CIR1 boundary and stable errors. Scope filtering retains
 boundary references and whole-flow SGR1 findings. Inspect coverage: a successful

@@ -23,6 +23,9 @@ The same query-first workflow is portable to external projects (including Visual
 
 ### Recur Lang specialization
 
+Bare `recur lang -d <root>` displays a compact source hierarchy with static status
+and recorded Eventness, including sources with no recorded state. `--help` opens
+the command menu. This inventory does not establish runtime activity.
 `recur lang list -d <root> --json` inventories bounded language sources, retaining
 unsupported inputs as diagnostics. `recur lang show <source> --scope gcd.f -d
 <root>` explains a local function. `report` accepts `--scope`, `--eventness` and

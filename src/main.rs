@@ -703,10 +703,10 @@ enum Commands {
         dir: PathBuf,
     },
 
-    /// Pure, bounded Recur Lang discovery, contract views and static checks
+    /// List the Recur Lang hierarchy, or inspect contracts and static checks
     Lang {
         #[command(subcommand)]
-        command: recur::recur_lang_query::LangCommand,
+        command: Option<recur::recur_lang_query::LangCommand>,
         /// Read root; relative sources resolve here and cannot escape it
         #[arg(short = 'd', long, default_value = ".", global = true)]
         dir: PathBuf,
@@ -1196,7 +1196,11 @@ fn main() {
         ),
 
         Commands::Lang { command, dir } => {
-            process::exit(recur::recur_lang_query::execute(command, &dir, cli.json));
+            process::exit(recur::recur_lang_query::execute(
+                command.unwrap_or(recur::recur_lang_query::LangCommand::List),
+                &dir,
+                cli.json,
+            ));
         }
 
         Commands::Flatten {

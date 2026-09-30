@@ -1,0 +1,18 @@
+{
+  "command": "cargo test --locked --offline --test lang_query --test lang_checked -j 1 -- --nocapture",
+  "environment": {
+    "CARGO_INCREMENTAL": "0",
+    "RUST_MIN_STACK": "33554432"
+  },
+  "observed_exit_code": 0,
+  "tests": {
+    "failed": 0,
+    "passed": 17,
+    "ignored": 0
+  },
+  "log": "focused-tests.log",
+  "log_sha256": "de64c2d5ca4578f247fa46542ed255ed9eb4b8ecd41b342cb61ec54b35998387",
+  "query_phase_executable_sha256": "4bfb1f3915db8c3856c5298068be039cc8e03d2b80a05a6f337e7c036f66bffa",
+  "post_cargo_executable_sha256": "a354efb441cfabb7f16e64558a4e7c213295732db78438b4944b77bc31a73e28",
+  "note": "Query timings and full outputs bind the earlier binary hash. Cargo subsequently rebuilt the executable; this record does not refresh Warp acceptance."
+}

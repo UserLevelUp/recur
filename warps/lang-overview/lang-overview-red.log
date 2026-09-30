@@ -1,0 +1,71 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.90s
+     Running tests\lang_query.rs (target\debug\deps\lang_query-1a25d18636ac53ad.exe)
+
+running 2 tests
+test bare_lang_handles_empty_root_errors_and_explicit_help ... FAILED
+test bare_lang_lists_hierarchy_and_preserves_read_only_json_discovery ... FAILED
+
+failures:
+
+---- bare_lang_handles_empty_root_errors_and_explicit_help stdout ----
+
+thread 'bare_lang_handles_empty_root_errors_and_explicit_help' (42172) panicked at /rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library\core\src\ops\function.rs:250:5:
+Unexpected return code, failed var == 0
+└── var: 2
+
+command=`"C:\\src\\recur\\target\\debug\\recur.exe" "lang" "-d" "C:\\Users\\marcn\\AppData\\Local\\Temp\\.tmpqkFpVH" "--json"`
+code=2
+stdout=""
+stderr=```
+error: \'recur.exe lang\' requires a subcommand but one was not provided
+  [subcommands: evidence, list, show, report, check, help]
+
+Usage: recur.exe lang [OPTIONS] <COMMAND>
+
+For more information, try \'--help\'.
+```
+
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- bare_lang_lists_hierarchy_and_preserves_read_only_json_discovery stdout ----
+
+thread 'bare_lang_lists_hierarchy_and_preserves_read_only_json_discovery' (45692) panicked at /rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library\core\src\ops\function.rs:250:5:
+Unexpected return code, failed var == 0
+└── var: 2
+
+command=`"C:\\src\\recur\\target\\debug\\recur.exe" "lang" "-d" "C:\\Users\\marcn\\AppData\\Local\\Temp\\.tmpKxG7Ln" "--json"`
+code=2
+stdout=""
+stderr=```
+error: \'recur.exe lang\' requires a subcommand but one was not provided
+  [subcommands: evidence, list, show, report, check, help]
+
+Usage: recur.exe lang [OPTIONS] <COMMAND>
+
+For more information, try \'--help\'.
+```
+
+
+
+
+failures:
+    bare_lang_handles_empty_root_errors_and_explicit_help
+    bare_lang_lists_hierarchy_and_preserves_read_only_json_discovery
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 3 filtered out; finished in 1.11s
+
+error: test failed, to rerun pass `--test lang_query`

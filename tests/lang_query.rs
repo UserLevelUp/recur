@@ -37,6 +37,49 @@ fn inventory(root: &Path) -> BTreeMap<String, Vec<u8>> {
         })
         .collect()
 }
+
+#[test]
+fn bare_lang_lists_hierarchy_and_preserves_read_only_json_discovery() {
+    let root = tempfile::tempdir().unwrap();
+    fs::write(root.path().join("main.lang.algorithms.recur"), ALGORITHM).unwrap();
+    fs::write(root.path().join("main.lang.coordination.recur"), SKIPPY).unwrap();
+    fs::write(root.path().join("main.lang.future.recur"), "recur 9.0 class Future\n").unwrap();
+    fs::write(root.path().join("demo.algorithm.gcd.todo.current.md"), "recorded").unwrap();
+    fs::create_dir(root.path().join("target")).unwrap();
+    fs::write(root.path().join("target/hidden.recur"), ALGORITHM).unwrap();
+    let before = inventory(root.path());
+    let result = run(root.path(), &[], 0);
+    assert_eq!(result, run(root.path(), &["list"], 0));
+    assert_eq!(result["schema"], "recur-lang-list-v1");
+    assert_eq!(result["sources"].as_array().unwrap().len(), 3);
+    assert_eq!(result["sources"][0]["recorded_eventness"][0]["records"][0]["state"], "todo.current");
+    let output = Command::new(env!("CARGO_BIN_EXE_recur"))
+        .args(["lang", "-d"]).arg(root.path()).assert().success()
+        .get_output().stdout.clone();
+    let text = String::from_utf8(output).unwrap();
+    assert!(text.contains("main.lang\n"), "{text}");
+    assert!(text.contains("algorithms.recur"), "{text}");
+    assert!(text.contains("recorded: todo.current"), "{text}");
+    assert!(text.contains("coordination.recur"), "{text}");
+    assert!(text.contains("LANG005"), "{text}");
+    assert!(!text.contains("hidden.recur"), "{text}");
+    assert!(!text.contains("\"coverage\""), "{text}");
+    assert!(text.lines().count() < 20, "{text}");
+    assert_eq!(before, inventory(root.path()));
+}
+
+#[test]
+fn bare_lang_handles_empty_root_errors_and_explicit_help() {
+    let root = tempfile::tempdir().unwrap();
+    assert_eq!(run(root.path(), &[], 0)["sources"], serde_json::json!([]));
+    Command::new(env!("CARGO_BIN_EXE_recur"))
+        .args(["lang", "-d"]).arg(root.path()).assert().success()
+        .stdout(predicates::str::contains("No .recur sources"));
+    assert_eq!(run(&root.path().join("missing"), &[], 2)["diagnostics"][0]["code"], "LANG001");
+    Command::new(env!("CARGO_BIN_EXE_recur"))
+        .args(["lang", "--help"]).assert().success()
+        .stdout(predicates::str::contains("Commands:"));
+}
 #[test]
 fn pure_queries_preserve_unicode_exact_inventory_and_scope_boundaries() {
     let parent = tempfile::tempdir().unwrap();
