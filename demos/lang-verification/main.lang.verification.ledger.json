@@ -1,0 +1,490 @@
+{
+  "schema": "lang-verification-ledger-v1",
+  "qualification": "A mapping of targeted executable demos, existing tests and explicitly remaining test design; not a claim of exhaustive coverage or acceptance.",
+  "todo": "README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md",
+  "test_suite": "julia-tests/main.command.lang.verification.test.jl",
+  "items": [
+    {
+      "id": "V01",
+      "title": "Path-contiguity oracle",
+      "warp": "main.lang.verification",
+      "slice": "slice-path",
+      "case_prefixes": [
+        "path.oracle."
+      ],
+      "existing_artifacts": [
+        "julia-tests/main.lang.pathing.test.jl"
+      ],
+      "remaining_test_work": "Reject empty/singleton paths; accept each adjacent forward/reverse edge; reject malformed coordinates and disconnected paths.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V02",
+      "title": "Configured Eventness suffixes",
+      "warp": "main.lang.verification",
+      "slice": "slice-query",
+      "case_prefixes": [
+        "query.suffix.",
+        "query.simultaneous."
+      ],
+      "existing_artifacts": [
+        "tests/lang_query.rs"
+      ],
+      "remaining_test_work": "Exercise default, dotted, extension-bearing and overlapping state suffixes; preserve source identity and root isolation.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V03",
+      "title": "CIR empty recorded Eventness",
+      "warp": "main.lang.verification",
+      "slice": "slice-query",
+      "case_prefixes": [
+        "query.cir."
+      ],
+      "existing_artifacts": [
+        "docs/main.command.lang.query.readme.md"
+      ],
+      "remaining_test_work": "CIR list reports exactly []; keep WIR recorded states intact.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V04",
+      "title": "Ordinary PR gate and pinned environments",
+      "warp": "main.lang.verification",
+      "slice": "slice-delivery",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        ".github/workflows/ci.yml",
+        "demos/web-evidence-lab/Project.toml",
+        "julia-tests/runtests.jl"
+      ],
+      "remaining_test_work": "Add a Julia supported-suite runner with nonzero eligibility, separate pass/fail/error/broken/skip counts and exact exit propagation; exercise failing/empty child fixtures before wiring CI.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V05",
+      "title": "Reproducible Julia and exhaustive Holdem",
+      "warp": "main.lang.verification",
+      "slice": "slice-delivery",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "demos/holdem-lab/main.holdem.test.jl",
+        "demos/holdem-lab/main.holdem.exhaustive.jl"
+      ],
+      "remaining_test_work": "Run the explicit Julia executable and report process faults separately; exhaustive five-card oracle remains a distinct gate.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V06",
+      "title": "Fresh inputs and immutable refresh",
+      "warp": "main.lang.verification",
+      "slice": "slice-final",
+      "case_prefixes": [
+        "checked.drift."
+      ],
+      "existing_artifacts": [
+        "tests/lang_checked_reentry.rs",
+        "tests/warp_refresh.rs"
+      ],
+      "remaining_test_work": "Mutate every assessed role, preserve history, then validate a genuinely fresh replacement; no relabeling stale evidence.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V07",
+      "title": "Pure read containment and no execution",
+      "warp": "main.lang.verification",
+      "slice": "slice-query",
+      "case_prefixes": [
+        "query.escape.",
+        "query.directory."
+      ],
+      "existing_artifacts": [
+        "tests/lang_query.rs",
+        "tests/lang_checked.rs"
+      ],
+      "remaining_test_work": "Inside links resolve, outside links reject LANG002; sentinel bindings do not run and inventories remain unchanged; extend to linked roots/configs.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V08",
+      "title": "Complete WIR diagnostic matrix",
+      "warp": "main.lang.verification",
+      "slice": "slice-parser",
+      "case_prefixes": [
+        "parser.reject.",
+        "parser.unicode."
+      ],
+      "existing_artifacts": [
+        "src/recur_lang_ir.rs"
+      ],
+      "remaining_test_work": "Extend existing exact-code tests with RLIR001/008/009/011, version/scope/function/flow/event/Warp cardinality, bundles and aliases; independent source spans.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V09",
+      "title": "Complete CIR diagnostic matrix",
+      "warp": "main.lang.verification",
+      "slice": "slice-parser",
+      "case_prefixes": [
+        "parser.reject.",
+        "graph.fault."
+      ],
+      "existing_artifacts": [
+        "src/recur_lang_concurrent_ir.rs"
+      ],
+      "remaining_test_work": "Extend RCIR001/003/004/006/010 cardinality and coordinator identity tests; retain existing ordered await, policy and projection controls.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V10",
+      "title": "Lexical isolation and await policy",
+      "warp": "main.lang.verification",
+      "slice": "slice-parser",
+      "case_prefixes": [
+        "parser.comments."
+      ],
+      "existing_artifacts": [
+        "src/recur_lang_concurrent_ir.rs"
+      ],
+      "remaining_test_work": "Comments cannot invent declarations; add quoted/escaped braces, malformed tokens, multiline flows and repeated/reordered await cases after documenting exact supported semantics.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V11",
+      "title": "Independent graph oracle",
+      "warp": "main.lang.verification",
+      "slice": "slice-parser",
+      "case_prefixes": [
+        "graph."
+      ],
+      "existing_artifacts": [
+        "src/recur_lang_graph.rs",
+        "demos/holdem-lab/main.holdem.graph.test.jl"
+      ],
+      "remaining_test_work": "Exact node/edge/wait/reachability oracle and valid reported cycle edges; extend disjoint/overlapping shortest cycles and AND-readiness boundary.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V12",
+      "title": "Query input/error/projection matrix",
+      "warp": "main.lang.verification",
+      "slice": "slice-query",
+      "case_prefixes": [
+        "query.",
+        "parser.unicode."
+      ],
+      "existing_artifacts": [
+        "tests/lang_query.rs",
+        "src/recur_lang_query.rs"
+      ],
+      "remaining_test_work": "Keep exact exit/schema/hash/ambiguity codes, compact-expanded equivalence, malformed config and excluded-path cases.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V13",
+      "title": "Companion argument combinations",
+      "warp": "main.lang.verification",
+      "slice": "slice-query",
+      "case_prefixes": [
+        "actor.arguments.",
+        "checked.control."
+      ],
+      "existing_artifacts": [
+        "src/recur_lang_main.rs"
+      ],
+      "remaining_test_work": "Invalid confirmation/recovery/ID combinations reject with no mutation; valid checked preview remains pure.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V14",
+      "title": "Conflicting published records",
+      "warp": "main.lang.verification",
+      "slice": "slice-records",
+      "case_prefixes": [
+        "checked.conflict."
+      ],
+      "existing_artifacts": [
+        "tests/lang_checked_transition.rs",
+        "tests/lang_checked_reentry.rs"
+      ],
+      "remaining_test_work": "Both durable records must agree when present; reject malformed prepared records even beside accepted history. Freeze missing-prepared replay policy separately.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V15",
+      "title": "Queried status exact identity",
+      "warp": "main.lang.verification",
+      "slice": "slice-status",
+      "case_prefixes": [
+        "checked.status."
+      ],
+      "existing_artifacts": [
+        "src/recur_lang_evidence.rs",
+        "tests/lang_checked.rs"
+      ],
+      "remaining_test_work": "Reject altered source hash, substituted before/after and omitted assessed inputs; no current acceptance and no actor mutation.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V16",
+      "title": "Legacy containment and rollback",
+      "warp": "main.lang.verification",
+      "slice": "slice-records",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "src/recur_lang_main.rs"
+      ],
+      "remaining_test_work": "Add linked legacy lane, occupied status destination, deterministic write failure/rollback and replay tests; legacy replacement policy is separate from checked immutability.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V17",
+      "title": "Parent qualification matrix",
+      "warp": "main.lang.verification",
+      "slice": "slice-evidence",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "src/warp_bubble.rs",
+        "tests/warp_refresh.rs"
+      ],
+      "remaining_test_work": "Cross evidence freshness/status, acceptance domain, child state and exact public hash; same shape/different identity and nesting must not inherit acceptance.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V18",
+      "title": "Runtime loader gate and boundaries",
+      "warp": "main.lang.verification",
+      "slice": "slice-evidence",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "demos/web-evidence-lab/main.lang.evidence.test.jl"
+      ],
+      "remaining_test_work": "Run every existing case; extend exact +/-1 unique resource limits, growth during read and multi-reason precedence without mutating packets or executing producers.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V19",
+      "title": "Runtime API/browser integration",
+      "warp": "main.lang.verification",
+      "slice": "slice-evidence",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "demos/web-evidence-lab/main.lang.api.test.jl",
+        "warps/main.lang.runtime-evidence.contract.md"
+      ],
+      "remaining_test_work": "Reuse existing Warp order; API allowlist/opt-in/empty compatibility plus browser loading/error/stale/mismatch, responsive views and disk-restart lifecycle. Port Python browser checks before execution.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V20",
+      "title": "Specialist mock-to-real substitution",
+      "warp": "main.lang.verification",
+      "slice": "slice-evidence",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "demos/holdem-lab/main.holdem.06.test.jl",
+        "warps/main.lang.runtime-evidence.contract.md"
+      ],
+      "remaining_test_work": "Add a bounded producer fixture with identical public contract for mock/real, wrong-worker negative and separate exact-hash parent acceptance.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V21",
+      "title": "Syscall fault injection",
+      "warp": "main.lang.verification",
+      "slice": "slice-robustness",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "src/recur_lang_checked_transition.rs",
+        "tests/lang_checked_reentry.rs"
+      ],
+      "remaining_test_work": "Extend existing stage interruption tests with deterministic partial write/sync/link/unlink/cleanup faults and fresh-process recovery, preserving valid state without false ACK.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V22",
+      "title": "Graph/layer properties and real refresh forks",
+      "warp": "main.lang.verification",
+      "slice": "slice-robustness",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "src/warp_bubble.rs",
+        "tests/warp_refresh.rs",
+        "tests/warp_refresh_bounds.rs"
+      ],
+      "remaining_test_work": "Permute layers and duplicate equivalent attempts; conflicts cannot increase coverage. Use correctly named competing successors and verify attribution/narrowed predecessors/reused IDs.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V23",
+      "title": "Limits, IDs, timestamps and hash vectors",
+      "warp": "main.lang.verification",
+      "slice": "slice-robustness",
+      "case_prefixes": [
+        "checked.attempt."
+      ],
+      "existing_artifacts": [
+        "tests/lang_checked.rs",
+        "tests/warp_refresh_bounds.rs",
+        "src/warp_evidence.rs"
+      ],
+      "remaining_test_work": "Extend 80/81 ID boundary with 128/129 cases, duplicate JSON keys, timestamp extremes, multi-reason precedence and independent Rust/Julia FNV vectors.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V24",
+      "title": "Spans, negative mutations and Julia types",
+      "warp": "main.lang.verification",
+      "slice": "slice-parser",
+      "case_prefixes": [
+        "parser.unicode."
+      ],
+      "existing_artifacts": [
+        "julia-tests/main.lang.test.jl",
+        "src/recur_lang_ir.rs"
+      ],
+      "remaining_test_work": "Independent UTF-8 source slices, verified single-fault mutations, missing/extra fields, Bool versus Int, aliases/intrinsics/bindings, immutable values and JSON controls.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V25",
+      "title": "Inspector stress and conformance corpus",
+      "warp": "main.lang.verification",
+      "slice": "slice-evidence",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "julia-tests/main.demo.lang-inspector.test.jl",
+        "julia-tests/main.demo.lang-dogfood.test.jl",
+        "demos/holdem-lab/main.holdem.graph.test.jl"
+      ],
+      "remaining_test_work": "Nested malformed data, bounded inventory/time/output/Unicode/navigation failures; version supported Rust/Julia corpus and preserve statically sound but wrong-output negative.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V26",
+      "title": "Coverage, mutations, fuzzing and stress",
+      "warp": "main.lang.verification",
+      "slice": "slice-robustness",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "src/recur_lang_graph.rs",
+        "tests/lang_checked.rs"
+      ],
+      "remaining_test_work": "Measure only after reproducible gates; seed/minimize SCC and containment/hash/fan-in/exit/resource mutations in a separate bounded slow lane.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V27",
+      "title": "Native platforms and extracted packages",
+      "warp": "main.lang.verification",
+      "slice": "slice-delivery",
+      "case_prefixes": [
+        "delivery.seven."
+      ],
+      "existing_artifacts": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/release.yml",
+        "scripts/check_lang_package.py"
+      ],
+      "remaining_test_work": "Current demo only smokes a selected binary directory. Port package content/hash/query/CIR/preview checks to Cargo/Julia and run on extracted Linux/Windows packages; do not execute Python.",
+      "coverage": "targeted-executable",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V28",
+      "title": "Capability and Eventness guidance",
+      "warp": "main.lang.verification",
+      "slice": "slice-delivery",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "julia-expert/references/recur-playbook.md",
+        "recur-eventness/SKILL.md",
+        "docs/main.command.lang.query.readme.md"
+      ],
+      "remaining_test_work": "Add a guidance regression that preserves inspection of overlapping markers; reconcile delivered capability tables and current runtime readiness without deleting markers.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V29",
+      "title": "Trace identifiers and configured roles",
+      "warp": "main.lang.verification",
+      "slice": "slice-delivery",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "README.CORE.EVENTNESS.md",
+        ".recur/config.toml",
+        "src/trait/trace_id.rs"
+      ],
+      "remaining_test_work": "Query each declared full ID and check roles under explicit custom/default keyword fixtures; do not silently overwrite local policy.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V30",
+      "title": "Advanced milestones",
+      "warp": "main.lang.verification",
+      "slice": "contract-first",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "README.CORE.IMPROVEMENT30.md"
+      ],
+      "remaining_test_work": "Separate contracts and red-test gates for unified identity, grid, watch readiness, retry/failure, scatter/gather and imports. No invented executable semantics before each contract.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V31",
+      "title": "Requirement-to-evidence ledger",
+      "warp": "main.lang.verification",
+      "slice": "slice-0",
+      "case_prefixes": ["catalog."],
+      "existing_artifacts": [
+        "README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md"
+      ],
+      "remaining_test_work": "Catalog test checks every checkbox ID, unique entries, real suite paths, valid slices and executable new case selectors; accepted evidence stays null until qualified.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    },
+    {
+      "id": "V32",
+      "title": "Observed gates and checked residue",
+      "warp": "main.lang.verification",
+      "slice": "slice-final",
+      "case_prefixes": [],
+      "existing_artifacts": [
+        "README.CORE.EVENTNESS.md",
+        "warps/main.lang.verification.warp-map.json"
+      ],
+      "remaining_test_work": "Bind revision, binary/test/config/runner hashes, exits, platforms and real gate receipts; rename only completed scope after verification.",
+      "coverage": "existing-or-test-design",
+      "accepted_evidence": null
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.advanced.imports",
+  "bubble_uuid": "01a0f09e-1615-7d03-971c-f5e5b5b884e0",
+  "current_slice": "slice-contract",
+  "goal": "Bounded resolution with lossless expansion and collapse",
+  "contract_document": "warps/main.lang.advanced.imports.contract.md",
+  "planning_status": "contract-first-deferred",
+  "invariants": [
+    "No executable language semantics are implied before a reviewed feature contract.",
+    "Freeze red tests and positive controls before implementing behavior.",
+    "Use Cargo and Julia; preserve pure core queries and explicit companion writes."
+  ],
+  "required_slices": [
+    {
+      "slice_id": "slice-contract",
+      "slice_uuid": "01a0f09e-1615-7627-8080-287eb0d5113b",
+      "contract_hash": "contract:main.lang.advanced.imports.slice-contract:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "reviewed-feature-contract"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-tests",
+      "slice_uuid": "01a0f09e-1615-7fad-8ee8-aae49447cb93",
+      "contract_hash": "contract:main.lang.advanced.imports.slice-tests:v1",
+      "depends_on": [
+        "slice-contract"
+      ],
+      "evidence_gates": [
+        "observed-red-tests"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-implementation",
+      "slice_uuid": "01a0f09e-1615-79a2-8b93-3c310e9fddeb",
+      "contract_hash": "contract:main.lang.advanced.imports.slice-implementation:v1",
+      "depends_on": [
+        "slice-tests"
+      ],
+      "evidence_gates": [
+        "feature-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "feature-tests": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0f09e-1615-79d5-b3c9-2871258840bc",
+      "contract_hash": "contract:main.lang.advanced.imports.slice-final:v1",
+      "depends_on": [
+        "slice-implementation"
+      ],
+      "evidence_gates": [
+        "integration-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "integration-tests": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    }
+  ]
+}

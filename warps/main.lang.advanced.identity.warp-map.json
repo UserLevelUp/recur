@@ -1,0 +1,74 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.advanced.identity",
+  "bubble_uuid": "01a0f09e-1614-74fb-9ac5-73e3137aeae0",
+  "current_slice": "slice-contract",
+  "goal": "WIR/CIR identity, lifecycle and public-contract binding",
+  "contract_document": "warps/main.lang.advanced.identity.contract.md",
+  "planning_status": "contract-first-deferred",
+  "invariants": [
+    "No executable language semantics are implied before a reviewed feature contract.",
+    "Freeze red tests and positive controls before implementing behavior.",
+    "Use Cargo and Julia; preserve pure core queries and explicit companion writes."
+  ],
+  "required_slices": [
+    {
+      "slice_id": "slice-contract",
+      "slice_uuid": "01a0f09e-1614-72d9-8201-356878f7a08e",
+      "contract_hash": "contract:main.lang.advanced.identity.slice-contract:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "reviewed-feature-contract"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-tests",
+      "slice_uuid": "01a0f09e-1614-7305-b476-0c9c9293c316",
+      "contract_hash": "contract:main.lang.advanced.identity.slice-tests:v1",
+      "depends_on": [
+        "slice-contract"
+      ],
+      "evidence_gates": [
+        "observed-red-tests"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-implementation",
+      "slice_uuid": "01a0f09e-1614-7b28-ad80-c1aea9b464ec",
+      "contract_hash": "contract:main.lang.advanced.identity.slice-implementation:v1",
+      "depends_on": [
+        "slice-tests"
+      ],
+      "evidence_gates": [
+        "feature-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "feature-tests": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0f09e-1614-7dc0-8334-0652891e6249",
+      "contract_hash": "contract:main.lang.advanced.identity.slice-final:v1",
+      "depends_on": [
+        "slice-implementation"
+      ],
+      "evidence_gates": [
+        "integration-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "integration-tests": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    }
+  ]
+}

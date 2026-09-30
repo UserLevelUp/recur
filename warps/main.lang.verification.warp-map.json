@@ -1,0 +1,233 @@
+{
+  "bubble_uuid": "01a0f09a-cd8e-77e4-a883-6db91ef912c9",
+  "current_slice": "slice-0",
+  "goal": "Demonstrate Lang verification todos with executable tests before bounded implementation and exact-input acceptance.",
+  "invariants": [
+    "Core queries remain pure; companion mutations stay explicit and bounded.",
+    "Use Cargo and Julia only for Recur validation.",
+    "Do not alter implementation until the owning slice has its reviewed assertions and observed baseline.",
+    "Preserve legacy coverage and immutable historical evidence.",
+    "A targeted demo or green catalogue does not establish exhaustive coverage or Warp acceptance.",
+    "Advanced features require their own contract-first Warps."
+  ],
+  "required_slices": [
+    {
+      "slice_id": "slice-0",
+      "slice_uuid": "01a0f09e-1605-788d-be16-6ff715da8b26",
+      "contract_hash": "contract:main.lang.verification.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "catalog-and-red-baseline"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-query",
+      "slice_uuid": "01a0f09e-1606-79ad-bc51-30bf0785df9a",
+      "contract_hash": "contract:main.lang.verification.slice-query:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "query-and-purity"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "query-and-purity": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-path",
+      "slice_uuid": "01a0f09e-1606-7a02-989c-739423bbf4d1",
+      "contract_hash": "contract:main.lang.verification.slice-path:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "path-oracle"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "path-oracle": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-parser",
+      "slice_uuid": "01a0f09e-1606-7982-9f27-0729ab6ef99c",
+      "contract_hash": "contract:main.lang.verification.slice-parser:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "parser-and-graph"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "parser-and-graph": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-status",
+      "slice_uuid": "01a0f09e-1606-77ac-ba38-efd8c9835d06",
+      "contract_hash": "contract:main.lang.verification.slice-status:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "exact-status-identity"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "exact-status-identity": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-records",
+      "slice_uuid": "01a0f09e-1606-7ec0-996a-52839ec8bc72",
+      "contract_hash": "contract:main.lang.verification.slice-records:v1",
+      "depends_on": [
+        "slice-status"
+      ],
+      "evidence_gates": [
+        "record-consistency-and-recovery"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "record-consistency-and-recovery": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-evidence-tests",
+      "slice_uuid": "01a0f09e-1606-7651-b784-b33a33d09b40",
+      "contract_hash": "contract:main.lang.verification.slice-evidence-tests:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "evidence-test-matrix"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-evidence",
+      "slice_uuid": "01a0f09e-1606-786c-8dcd-f7ed52e415f6",
+      "contract_hash": "contract:main.lang.verification.slice-evidence:v1",
+      "depends_on": [
+        "slice-evidence-tests"
+      ],
+      "evidence_gates": [
+        "loader-parent-and-integration"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "loader-parent-and-integration": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-robustness-tests",
+      "slice_uuid": "01a0f09e-1606-77cc-a4fe-24d09a1ebefb",
+      "contract_hash": "contract:main.lang.verification.slice-robustness-tests:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "fault-and-property-test-matrix"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-robustness",
+      "slice_uuid": "01a0f09e-1606-7fd3-aba1-5bd47d33dd1f",
+      "contract_hash": "contract:main.lang.verification.slice-robustness:v1",
+      "depends_on": [
+        "slice-robustness-tests"
+      ],
+      "evidence_gates": [
+        "faults-properties-and-bounds"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "faults-properties-and-bounds": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-delivery-tests",
+      "slice_uuid": "01a0f09e-1606-71fa-877d-e3a4d16312a7",
+      "contract_hash": "contract:main.lang.verification.slice-delivery-tests:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "ci-package-and-guidance-tests"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-delivery",
+      "slice_uuid": "01a0f09e-1606-7069-9b94-9f6ce4de1c85",
+      "contract_hash": "contract:main.lang.verification.slice-delivery:v1",
+      "depends_on": [
+        "slice-delivery-tests"
+      ],
+      "evidence_gates": [
+        "platform-runner-and-package"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "platform-runner-and-package": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    },
+    {
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0f09e-1606-7fb2-b3f2-89a8c7ac7040",
+      "contract_hash": "contract:main.lang.verification.slice-final:v1",
+      "depends_on": [
+        "slice-query",
+        "slice-path",
+        "slice-parser",
+        "slice-records",
+        "slice-evidence",
+        "slice-robustness",
+        "slice-delivery"
+      ],
+      "evidence_gates": [
+        "fresh-integration-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "fresh-integration-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      }
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.verification",
+  "contract_document": "warps/main.lang.verification.contract.md",
+  "planning_status": "tests-first-red-baseline"
+}

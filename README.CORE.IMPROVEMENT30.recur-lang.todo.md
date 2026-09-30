@@ -69,6 +69,9 @@ defines: recur.lang.work.remaining.evidence verification freshness and integrati
 consumes: recur.lang.work.remaining.verification detailed branch-analysis follow-ups
 
 - [ ] Work through the [baseline and evidence verification focus](README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md).
+  Its [runnable demos and test catalog](demos/lang-verification/main.lang.verification.readme.md)
+  feed the tests-first `main.lang.verification` Warp; advanced features remain
+  in separate `main.lang.advanced.*` contract-first Warps.
   It incorporates the supplied branch analysis, two locally reproduced query
   discrepancies, the inspected path-test/CI gaps, and unexecuted corruption and
   parser hypotheses. Its detailed checklists own those follow-ups; the items

@@ -1,0 +1,753 @@
+
+DEMO query.suffix.complete
+Test Summary:         | Pass  Total  Time
+query.suffix.complete |   10     10  0.7s
+
+DEMO query.suffix.todo_complete
+Test Summary:              | Pass  Total  Time
+query.suffix.todo_complete |   10     10  0.4s
+
+DEMO query.suffix._complete_md
+query.suffix._complete_md: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:117
+  Expression: length((packet(query(root, "report", "spec.recur", "--eventness", state)))["header"]) == 1
+   Evaluated: 0 == 1
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#8#9"{String})(parent::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:117
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#8#9"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#6#7"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:104
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:             | Pass  Fail  Total  Time
+query.suffix._complete_md |    9     1     10  0.9s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO query.suffix._todo_complete_md
+query.suffix._todo_complete_md: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:117
+  Expression: length((packet(query(root, "report", "spec.recur", "--eventness", state)))["header"]) == 1
+   Evaluated: 0 == 1
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#8#9"{String})(parent::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:117
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#8#9"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#6#7"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:104
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:                  | Pass  Fail  Total  Time
+query.suffix._todo_complete_md |    9     1     10  0.4s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO query.cir.empty.eventness
+query.cir.empty.eventness: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:127
+  Expression: ((p["sources"])[1])["recorded_eventness"] == []
+   Evaluated: Any[Dict{String, Any}("records" => Any[], "scope" => "left"), Dict{String, Any}("records" => Any[], "scope" => "right"), Dict{String, Any}("records" => Any[], "scope" => "settle"), Dict{String, Any}("records" => Any[], "scope" => "audit")] == Any[]
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#14#15")(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:127
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#14#15", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#12#13")()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:123
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:             | Pass  Fail  Total  Time
+query.cir.empty.eventness |    3     1      4  0.2s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO query.simultaneous.states
+Test Summary:             | Pass  Total  Time
+query.simultaneous.states |    5      5  0.2s
+
+DEMO query.invalid.inputs
+Test Summary:        | Pass  Total  Time
+query.invalid.inputs |    9      9  0.4s
+
+DEMO query.escape.and.executable.binding
+Test Summary:                       | Pass  Total  Time
+query.escape.and.executable.binding |   11     11  0.6s
+
+DEMO query.directory.link.boundary
+Test Summary:                 | Pass  Total  Time
+query.directory.link.boundary |    6      6  0.3s
+
+DEMO actor.arguments.confirm.without.receipt
+Test Summary:                           | Pass  Total  Time
+actor.arguments.confirm.without.receipt |    2      2  0.6s
+
+DEMO actor.arguments.recover.without.checked
+Test Summary:                           | Pass  Total  Time
+actor.arguments.recover.without.checked |    2      2  0.1s
+
+DEMO actor.arguments.checked.with.id
+Test Summary:                   | Pass  Total  Time
+actor.arguments.checked.with.id |    2      2  0.1s
+
+DEMO delivery.seven.binary.smoke
+Test Summary:               | Pass  Total  Time
+delivery.seven.binary.smoke |   28     28  1.8s
+
+DEMO graph.exact.oracle
+Test Summary:      | Pass  Total  Time
+graph.exact.oracle |   12     12  0.5s
+
+DEMO graph.fault.self
+Test Summary:    | Pass  Total  Time
+graph.fault.self |    7      7  0.2s
+
+DEMO graph.fault.dependency
+Test Summary:          | Pass  Total  Time
+graph.fault.dependency |    7      7  0.1s
+
+DEMO graph.fault.wait
+Test Summary:    | Pass  Total  Time
+graph.fault.wait |    5      5  0.1s
+
+DEMO graph.fault.missing.join
+Test Summary:            | Pass  Total  Time
+graph.fault.missing.join |    5      5  0.1s
+
+DEMO parser.comments.are.inert
+parser.comments.are.inert: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:39
+  Expression: r.code == code
+   Evaluated: 2 == 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] packet(r::@NamedTuple{code::Int64, packet::Dict{String, Any}, stdout::String, stderr::String}, code::Int64)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:39
+ [3] (::Main.LangVerificationTests.var"#93#94")(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:259
+ [4] mktempdir(fn::Main.LangVerificationTests.var"#93#94", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [5] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [6] (::Main.LangVerificationTests.var"#91#92")()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:255
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [8] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [9] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+parser.comments.are.inert: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:260
+  Expression: [h["identity"] for h = get(p, "header", [])] == ["hello.h"]
+   Evaluated: Any[] == ["hello.h"]
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#93#94")(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:260
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#93#94", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#91#92")()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:255
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:             | Pass  Fail  Total  Time
+parser.comments.are.inert |    1     2      3  0.2s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO parser.reject.duplicate.scope
+Test Summary:                 | Pass  Total  Time
+parser.reject.duplicate.scope |    3      3  0.1s
+
+DEMO parser.reject.missing.function
+Test Summary:                  | Pass  Total  Time
+parser.reject.missing.function |    3      3  0.1s
+
+DEMO parser.reject.wrong.flow.port
+Test Summary:                 | Pass  Total  Time
+parser.reject.wrong.flow.port |    3      3  0.1s
+
+DEMO parser.reject.undeclared.state
+Test Summary:                  | Pass  Total  Time
+parser.reject.undeclared.state |    3      3  0.1s
+
+DEMO parser.reject.unknown.producer
+Test Summary:                  | Pass  Total  Time
+parser.reject.unknown.producer |    3      3  0.1s
+
+DEMO parser.reject.missing.policy
+Test Summary:                | Pass  Total  Time
+parser.reject.missing.policy |    3      3  0.1s
+
+DEMO parser.unicode.spans.LF
+Test Summary:           | Pass  Total  Time
+parser.unicode.spans.LF |    6      6  0.2s
+
+DEMO parser.unicode.spans.CRLF
+Test Summary:             | Pass  Total  Time
+parser.unicode.spans.CRLF |    6      6  0.1s
+
+DEMO checked.control.preview.accept.replay
+Test Summary:                         | Pass  Total  Time
+checked.control.preview.accept.replay |   13     13  0.5s
+
+DEMO checked.status.source_hash
+checked.status.source_hash: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.status.source_hash: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+  Expression: (p["transition_status"])["current_accepted"] == false
+   Evaluated: true == false
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:              | Pass  Fail  Total  Time
+checked.status.source_hash |   10     2     12  0.6s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO checked.status.before
+checked.status.before: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.status.before: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+  Expression: (p["transition_status"])["current_accepted"] == false
+   Evaluated: true == false
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:         | Pass  Fail  Total  Time
+checked.status.before |   10     2     12  0.5s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO checked.status.after
+checked.status.after: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.status.after: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+  Expression: (p["transition_status"])["current_accepted"] == false
+   Evaluated: true == false
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:        | Pass  Fail  Total  Time
+checked.status.after |   10     2     12  0.5s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO checked.status.checked_inputs
+checked.status.checked_inputs: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:324
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.status.checked_inputs: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+  Expression: (p["transition_status"])["current_accepted"] == false
+   Evaluated: true == false
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#119#120"{String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:326
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#119#120"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#117#118"{String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:309
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:                 | Pass  Fail  Total  Time
+checked.status.checked_inputs |   10     2     12  0.5s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO checked.conflict.prepared.scope
+checked.conflict.prepared.scope: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.conflict.prepared.scope: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+  Expression: isnothing(r.packet) || get(get(r.packet, "action", Dict()), "ack", false) != true
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.conflict.prepared.scope: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.conflict.prepared.scope: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+  Expression: isnothing(r.packet) || get(get(r.packet, "action", Dict()), "ack", false) != true
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:                   | Pass  Fail  Total  Time
+checked.conflict.prepared.scope |    8     4     12  0.6s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO checked.conflict.prepared.json
+checked.conflict.prepared.json: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.conflict.prepared.json: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+  Expression: isnothing(r.packet) || get(get(r.packet, "action", Dict()), "ack", false) != true
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.conflict.prepared.json: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+  Expression: r.code != 0
+   Evaluated: 0 != 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:346
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+checked.conflict.prepared.json: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+  Expression: isnothing(r.packet) || get(get(r.packet, "action", Dict()), "ack", false) != true
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#125#126"{String, String})(root::String)
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:347
+ [3] mktempdir(fn::Main.LangVerificationTests.var"#125#126"{String, String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir (repeats 2 times)
+   @ .\file.jl:937 [inlined]
+ [5] (::Main.LangVerificationTests.var"#123#124"{String, String})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:336
+ [6] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [7] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [8] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:                  | Pass  Fail  Total  Time
+checked.conflict.prepared.json |    8     4     12  0.5s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO checked.conflict.accepted.scope
+Test Summary:                   | Pass  Total  Time
+checked.conflict.accepted.scope |   12     12  0.5s
+
+DEMO checked.conflict.accepted.json
+Test Summary:                  | Pass  Total  Time
+checked.conflict.accepted.json |   12     12  0.5s
+
+DEMO checked.drift.spec_recur
+Test Summary:            | Pass  Total  Time
+checked.drift.spec_recur |   10     10  0.5s
+
+DEMO checked.drift.implementation_jl
+Test Summary:                   | Pass  Total  Time
+checked.drift.implementation_jl |   10     10  0.5s
+
+DEMO checked.drift.cases_jl
+Test Summary:          | Pass  Total  Time
+checked.drift.cases_jl |   10     10  0.5s
+
+DEMO checked.drift.config_toml
+Test Summary:             | Pass  Total  Time
+checked.drift.config_toml |   10     10  0.5s
+
+DEMO checked.drift.runner_jl
+Test Summary:           | Pass  Total  Time
+checked.drift.runner_jl |   10     10  0.5s
+
+DEMO checked.drift.behavior_md
+Test Summary:             | Pass  Total  Time
+checked.drift.behavior_md |   10     10  0.5s
+
+DEMO checked.drift.policy_json
+Test Summary:             | Pass  Total  Time
+checked.drift.policy_json |   10     10  0.5s
+
+DEMO checked.drift.result_json
+Test Summary:             | Pass  Total  Time
+checked.drift.result_json |   10     10  0.5s
+
+DEMO checked.drift.evidence_json
+Test Summary:               | Pass  Total  Time
+checked.drift.evidence_json |   10     10  0.5s
+
+DEMO checked.drift.attempt_json
+Test Summary:              | Pass  Total  Time
+checked.drift.attempt_json |   10     10  0.5s
+
+DEMO checked.attempt.id.80
+Test Summary:         | Pass  Total  Time
+checked.attempt.id.80 |    2      2  0.2s
+
+DEMO checked.attempt.id.81
+Test Summary:         | Pass  Total  Time
+checked.attempt.id.81 |    2      2  0.1s
+
+DEMO checked.attempt.id.dot
+Test Summary:          | Pass  Total  Time
+checked.attempt.id.dot |    2      2  0.1s
+
+DEMO checked.attempt.id.empty
+Test Summary:            | Pass  Total  Time
+checked.attempt.id.empty |    2      2  0.1s
+
+DEMO checked.attempt.id.unicode
+Test Summary:              | Pass  Total  Time
+checked.attempt.id.unicode |    2      2  0.1s
+
+DEMO path.oracle.adjacent
+WARNING: Detected access to binding `PathOracle.every_path_is_contiguous` in a world prior to its definition world.
+  Julia 1.12 has introduced more strict world age semantics for global bindings.
+  !!! This code may malfunction under Revise.
+  !!! This code will error in future versions of Julia.
+Hint: Add an appropriate `invokelatest` around the access to this binding.
+To make this warning an error, and hence obtain a stack trace, use `julia --depwarn=error`.
+path.oracle.adjacent: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+  Expression: Base.invokelatest(PathOracle.every_path_is_contiguous, path_fixture(tiles; edge)) == expected
+   Evaluated: false == true
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#144#145"{Bool, Bool, Vector{Dict{String, Int64}}})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [5] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:        | Fail  Total  Time
+path.oracle.adjacent |    1      1  0.4s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO path.oracle.reverse
+path.oracle.reverse: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+  Expression: Base.invokelatest(PathOracle.every_path_is_contiguous, path_fixture(tiles; edge)) == expected
+   Evaluated: false == true
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#144#145"{Bool, Bool, Vector{Dict{String, Int64}}})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [5] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:       | Fail  Total  Time
+path.oracle.reverse |    1      1  0.1s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO path.oracle.disconnected
+Test Summary:            | Pass  Total  Time
+path.oracle.disconnected |    1      1  0.1s
+
+DEMO path.oracle.empty
+path.oracle.empty: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+  Expression: Base.invokelatest(PathOracle.every_path_is_contiguous, path_fixture(tiles; edge)) == expected
+   Evaluated: true == false
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#144#145"{Bool, Bool, Vector{Any}})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [5] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:     | Fail  Total  Time
+path.oracle.empty |    1      1  0.1s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO path.oracle.singleton
+path.oracle.singleton: Test Failed at C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+  Expression: Base.invokelatest(PathOracle.every_path_is_contiguous, path_fixture(tiles; edge)) == expected
+   Evaluated: true == false
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.LangVerificationTests.var"#144#145"{Bool, Bool, Vector{Dict{String, Int64}}})()
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:401
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [5] main(args::Vector{String})
+   @ Main.LangVerificationTests C:\src\recur\julia-tests\main.command.lang.verification.test.jl:457
+Test Summary:         | Fail  Total  Time
+path.oracle.singleton |    1      1  0.1s
+RNG of the outermost testset: Random.Xoshiro(0xd6bfab43b02e5dff, 0xacfe876f8a98e45b, 0x22099c62972266ef, 0x5d8964ad8c498482, 0x16ad103e19a7ad49)
+
+DEMO path.oracle.malformed
+Test Summary:         | Pass  Total  Time
+path.oracle.malformed |    1      1  0.1s
+
+DEMO catalog.every.todo.has.test.and.warp.mapping
+Test Summary:                                | Pass  Total  Time
+catalog.every.todo.has.test.and.warp.mapping |  183    183  0.4s
+
+Case results: {"passed":44,"error":0,"broken":0,"failed":14,"empty":0}; exit=1

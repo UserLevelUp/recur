@@ -1,0 +1,10 @@
+artifact.type = warp
+recur.gift = Demonstrate each Lang verification concern before changing its implementation.
+warp.id = main.lang.verification
+warp.map = warps/main.lang.verification.warp-map.json
+status = tests-first-planned
+pull.first = read warps/main.lang.verification.contract.md and demos/lang-verification/main.lang.verification.readme.md
+pull.then = inspect the todo ledger and observed baseline; recur warp slices main.lang.verification -d .
+verify = run the selected Julia demo cases and affected existing Cargo/Julia suites with explicit binary paths
+ready.state = slice-0 review; targeted red cases exist, remaining coverage is explicit, no accepted layers
+do.not.disturb = Preserve existing evidence; no Python validation, implicit binding execution or advanced grammar implementation.

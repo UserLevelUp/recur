@@ -1,0 +1,6 @@
+
+DEMO catalog.every.todo.has.test.and.warp.mapping
+Test Summary:                                | Pass  Total  Time
+catalog.every.todo.has.test.and.warp.mapping |  183    183  0.4s
+
+Case results: {"passed":1,"error":0,"broken":0,"failed":0,"empty":0}; exit=0

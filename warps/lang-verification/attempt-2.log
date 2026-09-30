@@ -1,0 +1,18 @@
+
+DEMO query.suffix.complete
+Test Summary:         | Pass  Total  Time
+query.suffix.complete |   10     10  0.9s
+
+DEMO query.suffix.todo_complete
+Test Summary:              | Pass  Total  Time
+query.suffix.todo_complete |   10     10  0.3s
+
+DEMO query.suffix._complete_md
+
+Please submit a bug report with steps to reproduce this fault, and any error messages that follow (in their entirety). Thanks.
+Exception: EXCEPTION_ACCESS_VIOLATION at 0x7ffb26c833b9 -- process_node! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1470
+in expression starting at C:\src\recur\demos\lang-verification\main.lang.verification.jl:48
+process_node! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1470
+unknown function (ip: 000001dae6e0d22f) at (unknown file)
+Allocations: 5718219 (Pool: 5718143; Big: 76); GC: 5
+query.suffix._complete_md: 

@@ -99,3 +99,7 @@
 /julia-tests/main.command.recur-lang.init.test.jl -text
 /julia-tests/main.demo.holdem-lab.test.jl -text
 /julia-tests/runtests.jl text eol=crlf
+# Tests-first Lang verification observations bind these exact authored bytes.
+/demos/lang-verification/** -text
+/julia-tests/main.command.lang.verification.test.jl -text
+/README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md -text
