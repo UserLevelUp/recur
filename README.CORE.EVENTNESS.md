@@ -150,11 +150,39 @@ Typical outcomes:
 
 ### Focused Todos and Checked Residue
 
+defines: recur.eventness.todo focused hierarchical work and attention records
+defines: recur.eventness.todo.checked verified residue for one named scope
+
 A subject may keep one `subject.todo.md` checklist or expand into any number of
 named focus artifacts such as `subject.init.todo.md`, `subject.tests.todo.md`,
 and `subject.docs.todo.md`. Keep the shared parent as an index when useful;
 the focused artifact owns its detailed acceptance criteria and observations.
 There is no fixed number of todo files and no requirement to split small work.
+
+Put several explicit trace-role rows below the title when multiple hierarchical
+identities describe the work. Define the focused work's stable ID, consume its
+broader context/contract IDs, and add deeper IDs beside the relevant sections:
+
+```text
+defines: recur.lang.work.remaining.init focused policy initialization
+consumes: recur.lang broader language context
+consumes: recur.lang.init.v1 exact behavioral contract
+consumes: recur.eventness.todo shared attention convention
+
+defines: recur.lang.work.remaining.init.configuration.preservation preserve user settings
+```
+
+These rows provide hierarchical context like detailed tags, with explicit roles:
+`defines` locates the owning description, `consumes` references context or an
+input contract, and `triggers` records an initiating relationship. Use `produces`
+for an actual declared output rather than to imply an unfinished task succeeded.
+Trace output classifies roles using `[traits.trace_id]` keyword settings; custom
+keywords can classify a row differently from its written label. Inspect the
+returned role when following producer/consumer lineage. Identifier discovery
+still finds the row independently of that classification.
+Scope trace queries to the work files when searching for real task records;
+examples in documentation can also match. Eventness stays in the filename while
+these identities remain stable through todo-to-checked renames.
 
 When the named work is done and its acceptance criteria have been checked,
 record the outcome, date, relevant source revision and evidence in the file,

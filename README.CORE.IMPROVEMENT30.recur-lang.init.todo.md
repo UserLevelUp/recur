@@ -1,5 +1,15 @@
 # Focus: implement recur-lang init
 
+```text
+defines: recur.lang.work.remaining.init focused companion-policy initialization work
+consumes: recur.lang Lang design context
+consumes: recur.lang.companion opinionated companion implementation context
+consumes: recur.lang.work.remaining parent remaining-work index
+consumes: recur.lang.init.v1 exact initialization acceptance boundary
+consumes: recur.eventness.todo stable todo identity and attention convention
+triggers: main.lang.init.plan implement the selected bounded companion increment
+```
+
 Status: open. Parent: [remaining Lang work](README.CORE.IMPROVEMENT30.recur-lang.todo.md).
 Warp: [main.lang.init](warps/main.lang.init.readme.md).
 Exact acceptance: [v1 contract](warps/main.lang.init.contract.md).
@@ -13,22 +23,44 @@ until a subsequent planner consumes them.
 - [ ] Review the frozen contract and [expected-red baseline](warps/main.lang.init.baseline.md).
   The observed 57 pass / 44 fail result establishes the missing command, not
   implemented initialization. No slice is currently accepted.
+
+  defines: recur.lang.work.remaining.init.baseline contract review and intentionally failing tests
+
 - [ ] Implement preview and additive installation, including nearest-root
   discovery, exact defaults, empty/inline tables and explicit false settings.
+
+  defines: recur.lang.work.remaining.init.configuration nearest-project defaults and preview
+
 - [ ] Preserve unrelated configuration, user comments, unknown keys and repeat
   byte identity. Reserve the policy table so it cannot become a file lane.
+
+  defines: recur.lang.work.remaining.init.configuration.preservation explicit choices and byte identity
+
 - [ ] Reject malformed types/versions, invalid roots and escaping paths without
   mutation. Add deterministic Cargo tests for concurrent edits and publication
   failures, including Windows sharing-lock rollback.
+
+  defines: recur.lang.work.remaining.init.validation malformed inputs and path boundaries
+  defines: recur.lang.work.remaining.init.publication concurrent changes and atomic-write failure
+
 - [ ] Make `julia-tests/main.command.recur-lang.init.test.jl` pass, then add it to
   the normal runner. Run relevant legacy tests and record process faults as
   failed validation attempts rather than acceptance.
+
+  defines: recur.lang.work.remaining.init.tests green focused and legacy acceptance checks
+
 - [ ] Update CLI/discovery documentation and applicable expert guidance; verify
   the intended installed candidate and satisfy the Warp's evidence gates.
+
+  defines: recur.lang.work.remaining.init.integration docs, discovery, candidate and Warp evidence
 
 After these criteria are verified, record the source revision and evidence here,
 rename this file to `README.CORE.IMPROVEMENT30.recur-lang.init.todo.checked.md`,
 and update the parent link. Leave the broader Lang todo open for subsequent work.
 
-consumes: recur.lang.init.v1 exact initialization acceptance boundary
-triggers: main.lang.init.plan implement the selected bounded companion increment
+Keep these trace IDs unchanged when the filename becomes `todo.checked.md`.
+For this focus and its nested concerns:
+
+```powershell
+recur trace-id 'recur.lang.work.remaining.init.**' --scope 'README.CORE.IMPROVEMENT30.recur-lang.**' -d . --format full
+```

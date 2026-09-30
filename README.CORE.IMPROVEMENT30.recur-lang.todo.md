@@ -1,5 +1,12 @@
 # Recur Lang: remaining work
 
+```text
+defines: recur.lang.work.remaining next focused choices for the opinionated companion
+consumes: recur.lang Lang design context across all work items
+consumes: recur.lang.companion opinionated companion implementation context
+consumes: recur.eventness.todo stable todo identity and attention convention
+```
+
 Status: open. Updated: 2026-09-29. Design parent:
 [Improvement 30](README.CORE.IMPROVEMENT30.md).
 
@@ -17,6 +24,9 @@ formal Warp gate acceptance are separate; see
 
 ## Selected focus
 
+consumes: recur.lang.work.remaining.init focused initialization todo
+consumes: recur.lang.init.v1 exact initialization contract
+
 - [ ] [Initialize project policy](README.CORE.IMPROVEMENT30.recur-lang.init.todo.md)
   through `main.lang.init`. The contract/map/standalone red tests exist; implement
   additive `[recur-lang]` defaults with preview and preservation first.
@@ -28,33 +38,60 @@ formal Warp gate acceptance are separate; see
   source-bound work packet with implementation boundaries, prioritized graph
   findings, suggested tests, unresolved decisions and required evidence.
   No map or `recur-lang plan` command exists yet.
+
+  defines: recur.lang.work.remaining.planning policy-informed implementation and test packets
+
 - [ ] Define a separate scaffolding increment after planning is useful. Generate
   reviewable implementation/test skeletons for an explicitly selected target,
   preserve user code and trace IDs, and make repeated use predictable.
+
+  defines: recur.lang.work.remaining.scaffolding implementation and test skeleton generation
+
 - [ ] Investigate declared-versus-implemented dependency checking. The Hold'em
   experiment catches declared cycles but deliberately demonstrates that a Julia
   cycle hidden behind a binding is outside current static coverage.
+
+  defines: recur.lang.work.remaining.dependencies declaration-to-implementation correspondence
+  defines: recur.lang.work.remaining.dependencies.hidden-cycles implementation-only circular references
+  consumes: demo.holdem.graph observed graph checks and coverage limits
+
 - [ ] Turn observed authoring friction into bounded follow-ups: reusable WIR1
   output contracts (output-to-output aliases currently raise RLIR011), clearer
   multiline CIR1-flow diagnostics, and explicit state-plus-action contracts.
   Keep proposed syntax separate from implemented grammar.
 
+  defines: recur.lang.work.remaining.contracts reusable outputs and state-plus-action contracts
+  defines: recur.lang.work.remaining.diagnostics multiline coordination-flow errors
+
 ## Evidence and integration work still open
+
+defines: recur.lang.work.remaining.evidence verification freshness and integration work
 
 - [ ] Recover a reproducible Julia validation run. The Hold'em lab observed a
   clean 527-assertion pass, then intermittent compiler/interpreter faults in
   later focused and full-suite runs. Exhaustive poker validation remains
   unestablished. Read the [observations](demos/holdem-lab/main.holdem.observations.md).
+
+  defines: recur.lang.work.remaining.evidence.julia reproducible validation after runtime faults
+
 - [ ] Reassess the existing [checked-transition](warps/main.lang.checked-transition.readme.md)
   Warp's stale evidence against the current source. Its implementation exists;
   stale acceptance is not a reason to reimplement it.
+
+  defines: recur.lang.work.remaining.evidence.checked-transition current evidence for existing transitions
+
 - [ ] Resume [runtime evidence](warps/main.lang.runtime-evidence.readme.md) and
   browser-inspector association work using its existing contract and actual
   blockers. The browser currently supplies no runtime receipts and supports
   WIR1 views; it does not yet present the CIR1 Hold'em graph.
+
+  defines: recur.lang.work.remaining.evidence.runtime browser association and observed receipts
+
 - [ ] Reconcile affected Warp evidence and run appropriate Cargo/Julia tests
   before installation or a release claim. Keep failure logs and accepted
   historical observations distinct from current source freshness.
+
+  defines: recur.lang.work.remaining.evidence.release validation before installation or release claims
 
 The broader Improvement 30 proposals (subsystems/imports, general execution,
 bounded feedback, grids and multi-worktree coordination) remain design context.
@@ -68,9 +105,7 @@ recur tree README.CORE.IMPROVEMENT30.recur-lang -d . --sep .
 recur files 'README.CORE.IMPROVEMENT30.recur-lang.**' -d . --sep .
 recur warp show main.lang.init -d .
 recur warp slices main.lang.init -d .
+recur trace-id 'recur.lang.work.remaining.**' --scope 'README.CORE.IMPROVEMENT30.recur-lang.**' -d . --format full
+recur trace-id 'recur.lang.work.remaining.dependencies.**' --scope 'README.CORE.IMPROVEMENT30.recur-lang.**' -d . --format full
 recur trace-id recur.lang.init.v1 --scope '**' -d . --format full
 ```
-
-defines: recur.lang.work.remaining next focused choices for the opinionated companion
-consumes: recur.lang.init.v1 first implementation contract
-consumes: demo.holdem.graph observed graph checks and coverage limits
