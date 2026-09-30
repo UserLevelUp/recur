@@ -66,6 +66,13 @@ consumes: recur.lang.init.v1 exact initialization contract
 ## Evidence and integration work still open
 
 defines: recur.lang.work.remaining.evidence verification freshness and integration work
+consumes: recur.lang.work.remaining.verification detailed branch-analysis follow-ups
+
+- [ ] Work through the [baseline and evidence verification focus](README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md).
+  It incorporates the supplied branch analysis, two locally reproduced query
+  discrepancies, the inspected path-test/CI gaps, and unexecuted corruption and
+  parser hypotheses. Its detailed checklists own those follow-ups; the items
+  below retain the integration priorities and links.
 
 - [ ] Recover a reproducible Julia validation run. The Hold'em lab observed a
   clean 527-assertion pass, then intermittent compiler/interpreter faults in

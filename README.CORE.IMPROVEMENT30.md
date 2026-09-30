@@ -178,6 +178,11 @@ tests exist; the installed companion still exposes only `warp`. The initial
 suite observed 57 passing and 44 expected-failing assertions. Implementation
 and acceptance remain open in the [focused init todo](README.CORE.IMPROVEMENT30.recur-lang.init.todo.md).
 
+The supplied branch analysis is tracked in the
+[baseline and evidence verification todo](README.CORE.IMPROVEMENT30.recur-lang.verification.todo.md).
+It separates locally reproduced query discrepancies, inspected source/CI gaps
+and unexecuted hypotheses, with acceptance criteria and stable trace identities.
+
 The [Hello World to Hold'em lab](demos/holdem-lab/main.holdem.readme.md) exercises
 progressive contracts, explicit joins and deliberately introduced cycles. Its
 clean focused run passed 527 assertions; later Julia process faults prevented
