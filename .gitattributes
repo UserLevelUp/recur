@@ -94,3 +94,8 @@
 /.gitattributes text eol=crlf
 /docs/main.command.warp.evidence-refresh.readme.md text eol=lf
 /docs/main.command.warp.evidence.readme.md text eol=lf
+# Lang experiment and red-baseline inputs retain their observed checkout bytes.
+/demos/holdem-lab/** -text
+/julia-tests/main.command.recur-lang.init.test.jl -text
+/julia-tests/main.demo.holdem-lab.test.jl -text
+/julia-tests/runtests.jl text eol=crlf

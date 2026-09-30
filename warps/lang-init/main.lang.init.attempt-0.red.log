@@ -1,0 +1,1086 @@
+CLI discovery: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:57
+  Expression: occursin(r"(?m)^\s+init\s", result.stdout)
+   Evaluated: occursin(r"(?m)^\s+init\s", "Stateful companion for bounded Recur Lang coordination\n\nUsage: recur-lang.exe <COMMAND>\n\nCommands:\n  warp  Plan or confirm one declared E0 -> dE -> Ef transition\n  help  Print this message or the help of the given subcommand(s)\n\nOptions:\n  -h, --help     Print help\n  -V, --version  Print version\n")
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:55 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [5] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:57 [inlined]
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+CLI discovery: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:59
+  Expression: help.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:55 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [5] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:59 [inlined]
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+CLI discovery: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:60
+  Expression: occursin("--dry-run", help.stdout)
+   Evaluated: occursin("--dry-run", "")
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:55 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [5] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:60 [inlined]
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Fresh preview, install, exact defaults and repeat: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  Expression: r.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  [3] (::Main.RecurLangInitContractTests.var"#10#11")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:67
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#10#11", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+Fresh preview, install, exact defaults and repeat: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  [3] (::Main.RecurLangInitContractTests.var"#10#11")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:67
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#10#11", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+Fresh preview, install, exact defaults and repeat: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  Expression: r.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  [3] (::Main.RecurLangInitContractTests.var"#10#11")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:76
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#10#11", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+Fresh preview, install, exact defaults and repeat: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  [3] (::Main.RecurLangInitContractTests.var"#10#11")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:76
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#10#11", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+Fresh preview, install, exact defaults and repeat: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:78
+  Expression: isfile(path)
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.RecurLangInitContractTests.var"#10#11")(root::String)
+   @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:78
+ [3] mktempdir(fn::Main.RecurLangInitContractTests.var"#10#11", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+ [8] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [9] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:64 [inlined]
+Inherited root, comments, false preferences and unrelated settings: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  Expression: r.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  [3] (::Main.RecurLangInitContractTests.var"#12#13")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:119
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#12#13", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+Inherited root, comments, false preferences and unrelated settings: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  [3] (::Main.RecurLangInitContractTests.var"#12#13")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:119
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#12#13", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+Inherited root, comments, false preferences and unrelated settings: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  Expression: r.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  [3] (::Main.RecurLangInitContractTests.var"#12#13")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:121
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#12#13", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+Inherited root, comments, false preferences and unrelated settings: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  [3] (::Main.RecurLangInitContractTests.var"#12#13")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:121
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#12#13", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:98 [inlined]
+Inline and empty tables, no extra config file: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  Expression: r.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  [3] (::Main.RecurLangInitContractTests.var"#14#15"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:146
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#14#15"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:143 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:144 [inlined]
+Inline and empty tables, no extra config file: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  [3] (::Main.RecurLangInitContractTests.var"#14#15"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:146
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#14#15"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:143 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:144 [inlined]
+Inline and empty tables, no extra config file: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  Expression: r.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  [3] (::Main.RecurLangInitContractTests.var"#14#15"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:146
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#14#15"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:143 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:144 [inlined]
+Inline and empty tables, no extra config file: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  [3] (::Main.RecurLangInitContractTests.var"#14#15"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:146
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#14#15"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:143 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:144 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:175
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid nearest config is rejected without mutation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#16#17"{String})(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:177
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#16#17"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:163 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:171 [inlined]
+Invalid root and config directory: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#18#19")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:187
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#18#19", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:184 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:184 [inlined]
+Invalid root and config directory: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#18#19")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:188
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#18#19", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:184 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:184 [inlined]
+Invalid root and config directory: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#18#19")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:192
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#18#19", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:184 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:184 [inlined]
+Policy table must never be discovered as a file lane: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  Expression: r.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:36
+  [3] (::Main.RecurLangInitContractTests.var"#20#21")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:202
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#20#21", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:198 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:198 [inlined]
+Policy table must never be discovered as a file lane: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] successpacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String})
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:37
+  [3] (::Main.RecurLangInitContractTests.var"#20#21")(root::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:202
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#20#21", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:198 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:198 [inlined]
+Symlink escape, where the host permits symlink creation: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  Expression: r.packet !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+  [1] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] failurepacket(r::@NamedTuple{code::Int64, packet::Nothing, stdout::String, stderr::String}, code::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:44
+  [3] (::Main.RecurLangInitContractTests.var"#22#23")(parent::String)
+    @ Main.RecurLangInitContractTests C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:229
+  [4] mktempdir(fn::Main.RecurLangInitContractTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:941
+  [5] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:937
+  [6] top-level scope
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:54
+  [7] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+  [8] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:218 [inlined]
+  [9] macro expansion
+    @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [10] macro expansion
+    @ C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:218 [inlined]
+Test Summary:                                                        | Pass  Fail  Total  Time
+recur-lang init v1 (standalone; expected red before implementation)  |   57    44    101  3.5s
+  CLI discovery                                                      |    1     3      4  1.4s
+  Fresh preview, install, exact defaults and repeat                  |    2     5      7  1.2s
+  Inherited root, comments, false preferences and unrelated settings |    2     4      6  0.2s
+  Inline and empty tables, no extra config file                      |          4      4  0.1s
+  Invalid nearest config is rejected without mutation                |   44    22     66  0.4s
+  Invalid root and config directory                                  |    5     3      8  0.0s
+  Policy table must never be discovered as a file lane               |          2      2  0.1s
+  Symlink escape, where the host permits symlink creation            |    3     1      4  0.1s
+RNG of the outermost testset: Random.Xoshiro(0x22e1770362cd256a, 0x4d04a74e068916b4, 0x7bbf6f23207a2cdf, 0x4dfb6d616e18b75b, 0x968c96471b784d5e)
+ERROR: LoadError: Some tests did not pass: 57 passed, 44 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\julia-tests\main.command.recur-lang.init.test.jl:3

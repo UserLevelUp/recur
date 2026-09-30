@@ -187,6 +187,13 @@ its shape alone is not proof that the worker is trustworthy.
 
 ## Run the Julia tests
 
+For a progressive specification-first app, see the
+[Hello World to Hold'em lab](../demos/holdem-lab/main.holdem.readme.md).
+It grows Julia class-style boundaries into WIR1 state bundles and a CIR1
+fork/join graph, with deliberate dependency/wait cycles, missing joins and a
+runtime-only cycle illustrating the static coverage limit. Its standalone Julia
+suite is also included in the main regression runner.
+
 ```powershell
 julia --startup-file=no julia-tests/main.lang.test.jl
 ```

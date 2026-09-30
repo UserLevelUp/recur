@@ -1,0 +1,33 @@
+{
+  "schema": "lang-init-red-baseline-v1",
+  "recorded_at": "2026-09-30T04:20:28.4908743Z",
+  "result": "expected-red-not-acceptance",
+  "exit_code": 1,
+  "assertions": {
+    "errors": 0,
+    "passed": 57,
+    "failed": 44,
+    "broken": 0
+  },
+  "julia_version": "1.12.7",
+  "companion_sha256": "97a11426f785d6660c2d33e91abb142de26c45b96debb44266081fe30fd381a1",
+  "core_sha256": "d593d4b9fda783b13871c49b5817ea688709938c969506da1135ad9eb9145867",
+  "inputs": [
+    {
+      "path": "warps/main.lang.init.contract.md",
+      "sha256": "955f64b64a3da10a4e857d024e9bcc17db3f76abe41e19e5e36d57d3132dec57"
+    },
+    {
+      "path": "warps/main.lang.init.warp-map.json",
+      "sha256": "fc596b6b732b379de088bccb1c4dbb71f084187f40c85c4a2af95173df609956"
+    },
+    {
+      "path": "julia-tests/main.command.recur-lang.init.test.jl",
+      "sha256": "0d5d903d9e473e9987231e3a2de4c8c57023717cff6041b713029fb1c3fa0354"
+    }
+  ],
+  "log": {
+    "path": "warps/lang-init/main.lang.init.attempt-0.red.log",
+    "sha256": "fa9155b5f7283c023017f99b3674eb446d01350583e7bde5d150eb66f8de2942"
+  }
+}

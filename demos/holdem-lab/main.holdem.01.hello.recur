@@ -1,0 +1,20 @@
+recur 0.1 class HelloWorld
+header {
+  scope hello {
+    i(a) := (name: OptionalText)
+    o(b) := (message: Text)
+    h : i(a) -> o(b) ~ "Return Hello, World! by default or Hello, NAME!" by HoldemLab.hello
+  }
+}
+body {
+  hello sync : i(a) -> h(a) -> o(b)
+  # Absent name defaults to World. This prose requires Julia tests.
+}
+footer {
+  event hello {
+    consume demo.holdem.hello
+    produce demo.holdem.message
+    state demo.holdem.hello.complete
+  }
+  warp hello : E0(demo.holdem.hello.todo.current) -> dE(hello.h) -> Ef(demo.holdem.hello.complete)
+}

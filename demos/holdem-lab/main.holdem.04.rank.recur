@@ -1,0 +1,37 @@
+recur 0.1 class HoldemRank
+header {
+  scope evaluate {
+    i(a) := (cards: SevenUniqueCards)
+    o(b) := (rank: OrderedRank)
+    e : i(a) -> o(b) ~ "Choose the best five of seven; return category and complete tie breakers" by HoldemLab.evaluate
+  }
+  scope compare {
+    i(c) := (left: OrderedRank, right: OrderedRank)
+    o(d) := (winners: PlayerIds)
+    c : i(c) -> o(d) ~ "Return player 1, player 2 or both for exact equality" by HoldemLab.winners
+  }
+}
+body {
+  evaluate sync : i(a) -> e(a) -> o(b)
+  compare sync : i(c) -> c(c) -> o(d)
+  # Two distinct evaluate calls feed compare; WIR1 does not type-check this join.
+  # Stage 06 CIR1 will explicitly model both producer identities and the join.
+  # Rank ordered high: straight flush, quads, full house, flush, straight,
+  # trips, two pair, pair, high card. Wheel A2345 is five-high, not ace-high.
+  # Compare all kickers, never suits. Either/both/no hole cards may be used.
+  # Reject duplicate cards and lengths other than seven before evaluating.
+}
+footer {
+  event evaluate {
+    consume demo.holdem.deal
+    produce demo.holdem.rank
+    state demo.holdem.rank.complete
+  }
+  warp evaluate : E0(demo.holdem.rank.todo.current) -> dE(evaluate.e) -> Ef(demo.holdem.rank.complete)
+  event compare {
+    consume demo.holdem.rank
+    produce demo.holdem.winners
+    state demo.holdem.compare.complete
+  }
+  warp compare : E0(demo.holdem.compare.todo.current) -> dE(compare.c) -> Ef(demo.holdem.compare.complete)
+}

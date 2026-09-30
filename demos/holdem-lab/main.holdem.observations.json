@@ -1,0 +1,122 @@
+{
+  "schema": "holdem-lab-observations-v1",
+  "recorded_at": "2026-09-30T03:40:21.9404540Z",
+  "acceptance": "observations-only-not-a-warp-receipt",
+  "julia_version": "1.12.7",
+  "recur_version": "0.2.8",
+  "recur_sha256": "d593d4b9fda783b13871c49b5817ea688709938c969506da1135ad9eb9145867",
+  "focused_clean_run": {
+    "failed": 0,
+    "exit_code": 0,
+    "passed": 527
+  },
+  "subsequent_reruns": "intermittent Julia compiler/interpreter faults; see observations.md",
+  "full_regression": "not-established",
+  "exhaustive_histogram": "not-established",
+  "inputs": [
+    {
+      "path": "demos/holdem-lab/main.holdem.requirements.md",
+      "sha256": "3f4d9d6f6bb0106c6ec930c0669ac160de8434a25bb88407f6d1a543a98a422a"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.01.hello.recur",
+      "sha256": "e84dc825da9ececa24e6ce8abe1e07c700cc59abc19c4237e79053ab41693a6d"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.01.jl",
+      "sha256": "e3d4d288f810bf65ea19f16498aa0ac46f440883ee680f2d7f84e42f0f34b395"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.01.test.jl",
+      "sha256": "cef96640bbf3b760c4a914dafcdaff5897e2cd2a4693fbab03def9fbb3bd4e7b"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.02.caller.recur",
+      "sha256": "be074ed871f78c9bae06e00b38f320455273eeacdaa06a1c2ba412fe2a8e4793"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.02.jl",
+      "sha256": "f756e83e7583a747da6fddf28ef5b7e91690b0651b81c65cfa33b3edb2770cfe"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.02.test.jl",
+      "sha256": "53adbc2b6b67fae4fcc6b1338917d73c216524899c5de4dc4fbaac5536892244"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.03.deal.recur",
+      "sha256": "d159319c8e4676d352d2305077bbddc93803c3175d9a23ab698485d65834b28b"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.03.jl",
+      "sha256": "661c609b74644c74d8dc901e3a7345093170538f8b2c265dbcfd4d90c632193f"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.03.test.jl",
+      "sha256": "7520bb0a94f576d6cc0402bedeaee0ea34fde164ad02cac64a52df94f6b7d7f9"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.04.jl",
+      "sha256": "5d1500c26d148b44b0b9d92e1ce2f3a1f7f6902333639eac390edbec03bedf32"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.04.rank.recur",
+      "sha256": "ac1dcefe8c0e96e96a3346ee66a494f0b1d18a27b20aefaad4796e2128627332"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.04.test.jl",
+      "sha256": "73c1553e48356d407bef80aa1d0f73aad4c1f6c08be1ee0f7d0af969821f4125"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.05.jl",
+      "sha256": "6cd63c67698fc415b3f73cd82d3a923071c1fdf57c4ca2f6a302f93a70918df5"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.05.play.recur",
+      "sha256": "9b5591fd7037cd7cb03e6577b70d2804f84b0abfa14ef0d41688116e4555be3d"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.05.test.jl",
+      "sha256": "34faeefc91b03288388ae8bb142138fbbfdc759d1fe9b61bc4a17ceab05603e3"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.06.coordination.recur",
+      "sha256": "df55f4134f35a51191ece78ad275ad4f1cea8dc847a05e8fd07a497f877f8aab"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.06.jl",
+      "sha256": "20eca21470a0bebc38428ba2bbe8e19dab6778e13bcbb2c65abf81bf365ba0e7"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.06.test.jl",
+      "sha256": "1d506aa21c0c77b66feec22586788134085ecf251e8535a6752cc79570022997"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.app.jl",
+      "sha256": "d775a7286f39bd5d56ea34c8fb63107533ccffc34bd782a0db6c6a9e4420ec21"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.exhaustive.jl",
+      "sha256": "9c67875455085b1ec016ad5c63d8e6f5008a94bee3635d64eb15e3e14ba15ede"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.graph.test.jl",
+      "sha256": "892d80c65b8f3d1c049db815b7182ed91363e38e953c4b353f2e035073de1d79"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.jl",
+      "sha256": "88e3940d6a1df24661a462ec7a4f6b5e8ad4cae2b224fccbe11e951e6a702cee"
+    },
+    {
+      "path": "demos/holdem-lab/main.holdem.test.jl",
+      "sha256": "f92ebb01da5aa34bad149912d749af88d3ef179a346f4a5ce30d53ccad11fe49"
+    },
+    {
+      "path": "julia-tests/main.demo.holdem-lab.test.jl",
+      "sha256": "5c209b70fc27223e685dfe64f02052470592f1fc46fb85fd5c5d5830662daed6"
+    },
+    {
+      "path": "julia-tests/runtests.jl",
+      "sha256": "dfa1818574f0dffb68e71d698a4d69cf6f1ba131d2ea7043e93ef3bfebe7824e"
+    }
+  ]
+}

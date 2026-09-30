@@ -161,7 +161,31 @@ external verification evidence.
 IMPLEMENTATION CHECKPOINTS
 -------------------------
 
-### Current planning checkpoint: 2026-09-12
+### Current planning checkpoint: 2026-09-29
+
+Use the [Recur Lang remaining-work todo](README.CORE.IMPROVEMENT30.recur-lang.todo.md)
+to choose the next focus. It can hold a single checklist or link any number of
+focused `README.CORE.IMPROVEMENT30.recur-lang.<focus>.todo.md` artifacts. Once
+the named work is verified, record the evidence and append `.checked` before
+`.md`, for example `<focus>.todo.checked.md`. Checking a child does not close
+the overall Lang todo. This is an explicit Eventness convention, not automatic
+Warp acceptance; see [the naming policy](README.CORE.EVENTNESS.md#focused-todos-and-checked-residue).
+
+The selected companion increment is [main.lang.init](warps/main.lang.init.readme.md):
+initialize `[recur-lang]` in the existing `.recur/config.toml`, following current
+companion preservation and preview conventions. Its contract and standalone
+tests exist; the installed companion still exposes only `warp`. The initial
+suite observed 57 passing and 44 expected-failing assertions. Implementation
+and acceptance remain open in the [focused init todo](README.CORE.IMPROVEMENT30.recur-lang.init.todo.md).
+
+The [Hello World to Hold'em lab](demos/holdem-lab/main.holdem.readme.md) exercises
+progressive contracts, explicit joins and deliberately introduced cycles. Its
+clean focused run passed 527 assertions; later Julia process faults prevented
+a reliable full-regression result. Preserve that qualification when planning
+the remaining evidence and release work. Re-query live Warps rather than
+inheriting acceptance from any checkpoint below.
+
+### Historical planning checkpoint: 2026-09-12
 
 The live `main.lang.baseline` and `main.lang.dogfood` maps report complete with
 declared evidence. Their observations are not a claim that current artifacts

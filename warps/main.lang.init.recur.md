@@ -1,0 +1,9 @@
+artifact.type = warp
+recur.gift = Initialize opinionated Lang policy through the existing companion conventions.
+status = planned
+warp.id = main.lang.init
+warp.map = warps/main.lang.init.warp-map.json
+pull.first = read warps/main.lang.init.contract.md and warps/main.lang.init.baseline.md; query recur warp show main.lang.init -d .
+pull.then = run julia-tests/main.command.recur-lang.init.test.jl standalone against the selected candidate binary
+verify = Cargo and Julia only; retain red observations and process faults; integrate tests into the main runner only when green
+ready.state = slice-0 contract and test baseline; no implementation or acceptance implied

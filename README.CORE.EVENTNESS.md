@@ -148,6 +148,34 @@ Typical outcomes:
 - keep a durable rediscovery point: `*.recurring.*`
 - remove the ephemeral file entirely when no residue is worth keeping
 
+### Focused Todos and Checked Residue
+
+A subject may keep one `subject.todo.md` checklist or expand into any number of
+named focus artifacts such as `subject.init.todo.md`, `subject.tests.todo.md`,
+and `subject.docs.todo.md`. Keep the shared parent as an index when useful;
+the focused artifact owns its detailed acceptance criteria and observations.
+There is no fixed number of todo files and no requirement to split small work.
+
+When the named work is done and its acceptance criteria have been checked,
+record the outcome, date, relevant source revision and evidence in the file,
+then append `checked` as the last Eventness segment before the extension:
+
+```text
+subject.init.todo.md         -> subject.init.todo.checked.md
+subject.init.todo.current.md -> subject.init.todo.current.checked.md
+```
+
+Preserve the subject's trace IDs and useful history. Update links from the parent
+index to the renamed artifact. A checked child closes only that child's scope;
+leave the parent todo open while other work remains. If work changes later,
+retain the checked record and add a new, specifically named follow-up todo.
+
+`checked` here is a human/project attention convention. The filename alone
+does not mean that Recur checked a receipt or accepted a Warp gate. Ordinary
+`tree` and `files` queries can discover these names; automatic Eventness filters,
+ranking and transitions still use their supported configured suffix policies.
+This convention does not globally replace `complete` or change those policies.
+
 ### 4) Recurring Rediscovery
 
 `recurring` is apt when the value is not "this is active now" but "this workflow or pattern should be easy to find again later."

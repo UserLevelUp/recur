@@ -1,0 +1,70 @@
+recur 0.1 class HoldemApp
+header {
+  scope start {
+    i(a) := (order: Cards, stack: Chips)
+    o(b) := (deal: PrivateDeal, stacks: ChipPair, paid: ChipPair, pot: Chips, street: Street, actor: PlayerId, pending: PlayerIds, min_raise: Chips, settled: Bool, winners: PlayerIds)
+    s : i(a) -> o(b) ~ "Validate equal stacks, deal and post fixed 1/2 blinds with player 1 on button" by HoldemLab.start_hand
+  }
+  scope command {
+    i(c) := (state: HandState, player: PlayerId, action: Action, amount: OptionalChips)
+    o(d) := (deal: PrivateDeal, stacks: ChipPair, paid: ChipPair, pot: Chips, street: Street, actor: PlayerId, pending: PlayerIds, min_raise: Chips, settled: Bool, winners: PlayerIds)
+    c : i(c) -> o(d) ~ "Return a new hand state after one legal action, or reject atomically" by HoldemLab.act
+  }
+  scope view {
+    i(d) := command.o(d)
+    o(e) := (street: Street, board: VisibleCards, stacks: ChipPair, pot: Chips, actor: PlayerId, settled: Bool, winners: PlayerIds)
+    v : i(d) -> o(e) ~ "Publish board by street; no private cards or undealt future board" by HoldemLab.public_view
+  }
+  scope render {
+    i(e) := view.o(e)
+    o(f) := (text: Text)
+    r : i(e) -> o(f) ~ "Render the public snapshot without calling back into the game" by HoldemLab.render
+  }
+}
+body {
+  start sync : i(a) -> s(a) -> o(b)
+  command sync : i(c) -> c(c) -> o(d)
+  view sync : i(d) -> v(d) -> o(e)
+  render sync : i(e) -> r(e) -> o(f)
+  share command.o(d) -> view.i(d)
+  share view.o(e) -> render.i(e)
+  # A controller supplies state + action repeatedly; this is an intentional
+  # sequential state transition, not a circular module dependency.
+  # Only the actor may act. check requires no debt; call requires debt; raise
+  # amount is a street-total, at least current max + min_raise and <= both stacks
+  # plus their street contributions. Full legal all-in raises only.
+  # After a raise only opponent is pending. A preflop call leaves BB its option.
+  # New streets reset paid and min_raise=2; player 2 acts first.
+  # Fold pays opponent immediately. Matched all-in runs out board. River closes
+  # with best-five evaluation, ties split; any odd chip goes to player 2.
+  # Never mutate input state, including on rejection. Sum(stacks)+pot is constant.
+  # WIR1 cannot alias output-to-output: command repeats start's field declaration.
+  # HandState in the input refers to that state shape by convention; it is not a
+  # mechanically resolved nested contract. CIR1's named contracts improve reuse.
+}
+footer {
+  event start {
+    consume demo.holdem.deal
+    produce demo.holdem.play.initial
+    state demo.holdem.start.complete
+  }
+  warp start : E0(demo.holdem.start.todo.current) -> dE(start.s) -> Ef(demo.holdem.start.complete)
+  event command {
+    consume demo.holdem.play.initial
+    produce demo.holdem.play
+    state demo.holdem.command.complete
+  }
+  warp command : E0(demo.holdem.command.todo.current) -> dE(command.c) -> Ef(demo.holdem.command.complete)
+  event view {
+    consume demo.holdem.play
+    produce demo.holdem.public
+    state demo.holdem.view.complete
+  }
+  warp view : E0(demo.holdem.view.todo.current) -> dE(view.v) -> Ef(demo.holdem.view.complete)
+  event render {
+    consume demo.holdem.public
+    produce demo.holdem.display
+    state demo.holdem.render.complete
+  }
+  warp render : E0(demo.holdem.render.todo.current) -> dE(render.r) -> Ef(demo.holdem.render.complete)
+}

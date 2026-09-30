@@ -1,0 +1,36 @@
+recur 0.1 class GreetingApp
+header {
+  scope greet {
+    i(a) := (name: Text, prefix: OptionalText)
+    o(b) := (message: Text)
+    g : i(a) -> o(b) ~ "Greet a nonblank name with the app prefix, default Hello" by HoldemLab.greet
+  }
+  scope caller {
+    i(b) := greet.o(b)
+    o(c) := (line: Text)
+    c : i(b) -> o(c) ~ "Present the class result as one line without unpacking its contract" by HoldemLab.present
+  }
+}
+body {
+  greet sync : i(a) -> g(a) -> o(b)
+  caller sync : i(b) -> c(b) -> o(c)
+  share greet.o(b) -> caller.i(b)
+  # run_hello constructs HelloApp and calls present(greet(app, name)).
+  # Julia methods implement this class-style contract; no inheritance is needed.
+  # Strip names and reject blank names. Missing prefix means Hello; explicit Hola
+  # is preserved. An optional parameter is still part of the declared bundle.
+}
+footer {
+  event greet {
+    consume demo.holdem.hello
+    produce demo.holdem.message
+    state demo.holdem.greet.complete
+  }
+  warp greet : E0(demo.holdem.greet.todo.current) -> dE(greet.g) -> Ef(demo.holdem.greet.complete)
+  event caller {
+    consume demo.holdem.message
+    produce demo.holdem.call
+    state demo.holdem.call.complete
+  }
+  warp caller : E0(demo.holdem.call.todo.current) -> dE(caller.c) -> Ef(demo.holdem.call.complete)
+}

@@ -1,0 +1,89 @@
+recur 0.2 coordination HoldemShowdown
+
+# defines: demo.holdem.graph explicit independent rankings and joined settlement
+# consumes: demo.holdem.deal completed board and private hole cards
+# produces: demo.holdem.settle winner identities and chip allocation
+header {
+  contract ShowdownRequest {
+    holes: HoleCards
+    board: Cards
+    pot: Chips
+  }
+  contract Ranking {
+    player: PlayerId
+    rank: OrderedRank
+  }
+  contract Settlement {
+    winners: PlayerIds
+    payouts: ChipPair
+  }
+  contract Audit {
+    conserved: Bool
+    settlement: Settlement
+  }
+  coordinator table {
+    scope plan {
+      o(a) := ShowdownRequest
+    }
+    scope finish {
+      o(b) := Audit
+    }
+  }
+  lane left {
+    persona evaluator
+    i(a) := table.plan.o(a)
+    o(b) := Ranking
+    e : i(a) -> o(b) ~ "Evaluate player 1 using the complete board"
+    allow read ["main.holdem.04.jl"]
+    allow write []
+    allow tools ["julia"]
+    require receipt ["rank.left"]
+  }
+  lane right {
+    persona evaluator
+    i(a) := table.plan.o(a)
+    o(b) := Ranking
+    e : i(a) -> o(b) ~ "Evaluate player 2 independently"
+    allow read ["main.holdem.04.jl"]
+    allow write []
+    allow tools ["julia"]
+    require receipt ["rank.right"]
+  }
+  lane settle {
+    persona settler
+    i(a) := join(table.plan.o(a), left.o(b), right.o(b))
+    o(b) := Settlement
+    s : i(a) -> o(b) ~ "Compare both rankings and allocate pot with odd chip to player 2"
+    allow read ["main.holdem.04.jl"]
+    allow write []
+    allow tools ["julia"]
+    require receipt ["settlement"]
+  }
+  lane audit {
+    persona auditor
+    i(a) := join(table.plan.o(a), settle.o(b))
+    o(b) := Audit
+    a : i(a) -> o(b) ~ "Verify nonnegative payouts sum to the original pot"
+    allow read []
+    allow write []
+    allow tools ["julia"]
+    require receipt ["conservation"]
+  }
+}
+body {
+  showdown async :
+    i(a) -> table.plan(a)
+    -> fork [left(a), right(a)]
+    -> await [left.o(b), right.o(b)]
+    -> settle(a)
+    -> await settle.o(b)
+    -> audit(a)
+    -> await audit.o(b)
+    -> table.finish(a) -> o(b)
+}
+footer {
+  # These are descriptive policy declarations. Core Lang does not execute Julia,
+  # acquire receipts or enforce the array/card invariants in ShowdownRequest.
+  # Runtime must reject repeated cards across different players, negative pot,
+  # wrong hole/board counts, and a failed or mislabeled ranking producer.
+}

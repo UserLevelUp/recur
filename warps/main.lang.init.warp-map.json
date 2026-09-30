@@ -1,0 +1,68 @@
+{
+  "bubble_uuid": "01a0f087-ebb6-703a-b744-7d46d4163815",
+  "current_slice": "slice-0",
+  "goal": "Initialize editable recur-lang policy in the existing project config, preserving companion conventions and user settings, with tests-first acceptance.",
+  "invariants": [
+    "Core recur lang remains pure; init belongs only to recur-lang.",
+    "Use the nearest existing project config and one recur-lang table; no competing config precedence.",
+    "Preserve explicit values, unknown data and comments; repeated init is byte-identical.",
+    "Preview and validation failures do not mutate project files.",
+    "Preferences are inert; init neither executes a planner nor certifies implementation.",
+    "No accepted gate is inferred from an expected-red suite or a compiler fault."
+  ],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.lang.init.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-and-red-baseline"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a0f087-ebb6-7a2b-b6cb-0bc4b25f61eb"
+    },
+    {
+      "slice_id": "slice-1",
+      "slice_uuid": "01a0f088-e7c7-7eeb-b57f-a7b6b3f01267",
+      "contract_hash": "contract:main.lang.init.slice-1:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "defaults-preview-and-nearest-root",
+        "preservation-and-repeatability"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "slice-2",
+      "slice_uuid": "01a0f088-e7c8-764c-b99e-7bba5d30d948",
+      "contract_hash": "contract:main.lang.init.slice-2:v1",
+      "depends_on": [
+        "slice-1"
+      ],
+      "evidence_gates": [
+        "invalid-inputs-no-mutation",
+        "publication-and-policy-isolation"
+      ],
+      "evidence_mode": "declared"
+    },
+    {
+      "contract_hash": "contract:main.lang.init.slice-final:v1",
+      "depends_on": [
+        "slice-2"
+      ],
+      "evidence_gates": [
+        "focused-and-legacy-regressions",
+        "docs-and-installed-smoke"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0f087-ebb6-729a-9c0d-8e6e1ebc6d49"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.init",
+  "contract_document": "warps/main.lang.init.contract.md",
+  "planning_status": "tests-first-planned"
+}
