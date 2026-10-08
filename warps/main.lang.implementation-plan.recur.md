@@ -1,0 +1,9 @@
+artifact.type = warp
+recur.gift = Turn a selected Lang contract and project preferences into bounded implementation/test advice.
+warp.id = main.lang.implementation-plan
+warp.map = warps/main.lang.implementation-plan.warp-map.json
+pull.first = read warps/main.lang.implementation-plan.contract.md and docs/main.command.lang.plan.readme.md
+pull.then = run recur-lang plan main.blackjack.05.session.recur -d demos/blackjack-lab --json
+verify = run julia-tests/main.command.recur-lang.plan.test.jl and the blackjack lab; inspect full-root Warp acceptance
+ready.state = implementation present; query live acceptance and current evidence separately
+do.not.disturb = Advice is not execution, code generation, proof of semantic invariants or acceptance.

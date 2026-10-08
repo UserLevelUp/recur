@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Prompt discovery capsule
 warp.id = main.command.prompt.discovery
 warp.root = docs

@@ -1,0 +1,103 @@
+recur 0.2 coordination SplitDependencyProposal
+# defines: demo.blackjack.web.split.dependencies proposed review ordering
+header {
+  contract Order {
+    source: SourcePath
+    inputs: InputContract
+    outputs: OutputContract
+  }
+  contract Receipt {
+    matched: Bool
+    unknowns: ReviewNotes
+  }
+  coordinator review {
+    scope plan {
+      o(a) := DispatchSet<Order>
+    }
+    scope finish {
+      o(b) := Receipt
+    }
+  }
+  lane rules {
+    persona reviewer
+    i(a) := project review.plan.o(a).orders["rules"]
+    o(b) := Receipt
+    f : i(a) -> o(b) ~ "Review rules contracts and actual implementation calls before downstream acceptance"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["rules.reviewed"]
+  }
+  lane hands {
+    persona reviewer
+    i(a) := join(review.plan.o(a), rules.o(b))
+    o(b) := Receipt
+    f : i(a) -> o(b) ~ "Review hands contracts and actual implementation calls before downstream acceptance"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["hands.reviewed"]
+  }
+  lane turns {
+    persona reviewer
+    i(a) := join(review.plan.o(a), hands.o(b))
+    o(b) := Receipt
+    f : i(a) -> o(b) ~ "Review turns contracts and actual implementation calls before downstream acceptance"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["turns.reviewed"]
+  }
+  lane dealer {
+    persona reviewer
+    i(a) := join(review.plan.o(a), turns.o(b))
+    o(b) := Receipt
+    f : i(a) -> o(b) ~ "Review dealer contracts and actual implementation calls before downstream acceptance"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["dealer.reviewed"]
+  }
+  lane settlement {
+    persona reviewer
+    i(a) := join(review.plan.o(a), dealer.o(b))
+    o(b) := Receipt
+    f : i(a) -> o(b) ~ "Review settlement contracts and actual implementation calls before downstream acceptance"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["settlement.reviewed"]
+  }
+  lane view {
+    persona reviewer
+    i(a) := join(review.plan.o(a), settlement.o(b))
+    o(b) := Receipt
+    f : i(a) -> o(b) ~ "Review view contracts and actual implementation calls before downstream acceptance"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["view.reviewed"]
+  }
+}
+body {
+  analysis async :
+    i(a) -> review.plan(a)
+    -> fork [rules(a)]
+    -> await rules.o(b)
+    -> hands(a)
+    -> await hands.o(b)
+    -> turns(a)
+    -> await turns.o(b)
+    -> dealer(a)
+    -> await dealer.o(b)
+    -> settlement(a)
+    -> await settlement.o(b)
+    -> view(a)
+    -> await view.o(b)
+    -> review.finish(a) -> o(b)
+}
+footer {
+  # Review prerequisite DAG, not parallel game play or executable dependency extraction.
+  # The shared deck is single-owner. Player turns stay sequential.
+}
+

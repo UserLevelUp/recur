@@ -1,0 +1,1190 @@
+[
+  {
+    "identifier": "demo.blackjack.web.split.",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 57,
+        "line": "recur trace-id 'demo.blackjack.web.split.**' --scope 'main.blackjack.web.split.**' -d demos/blackjack-web/split --format full",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 46,
+        "line": "# publish: demo.blackjack.web.split.eligibility.result pair, wallet and aggregate reserve",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 73,
+        "line": "# publish: demo.blackjack.web.split.view.result same projection for HTTP and model correspondence",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 99,
+        "line": "# publish: demo.blackjack.web.split.settle.result one aggregate settlement, per-hand outcomes",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 118,
+        "line": "# publish: demo.blackjack.web.split.dealer.result dealer plays once after all hands finish",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 126,
+        "line": "# publish: demo.blackjack.web.split.advance.result next unfinished hand or dealer phase",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 139,
+        "line": "# publish: demo.blackjack.web.split.split.result stable IDs and one replacement each",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.js",
+        "line_number": 100,
+        "line": "// publish: demo.blackjack.web.split.browser two independent hands, one active control group",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 8,
+        "line": "publish: demo.blackjack.web.split.analysis.result observed model checks and runtime gaps",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.baseline.complete.md",
+        "line_number": 5,
+        "line": "publish: demo.blackjack.web.split.baseline.result missing collection demonstrated",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.implementation.plan requirements and acceptance cases",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.review source-bound author assessment",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.runtime.test.jl",
+        "line_number": 20,
+        "line": "# publish: demo.blackjack.web.split.runtime observed behavior, not model execution",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.test.plan bounded behavior checks",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 8,
+        "line": "publish: demo.blackjack.web.split.acceptance evidence for the final Warp gate",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 9,
+        "line": "register: demo.blackjack.web.split.implementation pending implementation Warp",
+        "edge_type": "trigger"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.browser-fixture.jl",
+        "line_number": 1,
+        "line": "# register: demo.blackjack.web.split.browser.test private fixture server, never production",
+        "edge_type": "trigger"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 7,
+        "line": "register: demo.blackjack.web.split.reassessment new rules require new contract review",
+        "edge_type": "trigger"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 7,
+        "line": "register: demo.blackjack.web.split.reassessment changed inputs require renewed review",
+        "edge_type": "trigger"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 9,
+        "line": "register: demo.blackjack.web.split.reassessment new rules or source changes require new review",
+        "edge_type": "trigger"
+      }
+    ]
+  },
+  {
+    "identifier": "demo.blackjack.web.split.acceptance",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 8,
+        "line": "publish: demo.blackjack.web.split.acceptance evidence for the final Warp gate",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 8,
+        "line": "publish: demo.blackjack.web.split.acceptance evidence for the final Warp gate",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.advance.complete",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 59,
+        "line": "    state demo.blackjack.web.split.advance.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 61,
+        "line": "  warp advance : E0(demo.blackjack.web.split.advance.todo.current) -> dE(advance.f) -> Ef(demo.blackjack.web.split.advance.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.advance.request",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 57,
+        "line": "    consume demo.blackjack.web.split.advance.request",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.advance.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 126,
+        "line": "# publish: demo.blackjack.web.split.advance.result next unfinished hand or dealer phase",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 58,
+        "line": "    produce demo.blackjack.web.split.advance.result",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 126,
+        "line": "# publish: demo.blackjack.web.split.advance.result next unfinished hand or dealer phase",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.advance.todo.current",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 61,
+        "line": "  warp advance : E0(demo.blackjack.web.split.advance.todo.current) -> dE(advance.f) -> Ef(demo.blackjack.web.split.advance.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.analysis",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 5,
+        "line": "defines: demo.blackjack.web.split.analysis reviewed design, not implemented game behavior",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 8,
+        "line": "publish: demo.blackjack.web.split.analysis.result observed model checks and runtime gaps",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.analysis.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 8,
+        "line": "publish: demo.blackjack.web.split.analysis.result observed model checks and runtime gaps",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 8,
+        "line": "publish: demo.blackjack.web.split.analysis.result observed model checks and runtime gaps",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.baseline",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.baseline.complete.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.web.split.baseline pre-implementation observation",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.baseline.complete.md",
+        "line_number": 5,
+        "line": "publish: demo.blackjack.web.split.baseline.result missing collection demonstrated",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.baseline.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.baseline.complete.md",
+        "line_number": 5,
+        "line": "publish: demo.blackjack.web.split.baseline.result missing collection demonstrated",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.baseline.complete.md",
+        "line_number": 5,
+        "line": "publish: demo.blackjack.web.split.baseline.result missing collection demonstrated",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.browser",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.css",
+        "line_number": 11,
+        "line": "/* consumer: demo.blackjack.web.split.browser active turn and responsive hand layout */",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.js",
+        "line_number": 100,
+        "line": "// publish: demo.blackjack.web.split.browser two independent hands, one active control group",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.js",
+        "line_number": 100,
+        "line": "// publish: demo.blackjack.web.split.browser two independent hands, one active control group",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.css",
+        "line_number": 11,
+        "line": "/* consumer: demo.blackjack.web.split.browser active turn and responsive hand layout */",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 7,
+        "line": "consumer: demo.blackjack.web.split.browser.acceptance observed controls and settlement",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.browser-fixture.jl",
+        "line_number": 1,
+        "line": "# register: demo.blackjack.web.split.browser.test private fixture server, never production",
+        "edge_type": "trigger"
+      }
+    ]
+  },
+  {
+    "identifier": "demo.blackjack.web.split.browser.acceptance",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 7,
+        "line": "consumer: demo.blackjack.web.split.browser.acceptance observed controls and settlement",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 7,
+        "line": "consumer: demo.blackjack.web.split.browser.acceptance observed controls and settlement",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.browser.test",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.browser-fixture.jl",
+        "line_number": 1,
+        "line": "# register: demo.blackjack.web.split.browser.test private fixture server, never production",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.browser-fixture.jl",
+        "line_number": 1,
+        "line": "# register: demo.blackjack.web.split.browser.test private fixture server, never production",
+        "edge_type": "trigger"
+      }
+    ]
+  },
+  {
+    "identifier": "demo.blackjack.web.split.contract",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 152,
+        "line": "# consumer: demo.blackjack.web.split.contract revision AND active identity",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 2,
+        "line": "# defines: demo.blackjack.web.split.contract v2 reference; logical aliases mapped in split source review",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract proposed symbolic input/output bundles",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract symbolic inputs and outputs",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.runtime.test.jl",
+        "line_number": 19,
+        "line": "# consumer: demo.blackjack.web.split.contract acceptance against actual Julia",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract symbolic requirements",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract six symbolic boundaries",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 152,
+        "line": "# consumer: demo.blackjack.web.split.contract revision AND active identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract proposed symbolic input/output bundles",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract symbolic inputs and outputs",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.runtime.test.jl",
+        "line_number": 19,
+        "line": "# consumer: demo.blackjack.web.split.contract acceptance against actual Julia",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract symbolic requirements",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.contract six symbolic boundaries",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.dealer.complete",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 65,
+        "line": "    state demo.blackjack.web.split.dealer.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 67,
+        "line": "  warp dealer : E0(demo.blackjack.web.split.dealer.todo.current) -> dE(dealer.f) -> Ef(demo.blackjack.web.split.dealer.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.dealer.request",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 63,
+        "line": "    consume demo.blackjack.web.split.dealer.request",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.dealer.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 118,
+        "line": "# publish: demo.blackjack.web.split.dealer.result dealer plays once after all hands finish",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 64,
+        "line": "    produce demo.blackjack.web.split.dealer.result",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 118,
+        "line": "# publish: demo.blackjack.web.split.dealer.result dealer plays once after all hands finish",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.dealer.todo.current",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 67,
+        "line": "  warp dealer : E0(demo.blackjack.web.split.dealer.todo.current) -> dE(dealer.f) -> Ef(demo.blackjack.web.split.dealer.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.dependencies",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.dependencies.recur",
+        "line_number": 2,
+        "line": "# defines: demo.blackjack.web.split.dependencies proposed review ordering",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.web.split.dependencies reviewed implementation boundary",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.design",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 6,
+        "line": "consumer: demo.blackjack.web.split.design proposed two-hand policy",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.web.split.design two-hand extension of the playable website",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 6,
+        "line": "consumer: demo.blackjack.web.split.design proposed two-hand policy",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.eligibility.complete",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 47,
+        "line": "    state demo.blackjack.web.split.eligibility.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 49,
+        "line": "  warp eligibility : E0(demo.blackjack.web.split.eligibility.todo.current) -> dE(eligibility.f) -> Ef(demo.blackjack.web.split.eligibility.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.eligibility.request",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 45,
+        "line": "    consume demo.blackjack.web.split.eligibility.request",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.eligibility.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 46,
+        "line": "# publish: demo.blackjack.web.split.eligibility.result pair, wallet and aggregate reserve",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 46,
+        "line": "    produce demo.blackjack.web.split.eligibility.result",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 46,
+        "line": "# publish: demo.blackjack.web.split.eligibility.result pair, wallet and aggregate reserve",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.eligibility.todo.current",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 49,
+        "line": "  warp eligibility : E0(demo.blackjack.web.split.eligibility.todo.current) -> dE(eligibility.f) -> Ef(demo.blackjack.web.split.eligibility.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.implementation",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 9,
+        "line": "register: demo.blackjack.web.split.implementation pending implementation Warp",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.implementation.plan requirements and acceptance cases",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 5,
+        "line": "consumer: demo.blackjack.web.split.implementation.plan implementation slices",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 9,
+        "line": "register: demo.blackjack.web.split.implementation pending implementation Warp",
+        "edge_type": "trigger"
+      }
+    ]
+  },
+  {
+    "identifier": "demo.blackjack.web.split.implementation.plan",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.implementation.plan requirements and acceptance cases",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 5,
+        "line": "consumer: demo.blackjack.web.split.implementation.plan implementation slices",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.implementation.plan requirements and acceptance cases",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 5,
+        "line": "consumer: demo.blackjack.web.split.implementation.plan implementation slices",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.reassessment",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 7,
+        "line": "register: demo.blackjack.web.split.reassessment new rules require new contract review",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 7,
+        "line": "register: demo.blackjack.web.split.reassessment changed inputs require renewed review",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 9,
+        "line": "register: demo.blackjack.web.split.reassessment new rules or source changes require new review",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.design.todo.current.md",
+        "line_number": 7,
+        "line": "register: demo.blackjack.web.split.reassessment new rules require new contract review",
+        "edge_type": "trigger"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 7,
+        "line": "register: demo.blackjack.web.split.reassessment changed inputs require renewed review",
+        "edge_type": "trigger"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 9,
+        "line": "register: demo.blackjack.web.split.reassessment new rules or source changes require new review",
+        "edge_type": "trigger"
+      }
+    ]
+  },
+  {
+    "identifier": "demo.blackjack.web.split.review",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.review source-bound author assessment",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.review source-bound author assessment",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.runtime",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 5,
+        "line": "consumer: demo.blackjack.web.split.runtime deterministic and randomized evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.runtime.test.jl",
+        "line_number": 20,
+        "line": "# publish: demo.blackjack.web.split.runtime observed behavior, not model execution",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 6,
+        "line": "consumer: demo.blackjack.web.split.runtime Julia observations",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.runtime.test.jl",
+        "line_number": 20,
+        "line": "# publish: demo.blackjack.web.split.runtime observed behavior, not model execution",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.review.md",
+        "line_number": 5,
+        "line": "consumer: demo.blackjack.web.split.runtime deterministic and randomized evidence",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 6,
+        "line": "consumer: demo.blackjack.web.split.runtime Julia observations",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.settle.complete",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 71,
+        "line": "    state demo.blackjack.web.split.settle.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 73,
+        "line": "  warp settle : E0(demo.blackjack.web.split.settle.todo.current) -> dE(settle.f) -> Ef(demo.blackjack.web.split.settle.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.settle.request",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 69,
+        "line": "    consume demo.blackjack.web.split.settle.request",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.settle.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 99,
+        "line": "# publish: demo.blackjack.web.split.settle.result one aggregate settlement, per-hand outcomes",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 70,
+        "line": "    produce demo.blackjack.web.split.settle.result",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 99,
+        "line": "# publish: demo.blackjack.web.split.settle.result one aggregate settlement, per-hand outcomes",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.settle.todo.current",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 73,
+        "line": "  warp settle : E0(demo.blackjack.web.split.settle.todo.current) -> dE(settle.f) -> Ef(demo.blackjack.web.split.settle.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.split.complete",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 53,
+        "line": "    state demo.blackjack.web.split.split.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 55,
+        "line": "  warp split : E0(demo.blackjack.web.split.split.todo.current) -> dE(split.f) -> Ef(demo.blackjack.web.split.split.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.split.request",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 51,
+        "line": "    consume demo.blackjack.web.split.split.request",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.split.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 139,
+        "line": "# publish: demo.blackjack.web.split.split.result stable IDs and one replacement each",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 52,
+        "line": "    produce demo.blackjack.web.split.split.result",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 139,
+        "line": "# publish: demo.blackjack.web.split.split.result stable IDs and one replacement each",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.split.todo.current",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 55,
+        "line": "  warp split : E0(demo.blackjack.web.split.split.todo.current) -> dE(split.f) -> Ef(demo.blackjack.web.split.split.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.test.plan",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.http.test.jl",
+        "line_number": 11,
+        "line": "# consumer: demo.blackjack.web.split.test.plan protocol, identity and replay",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.baseline.complete.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.test.plan acceptance matrix",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.test.plan bounded behavior checks",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 5,
+        "line": "consumer: demo.blackjack.web.split.test.plan 22 acceptance cases",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 6,
+        "line": "publish: demo.blackjack.web.split.test.plan bounded behavior checks",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.http.test.jl",
+        "line_number": 11,
+        "line": "# consumer: demo.blackjack.web.split.test.plan protocol, identity and replay",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.baseline.complete.md",
+        "line_number": 4,
+        "line": "consumer: demo.blackjack.web.split.test.plan acceptance matrix",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 5,
+        "line": "consumer: demo.blackjack.web.split.test.plan 22 acceptance cases",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.tests",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 7,
+        "line": "consumer: demo.blackjack.web.split.tests acceptance matrix",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.tests.todo.current.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.web.split.tests proposed runtime acceptance",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.analysis.current.md",
+        "line_number": 7,
+        "line": "consumer: demo.blackjack.web.split.tests acceptance matrix",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.verification",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.verification.complete.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.web.split.verification bounded completed implementation",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.view.complete",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 77,
+        "line": "    state demo.blackjack.web.split.view.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 79,
+        "line": "  warp view : E0(demo.blackjack.web.split.view.todo.current) -> dE(view.f) -> Ef(demo.blackjack.web.split.view.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.view.request",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 75,
+        "line": "    consume demo.blackjack.web.split.view.request",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.view.result",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 73,
+        "line": "# publish: demo.blackjack.web.split.view.result same projection for HTTP and model correspondence",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 76,
+        "line": "    produce demo.blackjack.web.split.view.result",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.web.engine.jl",
+        "line_number": 73,
+        "line": "# publish: demo.blackjack.web.split.view.result same projection for HTTP and model correspondence",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.web.split.view.todo.current",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\split\\main.blackjack.web.split.contract.recur",
+        "line_number": 79,
+        "line": "  warp view : E0(demo.blackjack.web.split.view.todo.current) -> dE(view.f) -> Ef(demo.blackjack.web.split.view.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  }
+]

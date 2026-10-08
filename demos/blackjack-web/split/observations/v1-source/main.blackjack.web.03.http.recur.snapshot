@@ -1,0 +1,35 @@
+recur 0.1 class WebSession
+# defines: demo.blackjack.web.http contract-first website stage
+header {
+  scope route {
+    i(a) := (request: HttpRequest, store: Sessions)
+    o(b) := (response: HttpResponse)
+    f : i(a) -> o(b) ~ "Serve only public assets and authoritative JSON; cookie sessions isolate tables and reject stale actions" by BlackjackWebServer.handler
+  }
+  scope publish {
+    i(a) := (game: PrivateGame)
+    o(b) := (snapshot: PublicState)
+    f : i(a) -> o(b) ~ "Return no remaining deck or hidden dealer card; failed commands preserve session state" by BlackjackWeb.public_state
+  }
+}
+body {
+  route sync : i(a) -> f(a) -> o(b)
+  publish sync : i(a) -> f(a) -> o(b)
+}
+footer {
+  event route {
+    consume demo.blackjack.web.route.request
+    produce demo.blackjack.web.route.result
+    state demo.blackjack.web.route.complete
+  }
+  warp route : E0(demo.blackjack.web.route.todo.current) -> dE(route.f) -> Ef(demo.blackjack.web.route.complete)
+  event publish {
+    consume demo.blackjack.web.publish.request
+    produce demo.blackjack.web.publish.result
+    state demo.blackjack.web.publish.complete
+  }
+  warp publish : E0(demo.blackjack.web.publish.todo.current) -> dE(publish.f) -> Ef(demo.blackjack.web.publish.complete)
+  # References for implementation review; opaque types need behavioral tests.
+  # Browser event feedback is repeated requests, not a server-to-browser module import.
+}
+

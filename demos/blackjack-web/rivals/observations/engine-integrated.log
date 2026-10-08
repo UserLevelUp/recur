@@ -1,0 +1,16 @@
+Test Summary:        | Pass  Total  Time
+Rival table contract |  904    904  1.4s
+Test Summary:                 | Pass  Total  Time
+Visible Stand on 17 benchmark |   11     11  0.0s
+Test Summary:              | Pass  Total  Time
+Natural blackjack and peek |   18     18  0.0s
+Test Summary:                                       | Pass  Total  Time
+Two rivals act in seat order before one dealer turn |    7      7  0.0s
+Test Summary:                                           | Pass  Total  Time
+Split aces, split 21, sequential human hands and double |   49     49  0.1s
+Test Summary:                                  | Pass  Total  Time
+Aggregate reserves and affordable rival wagers |   29     29  0.1s
+Test Summary:                                             | Pass  Total  Time
+Command rejection, revision, reset and snapshot isolation |   94     94  0.9s
+Test Summary:                              | Pass  Total  Time
+Repeated rounds and retained human history |   81     81  0.1s

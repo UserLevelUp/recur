@@ -1,0 +1,43 @@
+Companion implementation plan v1: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:19
+  Expression: first.code == 0
+   Evaluated: 2 == 0
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.RecurLangPlanTests.var"#6#7")(root::String)
+   @ Main.RecurLangPlanTests C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:19
+ [3] mktempdir(fn::Main.RecurLangPlanTests.var"#6#7", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:14
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:14 [inlined]
+Companion implementation plan v1: Test Failed at C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:20
+  Expression: first.data !== nothing
+   Evaluated: nothing !== nothing
+
+Stacktrace:
+ [1] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.RecurLangPlanTests.var"#6#7")(root::String)
+   @ Main.RecurLangPlanTests C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:20
+ [3] mktempdir(fn::Main.RecurLangPlanTests.var"#6#7", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:14
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:14 [inlined]
+Test Summary:                    | Fail  Total  Time
+Companion implementation plan v1 |    2      2  1.0s
+RNG of the outermost testset: Random.Xoshiro(0x0652eb35244df037, 0x76f6c12ac4062a2e, 0x1fae27a05e8d078c, 0x3257b86b4c09811b, 0x6a03ffc65d641c3a)
+ERROR: LoadError: Some tests did not pass: 0 passed, 2 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\julia-tests\main.command.recur-lang.plan.test.jl:1

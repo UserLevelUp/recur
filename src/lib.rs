@@ -21,6 +21,7 @@ pub mod search;
 pub mod tree;
 pub mod warp_bubble;
 pub mod warp_discovery;
+pub mod warp_dispatch;
 pub mod warp_evidence;
 pub mod warp_refresh;
 pub mod warp_policy;

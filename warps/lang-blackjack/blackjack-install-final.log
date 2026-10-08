@@ -1,0 +1,23 @@
+  Installing recur v0.2.8 (C:\src\recur)
+   Compiling recur v0.2.8 (C:\src\recur)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `release-safe` profile [optimized] target(s) in 21.55s
+   Replacing C:\Users\marcn\.cargo\bin\recur-git.exe
+   Replacing C:\Users\marcn\.cargo\bin\recur-lang.exe
+   Replacing C:\Users\marcn\.cargo\bin\recur-reveal.exe
+   Replacing C:\Users\marcn\.cargo\bin\recur-version.exe
+   Replacing C:\Users\marcn\.cargo\bin\recur-warp.exe
+   Replacing C:\Users\marcn\.cargo\bin\recur-watch.exe
+   Replacing C:\Users\marcn\.cargo\bin\recur.exe
+    Replaced package `recur v0.2.8 (C:\src\recur)` with `recur v0.2.8 (C:\src\recur)` (executables `recur-git.exe`, `recur-lang.exe`, `recur-reveal.exe`, `recur-version.exe`, `recur-warp.exe`, `recur-watch.exe`, `recur.exe`)

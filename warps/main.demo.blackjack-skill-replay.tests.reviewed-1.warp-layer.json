@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.blackjack-skill-replay",
+  "slice_id": "tests",
+  "contract_hash": "contract:main.demo.blackjack-skill-replay.tests:v1",
+  "attempt_id": "reviewed-1",
+  "result_state": "accepted",
+  "result_hash": "sha256:93d6601f209df322fdd8ac65f232db916d0b6229a51f67993864e21a1a70692a",
+  "evidence": {
+    "red-first-fixtures": [
+      "blackjack-skill/main.blackjack.skill.tests.complete.md"
+    ]
+  },
+  "reason": null
+}

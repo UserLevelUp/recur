@@ -62,12 +62,28 @@ Tests are organized into functions by command:
    ```
    Then run tests with `RECUR_PROFILE=release-safe` (or set `RECUR_BIN` directly).
 
-### Run All Tests
+### Run Core Tests
 
 ```bash
 cd julia-tests
 julia runtests.jl
 ```
+
+Demo suites are optional and excluded by default. Select one demo to run only
+its tests, or add `--with-core` to run core tests as well:
+
+```bash
+julia runtests.jl --list-demos
+julia runtests.jl --demo blackjack-web
+julia runtests.jl --demo sudoku --with-core
+julia runtests.jl --demo blackjack-lab --demo blackjack-web
+julia runtests.jl --demo blackjack-web --dry-run
+```
+
+Selections are exact names; repeat `--demo` for multiple demos. Unknown names
+or options fail before test setup. Direct demo test files and demo-specific
+coordinator verification commands remain explicit opt-ins. Core language and
+CLI tests may use small demo files as fixtures without running those demo suites.
 
 ### Run with Verbose Output
 

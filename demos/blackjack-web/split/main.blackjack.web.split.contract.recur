@@ -1,0 +1,83 @@
+recur 0.1 class SplitRound
+# defines: demo.blackjack.web.split.contract v2 reference; logical aliases mapped in split source review
+header {
+  scope eligibility {
+    i(a) := (round: PrivateRound, policy: SplitPolicy)
+    o(b) := (allowed: Bool, reason: OptionalText, extra_stake: Chips, reserve: Chips)
+    f : i(a) -> o(b) ~ "Require original active two-card equal-rank hand, no earlier split, enough wallet and house reserve" by BlackjackWeb.split_eligibility
+  }
+  scope split {
+    i(a) := (round: PrivateRound, command: RevisionedHandCommand, policy: SplitPolicy)
+    o(b) := (round: PrivateRound)
+    f : i(a) -> o(b) ~ "Atomically reserve one extra stake and create two stable hand IDs; deal one card each in order" by SplitV2.split
+  }
+  scope advance {
+    i(a) := (round: PrivateRound, command: RevisionedHandCommand)
+    o(b) := (round: PrivateRound)
+    f : i(a) -> o(b) ~ "Act only on the active hand; finish it before advancing to the next unfinished hand" by SplitV2.advance
+  }
+  scope dealer {
+    i(a) := (round: PrivateRound)
+    o(b) := (round: PrivateRound)
+    f : i(a) -> o(b) ~ "Require every player hand finished; play the shared dealer at most once or skip drawing if all bust" by SplitV2.dealer
+  }
+  scope settle {
+    i(a) := (round: PrivateRound)
+    o(b) := (round: PrivateRound, result: RoundResult)
+    f : i(a) -> o(b) ~ "Resolve every hand against the same dealer and apply one aggregate ledger update; split twenty-one pays one to one" by SplitV2.settle
+  }
+  scope view {
+    i(a) := (round: PrivateRound)
+    o(b) := (schema: SchemaVersion, revision: Revision, round_id: RoundId, phase: Phase, balance: Chips, starting: Chips, bank: Chips, escrow: Chips, hands: PublicHands, active_hand_id: OptionalHandId, dealer: PublicCards, dealer_score: OptionalScore, result: Outcome, profit: Chips, net: Chips, allowed: Actions, split: SplitEligibility, history: RoundResults, stats: RoundAndHandCounts, max_bet: Chips, session_statistics: SessionStatistics, rules_id: RulesId, engine_id: EngineId, comparison_label: ComparisonLabel)
+    f : i(a) -> o(b) ~ "Expose per-hand cards stakes status and result; keep hole card private until all player hands finish" by BlackjackWeb.public_state
+  }
+}
+body {
+  eligibility sync : i(a) -> f(a) -> o(b)
+  split sync : i(a) -> f(a) -> o(b)
+  advance sync : i(a) -> f(a) -> o(b)
+  dealer sync : i(a) -> f(a) -> o(b)
+  settle sync : i(a) -> f(a) -> o(b)
+  view sync : i(a) -> f(a) -> o(b)
+}
+footer {
+  event eligibility {
+    consume demo.blackjack.web.split.eligibility.request
+    produce demo.blackjack.web.split.eligibility.result
+    state demo.blackjack.web.split.eligibility.complete
+  }
+  warp eligibility : E0(demo.blackjack.web.split.eligibility.todo.current) -> dE(eligibility.f) -> Ef(demo.blackjack.web.split.eligibility.complete)
+  event split {
+    consume demo.blackjack.web.split.split.request
+    produce demo.blackjack.web.split.split.result
+    state demo.blackjack.web.split.split.complete
+  }
+  warp split : E0(demo.blackjack.web.split.split.todo.current) -> dE(split.f) -> Ef(demo.blackjack.web.split.split.complete)
+  event advance {
+    consume demo.blackjack.web.split.advance.request
+    produce demo.blackjack.web.split.advance.result
+    state demo.blackjack.web.split.advance.complete
+  }
+  warp advance : E0(demo.blackjack.web.split.advance.todo.current) -> dE(advance.f) -> Ef(demo.blackjack.web.split.advance.complete)
+  event dealer {
+    consume demo.blackjack.web.split.dealer.request
+    produce demo.blackjack.web.split.dealer.result
+    state demo.blackjack.web.split.dealer.complete
+  }
+  warp dealer : E0(demo.blackjack.web.split.dealer.todo.current) -> dE(dealer.f) -> Ef(demo.blackjack.web.split.dealer.complete)
+  event settle {
+    consume demo.blackjack.web.split.settle.request
+    produce demo.blackjack.web.split.settle.result
+    state demo.blackjack.web.split.settle.complete
+  }
+  warp settle : E0(demo.blackjack.web.split.settle.todo.current) -> dE(settle.f) -> Ef(demo.blackjack.web.split.settle.complete)
+  event view {
+    consume demo.blackjack.web.split.view.request
+    produce demo.blackjack.web.split.view.result
+    state demo.blackjack.web.split.view.complete
+  }
+  warp view : E0(demo.blackjack.web.split.view.todo.current) -> dE(view.f) -> Ef(demo.blackjack.web.split.view.complete)
+  # Desired lifecycle only. SplitV2 aliases map to Julia mutating helpers in the source review; Lang does not execute them.
+  # Multi-command human play carries PrivateRound state between requests; no recursive settle-to-play call.
+}
+

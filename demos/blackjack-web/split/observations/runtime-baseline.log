@@ -1,0 +1,17 @@
+Split runtime acceptance: Test Failed at C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.runtime.test.jl:23
+  Expression: supported
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.runtime.test.jl:22
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.runtime.test.jl:23 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Test Summary:            | Fail  Total  Time
+Split runtime acceptance |    1      1  0.8s
+RNG of the outermost testset: Random.Xoshiro(0xf57475429088da81, 0x42cbdf3fb1d92a18, 0xc850d6875705205b, 0x9831b2c2eb549e0e, 0xd0c826fac87e4cf2)
+ERROR: LoadError: Some tests did not pass: 0 passed, 1 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.runtime.test.jl:1

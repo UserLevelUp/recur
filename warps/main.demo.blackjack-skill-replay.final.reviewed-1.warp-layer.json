@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.blackjack-skill-replay",
+  "slice_id": "final",
+  "contract_hash": "contract:main.demo.blackjack-skill-replay.final:v1",
+  "attempt_id": "reviewed-1",
+  "result_state": "accepted",
+  "result_hash": "sha256:27d1b1ea6dcf0a6e5dfee8744b6e25934ac0830ca7e7fab74e91fae89a643a78",
+  "evidence": {
+    "coordinator-acceptance": [
+      "blackjack-skill/main.blackjack.skill.final.complete.md"
+    ]
+  },
+  "reason": null
+}

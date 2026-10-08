@@ -1,0 +1,3 @@
+interface:
+  display_name: "Recur Watch"
+  short_description: "Inspect subscriptions and coordinate asynchronous slices"

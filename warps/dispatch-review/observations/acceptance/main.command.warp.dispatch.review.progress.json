@@ -1,0 +1,162 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a1170a-50bc-7196-ae0e-ca70760dbcf6",
+  "completed_slices": [
+    "codex-coordinator",
+    "codex-independent",
+    "copilot-review",
+    "gemini-review"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 4,
+    "pending": 0,
+    "required": 4,
+    "stale_contract": 0
+  },
+  "covered": [
+    "codex-coordinator",
+    "codex-independent",
+    "copilot-review",
+    "gemini-review"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/observations/copilot-review.json",
+          "status": "declared"
+        }
+      ],
+      "gate": "review",
+      "satisfied": true,
+      "slice_id": "copilot-review",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/main.command.warp.dispatch.gemini.blocked.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "review",
+      "satisfied": true,
+      "slice_id": "gemini-review",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/observations/codex-independent-review.json",
+          "status": "declared"
+        }
+      ],
+      "gate": "review",
+      "satisfied": true,
+      "slice_id": "codex-independent",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/observations/codex-coordinator-review.json",
+          "status": "declared"
+        }
+      ],
+      "gate": "review",
+      "satisfied": true,
+      "slice_id": "codex-coordinator",
+      "status": "declared"
+    }
+  ],
+  "goal": "Cross-provider review and Codex high coordination for dispatch acceptance, with observed handoff timing",
+  "layers": [
+    "codex-coordinator@reviewed-codex-high-coordinator-20261007",
+    "codex-independent@reviewed-codex-high-1-20261007",
+    "copilot-review@reviewed-copilot-11-20261007",
+    "gemini-review@reviewed-unavailable-20261007"
+  ],
+  "manifest": "main.command.warp.dispatch.review.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "//?/C:/src/recur/warps",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:dispatch.review.copilot:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "review"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "copilot-review",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:dispatch.review.gemini-availability:v2",
+      "depends_on": [],
+      "evidence_gates": [
+        "review"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "gemini-review",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:dispatch.review.codex-independent:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "review"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "codex-independent",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:dispatch.review.coordinator:v1",
+      "depends_on": [
+        "copilot-review",
+        "gemini-review",
+        "codex-independent"
+      ],
+      "evidence_gates": [
+        "review"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "codex-coordinator",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [
+    "Declared current_slice 'copilot-review' is no longer ready; selection not inferred."
+  ],
+  "warp_id": "main.command.warp.dispatch.review"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.dispatch.review",
+  "slice_id": "copilot-review",
+  "contract_hash": "contract:dispatch.review.copilot:v1",
+  "attempt_id": "reviewed-copilot-11-20261007",
+  "result_state": "accepted",
+  "result_hash": "sha256:8c0d11d8441140a66fb2c3cf964f400bdd3aaa878e4abb1431bf2689305a0f6f",
+  "evidence": {
+    "review": [
+      "warps/dispatch-review/observations/copilot-review.json"
+    ]
+  },
+  "reason": null
+}

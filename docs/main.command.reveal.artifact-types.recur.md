@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Reveal artifact types
 warp.id = main.command.reveal.artifact-types
 warp.root = docs

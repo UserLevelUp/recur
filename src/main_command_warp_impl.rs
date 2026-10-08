@@ -19,6 +19,8 @@ use crate::warp_bubble::BUBBLE_MAP_SCHEMA;
 
 #[derive(Subcommand)]
 pub enum WarpSubcommand {
+    /// Inspect asynchronous assignment records; never launches agents
+    Dispatch { warp: String },
     /// Show a discovered bubble's progress (including completed bubbles)
     Show { warp: String },
     /// List a discovered bubble's slices, dependencies, and readiness
@@ -281,6 +283,10 @@ struct WarpRingMergeOutput {
 pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Result<()> {
     let root = resolve_root(dir)?;
     match command {
+        WarpSubcommand::Dispatch { warp } => {
+            println!("{}", serde_json::to_string_pretty(&crate::warp_dispatch::inspect(&root, &warp)?)?);
+            Ok(())
+        }
         WarpSubcommand::Show { warp } | WarpSubcommand::Slices { warp } => {
             let output = bubble_progress(&root, &warp)?;
             if json {
@@ -387,7 +393,7 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
 }
 
 // defines: recur.warp.discovery.inventory deterministic read-only manifest discovery
-fn bubble_progress(root: &Path, warp: &str) -> anyhow::Result<serde_json::Value> {
+pub fn bubble_progress(root: &Path, warp: &str) -> anyhow::Result<serde_json::Value> {
     let inventory = list_warps(root, true, false)?;
     let matches: Vec<_> = inventory["entries"]
         .as_array()
@@ -1234,6 +1240,16 @@ fn load_warp_layers_scoped(
             );
         }
         if layer.warp_id != warp {
+            // A hierarchical child shares the parent's filename prefix, but owns
+            // its layers only when an exact, valid sibling declaration proves it.
+            // Do not silently discard arbitrary wrong-identity/corrupt records.
+            if !layer.slice_id.trim().is_empty()
+                && !layer.contract_hash.trim().is_empty()
+                && !layer.attempt_id.trim().is_empty()
+                && declared_descendant_layer(&path, warp, &layer.warp_id)
+            {
+                continue;
+            }
             anyhow::bail!(
                 "Warp identity '{}' in '{}' does not match requested '{}'",
                 layer.warp_id,
@@ -1256,6 +1272,31 @@ fn load_warp_layers_scoped(
         });
     }
     Ok(layers)
+}
+
+fn declared_descendant_layer(path: &Path, requested: &str, owner: &str) -> bool {
+    if !owner.starts_with(&format!("{requested}."))
+        || !path.file_name().is_some_and(|name| {
+            name.to_string_lossy().starts_with(&format!("{owner}."))
+        })
+        || owner.contains(['/', '\\'])
+    {
+        return false;
+    }
+    let Some(directory) = path.parent() else {
+        return false;
+    };
+    let declaration = directory.join(format!("{owner}.warp-map.json"));
+    // Symlinks cannot prove local ownership outside the selected evidence root.
+    if !fs::symlink_metadata(&declaration)
+        .is_ok_and(|metadata| metadata.file_type().is_file())
+    {
+        return false;
+    }
+    fs::read_to_string(&declaration)
+        .ok()
+        .and_then(|text| serde_json::from_str::<WarpBubbleMap>(&text).ok())
+        .is_some_and(|map| validate_bubble_map(&map, owner, &declaration).is_ok())
 }
 
 /// Compose only explicitly supplied map/layer snapshots for a bounded caller.
@@ -2169,6 +2210,7 @@ mod tests {
 
     fn required(slice_id: &str, depends_on: &[&str]) -> WarpRequiredSlice {
         WarpRequiredSlice {
+            intelligence_tick: None,
             slice_uuid: None,
             evidence_mode: "declared".into(),
             gate_rules: BTreeMap::new(),
@@ -2245,6 +2287,80 @@ mod tests {
                 "evidence": {"tests": ["receipt.json"]}
             }),
         );
+    }
+
+    #[test]
+    fn descendant_layers_are_separate_from_parent_progress() {
+        let temporary = tempdir().unwrap();
+        let root = temporary.path();
+        write_complete_child(root, "demo.parent");
+        write_complete_child(root, "demo.parent.split");
+        write_complete_child(root, "demo.parent.split.computer");
+        for local in [false, true] {
+            let parent = load_warp_layers_scoped(root, "demo.parent", local).unwrap();
+            assert_eq!(parent.len(), 1);
+            assert_eq!(parent[0].layer.warp_id, "demo.parent");
+            let child = load_warp_layers_scoped(root, "demo.parent.split", local).unwrap();
+            assert_eq!(child.len(), 1);
+            assert_eq!(child[0].layer.warp_id, "demo.parent.split");
+        }
+        assert_eq!(merge_bubble(root, "demo.parent").unwrap().state, "complete");
+        assert_eq!(
+            merge_bubble(root, "demo.parent.split").unwrap().state,
+            "complete"
+        );
+    }
+
+    #[test]
+    fn descendant_exclusion_requires_valid_exact_sibling_declaration() {
+        let temporary = tempdir().unwrap();
+        let root = temporary.path();
+        write_complete_child(root, "demo.parent");
+        write_complete_child(root, "demo.parent.split");
+        let declaration = root.join("demo.parent.split.warp-map.json");
+        let valid = fs::read(&declaration).unwrap();
+        for invalid in [
+            json!({}),
+            json!({"schema": BUBBLE_MAP_SCHEMA, "warp_id": "demo.other", "required_slices": [{"slice_id":"work","contract_hash":"v1"}]}),
+            json!({"schema": BUBBLE_MAP_SCHEMA, "warp_id": "demo.parent.split", "required_slices": []}),
+        ] {
+            write_json(&declaration, invalid);
+            assert!(load_warp_layers(root, "demo.parent").is_err());
+        }
+        fs::remove_file(&declaration).unwrap();
+        assert!(load_warp_layers(root, "demo.parent").is_err());
+        fs::create_dir(root.join("elsewhere")).unwrap();
+        fs::write(root.join("elsewhere/demo.parent.split.warp-map.json"), &valid).unwrap();
+        assert!(load_warp_layers(root, "demo.parent").is_err());
+        fs::write(&declaration, valid).unwrap();
+        assert!(load_warp_layers(root, "demo.parent").is_ok());
+    }
+
+    #[test]
+    fn descendant_declaration_does_not_hide_wrong_filename_identity() {
+        let temporary = tempdir().unwrap();
+        let root = temporary.path();
+        write_complete_child(root, "demo.parent");
+        write_complete_child(root, "demo.parent.split");
+        let parent_layer = root.join("demo.parent.work.attempt-1.warp-layer.json");
+        let original = fs::read(&parent_layer).unwrap();
+        let mut corrupt: serde_json::Value = serde_json::from_slice(&original).unwrap();
+        for wrong_owner in ["demo.parent.split", "demo.other"] {
+            corrupt["warp_id"] = json!(wrong_owner);
+            write_json(&parent_layer, corrupt.clone());
+            assert!(load_warp_layers(root, "demo.parent").is_err());
+        }
+        fs::write(parent_layer, original).unwrap();
+        let child_layer = root.join("demo.parent.split.work.attempt-1.warp-layer.json");
+        let mut corrupt: serde_json::Value =
+            serde_json::from_slice(&fs::read(&child_layer).unwrap()).unwrap();
+        corrupt["attempt_id"] = json!("");
+        write_json(&child_layer, corrupt.clone());
+        assert!(load_warp_layers(root, "demo.parent").is_err());
+        corrupt["attempt_id"] = json!("attempt-1");
+        corrupt["schema"] = json!("invalid");
+        write_json(&child_layer, corrupt);
+        assert!(load_warp_layers(root, "demo.parent").is_err());
     }
 
     fn write_ring(root: &Path, warp: &str, child_warp: &str, relative_root: &str, depth: usize) {

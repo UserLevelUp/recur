@@ -1,0 +1,8 @@
+{
+  "reference": "evidence:warps/dispatch-review/observations/acceptance/cargo-evidence.json",
+  "status": "checked",
+  "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+  "reasons": [
+    "scope: 95 explicitly named source files; dirty=true; revision is recorded provenance"
+  ]
+}

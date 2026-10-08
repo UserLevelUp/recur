@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # main.lang.dogfood.recur
 
 recur.gift = Grow a small working capability from compact contracts, fixtures and observed behavior.

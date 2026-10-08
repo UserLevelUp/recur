@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Companion policy foundation
 
 warp.id = main.command.warp.companion-policy

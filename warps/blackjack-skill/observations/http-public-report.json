@@ -1,0 +1,104 @@
+{
+  "schema": "blackjack-session-report-v1",
+  "provenance": {
+    "engine": "blackjack-rivals-v3",
+    "rules": "s17-3to2-one-split-v1",
+    "strategies": [
+      "stand17-v1",
+      "dealer-aware-v1"
+    ]
+  },
+  "comparison_label": "Practice results only: rivals hit/stand; the human may split/double. Shared deck, seat order, stakes and bankroll affect results; no skill rating.",
+  "settled_session_rounds": 1,
+  "seats": [
+    {
+      "id": "human",
+      "balance": 520,
+      "starting": 500,
+      "net": 20,
+      "capabilities": [
+        "hit",
+        "stand",
+        "double",
+        "split"
+      ],
+      "statistics": {
+        "rounds": 1,
+        "hands": 1,
+        "wins": 1,
+        "losses": 0,
+        "pushes": 0,
+        "started_rounds": 1,
+        "settled_rounds": 1,
+        "active_rounds": 1,
+        "sitting_out_rounds": 0,
+        "naturals": 0,
+        "busts": 0,
+        "resolved_wager": 20,
+        "net_chips": 20,
+        "roi": 1,
+        "roi_label": "Net chips / resolved wager",
+        "sample_hands": 1,
+        "sample_rounds": 1
+      }
+    },
+    {
+      "id": "rival-1",
+      "balance": 480,
+      "starting": 500,
+      "net": -20,
+      "capabilities": [
+        "hit",
+        "stand"
+      ],
+      "statistics": {
+        "rounds": 1,
+        "hands": 1,
+        "wins": 0,
+        "losses": 1,
+        "pushes": 0,
+        "started_rounds": 1,
+        "settled_rounds": 1,
+        "active_rounds": 1,
+        "sitting_out_rounds": 0,
+        "naturals": 0,
+        "busts": 1,
+        "resolved_wager": 20,
+        "net_chips": -20,
+        "roi": -1,
+        "roi_label": "Net chips / resolved wager",
+        "sample_hands": 1,
+        "sample_rounds": 1
+      }
+    },
+    {
+      "id": "rival-2",
+      "balance": 530,
+      "starting": 500,
+      "net": 30,
+      "capabilities": [
+        "hit",
+        "stand"
+      ],
+      "statistics": {
+        "rounds": 1,
+        "hands": 1,
+        "wins": 1,
+        "losses": 0,
+        "pushes": 0,
+        "started_rounds": 1,
+        "settled_rounds": 1,
+        "active_rounds": 1,
+        "sitting_out_rounds": 0,
+        "naturals": 1,
+        "busts": 0,
+        "resolved_wager": 20,
+        "net_chips": 30,
+        "roi": 1.5,
+        "roi_label": "Net chips / resolved wager",
+        "sample_hands": 1,
+        "sample_rounds": 1
+      }
+    }
+  ]
+}

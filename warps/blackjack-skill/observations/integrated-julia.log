@@ -1,0 +1,40 @@
+Test Summary:            | Pass  Total  Time
+Blackjack website engine | 8601   8601  1.9s
+Test Summary:            | Pass  Total  Time
+Split runtime acceptance | 6095   6095  1.1s
+Test Summary:                  | Pass  Total  Time
+Split HTTP protocol and replay |   18     18  2.7s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:          | Pass  Total  Time
+Blackjack website HTTP |   41     41  1.8s
+Test Summary:            | Pass  Total  Time
+Blackjack website assets |   14     14  0.0s
+Test Summary:        | Pass  Total  Time
+Rival table contract |  904    904  1.4s
+Test Summary:                 | Pass  Total  Time
+Visible Stand on 17 benchmark |   11     11  0.0s
+Test Summary:              | Pass  Total  Time
+Natural blackjack and peek |   18     18  0.0s
+Test Summary:                                       | Pass  Total  Time
+Two rivals act in seat order before one dealer turn |    7      7  0.0s
+Test Summary:                                           | Pass  Total  Time
+Split aces, split 21, sequential human hands and double |   50     50  0.1s
+Aggregate reserves and affordable rival wagers: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.rivals.test.jl:238
+  Expression: (g.rivals[2]).stats == R.newstats() && (g.rivals[2]).profit == 0
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.rivals.test.jl:199
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.rivals.test.jl:238 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Test Summary:                                  | Pass  Fail  Total  Time
+Aggregate reserves and affordable rival wagers |   28     1     29  0.5s
+RNG of the outermost testset: Random.Xoshiro(0x7bb800799a091261, 0xfe4a3dafde071254, 0x36d87ae18a277f39, 0xeca22a57171b5435, 0x0140485288a312ed)
+ERROR: LoadError: Some tests did not pass: 28 passed, 1 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-web\main.blackjack.rivals.test.jl:1
+in expression starting at C:\src\recur\demos\blackjack-web\main.blackjack.web.test.jl:1

@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Warp command usability
 warp.id = main.command.warp.usability
 warp.root = docs

@@ -1,0 +1,20 @@
+{
+  "schema": "blackjack-skill-browser-observation-v2",
+  "observed_at": "2026-10-08T06:08:01.678Z",
+  "url": "http://127.0.0.1:8797/",
+  "checks": [
+    "Live table explicitly shows rules/engine and both strategy identities and versions",
+    "Actual file-chooser upload opens isolated replay showing the same provenance",
+    "Replay 520-chip human snapshot remains distinct from live 530-chip human table",
+    "Close replay control returns to live table"
+  ],
+  "evidence": "browser-version-labels-v2.txt",
+  "screenshots": [
+    "C:/Users/marcn/Documents/Codex/2026-10-06/le/outputs/blackjack-skill-demo.jpg",
+    "C:/Users/marcn/Documents/Codex/2026-10-06/le/outputs/blackjack-replay.jpg"
+  ],
+  "limitations": [
+    "Saved native browser download remains unverified; previous browser-smoke.json is retained",
+    "Original return-button click encountered a browser control error; fresh inspection and visible close control succeeded"
+  ]
+}

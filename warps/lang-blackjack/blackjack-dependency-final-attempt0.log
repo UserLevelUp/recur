@@ -1,0 +1,7 @@
+  injected self: SGR001
+  injected dependency: SGR001
+  injected wait: SGR002
+  injected join: SGR004
+  reviewed hidden call: play -> session -> score -> play
+Test Summary:                   |  Pass  Total   Time
+Blackjack contract-first stages | 13833  13833  10.6s

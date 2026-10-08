@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-10-08T05:47:42.937Z",
+  "url": "http://127.0.0.1:8797",
+  "status": "passed",
+  "checks": [
+    "real HTTP reset/deal/stand for two policies",
+    "three-seat public report",
+    "complete private deck export",
+    "isolated playback",
+    "live state unchanged"
+  ],
+  "fixture": "browser-private-replay.json"
+}

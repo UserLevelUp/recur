@@ -1,0 +1,33 @@
+{
+  "bubble_uuid": "01a0f2f4-d234-76bf-9fb3-23479435c814",
+  "current_slice": "slice-0",
+  "goal": "Provide deterministic policy-informed implementation and test advice from existing Lang query packets; do not execute bindings",
+  "invariants": [],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.lang.implementation-plan.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a0f2f4-d234-7631-91a8-4801dfafd67f"
+    },
+    {
+      "contract_hash": "contract:main.lang.implementation-plan.slice-final:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "acceptance"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0f2f4-d234-7869-8cf3-be53d7524a84"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.implementation-plan",
+  "contract_document": "warps/main.lang.implementation-plan.contract.md"
+}

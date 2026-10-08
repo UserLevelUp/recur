@@ -1,0 +1,247 @@
+[
+  {
+    "slice_id": "browser",
+    "attempt": 1,
+    "state": "host_failed",
+    "reasoning": "medium",
+    "host_id": "codex",
+    "config_fingerprint": "fnv1a64:59e7b516ddbcd181",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "browser",
+    "attempt": 2,
+    "state": "host_failed",
+    "reasoning": "medium",
+    "host_id": "codex",
+    "config_fingerprint": "fnv1a64:59e7b516ddbcd181",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "browser",
+    "attempt": 3,
+    "state": "host_failed",
+    "reasoning": "medium",
+    "host_id": "codex",
+    "config_fingerprint": "fnv1a64:59e7b516ddbcd181",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "browser",
+    "attempt": 4,
+    "state": "produced",
+    "reasoning": "medium",
+    "host_id": "blackjack-codex",
+    "config_fingerprint": "fnv1a64:98b7b389f0bd71d5",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": [
+      {
+        "elapsed_seconds": 0,
+        "exit_code": 0,
+        "stderr": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-e4ab3168592ae44f.4.test-0.stderr.txt",
+        "stderr_fingerprint": "fnv1a64:cbf29ce484222325",
+        "stdout": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-e4ab3168592ae44f.4.test-0.stdout.txt",
+        "stdout_fingerprint": "fnv1a64:2d3cd047926b4ea2",
+        "success": true,
+        "timed_out": false
+      }
+    ],
+    "verification_inputs": {
+      ".recur/blackjack-workers/browser/main.blackjack.rivals.js": "fnv1a64:d77ae0cbb1915850",
+      ".recur/blackjack-workers/browser/main.blackjack.rivals.test.cjs": "fnv1a64:cc09a7610ece93b7",
+      ".recur/blackjack-workers/browser/task.md": "fnv1a64:d651179bf5dca482"
+    }
+  },
+  {
+    "slice_id": "engine",
+    "attempt": 1,
+    "state": "host_failed",
+    "reasoning": "high",
+    "host_id": "codex",
+    "config_fingerprint": "fnv1a64:59e7b516ddbcd181",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "engine",
+    "attempt": 2,
+    "state": "host_failed",
+    "reasoning": "high",
+    "host_id": "codex",
+    "config_fingerprint": "fnv1a64:59e7b516ddbcd181",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "engine",
+    "attempt": 3,
+    "state": "host_failed",
+    "reasoning": "high",
+    "host_id": "codex",
+    "config_fingerprint": "fnv1a64:59e7b516ddbcd181",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "engine",
+    "attempt": 4,
+    "state": "produced",
+    "reasoning": "high",
+    "host_id": "blackjack-codex",
+    "config_fingerprint": "fnv1a64:98b7b389f0bd71d5",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": [
+      {
+        "elapsed_seconds": 3,
+        "exit_code": 0,
+        "stderr": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-3dacd07fc0cad3db.4.test-0.stderr.txt",
+        "stderr_fingerprint": "fnv1a64:cbf29ce484222325",
+        "stdout": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-3dacd07fc0cad3db.4.test-0.stdout.txt",
+        "stdout_fingerprint": "fnv1a64:774a469e33a95576",
+        "success": true,
+        "timed_out": false
+      }
+    ],
+    "verification_inputs": {
+      ".recur/blackjack-workers/engine/main.blackjack.rivals.engine.jl": "fnv1a64:0c2627409525c227",
+      ".recur/blackjack-workers/engine/main.blackjack.rivals.test.jl": "fnv1a64:84b531eeb6da03ae",
+      ".recur/blackjack-workers/engine/rules/main.blackjack.01.jl": "fnv1a64:215bc7352f1920a9",
+      ".recur/blackjack-workers/engine/rules/main.blackjack.02.jl": "fnv1a64:f7c0cd8e1df25f91",
+      ".recur/blackjack-workers/engine/rules/main.blackjack.03.jl": "fnv1a64:71908398c4d46c7e",
+      ".recur/blackjack-workers/engine/rules/main.blackjack.04.jl": "fnv1a64:78640117f69cdd4e",
+      ".recur/blackjack-workers/engine/task.md": "fnv1a64:9a664a9f61ee3c21"
+    }
+  },
+  {
+    "slice_id": "integration",
+    "attempt": 1,
+    "state": "host_failed",
+    "reasoning": "host-default",
+    "host_id": "blackjack-checks",
+    "config_fingerprint": "fnv1a64:3784dc70a97470cf",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "integration",
+    "attempt": 2,
+    "state": "host_failed",
+    "reasoning": "host-default",
+    "host_id": "blackjack-checks",
+    "config_fingerprint": "fnv1a64:3784dc70a97470cf",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "integration",
+    "attempt": 3,
+    "state": "host_failed",
+    "reasoning": "host-default",
+    "host_id": "blackjack-checks",
+    "config_fingerprint": "fnv1a64:3784dc70a97470cf",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "integration",
+    "attempt": 4,
+    "state": "host_failed",
+    "reasoning": "host-default",
+    "host_id": "blackjack-checks",
+    "config_fingerprint": "fnv1a64:3784dc70a97470cf",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "integration",
+    "attempt": 5,
+    "state": "host_failed",
+    "reasoning": "host-default",
+    "host_id": "blackjack-checks",
+    "config_fingerprint": "fnv1a64:3784dc70a97470cf",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": null,
+    "verification_inputs": null
+  },
+  {
+    "slice_id": "integration",
+    "attempt": 6,
+    "state": "produced",
+    "reasoning": "host-default",
+    "host_id": "blackjack-checks",
+    "config_fingerprint": "fnv1a64:aee2f0a77c855fff",
+    "map_fingerprint": "fnv1a64:397b9ef9fc82de2e",
+    "test_results": [
+      {
+        "elapsed_seconds": 4,
+        "exit_code": 0,
+        "stderr": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-08eb5f91d02be9cd.6.test-0.stderr.txt",
+        "stderr_fingerprint": "fnv1a64:cbf29ce484222325",
+        "stdout": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-08eb5f91d02be9cd.6.test-0.stdout.txt",
+        "stdout_fingerprint": "fnv1a64:feef63a3c6ef3406",
+        "success": true,
+        "timed_out": false
+      },
+      {
+        "elapsed_seconds": 0,
+        "exit_code": 0,
+        "stderr": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-08eb5f91d02be9cd.6.test-1.stderr.txt",
+        "stderr_fingerprint": "fnv1a64:cbf29ce484222325",
+        "stdout": "\\\\?\\C:\\src\\recur\\.recur\\dispatch\\fnv1a64-fdc44bd2b95ac9d7\\fnv1a64-08eb5f91d02be9cd.6.test-1.stdout.txt",
+        "stdout_fingerprint": "fnv1a64:11a43c1dcd6a0816",
+        "success": true,
+        "timed_out": false
+      }
+    ],
+    "verification_inputs": {
+      "demos/blackjack-lab/main.blackjack.01.jl": "fnv1a64:215bc7352f1920a9",
+      "demos/blackjack-lab/main.blackjack.02.jl": "fnv1a64:f7c0cd8e1df25f91",
+      "demos/blackjack-lab/main.blackjack.03.jl": "fnv1a64:71908398c4d46c7e",
+      "demos/blackjack-lab/main.blackjack.04.jl": "fnv1a64:78640117f69cdd4e",
+      "demos/blackjack-web/index.html": "fnv1a64:c60b19ba787538a0",
+      "demos/blackjack-web/main.blackjack.rivals.engine.jl": "fnv1a64:eb98e16748612297",
+      "demos/blackjack-web/main.blackjack.rivals.http.test.jl": "fnv1a64:b31ac67081dee9fd",
+      "demos/blackjack-web/main.blackjack.rivals.js": "fnv1a64:d77ae0cbb1915850",
+      "demos/blackjack-web/main.blackjack.rivals.test.cjs": "fnv1a64:cc09a7610ece93b7",
+      "demos/blackjack-web/main.blackjack.rivals.test.jl": "fnv1a64:d440c9a55b890705",
+      "demos/blackjack-web/main.blackjack.web.01.table.recur": "fnv1a64:d5af6f926d29b571",
+      "demos/blackjack-web/main.blackjack.web.02.play.recur": "fnv1a64:1fb8bee312c42c10",
+      "demos/blackjack-web/main.blackjack.web.03.http.recur": "fnv1a64:6fe1627d9aba4389",
+      "demos/blackjack-web/main.blackjack.web.04.browser.recur": "fnv1a64:0d3474944bc1a3fb",
+      "demos/blackjack-web/main.blackjack.web.05.dependencies.recur": "fnv1a64:d3632eb9db7578e3",
+      "demos/blackjack-web/main.blackjack.web.css": "fnv1a64:d5d68737e9bdd5e2",
+      "demos/blackjack-web/main.blackjack.web.engine.jl": "fnv1a64:2bf83c5935766fea",
+      "demos/blackjack-web/main.blackjack.web.http.test.jl": "fnv1a64:b091d268984efe6f",
+      "demos/blackjack-web/main.blackjack.web.js": "fnv1a64:9dc36b26c9319b23",
+      "demos/blackjack-web/main.blackjack.web.reference.test.jl": "fnv1a64:4c0308ed888d96e2",
+      "demos/blackjack-web/main.blackjack.web.requirements.md": "fnv1a64:96685f0141ba0398",
+      "demos/blackjack-web/main.blackjack.web.server.jl": "fnv1a64:c55823580856bc8e",
+      "demos/blackjack-web/main.blackjack.web.test.jl": "fnv1a64:1e3e8bfc05210b5a",
+      "demos/blackjack-web/rivals/main.blackjack.rivals.review.json": "fnv1a64:40c5ef53f09f4c23",
+      "demos/blackjack-web/rivals/main.blackjack.rivals.review.md": "fnv1a64:cd12afddd4938be5",
+      "demos/blackjack-web/rivals/main.blackjack.rivals.verify.cjs": "fnv1a64:857ce925638ad029",
+      "demos/blackjack-web/split/main.blackjack.web.split.browser-fixture.jl": "fnv1a64:69b1edfeb175e4aa",
+      "demos/blackjack-web/split/main.blackjack.web.split.contract.recur": "fnv1a64:eaf1af2788038efe",
+      "demos/blackjack-web/split/main.blackjack.web.split.dependencies.recur": "fnv1a64:191f5ed8cf087891",
+      "demos/blackjack-web/split/main.blackjack.web.split.model.test.jl": "fnv1a64:ea5d626d3d15c30e",
+      "demos/blackjack-web/split/main.blackjack.web.split.review.md": "fnv1a64:17f4c91d7036d436",
+      "demos/blackjack-web/split/main.blackjack.web.split.runtime.test.jl": "fnv1a64:e533578de691e6ae",
+      "demos/web-evidence-lab/Manifest.toml": "fnv1a64:2d54fbbfa19e91bb",
+      "demos/web-evidence-lab/Project.toml": "fnv1a64:b69e6c251a17ddad",
+      "warps/main.demo.blackjack-computer-player.contract.md": "fnv1a64:b0f08a4fe324baa1"
+    }
+  }
+]

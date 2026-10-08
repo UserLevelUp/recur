@@ -175,7 +175,8 @@ The companion increment [main.lang.init](warps/main.lang.init.readme.md) now
 implements `recur-lang init [-d ROOT] [--dry-run] [--json]`. It adds only missing
 `[recur-lang]` preferences to the nearest `.recur/config.toml`, preserves user
 choices/comments, and rejects invalid inputs without mutation. Preferences are
-inert until a future planner consumes them. See the
+consumed by the bounded `recur-lang plan` advisory command. It executes no
+bindings or producers. See the
 [completed init focus](README.CORE.IMPROVEMENT30.recur-lang.init.todo.checked.md)
 and [implementation evidence](warps/main.lang.init.verification.md).
 

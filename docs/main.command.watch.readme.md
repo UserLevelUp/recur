@@ -95,3 +95,13 @@ poll framing.
 - `README.CORE.IMPROVEMENT23.md`
 - `docs/main.recur.purity.decision.md`
 - `docs/main.command.watch.cli-art.todo.current.md`
+# Warp coordinator mode
+
+`recur-watch dispatch WARP` previews a scheduling pass. Add `--confirm` to
+coordinate configured asynchronous workers until quiescent, or `--cycles N`
+to limit passes. It calls the sibling `recur-warp` companion; core watch/warp
+queries remain read-only. See main.command.warp.dispatch.readme.md for policy,
+host configuration, evidence boundaries and optional Lang assignments.
+
+consumes: main.command.warp.dispatch.config polling coordinator configuration
+

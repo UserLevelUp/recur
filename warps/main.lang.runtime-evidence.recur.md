@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # main.lang.runtime-evidence.recur
 
 recur.gift = Recover one exact Lang capability from broad project structure through its contract, tests and observed evidence.

@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Evidence refresh recovery
 
 recur.gift = Renew current evidence while keeping accepted history.

@@ -1,0 +1,33 @@
+recur 0.1 class BlackjackCards
+# defines: demo.blackjack.cards contract-first stage 03.cards
+header {
+  scope deck {
+    i(a) := (order: OptionalCards)
+    o(b) := (cards: Cards)
+    d : i(a) -> o(b) ~ "Return a copied 52-card permutation; reject duplicates, booleans and out-of-range cards" by BlackjackLab.deck
+  }
+  scope score {
+    i(c) := (cards: Cards)
+    o(d) := (total: Points, soft: Bool, natural: Bool, bust: Bool)
+    s : i(c) -> o(d) ~ "Count aces as eleven then one as needed; a natural requires exactly two cards" by BlackjackLab.score
+  }
+}
+body {
+  deck sync : i(a) -> d(a) -> o(b)
+  score sync : i(c) -> s(c) -> o(d)
+  # Semantic types and rules require Julia tests; bindings are not executed by Lang.
+}
+footer {
+  event deck {
+    consume demo.blackjack.deck.request
+    produce demo.blackjack.deck.result
+    state demo.blackjack.deck.complete
+  }
+  warp deck : E0(demo.blackjack.deck.todo.current) -> dE(deck.d) -> Ef(demo.blackjack.deck.complete)
+  event score {
+    consume demo.blackjack.score.request
+    produce demo.blackjack.score.result
+    state demo.blackjack.score.complete
+  }
+  warp score : E0(demo.blackjack.score.todo.current) -> dE(score.s) -> Ef(demo.blackjack.score.complete)
+}

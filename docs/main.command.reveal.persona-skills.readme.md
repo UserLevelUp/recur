@@ -10,8 +10,9 @@ the live map/layers and the separate verification document, not implied here.
 - `recur reveal` and the existing Reveal trait infrastructure discover and inspect
   typed capsules, in-root configured records, and explicit associations.
 - `recur init` includes shared editable association defaults for a fresh project.
-- `recur-reveal init` adds missing association tables to an existing project;
-  `--dry-run` previews, and existing tables (including empty opt-outs) are preserved.
+- `recur-reveal init` adds missing association tables and missing core skill
+  entries within populated registries; `--dry-run` previews. Custom records and
+  empty opt-outs are preserved. `--local` initializes a nested root's own config.
 - `recur-reveal next ID --type agent|persona -d ROOT --json` prepares bounded local
   context. It does not activate a persona, install skills or execute instructions.
 
@@ -38,8 +39,14 @@ The `capsule` binding is optional and exact. If present, its type must match the
 record's registry. Without it, a config record is independently discoverable.
 Shared artifact classification remains in `reveal_artifact`; matching names or
 incidental persona/agent fields never establish capsule type or relationships.
-Default Skippy bindings also include `recur-warp/SKILL.md`, an unresolved example
-until the project supplies it. Available context does not mean accepted work.
+Default Skippy bindings also include `recur-warp/SKILL.md`; this repository now
+supplies it. External projects must supply their own referenced path. Focused
+`recur-lang`, `recur-watch`, `recur-trace-id` and `recur-demo-tests` skills also
+have explicit `artifact.type = skill` capsules. Specialty is expressed in names
+and trace IDs, not an additional artifact subtype. Available context does not
+mean accepted work or automatic skill loading.
+See [core skill initialization](main.command.reveal.core-skills.readme.md) for
+hierarchy, idempotence, path resolution and the separate installation boundary.
 
 ```powershell
 recur reveal --type agent -d . --json

@@ -8,7 +8,10 @@ Tests are organized into hierarchical modules that can be run
 individually or as a complete suite.
 
 Usage:
-    julia runtests.jl                    # Run all tests
+    julia runtests.jl                    # Run core tests (no demos)
+    julia runtests.jl --list-demos        # List optional demos
+    julia runtests.jl --demo blackjack-web # Run only this demo
+    julia runtests.jl --demo sudoku --with-core # Core plus selected demo
     julia runtests.jl --verbose          # Run with verbose output
     julia runtests.files.jl             # Run only files command tests
     julia runtests.find.jl              # Run only find command tests
@@ -22,6 +25,24 @@ Test Structure:
 """
 
 using Test
+
+include("runtests.selection.jl")
+selection = try
+    TestSelection.parse_selection(ARGS)
+catch err
+    println(stderr, sprint(showerror, err))
+    exit(2)
+end
+if selection.list
+    foreach(pair -> println(first(pair)), TestSelection.DEMOS)
+    exit(0)
+end
+println("Core tests: ", selection.core ? "selected" : "skipped")
+println("Demo tests: ", isempty(selection.demos) ? "none" : join(selection.demos, ", "))
+if selection.dry_run
+    foreach(println, selection.files)
+    exit(0)
+end
 
 println("""
 ╔═══════════════════════════════════════════════════════════╗
@@ -37,77 +58,75 @@ include("runtests.setup.jl")
 setup_test_environment()
 
 try
-    # Run all test modules
-    @testset "Recur Complete Test Suite" begin
+    # Run core and demo modules according to the explicit selection.
+    @testset "Recur Selected Test Suite" begin
 
-        # Include and run test files
-        include("main.command.files.test.jl")
-        include("main.command.find.test.jl")
-        include("main.command.tree.test.jl")
-        include("main.command.tree.wildcard-current.test.jl")  # standalone tree wildcard receipt target
-        include("main.command.related.test.jl")
-        include("main.command.children.test.jl")
-        include("main.command.id.test.jl")
-        include("main.command.stats.test.jl")
-        include("main.command.merge.test.jl")
-        include("main.command.pipeline.compatibility.test.jl") # Real OS/shell pipes and stage failures
-        include("main.command.unflatten.test.jl")  # IMPROVEMENT15 - frozen contract tests (expected broken)
-        include("main.command.callers.test.jl")
-        include("main.command.callees.test.jl")
-        include("main.command.trace.test.jl")
-        include("main.meta.dogfooding.test.jl")  # Dogfooding hierarchy: tree + separator precedence
-        include("main.command.stdin.test.jl")    # IMPROVEMENT6 - Git integration with --stdin flag
-        include("main.command.init.test.jl")     # Init command: config generation, analyze mode, lane collision dedupe
-        include("main.command.reveal.test.jl")   # IMPROVEMENT22 - lane-local reveal helpers
-        include("main.command.reveal.artifact-types.test.jl") # Shared typed artifacts, filtering and bounded discovery
-        include("main.command.reveal.persona-skills.test.jl") # Agent/persona/skill associations and inert companion packets
-        include("main.command.watch.test.jl")    # IMPROVEMENT23 - pure watcher-state query surface
-        include("main.command.version.test.jl")  # IMPROVEMENT26 - pure version query + recur-version writer
-        include("main.command.capability.test.jl")  # IMPROVEMENT28 - capability-card query surface
-        include("main.improvement.27.warp.contract.test.jl")  # IMPROVEMENT27 - frozen warp-status-v1 fixtures
-        include("main.command.warp.test.jl")  # IMPROVEMENT27 - read-only warp status
-        include("main.command.warp.bubble.test.jl")  # IMPROVEMENT27 - compositional Warp bubbles
-        include("main.command.warp.ring-topology.test.jl")  # IMPROVEMENT27 - recursive coordinator/worker ring contract
-        include("main.command.recur-warp.test.jl")  # IMPROVEMENT27 - confirmed Slice-layer writer
-        include("main.command.warp.structure.test.jl")  # IMPROVEMENT27 - lane boundaries, collapse plan, and config
-        include("main.command.warp.evidence-integrity.test.jl")  # qualified completion and external evidence
-        include("main.command.warp.discovery.test.jl")  # default and explicit Warp inventory
-        include("main.command.warp.docs-reconciliation.test.jl") # Audited docs, references and proposal boundaries
-        include("main.command.warp.companion-policy.test.jl") # Shared collapse policy and no-mutation safety
-        include("main.command.warp.usability.test.jl") # Creation, progress and fail-closed safety
-        include("main.command.warp.query-compatibility.test.jl") # Hierarchy/trace queries remain read-only with UUID metadata
-        include("main.command.warp.identity-policy.test.jl") # Editable init and stable UUID identities
-        include("main.command.warp.list-format.test.jl") # Human presentation and JSON compatibility
-        include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
-        include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
-        include("main.command.lang.baseline.test.jl") # pure WIR1/CIR1 query surface
-        include("main.command.recur-lang.init.test.jl") # additive policy initialization and safe publication
-        include("main.command.lang.verification.test.jl") # independent query/evidence fault demonstrations
-        @test LangVerificationTests.main(String[]) == 0
-        include("main.demo.lang-inspector.test.jl") # Lang specification -> mocks/models -> real self-query
-        include("main.demo.lang-dogfood.test.jl") # Greeting fixtures and catalog inspector HTTP integration
-        include("main.demo.holdem-lab.test.jl") # Progressive Lang contracts, Holdem runtime and intentional cycles
-        include("main.lang.form-validation.test.jl")  # red-first validation, refinement, and error-routing contract
-        include("main.lang.retry-await.test.jl")  # red-first bounded retry and async await contract
-        include("main.lang.pathing.test.jl")  # red-first fan-out, scatter, graph, and deterministic pathing contracts
-        include("main.lane.coordination.trace-id.test.jl")  # IMPROVEMENT21+22 - trace-id as lane handoff contract
-        include("main.recur-git.checkpoint.lanes.test.jl")  # Checkpoint snapshot lane coverage for active agent vaults
-        include("main.recur-git.test-receipt.test.jl")  # Immutable passed/failed test-event receipts
-        include("main.recur.watch.test.jl")  # IMPROVEMENT23 - recur watch pub/sub subscription contract (expected red)
-        include("main.recur.psyche.test.jl")  # IMPROVEMENT23 - recur psyche v1 red-first spec lock
+        if selection.core
+            include("main.test-selection.test.jl")
+            # Include and run core test files
+            include("main.command.files.test.jl")
+            include("main.command.find.test.jl")
+            include("main.command.tree.test.jl")
+            include("main.command.tree.wildcard-current.test.jl")  # standalone tree wildcard receipt target
+            include("main.command.related.test.jl")
+            include("main.command.children.test.jl")
+            include("main.command.id.test.jl")
+            include("main.command.stats.test.jl")
+            include("main.command.merge.test.jl")
+            include("main.command.pipeline.compatibility.test.jl") # Real OS/shell pipes and stage failures
+            include("main.command.unflatten.test.jl")  # IMPROVEMENT15 - frozen contract tests (expected broken)
+            include("main.command.callers.test.jl")
+            include("main.command.callees.test.jl")
+            include("main.command.trace.test.jl")
+            include("main.meta.dogfooding.test.jl")  # Dogfooding hierarchy: tree + separator precedence
+            include("main.command.stdin.test.jl")    # IMPROVEMENT6 - Git integration with --stdin flag
+            include("main.command.init.test.jl")     # Init command: config generation, analyze mode, lane collision dedupe
+            include("main.command.reveal.test.jl")   # IMPROVEMENT22 - lane-local reveal helpers
+            include("main.command.reveal.artifact-types.test.jl") # Shared typed artifacts, filtering and bounded discovery
+            include("main.command.reveal.persona-skills.test.jl") # Agent/persona/skill associations and inert companion packets
+            include("main.command.watch.test.jl")    # IMPROVEMENT23 - pure watcher-state query surface
+            include("main.command.version.test.jl")  # IMPROVEMENT26 - pure version query + recur-version writer
+            include("main.command.capability.test.jl")  # IMPROVEMENT28 - capability-card query surface
+            include("main.improvement.27.warp.contract.test.jl")  # IMPROVEMENT27 - frozen warp-status-v1 fixtures
+            include("main.command.warp.test.jl")  # IMPROVEMENT27 - read-only warp status
+            include("main.command.warp.bubble.test.jl")  # IMPROVEMENT27 - compositional Warp bubbles
+            include("main.command.warp.ring-topology.test.jl")  # IMPROVEMENT27 - recursive coordinator/worker ring contract
+            include("main.command.recur-warp.test.jl")  # IMPROVEMENT27 - confirmed Slice-layer writer
+            include("main.command.warp.structure.test.jl")  # IMPROVEMENT27 - lane boundaries, collapse plan, and config
+            include("main.command.warp.evidence-integrity.test.jl")  # qualified completion and external evidence
+            include("main.command.warp.discovery.test.jl")  # default and explicit Warp inventory
+            include("main.command.warp.docs-reconciliation.test.jl") # Audited docs, references and proposal boundaries
+            include("main.command.warp.companion-policy.test.jl") # Shared collapse policy and no-mutation safety
+            include("main.command.warp.usability.test.jl") # Creation, progress and fail-closed safety
+            include("main.command.warp.query-compatibility.test.jl") # Hierarchy/trace queries remain read-only with UUID metadata
+            include("main.command.warp.identity-policy.test.jl") # Editable init and stable UUID identities
+            include("main.command.warp.list-format.test.jl") # Human presentation and JSON compatibility
+            include("main.command.lane.test.jl")    # IMPROVEMENT21 - named lane scaffolding (recur lane)
+            include("main.lang.test.jl")  # main.lang symbolic orchestration language prototype
+            include("main.command.lang.baseline.test.jl") # pure WIR1/CIR1 query surface
+            include("main.command.recur-lang.init.test.jl") # additive policy initialization and safe publication
+            include("main.command.recur-lang.plan.test.jl") # source-bound companion advice, never execution
+            include("main.command.lang.verification.test.jl") # independent query/evidence fault demonstrations
+            @test LangVerificationTests.main(String[]) == 0
+            include("main.lang.form-validation.test.jl")  # red-first validation, refinement, and error-routing contract
+            include("main.lang.retry-await.test.jl")  # red-first bounded retry and async await contract
+            include("main.lang.pathing.test.jl")  # red-first fan-out, scatter, graph, and deterministic pathing contracts
+            include("main.lane.coordination.trace-id.test.jl")  # IMPROVEMENT21+22 - trace-id as lane handoff contract
+            include("main.recur-git.checkpoint.lanes.test.jl")  # Checkpoint snapshot lane coverage for active agent vaults
+            include("main.recur-git.test-receipt.test.jl")  # Immutable passed/failed test-event receipts
+            include("main.recur.watch.test.jl")  # IMPROVEMENT23 - recur watch pub/sub subscription contract (expected red)
+            include("main.recur.psyche.test.jl")  # IMPROVEMENT23 - recur psyche v1 red-first spec lock
 
-        # TODO: Add more test modules as they are implemented
-        include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
-        include("main.command.trace-id.test.jl")     # IMPROVEMENT8 - trace-id MVP contract tests (expected broken)
-        include("main.command.trait.test.jl")        # Trait config command + traversal budget placeholders
-        include("main.command.trait.capabilities.test.jl") # Built-in capability metadata and preferences
-        include("main.command.prompt.discovery.test.jl") # Shared app prompts and bounded decision evidence
-        include("main.demo.skippy.trace-id.test.jl") # Demo: Skippy adaptive comms + trace-id protocol
-        include("runtests.demo.sudoku.jl")           # Demo: Sudoku + trace-id Phase 1+2 (file protocol + Recur.jl)
-        include("runtests.demo.sudoku.phase3.jl")    # Demo: Sudoku Phase 3 (Generator.jl — flow files + cascades)
-        include("runtests.demo.sudoku.phase4.jl")    # Demo: Sudoku Phase 4 (Engine.jl + Display.jl + Game.jl)
-        include("runtests.demo.sudoku.teaching.jl")  # Validated playable packages and failure preservation
-        include("main.demo.sudoku.watch.test.jl")    # Lane L cross-loop demo regression wrapper
+            # TODO: Add more test modules as they are implemented
+            include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
+            include("main.command.trace-id.test.jl")     # IMPROVEMENT8 - trace-id MVP contract tests (expected broken)
+            include("main.command.trait.test.jl")        # Trait config command + traversal budget placeholders
+            include("main.command.trait.capabilities.test.jl") # Built-in capability metadata and preferences
+            include("main.command.prompt.discovery.test.jl") # Shared app prompts and bounded decision evidence
+        end
+        for file in selection.files
+            include(file)
+        end
         # include("runtests.gaps.jl")        # Needs feature implementation
 
     end

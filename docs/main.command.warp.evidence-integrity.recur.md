@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # main.command.warp.evidence-integrity.recur
 
 recur.gift = Repair completion-evidence gaps from the external-project report; Slice 0 records current reality and Slice Final defines the verified destination.

@@ -1,0 +1,33 @@
+{
+  "bubble_uuid": "01a0f2fd-71ea-7faa-abb3-25edddddb99e",
+  "current_slice": "slice-0",
+  "goal": "Define an explicit Julia binding-to-contract verification boundary using blackjack field-shape and hidden-cycle probes before implementing general checking",
+  "invariants": [],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.lang.binding-correspondence.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a0f2fd-71ea-7a34-a458-e59831f5fb75"
+    },
+    {
+      "contract_hash": "contract:main.lang.binding-correspondence.slice-final:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "acceptance"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0f2fd-71ea-7ec0-b91c-7cc2f150ef0e"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.binding-correspondence",
+  "contract_document": "warps/main.lang.binding-correspondence.contract.md"
+}

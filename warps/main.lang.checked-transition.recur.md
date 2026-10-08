@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # main.lang.checked-transition.recur
 
 recur.gift = Recover the exact handoff from WIR1 specification to checked tests and a confirmed companion transition.

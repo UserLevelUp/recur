@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.blackjack-web.split",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.demo.blackjack-web.split.slice-0:v1",
+  "attempt_id": "split-20261002-baseline",
+  "result_state": "accepted",
+  "result_hash": "cecd44bca4e02dd4cf96504bc08fbf716c9e838d19c8b0f5ecfd6903c3f24131",
+  "evidence": {
+    "baseline": [
+      "demos/blackjack-web/split/main.blackjack.web.split.baseline.complete.md"
+    ]
+  },
+  "reason": null
+}

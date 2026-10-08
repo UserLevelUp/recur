@@ -1,0 +1,801 @@
+╔═══════════════════════════════════════════════════════════╗
+║         Recur Integration Test Suite                     ║
+║         Hierarchical Search Tool Testing                 ║
+╚═══════════════════════════════════════════════════════════╝
+
+
+============================================================
+  Setting up test environment
+============================================================
+
+============================================================
+  Testing: recur files
+============================================================
+  -> recur files UserService.Handlers -d test_environment
+  ✓ PASS
+  -> recur files UserService.* -d test_environment
+  ✓ PASS
+  -> recur files UserService.** -d test_environment
+  ✓ PASS
+  -> recur files UserService.** --min-depth 2 -d test_environment
+  ✗ FAIL (KNOWN ISSUE)
+  -> recur files UserService.** --max-depth 1 -d test_environment
+  ✗ FAIL (KNOWN ISSUE)
+  -> recur files ** --min-depth 1 --max-depth 1 -d test_environment
+  ✗ FAIL (KNOWN ISSUE)
+  -> recur files ** --min-depth 5 --max-depth 2 -d test_environment
+  ✓ PASS
+  -> recur files ** --ext .cs -d test_environment
+  ✓ PASS
+  -> recur files ** --ext .cs,.json -d test_environment
+  ✓ PASS
+  -> recur files UserService.** --count -d test_environment
+  ✓ PASS
+  -> recur files UserService.** --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur find
+============================================================
+  -> recur find async --scope ** -d test_environment
+  ✓ PASS
+  -> recur find async --scope UserService.** -d test_environment
+  ✓ PASS
+  -> recur find ASYNC --scope ** -i -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 2 -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 0 -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 5 -d test_environment
+  ✓ PASS
+  -> recur find async.*Task --scope ** -E -d test_environment
+  ✓ PASS
+  -> recur find (Create|Update)User --scope UserService.** -E -d test_environment
+  ✓ PASS
+  -> recur find async --scope UserService.** --json -d test_environment
+  ✓ PASS
+  -> recur find async --scope TestContext -C 2 --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur tree
+============================================================
+  -> recur tree UserService -d test_environment
+  ✓ PASS
+  -> recur tree UserService --depth 1 -d test_environment
+  ✓ PASS
+  -> recur tree config --ascii -d test_environment
+  ✗ FAIL
+  -> recur tree UserService --count -d test_environment
+  ✓ PASS
+  -> recur tree ApiController --json -d test_environment
+  ✓ PASS
+  -> recur tree main.**.current.** -d C:\Users\marcn\AppData\Local\Temp\jl_5B2QOh --json
+
+============================================================
+  Testing: recur related
+============================================================
+  -> recur related UserService.Handlers.Create.cs -d test_environment
+  ✓ PASS
+  -> recur related UserService.Handlers.Create.cs --exclude-self -d test_environment
+  ✓ PASS
+  -> recur related ApiController.Auth.cs --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur children
+============================================================
+  -> recur children UserService -d test_environment
+  ✓ PASS
+  -> recur children UserService.Handlers --count -d test_environment
+  ✓ PASS
+  -> recur children config --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur id
+============================================================
+  -> recur id config.database -d test_environment
+  ✓ PASS
+  -> recur id config.* -d test_environment
+  ✓ PASS
+  -> recur id public -C 1 -d test_environment
+  ✓ PASS
+  -> recur id connection --ext .json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur stats
+============================================================
+  -> recur stats ** -d test_environment
+  ✓ PASS
+  -> recur stats UserService.** -d test_environment
+  ✓ PASS
+  -> recur stats ** -l 0 -d test_environment
+  ✓ PASS
+  -> recur stats ** -l 1 -d test_environment
+  ✓ PASS
+  -> recur stats UserService.** -l 2 -d test_environment
+  ✓ PASS
+  -> recur stats config.** --json -d test_environment
+  ✓ PASS
+  -> recur stats ** -l 1 --json -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur merge
+============================================================
+  -> recur merge test_environment\merge_docs.json test_environment\merge_src.json --sep . --sep _ --base main.command.merge --show-sep -d test_environment
+  PASS
+  -> recur files main.command.files.** -d test_environment --sep . --json
+  -> recur merge --stdin --base main.command.files --sep . -d test_environment
+  PASS
+  -> recur tree main.command.tree -d test_environment --sep . --json
+  -> recur tree main_command_tree -d test_environment --sep _ --json
+  -> recur merge --stdin --base main.command.tree --sep . --sep _ --show-sep -d test_environment
+  PASS
+  -> recur tree main.auto -d test_environment --sep .
+  PASS
+
+============================================================
+  Testing: recur unflatten (expected broken)
+============================================================
+  -> recur unflatten --help
+  -> recur unflatten --stdin --format json
+  -> recur merge --pattern improvement.15.contract --sep . --pattern improvement_15_contract --sep _ --base improvement.15.contract --format flat --json -d test_environment
+
+============================================================
+  Testing: recur callers
+============================================================
+  -> recur callers ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers SaveUser --scope UserService.** -d test_environment
+  ✓ PASS
+  -> recur callers Initialize --scope ApiController.** -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers validateemail --scope ** -i -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope ** --ext .cs -d test_environment
+  ✓ PASS
+  -> recur callers Initialize --scope ** -C 1 -d test_environment
+  ✓ PASS
+  -> recur callers SaveUser --scope ** --count -d test_environment
+  ✓ PASS
+  -> recur callers Initialize --scope ApiController.** --json -d test_environment
+  ✓ PASS
+  -> recur callers ValidateEmail --scope UserService.** --json -d test_environment
+  ✓ PASS
+  -> recur callers NonExistentFunction --scope ** -d test_environment
+  ✓ PASS
+  -> recur callers email --scope ** -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur callees
+============================================================
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees ProcessRequest --scope UserService.** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees createuser --scope ** -i -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** --ext .cs -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** -C 1 -d test_environment
+  ✓ PASS
+  -> recur callees --help -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard hard-fail -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard clamp -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --depth-guard hard-fail --force -d test_environment
+  BROKEN
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 1 -d test_environment
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  BROKEN
+  -> recur callees CreateUser --scope ** --count -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope ** --json -d test_environment
+  ✓ PASS
+  -> recur callees ProcessRequest --scope UserService.** --json -d test_environment
+  ✓ PASS
+  -> recur callees NonExistentFunction --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees ValidateEmail --scope ** -d test_environment
+  ✓ PASS
+  -> recur callees CreateUser --scope NonExistent.** -d test_environment
+  ✓ PASS
+
+============================================================
+  Testing: recur trace
+============================================================
+  -> recur trace --help -d test_environment
+  PASS
+  -> recur trace -d test_environment
+  PASS
+  -> recur trace CreateWizard3 -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 -d test_environment
+  PASS
+  -> recur trace ValidateEmail --scope UserService.** --depth 2 -d test_environment
+  PASS
+  -> recur trace SaveUser --scope ** --depth 1 --direction callees -d test_environment
+  PASS
+  -> recur trace ValidateEmail --scope ** --depth 1 --direction callers -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --direction both -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  PASS
+  -> recur trace ApplyTemplate --scope LevelController.CreateWizard3.** --ext .cs --depth 2 --pick 1 -d test_environment
+  PASS
+  -> recur trace DeleteGameComponentAsync --scope DynamicGameComponentService.** --ext .cs --depth 2 -d test_environment
+  PASS
+  -> recur trace ApplyTemplate --scope LevelController.CreateWizard3.** --ext .cs --depth 1 -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  PASS
+  -> recur trace CreateWizard3.Tab --scope AddComponent --ext .cshtml --depth 1 -d test_environment
+  PASS
+  -> recur callees CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs -d test_environment
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 1 -d test_environment
+  PASS
+  -> recur trace FunctionA --scope CycleService --ext .cs --depth 3 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 0 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 3 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 10 -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --format tree -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --format flat -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --json -d test_environment
+  PASS
+  -> recur trace NoSuchSymbol --scope ** --depth 1 --json -d test_environment
+  PASS
+  -> recur trace WideRoot --scope WideService --ext .cs --depth 1 --max-width 1 -d test_environment
+  PASS
+  -> recur trace createuser --scope ** --depth 1 --ignore-case -d test_environment
+  PASS
+  -> recur trace CreateUser --scope ** --depth 1 --ext .cs -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope ** --depth 1 --ext .cs -d test_environment
+  PASS
+  -> recur trace GenerateAiContent --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur trace ApplyAiContent --scope LevelController.CreateWizard3.** --ext .cs --depth 2 -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur callees GenerateAiContent --scope LevelController.CreateWizard3.** --ext .cs -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur callers CreateChildComponent --scope LevelController.CreateWizard3.** --ext .cs -d test_environment
+  PASS
+  -> recur trace GetStates --scope LocationController.** --ext .cs --depth 2 -d test_environment
+  FAIL (KNOWN LIMITATION)
+  -> recur files LocationController.** --ext .cs -d test_environment
+  PASS
+  -> recur trace CreateWizard3 --scope LevelController.CreateWizard3.** --ext .cs --depth 6 --force -d test_environment
+  PASS
+  -> recur trace WideRoot --scope WideService --ext .cs --depth 6 --max-width 1 --force -d test_environment
+  PASS
+
+============================================================
+  Testing: dogfooding hierarchy with recur tree
+============================================================
+  -> recur tree main -d test_environment\dogfooding
+  -> recur tree main.command.stats -d test_environment\dogfooding
+  -> recur tree command -d test_environment\dogfooding --sep _
+  -> recur tree main -d test_environment\dogfooding
+  -> recur tree main -d test_environment\dogfooding --sep _
+
+============================================================
+  Testing: recur files with --stdin
+============================================================
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.Handlers.* --stdin
+  PASS
+  -> <stdin> | recur files Api* --stdin
+  PASS
+  -> <stdin> | recur files **.Handlers.* --stdin
+  PASS
+  -> <stdin> | recur files ** --stdin --ext .cs
+  PASS
+  -> <stdin> | recur files ** --stdin
+  FAIL
+  -> recur files UserService.** -d test_environment
+  -> recur files ** -d test_environment
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin --count
+  PASS
+  -> <stdin> | recur files UserService.** --stdin --json
+  PASS
+  -> <stdin> | recur find class --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur stats UserService.** --stdin
+  PASS
+  -> <stdin> | recur tree UserService.** --stdin
+  PASS
+  -> <stdin> | recur related UserService.cs --stdin
+  PASS
+  -> <stdin> | recur children UserService --stdin -d test_environment
+  PASS
+  -> <stdin> | recur id UserService --stdin -d test_environment
+  FAIL
+  -> <stdin> | recur callers ValidateEmail --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur callees ProcessRequest --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur trace CreateWizard3 --scope ** --stdin -d test_environment
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin --count
+  PASS
+  -> <stdin> | recur files ** --stdin
+  PASS
+  -> <stdin> | recur files **.UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  FAIL
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files **.UserService.** --stdin
+  PASS
+  -> <stdin> | recur files UserService.** --stdin
+  PASS
+  -> <stdin> | recur files File* --stdin
+  PASS
+  -> <stdin> | recur files User* --stdin
+  PASS
+
+============================================================
+  Testing: recur init
+============================================================
+  -> recur init -d test_environment --help
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_pYRcqp
+  -> recur trait -d C:\Users\marcn\AppData\Local\Temp\jl_pYRcqp list
+  -> recur --json init -d C:\Users\marcn\AppData\Local\Temp\jl_NWboOv --analyze
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_JJeWAg
+  -> recur trait -d C:\Users\marcn\AppData\Local\Temp\jl_JJeWAg list
+  -> recur trait -d C:\Users\marcn\AppData\Local\Temp\jl_JJeWAg get traversal_budget.depth_guard
+
+============================================================
+  Testing: recur reveal
+============================================================
+  -> recur reveal --help -d test_environment
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_kNL3Gz
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_kNL3Gz --json
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_pbysRw
+  -> recur reveal main.command.trace-id -d C:\Users\marcn\AppData\Local\Temp\jl_pbysRw --json
+  -> recur reveal expert -d C:\Users\marcn\AppData\Local\Temp\jl_unJnaH --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_unJnaH --json
+  -> recur reveal main.improvement.22 -d C:\Users\marcn\AppData\Local\Temp\jl_1PxUTU
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json skill
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json persona
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json agent
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json team.Custom-v1
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json legacy
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json empty
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json bad
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json conflict
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json same
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_SRypC2 --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json skill.expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json skill.team.expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json skill.override
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json --type skill
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json expert --type persona
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json skill.expert --type persona
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json --type absent
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json skill.expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_1YnOJk --json skill.override
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_nqyjPZ\.recur\private --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_nqyjPZ\.recur\private --json expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_nqyjPZ\.recur\private --json ./skill_team_expert.capsule.md
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_nqyjPZ\.recur\private --json --sep .
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_cgVD4p --json skill.expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_cgVD4p --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_cgVD4p --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_cgVD4p --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_cgVD4p --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_cgVD4p --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --json skill.expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --json skill.expert --type skill
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --json ./a/skill.expert.capsule.md
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --json skill.expert --type agent
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --json missing
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --json skillish
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --json --type skill
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq a/skill.expert.capsule.md
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --type "bad type"
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_JTwjsq --sep too-long
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_0KdsK8 --json skill.team.expert
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_0KdsK8 --json skill.team.expert --sep . --sep _
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_0KdsK8 --json --type Team.Custom --sep . --sep _
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_0KdsK8 --json --type team.custom
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_0KdsK8
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_0KdsK8
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_0KdsK8
+  -> recur tree skill -d C:\Users\marcn\AppData\Local\Temp\jl_9LUWNU\.recur --sep . --json
+  -> recur files skill.** -d C:\Users\marcn\AppData\Local\Temp\jl_9LUWNU\.recur --sep . --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_9LUWNU\.recur --json
+  -> recur reveal -d C:\Users\marcn\AppData\Local\Temp\jl_k3fkEZ\child\docs --json
+  -> recur reveal escape -d C:\Users\marcn\AppData\Local\Temp\jl_k3fkEZ\child\docs
+
+============================================================
+  Testing: recur watch query
+============================================================
+  -> recur watch --help -d test_environment
+  -> recur watch explain -d test_environment
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_PCe8rd
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_tImJxE
+  -> recur watch list --filter **.active -d C:\Users\marcn\AppData\Local\Temp\jl_tImJxE
+  -> recur watch list --filter **.stale -d C:\Users\marcn\AppData\Local\Temp\jl_tImJxE
+  -> recur --json watch status docs-monkey -d C:\Users\marcn\AppData\Local\Temp\jl_tImJxE
+  -> recur watch status missing-watch -d C:\Users\marcn\AppData\Local\Temp\jl_dJGFPo
+
+============================================================
+  Testing: recur version command
+============================================================
+  -> recur version status care.subject.routine -d C:\Users\marcn\AppData\Local\Temp\jl_0GuBE8
+  -> recur version policy care.subject.routine -d C:\Users\marcn\AppData\Local\Temp\jl_0GuBE8
+  -> recur version schema care.subject.routine -d C:\Users\marcn\AppData\Local\Temp\jl_0GuBE8
+  -> recur version query care.subject.routine --question "when did item-a become discontinued" -d C:\Users\marcn\AppData\Local\Temp\jl_0GuBE8
+
+============================================================
+  Testing: recur-version command
+============================================================
+  -> recur-version next care.subject.routine.proposed.current.csv -d C:\Users\marcn\AppData\Local\Temp\jl_8YrWv5
+  -> recur-version save care.subject.routine.proposed.current.csv --slug item-a-discontinued --reason "synthetic state correction" --operator operator-a -d C:\Users\marcn\AppData\Local\Temp\jl_8YrWv5
+  -> recur version status care.subject.routine -d C:\Users\marcn\AppData\Local\Temp\jl_8YrWv5
+  -> recur-version save missing.current.csv --slug bad-save --id bad-save -d C:\Users\marcn\AppData\Local\Temp\jl_8YrWv5
+
+============================================================
+  Testing: recur capability
+============================================================
+  -> recur capability --help -d test_environment
+  -> recur capability list -d C:\Users\marcn\AppData\Local\Temp\jl_1rgh0h
+  -> recur capability explain warp -d C:\Users\marcn\AppData\Local\Temp\jl_1rgh0h
+  -> recur capability explain .recur-watch -d C:\Users\marcn\AppData\Local\Temp\jl_1rgh0h
+  -> recur --json capability list -d C:\Users\marcn\AppData\Local\Temp\jl_Q4Zy6T
+  -> recur --json capability doctor -d C:\Users\marcn\AppData\Local\Temp\jl_Q4Zy6T
+  -> recur capability explain reveal -d C:\Users\marcn\AppData\Local\Temp\jl_BwzsSq
+  -> recur warp status demo.project.good -d C:\src\recur\julia-tests\fixtures\warp-status-v1\optimum --json
+  -> recur warp explain demo.project.good -d C:\src\recur\julia-tests\fixtures\warp-status-v1\optimum --json
+  -> recur warp next demo.project.good -d C:\src\recur\julia-tests\fixtures\warp-status-v1\optimum --json
+  -> recur warp status demo.project.needs -d C:\src\recur\julia-tests\fixtures\warp-status-v1\sub-optimum --json
+  -> recur warp explain demo.project.needs -d C:\src\recur\julia-tests\fixtures\warp-status-v1\sub-optimum --json
+  -> recur warp next demo.project.needs -d C:\src\recur\julia-tests\fixtures\warp-status-v1\sub-optimum --json
+  -> recur warp status demo.project.blocked -d C:\src\recur\julia-tests\fixtures\warp-status-v1\blocked --json
+  -> recur warp explain demo.project.blocked -d C:\src\recur\julia-tests\fixtures\warp-status-v1\blocked --json
+  -> recur warp next demo.project.blocked -d C:\src\recur\julia-tests\fixtures\warp-status-v1\blocked --json
+  -> recur warp status demo.project.custom -d C:\src\recur\julia-tests\fixtures\warp-status-v1\config-override --json
+  -> recur warp explain demo.project.custom -d C:\src\recur\julia-tests\fixtures\warp-status-v1\config-override --json
+  -> recur warp next demo.project.custom -d C:\src\recur\julia-tests\fixtures\warp-status-v1\config-override --json
+  -> recur warp map demo.release -d C:\src\recur\julia-tests\fixtures\warp-bubble-v1\complete --json
+  -> recur warp merge demo.release -d C:\src\recur\julia-tests\fixtures\warp-bubble-v1\complete --json
+  -> recur warp status demo.release -d C:\src\recur\julia-tests\fixtures\warp-bubble-v1\complete --json
+  -> recur warp merge demo.partial -d C:\src\recur\julia-tests\fixtures\warp-bubble-v1\partial --json
+  -> recur warp status demo.partial -d C:\src\recur\julia-tests\fixtures\warp-bubble-v1\partial --json
+  -> recur warp merge demo.explosion -d C:\src\recur\julia-tests\fixtures\warp-bubble-v1\exploded --json
+  -> recur warp status demo.explosion -d C:\src\recur\julia-tests\fixtures\warp-bubble-v1\exploded --json
+Internal error: during type inference of
+filter(Main.var"#347#348", JSON3.Array{JSON3.Object{S, TT} where TT<:AbstractArray{UInt64, 1} where S<:AbstractArray{UInt8, 1}, Base.CodeUnits{UInt8, String}, Base.SubArray{UInt64, 1, Array{UInt64, 1}, Tuple{Base.UnitRange{Int64}}, true}})
+Encountered unexpected error in runtime:
+BoundsError(a=Array{Any, 1}(dims=(3,), mem=Memory{Any}(3, 000001f2cb15b5c0)[
+  Base.getfield,
+  SSAValue(92),
+  :(:parent)]), i=(0,))
+throw_boundserror at .\essentials.jl:15
+getindex at .\essentials.jl:919 [inlined]
+_useref_getindex at .\../usr/share/julia/Compiler/src/ssair\ir.jl:543
+getindex at .\../usr/share/julia/Compiler/src/ssair\ir.jl:578 [inlined]
+renumber_ssa2! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1342
+jfptr_renumber_ssa2NOT._23505 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+tojlinvoke86156 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+j_renumber_ssa2NOT._80360 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+process_node! at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1538
+iterate_compact at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1955
+iterate at .\../usr/share/julia/Compiler/src/ssair\ir.jl:1877 [inlined]
+adce_pass! at .\../usr/share/julia/Compiler/src/ssair\passes.jl:2147
+run_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1013
+run_passes_ipo_safe at .\../usr/share/julia/Compiler/src\optimize.jl:1027 [inlined]
+optimize at .\../usr/share/julia/Compiler/src\optimize.jl:1002
+jfptr_optimize_81786 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+finish_nocycle at .\../usr/share/julia/Compiler/src\typeinfer.jl:202
+jfptr_finish_nocycle_84310 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+typeinf at .\../usr/share/julia/Compiler/src\abstractinterpretation.jl:4522
+typeinf_ext at .\../usr/share/julia/Compiler/src\typeinfer.jl:1256
+typeinf_ext_toplevel at .\../usr/share/julia/Compiler/src\typeinfer.jl:1439 [inlined]
+typeinf_ext_toplevel at .\../usr/share/julia/Compiler/src\typeinfer.jl:1448
+jfptr_typeinf_ext_toplevel_80922 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+_jl_invoke at C:/workdir/src\gf.c:3995 [inlined]
+ijl_apply_generic at C:/workdir/src\gf.c:4214 [inlined]
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+jl_type_infer at C:/workdir/src\gf.c:466
+jl_compile_method_internal at C:/workdir/src\gf.c:3516
+_jl_invoke at C:/workdir/src\gf.c:4006 [inlined]
+ijl_apply_generic at C:/workdir/src\gf.c:4214
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+jl_interpret_toplevel_thunk at C:/workdir/src\interpreter.c:898
+macro expansion at C:\src\recur\julia-tests\main.command.warp.ring-topology.test.jl:90 [inlined]
+macro expansion at C:\workdir\usr\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+macro expansion at C:\src\recur\julia-tests\main.command.warp.ring-topology.test.jl:86 [inlined]
+macro expansion at C:\workdir\usr\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+top-level scope at C:\src\recur\julia-tests\main.command.warp.ring-topology.test.jl:68
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:1035
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:975
+ijl_toplevel_eval at C:/workdir/src\toplevel.c:1047 [inlined]
+ijl_toplevel_eval_in at C:/workdir/src\toplevel.c:1092
+eval at .\boot.jl:489
+include_string at .\loading.jl:2952
+_include at .\loading.jl:3012
+include at .\Base.jl:307
+IncludeInto at .\Base.jl:308
+jfptr_IncludeInto_55095 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_stmt_value at C:/workdir/src\interpreter.c:194 [inlined]
+eval_body at C:/workdir/src\interpreter.c:707
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+jl_interpret_toplevel_thunk at C:/workdir/src\interpreter.c:898
+macro expansion at C:\src\recur\julia-tests\runtests.jl:70 [inlined]
+macro expansion at C:\workdir\usr\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+top-level scope at C:\src\recur\julia-tests\runtests.jl:44
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:1035
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:975
+ijl_toplevel_eval at C:/workdir/src\toplevel.c:1047 [inlined]
+ijl_toplevel_eval_in at C:/workdir/src\toplevel.c:1092
+eval at .\boot.jl:489
+include_string at .\loading.jl:2952
+_include at .\loading.jl:3012
+include at .\Base.jl:306
+exec_options at .\client.jl:317
+_start at .\client.jl:550
+jfptr__start_59066 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+true_main at C:/workdir/src\jlapi.c:985
+jl_repl_entrypoint at C:/workdir/src\jlapi.c:1153
+mainCRTStartup at C:/workdir/cli\loader_exe.c:58
+BaseThreadInitThunk at C:\WINDOWS\System32\KERNEL32.DLL (unknown line)
+RtlUserThreadStart at C:\WINDOWS\SYSTEM32\ntdll.dll (unknown line)
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_n8cy0k\coordinator
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_n8cy0k\coordinator\workers\docs-monkey
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_n8cy0k\coordinator\workers\test-bird
+  -> recur --json watch status coordinator-to-docs -d C:\Users\marcn\AppData\Local\Temp\jl_n8cy0k\coordinator\workers\docs-monkey
+  -> recur --json watch status docs-to-coordinator -d C:\Users\marcn\AppData\Local\Temp\jl_n8cy0k\coordinator
+  -> recur warp map coordinator.release -d C:\src\recur\julia-tests\fixtures\warp-ring-v1\complete --json
+  -> recur warp merge coordinator.release -d C:\src\recur\julia-tests\fixtures\warp-ring-v1\complete --json
+  -> recur warp status coordinator.release -d C:\src\recur\julia-tests\fixtures\warp-ring-v1\complete --json
+  -> recur warp merge demo.evolved -d C:\Users\marcn\AppData\Local\Temp\jl_PNfeMs --json
+  -> recur warp collapse-plan demo.lane -d C:\Users\marcn\AppData\Local\Temp\jl_CP8svs --json
+  -> recur warp merge demo.partial -d C:\Users\marcn\AppData\Local\Temp\jl_7jOuF9\partial --json
+  -> recur warp status demo.warp.slice.alpha -d C:\src\recur\julia-tests\fixtures\warp-command-v1 --json
+  -> recur warp collapse-plan demo.warp.slice.alpha -d C:\src\recur\julia-tests\fixtures\warp-command-v1 --json
+  -> recur warp config -d C:\src\recur\julia-tests\fixtures\warp-command-v1 --json
+  -> recur warp merge demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_Zundt3 --json
+  -> recur warp merge demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_Zundt3 --json
+  -> recur warp merge demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_Zundt3 --json
+  -> recur warp merge demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_Zundt3 --json
+  -> recur warp merge demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_Zundt3 --json
+  -> recur warp fingerprint source.txt -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp merge demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur reveal demo -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp status demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp status demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp status demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp status demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json --allow-skipped
+  -> recur warp merge demo.release -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur reveal demo -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp evidence evidence.json -d C:\Users\marcn\AppData\Local\Temp\jl_9X5gXA --json
+  -> recur warp status demo.release.alpha -d C:\Users\marcn\AppData\Local\Temp\jl_l7FkeB --json
+  -> recur reveal demo -d C:\Users\marcn\AppData\Local\Temp\jl_avmUvc --json
+  -> recur warp config -d C:\Users\marcn\AppData\Local\Temp\jl_avmUvc\docs --json
+  -> recur reveal demo -d C:\Users\marcn\AppData\Local\Temp\jl_avmUvc
+  -> recur reveal demo -d C:\Users\marcn\AppData\Local\Temp\jl_avmUvc --json
+  -> recur warp status demo.receipt -d C:\Users\marcn\AppData\Local\Temp\jl_eSYYH8 --json
+  -> recur warp status demo.other -d C:\Users\marcn\AppData\Local\Temp\jl_eSYYH8 --json
+  -> recur warp status demo.receipt -d C:\Users\marcn\AppData\Local\Temp\jl_eSYYH8 --json
+Read-only companion help: C:\src\recur\target\release-validation-1.85/release-safe\recur-warp.exe
+
+============================================================
+  Testing: recur lane
+============================================================
+  -> recur lane --help -d test_environment
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_gd3gCL
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_Az4s7V
+  -> recur lane docs -d C:\Users\marcn\AppData\Local\Temp\jl_Az4s7V
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_VncYvV
+  -> recur lane impl -d C:\Users\marcn\AppData\Local\Temp\jl_VncYvV
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_Yq6waO
+  -> recur lane tests -d C:\Users\marcn\AppData\Local\Temp\jl_Yq6waO
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_uaJMHj
+  -> recur lane docs -d C:\Users\marcn\AppData\Local\Temp\jl_uaJMHj
+  -> recur reveal docs -d C:\Users\marcn\AppData\Local\Temp\jl_uaJMHj\lanes\docs --json
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_JMTdDO
+  -> recur lane docs -d C:\Users\marcn\AppData\Local\Temp\jl_JMTdDO
+  -> recur lane impl -d C:\Users\marcn\AppData\Local\Temp\jl_JMTdDO
+  -> recur lane tests -d C:\Users\marcn\AppData\Local\Temp\jl_JMTdDO
+  -> recur lane -d C:\Users\marcn\AppData\Local\Temp\jl_JMTdDO --json
+  -> recur init -d C:\Users\marcn\AppData\Local\Temp\jl_9ocAzf
+  -> recur lane docs -d C:\Users\marcn\AppData\Local\Temp\jl_9ocAzf
+  -> recur lane docs -d C:\Users\marcn\AppData\Local\Temp\jl_9ocAzf
+  -> recur lane docs -d C:\Users\marcn\AppData\Local\Temp\jl_89Z2Jp
+  -> recur lane  -d C:\Users\marcn\AppData\Local\Temp\jl_CLnCmB
+
+DEMO query.suffix.complete
+
+DEMO query.suffix.todo_complete
+
+DEMO query.suffix._complete_md
+
+DEMO query.suffix._todo_complete_md
+
+DEMO query.cir.empty.eventness
+
+DEMO query.simultaneous.states
+
+DEMO query.invalid.inputs
+
+DEMO query.escape.and.executable.binding
+
+DEMO query.directory.link.boundary
+
+DEMO actor.arguments.confirm.without.receipt
+
+DEMO actor.arguments.recover.without.checked
+
+DEMO actor.arguments.checked.with.id
+
+DEMO delivery.seven.binary.smoke
+
+DEMO graph.exact.oracle
+
+DEMO graph.fault.self
+
+DEMO graph.fault.dependency
+
+DEMO graph.fault.wait
+
+DEMO graph.fault.missing.join
+
+DEMO parser.comments.are.inert
+
+DEMO parser.reject.duplicate.scope
+
+DEMO parser.reject.missing.function
+
+DEMO parser.reject.wrong.flow.port
+
+DEMO parser.reject.undeclared.state
+
+DEMO parser.reject.unknown.producer
+
+DEMO parser.reject.missing.policy
+
+DEMO parser.unicode.spans.LF
+
+DEMO parser.unicode.spans.CRLF
+
+DEMO checked.control.preview.accept.replay
+
+DEMO checked.status.source_hash
+
+DEMO checked.status.before
+
+DEMO checked.status.after
+
+DEMO checked.status.checked_inputs
+
+DEMO checked.conflict.prepared.scope
+
+DEMO checked.conflict.prepared.json
+
+DEMO checked.conflict.accepted.scope
+
+DEMO checked.conflict.accepted.json
+
+DEMO checked.drift.spec_recur
+
+DEMO checked.drift.implementation_jl
+
+DEMO checked.drift.cases_jl
+
+DEMO checked.drift.config_toml
+
+DEMO checked.drift.runner_jl
+
+DEMO checked.drift.behavior_md
+
+DEMO checked.drift.policy_json
+
+DEMO checked.drift.result_json
+
+DEMO checked.drift.evidence_json
+
+DEMO checked.drift.attempt_json
+
+DEMO checked.attempt.id.80
+
+DEMO checked.attempt.id.81
+
+DEMO checked.attempt.id.dot
+
+DEMO checked.attempt.id.empty
+
+DEMO checked.attempt.id.unicode
+
+DEMO path.oracle.adjacent
+
+DEMO path.oracle.reverse
+
+DEMO path.oracle.disconnected
+
+DEMO path.oracle.empty
+
+DEMO path.oracle.singleton
+
+DEMO path.oracle.malformed
+
+DEMO catalog.every.todo.has.test.and.warp.mapping
+
+Case results: {"passed":58,"error":0,"broken":0,"failed":0,"empty":0}; exit=0
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+
+Please submit a bug report with steps to reproduce this fault, and any error messages that follow (in their entirety). Thanks.
+Exception: EXCEPTION_ACCESS_VIOLATION at 0x7ffb27c0a278 -- walk_binding_partition at .\../usr/share/julia/Compiler/src\abstractinterpretation.jl:3617
+in expression starting at C:\src\recur\demos\holdem-lab\main.holdem.04.test.jl:5
+walk_binding_partition at .\../usr/share/julia/Compiler/src\abstractinterpretation.jl:3617
+scan_specified_partitions at .\../usr/share/julia/Compiler/src\abstractinterpretation.jl:3695
+unknown function (ip: 00007ffb28cb966f) at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll
+Allocations: 90352081 (Pool: 90350414; Big: 1667); GC: 39

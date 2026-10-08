@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Discover agents, personas and skills
 warp.id = main.command.reveal.persona-skills
 warp.root = docs

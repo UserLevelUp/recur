@@ -1,0 +1,3 @@
+interface:
+  display_name: "Recur Warp"
+  short_description: "Plan slices, coordinate workers and review gate evidence"

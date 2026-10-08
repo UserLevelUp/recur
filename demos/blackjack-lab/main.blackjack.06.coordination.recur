@@ -1,0 +1,86 @@
+recur 0.2 coordination BlackjackSettlement
+# defines: demo.blackjack.coordination batch players and dealer joined into settlement
+header {
+  contract Order {
+    hands: CardsByPlayer
+    active: PlayerIds
+    context: RoundState
+  }
+  contract Scores {
+    producer: LaneId
+    values: HandScores
+  }
+  contract Settlement {
+    outcomes: ResultsByPlayer
+    balances: ChipsByPlayer
+    bank: Chips
+  }
+  contract Audit {
+    conserved: Bool
+    result: Settlement
+  }
+  coordinator table {
+    scope plan {
+      o(a) := DispatchSet<Order>
+    }
+    scope finish {
+      o(b) := Audit
+    }
+  }
+  lane players {
+    persona scorer
+    i(a) := project table.plan.o(a).orders["players"]
+    o(b) := Scores
+    s : i(a) -> o(b) ~ "Score all active players; variable player count stays inside this batch"
+    allow read ["main.blackjack.03.jl"]
+    allow write []
+    allow tools ["julia"]
+    require receipt ["players.scored"]
+  }
+  lane house {
+    persona scorer
+    i(a) := project table.plan.o(a).orders["house"]
+    o(b) := Scores
+    s : i(a) -> o(b) ~ "Score the already played dealer hand independently"
+    allow read ["main.blackjack.03.jl"]
+    allow write []
+    allow tools ["julia"]
+    require receipt ["house.scored"]
+  }
+  lane settle {
+    persona settler
+    i(a) := join(table.plan.o(a), players.o(b), house.o(b))
+    o(b) := Settlement
+    s : i(a) -> o(b) ~ "Validate producer identity and complete scores before distributing chips"
+    allow read ["main.blackjack.04.jl"]
+    allow write []
+    allow tools ["julia"]
+    require receipt ["round.settled"]
+  }
+  lane audit {
+    persona auditor
+    i(a) := join(table.plan.o(a), settle.o(b))
+    o(b) := Audit
+    a : i(a) -> o(b) ~ "Compare starting and ending total money and require nonnegative balances"
+    allow read []
+    allow write []
+    allow tools ["julia"]
+    require receipt ["round.conserved"]
+  }
+}
+body {
+  settlement async :
+    i(a) -> table.plan(a)
+    -> fork [players(a), house(a)]
+    -> await [players.o(b), house.o(b)]
+    -> settle(a)
+    -> await settle.o(b)
+    -> audit(a)
+    -> await audit.o(b)
+    -> table.finish(a) -> o(b)
+}
+footer {
+  # This graph scores completed hands. Sharing a live deck between concurrent
+  # players and dealer would violate the deterministic dealing order.
+  # Lang validates declarations; Julia schedules tasks and checks receipt data.
+}

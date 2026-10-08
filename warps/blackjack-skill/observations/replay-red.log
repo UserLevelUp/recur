@@ -1,0 +1,25 @@
+Frozen private replay: Error During Test at C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.replay.test.jl:10
+  Got exception outside of a @test
+  UndefVarError: `new_recording` not defined in `Main.ReplayContractTests.BlackjackReplay`
+  Suggestion: check for spelling errors or missing imports.
+  Stacktrace:
+   [1] getproperty(x::Module, f::Symbol)
+     @ Base .\Base_compiler.jl:47
+   [2] top-level scope
+     @ C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.replay.test.jl:11
+   [3] macro expansion
+     @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+   [4] macro expansion
+     @ C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.replay.test.jl:11 [inlined]
+   [5] include(mod::Module, _path::String)
+     @ Base .\Base.jl:306
+   [6] exec_options(opts::Base.JLOptions)
+     @ Base .\client.jl:317
+   [7] _start()
+     @ Base .\client.jl:550
+Test Summary:         | Error  Total  Time
+Frozen private replay |     1      1  0.6s
+RNG of the outermost testset: Random.Xoshiro(0x8f880dbf05f0d993, 0x251c3f9737d94dae, 0xb7cf107753c5b33e, 0x205021ec629c2dc8, 0x78190c50029e834b)
+
+ERROR: LoadError: Some tests did not pass: 0 passed, 0 failed, 1 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.replay.test.jl:1

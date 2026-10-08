@@ -1,0 +1,12 @@
+{
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.dispatch",
+  "goal": "Dispatch dependency-ready Warp slices to configured asynchronous CLI hosts with observed evidence and bounded feedback",
+  "current_slice": "slice-contract",
+  "required_slices": [
+    {"slice_id":"slice-contract","contract_hash":"contract:main.command.warp.dispatch.contract:v1","evidence_gates":["contract-review"]},
+    {"slice_id":"slice-tests","contract_hash":"contract:main.command.warp.dispatch.tests:v1","depends_on":["slice-contract"],"evidence_gates":["red-first-tests"]},
+    {"slice_id":"slice-implementation","contract_hash":"contract:main.command.warp.dispatch.implementation:v1","depends_on":["slice-tests"],"evidence_gates":["dispatch-tests"]},
+    {"slice_id":"slice-final","contract_hash":"contract:main.command.warp.dispatch.final:v1","depends_on":["slice-implementation"],"evidence_gates":["regressions"]}
+  ]
+}

@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # main.lang.baseline.recur
 
 recur.gift = Explain bounded work with exact contracts and compact symbols, keeping the surrounding project flexible.

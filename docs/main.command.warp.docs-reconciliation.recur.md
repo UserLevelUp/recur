@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Improvement 27 documentation reconciliation
 
 warp.id = main.command.warp.docs-reconciliation

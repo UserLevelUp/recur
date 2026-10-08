@@ -1,0 +1,92 @@
+recur 0.2 coordination WebDependencyReview
+# defines: demo.blackjack.web.dependencies source correspondence review order
+header {
+  contract ReviewOrder {
+    source: SourcePath
+    inputs: InputContract
+    outputs: OutputContract
+  }
+  contract ReviewReceipt {
+    matched: Bool
+    unknowns: ReviewNotes
+  }
+  coordinator review {
+    scope plan {
+      o(a) := DispatchSet<ReviewOrder>
+    }
+    scope finish {
+      o(b) := ReviewReceipt
+    }
+  }
+  lane rules {
+    persona reviewer
+    i(a) := project review.plan.o(a).orders["rules"]
+    o(b) := ReviewReceipt
+    r : i(a) -> o(b) ~ "Shared scoring and payout primitives never import the website"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["rules.reviewed"]
+  }
+  lane engine {
+    persona reviewer
+    i(a) := join(review.plan.o(a), rules.o(b))
+    o(b) := ReviewReceipt
+    r : i(a) -> o(b) ~ "Private Game plus validated command produces copied Game; no HTTP or browser imports"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["engine.reviewed"]
+  }
+  lane http {
+    persona reviewer
+    i(a) := join(review.plan.o(a), engine.o(b))
+    o(b) := ReviewReceipt
+    r : i(a) -> o(b) ~ "Session cookie and request produce public JSON; never serve private Game"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["http.reviewed"]
+  }
+  lane view {
+    persona reviewer
+    i(a) := join(review.plan.o(a), http.o(b))
+    o(b) := ReviewReceipt
+    r : i(a) -> o(b) ~ "Public snapshot produces card and balance DOM; no game decisions"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["view.reviewed"]
+  }
+  lane controls {
+    persona reviewer
+    i(a) := join(review.plan.o(a), view.o(b))
+    o(b) := ReviewReceipt
+    r : i(a) -> o(b) ~ "User intent produces revision-bound request; repeated interaction is state feedback"
+    allow read []
+    allow write []
+    allow tools ["recur"]
+    require receipt ["controls.reviewed"]
+  }
+}
+body {
+  dependency async :
+    i(a) -> review.plan(a)
+    -> fork [rules(a)]
+    -> await rules.o(b)
+    -> engine(a)
+    -> await engine.o(b)
+    -> http(a)
+    -> await http.o(b)
+    -> view(a)
+    -> await view.o(b)
+    -> controls(a)
+    -> await controls.o(b)
+    -> review.finish(a) -> o(b)
+}
+footer {
+  # This is the review dependency order, not an executable website scheduler.
+  # HTTP calls and returned snapshots form a request/response protocol, not reverse imports.
+  # Source hashes make the review stale; they do not independently extract calls.
+}
+

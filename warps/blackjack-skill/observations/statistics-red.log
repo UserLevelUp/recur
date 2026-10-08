@@ -1,0 +1,25 @@
+Frozen session statistics: Error During Test at C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.statistics.test.jl:7
+  Got exception outside of a @test
+  UndefVarError: `empty_stats` not defined in `Main.StatisticsContractTests.BlackjackStatistics`
+  Suggestion: check for spelling errors or missing imports.
+  Stacktrace:
+   [1] getproperty
+     @ .\Base_compiler.jl:47 [inlined]
+   [2] macro expansion
+     @ C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.statistics.test.jl:8 [inlined]
+   [3] macro expansion
+     @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+   [4] top-level scope
+     @ C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.statistics.test.jl:8
+   [5] include(mod::Module, _path::String)
+     @ Base .\Base.jl:306
+   [6] exec_options(opts::Base.JLOptions)
+     @ Base .\client.jl:317
+   [7] _start()
+     @ Base .\client.jl:550
+Test Summary:             | Error  Total  Time
+Frozen session statistics |     1      1  0.6s
+RNG of the outermost testset: Random.Xoshiro(0x3315582c2375c3bf, 0x8e666005c23c3dc5, 0x391d62a6f38a0fed, 0x9000e3468ab3e908, 0xebe19c6df6c82be7)
+
+ERROR: LoadError: Some tests did not pass: 0 passed, 0 failed, 1 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-web\skill\main.blackjack.skill.statistics.test.jl:1

@@ -13,6 +13,7 @@ use walkdir::{DirEntry, WalkDir};
 mod recur_warp_create;
 mod recur_warp_init;
 mod recur_warp_refresh;
+mod recur_warp_dispatch;
 
 #[derive(Parser)]
 #[command(name = "recur-warp")]
@@ -36,6 +37,25 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Recover an exact stopped/interrupted dispatch attempt without erasing history
+    Recover {
+        warp: String,
+        #[arg(long)] slice: String,
+        #[arg(long)] attempt: u64,
+        #[arg(long)] reason: String,
+        #[arg(long)] confirm: bool,
+    },
+    /// Preview dependency-ready assignments; --confirm starts detached workers
+    Dispatch {
+        warp: String,
+        #[arg(long)]
+        confirm: bool,
+    },
+    #[command(hide = true)]
+    DispatchWorker {
+        #[arg(long)]
+        record: PathBuf,
+    },
     /// Renew one stale external gate reference without rewriting accepted history
     Refresh {
         #[command(flatten)]
@@ -60,6 +80,9 @@ enum Commands {
         warp: String,
         #[arg(long)]
         goal: String,
+        /// Repeatable advisory adjustment relative to the Warp starting level
+        #[arg(long, value_name = "SLICE=-1|0|1")]
+        slice_intelligence: Vec<String>,
         #[arg(long)]
         confirm: bool,
     },
@@ -125,6 +148,12 @@ enum Commands {
 
 #[derive(Subcommand)]
 enum LlmCommand {
+    /// Prepare a bounded host invocation and prompt for one slice
+    Plan {
+        warp: String,
+        #[arg(long)]
+        slice: String,
+    },
     /// List Warp prompts or inspect a selected prompt
     Prompt(recur::prompt::PromptArgs),
 }
@@ -211,6 +240,10 @@ fn main() {
         }
     };
     let result = match cli.command {
+        Commands::Recover {warp,slice,attempt,reason,confirm} => recur_warp_dispatch::recover(&root,&warp,&slice,attempt,&reason,confirm).and_then(|v|{println!("{}",serde_json::to_string_pretty(&v)?);Ok(())}),
+        Commands::Dispatch { warp, confirm } => recur_warp_dispatch::dispatch(&root,&warp,confirm).and_then(|v| { println!("{}",serde_json::to_string_pretty(&v)?); Ok(()) }),
+        Commands::DispatchWorker { record } => recur_warp_dispatch::worker(&root,&record),
+        Commands::Llm { command: LlmCommand::Plan {warp,slice} } => recur_warp_dispatch::plan(&root,&warp,&slice).and_then(|v| { println!("{}",serde_json::to_string_pretty(&v)?); Ok(()) }),
         Commands::Refresh {args,confirm} => recur_warp_refresh::run(&root,&args,confirm).and_then(|value| {
             println!("{}",serde_json::to_string_pretty(&value)?);Ok(())
         }),
@@ -237,8 +270,9 @@ fn main() {
         Commands::Create {
             warp,
             goal,
+            slice_intelligence,
             confirm,
-        } => recur_warp_create::create(&root, &warp, &goal, confirm).and_then(|output| {
+        } => recur_warp_create::create(&root, &warp, &goal, &slice_intelligence, confirm).and_then(|output| {
             if cli.json {
                 println!("{}", serde_json::to_string_pretty(&output)?);
             } else {

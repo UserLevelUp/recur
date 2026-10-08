@@ -21,6 +21,18 @@ The same query-first workflow is portable to external projects (including Visual
 
 ## Fast Rehydration
 
+### Focused core skills
+
+Use typed `recur reveal --type skill -d ROOT` to find `recur-warp`, `recur-lang`,
+`recur-watch`, `recur-trace-id` and `recur-demo-tests`; explicitly read the chosen
+body. `recur-reveal init --dry-run` previews missing core registry entries while
+preserving custom paths and empty opt-outs. `--local` targets a nested root's
+own config. Registration does not install or load bodies, and scoped queries
+do not automatically collect parent profiles. See
+`docs/main.command.reveal.core-skills.readme.md` for current initialization rules.
+Default Julia regression commands run core only; demo acceptance requires
+`julia julia-tests/runtests.jl --demo NAME` or a direct selected demo suite.
+
 ### Recur Lang specialization
 
 Bare `recur lang -d <root>` displays a compact source hierarchy with static status
@@ -41,7 +53,10 @@ hidden. No query runs a binding or accepts a receipt. All opinionated language
 behavior belongs in `recur-lang`; its implemented actions include additive policy
 initialization and the confirmed, receipt-bound Warp transition. Preview editable
 defaults with `recur-lang init --dry-run --json`, then omit `--dry-run` to install
-them in the nearest project config. Preferences are inert; no planner executes.
+them in the nearest project config. `recur-lang plan SOURCE --json` consumes these
+preferences to prepare source-bound implementation and test advice. It retains
+scope-independent graph findings and coverage exclusions, writes nothing and
+executes no binding. See docs/main.command.lang.plan.readme.md.
 See docs/main.command.lang.init.readme.md. Inspect the live main.lang.baseline and
 main.improvement.30.static-graph bubbles for acceptance evidence.
 
@@ -52,6 +67,22 @@ The page displays compact header/body/footer and expandable original query data,
 with recorded state, static findings and observed tests kept distinct.
 
 ### Warp specialization
+
+Per-slice reasoning ticks belong to `recur-warp`, with `[warp.intelligence]`
+defaults installed additively by its `init`. Creation accepts repeatable
+`--slice-intelligence SLICE=-1|0|1`; templates override defaults and CLI overrides
+templates. Ticks reference the recorded Warp baseline, not previous slices.
+See docs/main.recur.warp.intelligence.tick.recurring.md. No host/model changes
+are performed by this metadata; core only exposes recorded information.
+
+Async assignment policy belongs to `recur-warp dispatch` and the polling
+`recur-watch dispatch` coordinator. Inspect `recur-warp llm plan WARP --slice S`
+before confirmed execution. Init adds disabled dispatch defaults and editable
+host adapters; readiness, disjoint workspaces, concurrency and attempt limits
+bound scheduling. Core `recur warp dispatch WARP` only reads attempts. Worker-run
+tests produce observations for review, never automatic gate acceptance. Lang is
+optional; opted-in design packets may retain findings, while implementation
+requires static soundness within coverage. See docs/main.command.warp.dispatch.readme.md.
 
 Same-contract evidence renewal is `recur-warp refresh MAP LAYER --gate G --from
 evidence:OLD --to evidence:NEW --refresh-id ID --reason TEXT`, with an explicit

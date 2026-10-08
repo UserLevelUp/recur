@@ -1,0 +1,22 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+    Finished `release-safe` profile [optimized] target(s) in 24.80s
+     Running unittests src\recur_lang_main.rs (target/release-validation-1.85\release-safe\deps\recur_lang-8a264d273b905b34.exe)
+
+running 14 tests
+test recur_lang_init::tests::failed_fresh_publication_removes_only_own_staging ... ok
+test recur_lang_init::tests::concurrent_empty_config_is_not_overwritten ... ok
+test tests::plan_reads_exact_declared_warp_and_does_not_mutate ... ok
+test recur_lang_init::tests::windows_sharing_lock_preserves_config_and_cleans_staging ... ok
+test recur_lang_init::tests::concurrent_edit_is_preserved_and_staging_removed ... ok
+test tests::warp_requires_ef_to_be_a_declared_state_event ... ok
+test tests::warp_requires_data_flow_to_match_the_declared_slice ... ok
+test tests::confirmed_warp_moves_exact_e0_to_ef_and_writes_ack ... ok
+test tests::stale_receipt_writes_nak_without_moving_eventness ... ok
+test tests::confirmed_warp_rejects_eventness_outside_the_bounded_root ... ok
+test tests::receipt_from_an_unknown_ir_schema_writes_nak_without_moving_eventness ... ok
+test recur_lang_checked_transition::tests::changed_evidence_at_the_write_boundary_is_rejected ... ok
+test recur_lang_checked_transition::tests::recovery_rechecks_artifacts_evidence_and_staged_bytes ... ok
+test recur_lang_checked_transition::tests::every_interruption_requires_explicit_bounded_recovery ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+

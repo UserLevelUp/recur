@@ -1,0 +1,33 @@
+{
+  "bubble_uuid": "01a0f2fd-71b2-7d3e-8a3f-f7797cb7e6d8",
+  "current_slice": "slice-0",
+  "goal": "Define reusable WIR output/state contracts and red tests for blackjack round/session interfaces before grammar implementation",
+  "invariants": [],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.lang.contract-reuse.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a0f2fd-71b2-7cff-bbdc-807258854a60"
+    },
+    {
+      "contract_hash": "contract:main.lang.contract-reuse.slice-final:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "acceptance"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0f2fd-71b2-785a-be1e-004459175fd0"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.lang.contract-reuse",
+  "contract_document": "warps/main.lang.contract-reuse.contract.md"
+}

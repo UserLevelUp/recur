@@ -49,6 +49,9 @@ uuid7(value)=value isa AbstractString && occursin(r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0
             [warp.creation]
             directory = "docs/warps"
             template = "custom.json"
+            [warp.intelligence]
+            baseline = "medium"
+            default_tick = -1
             [warp.removal]
             require_confirmation = true
             require_committed_snapshot = false
@@ -61,7 +64,14 @@ uuid7(value)=value isa AbstractString && occursin(r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0
             before=snapshot(root)
             ok,_,_=invoke(["init","-d",root,"--json"])
             @test ok
-            @test snapshot(root)==before
+            after = snapshot(root)
+            @test all(after[key] == bytes for (key, bytes) in before if key != relpath(path, root))
+            updated = TOML.parsefile(path)
+            @test updated["warp"]["removal"]["require_committed_snapshot"] == false
+            @test updated["warp"]["intelligence"]["default_tick"] == -1
+            @test occursin("# User comment must survive.", read(path, String))
+            @test invoke(["init","-d",root,"--json"])[1]
+            @test snapshot(root) == after
         end
     end
     @testset "Malformed configuration is refused without writes" begin

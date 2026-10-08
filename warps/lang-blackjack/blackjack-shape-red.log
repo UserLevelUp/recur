@@ -1,0 +1,74 @@
+07 language surface and deliberate faults: Test Failed at C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:55
+  Expression: Set((f["name"] for f = contract["fields"])) == Set(string.(propertynames(result)))
+   Evaluated: Set(["rounds", "dealer", "players", "bet", "seed", "bank", "starting_money"]) == Set(["money", "rounds", "dealer", "players", "bet", "seed", "bank"])
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:55
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] mktempdir(fn::Main.BlackjackExperiment.var"#24#25", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:20
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:20 [inlined]
+07 language surface and deliberate faults: Test Failed at C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:55
+  Expression: Set((f["name"] for f = contract["fields"])) == Set(string.(propertynames(result)))
+   Evaluated: Set(["dealer_hand", "active", "balances", "hands", "bank", "remaining"]) == Set(["dealer_hand", "active", "config", "balances", "hands", "bank", "remaining"])
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:55
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] mktempdir(fn::Main.BlackjackExperiment.var"#24#25", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:20
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:20 [inlined]
+07 language surface and deliberate faults: Test Failed at C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:55
+  Expression: Set((f["name"] for f = contract["fields"])) == Set(string.(propertynames(result)))
+   Evaluated: Set(["rounds", "stop_reason", "balances", "leaders", "profit", "bank"]) == Set(["rounds", "stop_reason", "config", "balances", "leaders", "profit", "bank"])
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:55
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [3] mktempdir(fn::Main.BlackjackExperiment.var"#24#25", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:941
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:937
+ [5] top-level scope
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:20
+ [6] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\demos\blackjack-lab\main.blackjack.lang.test.jl:20 [inlined]
+  injected self: SGR001
+  injected dependency: SGR001
+  injected wait: SGR002
+  injected join: SGR004
+Test Summary:                                       |  Pass  Fail  Total  Time
+Blackjack contract-first stages                     | 13748     3  13751  4.3s
+  01 hello bundle                                   |     4            4  0.1s
+  02 table object and caller                        |    18           18  0.2s
+  03 cards and scores                               |  2668         2668  0.2s
+  04 round outcomes and chip conservation           |    64           64  0.4s
+  05 session history and leaders                    | 10813        10813  0.6s
+  06 explicit coordination                          |   101          101  0.3s
+  07 language surface and deliberate faults         |    63     3     66  1.6s
+  08 companion init and observed checked transition |    17           17  0.8s
+RNG of the outermost testset: Random.Xoshiro(0xb51d5f898d6c8828, 0xb3024a3a326de2b7, 0x6eb04956a9d24cb7, 0xcd4460e3be22c680, 0x94745323a8c51d60)
+ERROR: LoadError: Some tests did not pass: 13748 passed, 3 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-lab\main.blackjack.test.jl:1

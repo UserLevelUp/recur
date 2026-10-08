@@ -1,0 +1,25 @@
+Core tests: skipped
+Demo tests: blackjack-web
+╔═══════════════════════════════════════════════════════════╗
+║         Recur Integration Test Suite                     ║
+║         Hierarchical Search Tool Testing                 ║
+╚═══════════════════════════════════════════════════════════╝
+
+
+============================================================
+  Setting up test environment
+============================================================
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Test Summary:             |  Pass  Total   Time
+Recur Selected Test Suite | 19868  19868  22.0s
+
+============================================================
+  Cleaning up test environment
+============================================================
+╔═══════════════════════════════════════════════════════════╗
+║         Test Suite Complete                              ║
+╚═══════════════════════════════════════════════════════════╝
+

@@ -1,0 +1,56 @@
+   Compiling recur v0.2.8 (C:\src\recur)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.03s
+     Running unittests src\recur_warp_main.rs (target\debug\deps\recur_warp-6b893708b2d87403.exe)
+
+running 9 tests
+test recur_warp_dispatch::expand_regression_tests::empty_template_and_empty_values_are_supported ... ok
+test recur_warp_dispatch::expand_regression_tests::repeated_and_adjacent_original_tokens_expand_independently ... ok
+test recur_warp_dispatch::expand_regression_tests::unicode_and_literal_braces_surround_original_tokens ... ok
+test recur_warp_dispatch::expand_regression_tests::inserted_workspace_tokens_are_literal ... ok
+test recur_warp_dispatch::expand_regression_tests::inserted_fragments_do_not_form_new_tokens_across_boundaries ... FAILED
+test recur_warp_dispatch::expand_regression_tests::unknown_and_incomplete_tokens_and_non_token_bytes_are_preserved ... ok
+test recur_warp_dispatch::expand_regression_tests::inserted_prompt_tokens_are_literal ... FAILED
+test recur_warp_dispatch::expand_regression_tests::inserted_prompt_file_tokens_are_literal ... FAILED
+test recur_warp_dispatch::expand_regression_tests::inserted_reasoning_tokens_are_literal ... FAILED
+
+failures:
+
+---- recur_warp_dispatch::expand_regression_tests::inserted_fragments_do_not_form_new_tokens_across_boundaries stdout ----
+
+thread 'recur_warp_dispatch::expand_regression_tests::inserted_fragments_do_not_form_new_tokens_across_boundaries' (23144) panicked at src\recur_warp_dispatch.rs:932:9:
+assertion `left == right` failed
+  left: "space}|space}|{workspace}"
+ right: "{workspace}|{workspace}|{workspace}"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- recur_warp_dispatch::expand_regression_tests::inserted_prompt_tokens_are_literal stdout ----
+
+thread 'recur_warp_dispatch::expand_regression_tests::inserted_prompt_tokens_are_literal' (23756) panicked at src\recur_warp_dispatch.rs:858:9:
+assertion `left == right` failed
+  left: "<context: {prompt} file REASON WORK 雪>|WORK"
+ right: "<context: {prompt} {prompt_file} {reasoning} {workspace} 雪>|WORK"
+
+---- recur_warp_dispatch::expand_regression_tests::inserted_prompt_file_tokens_are_literal stdout ----
+
+thread 'recur_warp_dispatch::expand_regression_tests::inserted_prompt_file_tokens_are_literal' (30608) panicked at src\recur_warp_dispatch.rs:889:9:
+assertion `left == right` failed
+  left: "資料/{prompt}/{prompt_file}/REASON/WORK.txt|WORK"
+ right: "資料/{prompt}/{prompt_file}/{reasoning}/{workspace}.txt|WORK"
+
+---- recur_warp_dispatch::expand_regression_tests::inserted_reasoning_tokens_are_literal stdout ----
+
+thread 'recur_warp_dispatch::expand_regression_tests::inserted_reasoning_tokens_are_literal' (19084) panicked at src\recur_warp_dispatch.rs:869:9:
+assertion `left == right` failed
+  left: "WORK/{reasoning}/{prompt_file}/{prompt}|PROMPT"
+ right: "{workspace}/{reasoning}/{prompt_file}/{prompt}|PROMPT"
+
+
+failures:
+    recur_warp_dispatch::expand_regression_tests::inserted_fragments_do_not_form_new_tokens_across_boundaries
+    recur_warp_dispatch::expand_regression_tests::inserted_prompt_file_tokens_are_literal
+    recur_warp_dispatch::expand_regression_tests::inserted_prompt_tokens_are_literal
+    recur_warp_dispatch::expand_regression_tests::inserted_reasoning_tokens_are_literal
+
+test result: FAILED. 5 passed; 4 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--bin recur-warp`

@@ -44,8 +44,9 @@ For example:
 ```text
 defines: game.pathing.route A-star route contract
 consumes: game.pathing.route enemy movement lane
-produces: game.pathing.route.receipt accepted pathing verification
-triggers: game.pathing.route coordinator releases integration lane
+publish: game.pathing.route.receipt accepted pathing verification
+consumer: game.pathing.route accepted route consumption
+trigger: game.pathing.route coordinator releases integration lane
 ```
 
 `recur trace-id "game.pathing.route"` can find that lineage across the project,
@@ -54,8 +55,10 @@ whether the lanes can deadlock. The proposed `recur lang` surface performs
 those formal checks. Recur Lang artifacts should publish stable trace IDs so
 `trace-id` can discover their lineage outside the parsed coordination model.
 
-`recur trace-id` is implemented today. `recur lang` and `recur-lang` remain
-Improvement 30 design and prototype surfaces.
+`recur trace-id` is implemented. Core `recur lang` now provides WIR1/CIR1
+queries and bounded static checks; `recur-lang` provides companion planning
+and checked transitions. See `main.command.lang.query.readme.md` and
+`main.command.lang.plan.readme.md` for their current coverage and limits.
 
 ## Usage
 

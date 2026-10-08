@@ -1,0 +1,39 @@
+{
+  "bubble_uuid": "01a1170a-50bc-7196-ae0e-ca70760dbcf6",
+  "current_slice": "copilot-review",
+  "goal": "Cross-provider review and Codex high coordination for dispatch acceptance, with observed handoff timing",
+  "intelligence_baseline": "host-current",
+  "invariants": [],
+  "required_slices": [
+    {
+      "evidence_gates": [
+        "review"
+      ],
+      "intelligence_tick": 0,
+      "contract_hash": "contract:dispatch.review.copilot:v1",
+      "slice_id": "copilot-review"
+    },
+    {
+      "evidence_gates": [
+        "review"
+      ],
+      "intelligence_tick": 0,
+      "contract_hash": "contract:dispatch.review.gemini:v1",
+      "slice_id": "gemini-review"
+    },
+    {
+      "evidence_gates": [
+        "review"
+      ],
+      "intelligence_tick": 0,
+      "contract_hash": "contract:dispatch.review.coordinator:v1",
+      "slice_id": "codex-coordinator",
+      "depends_on": [
+        "copilot-review",
+        "gemini-review"
+      ]
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.dispatch.review"
+}

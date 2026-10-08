@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.dispatch.review",
+  "slice_id": "codex-independent",
+  "contract_hash": "contract:dispatch.review.codex-independent:v1",
+  "attempt_id": "reviewed-codex-high-1-20261007",
+  "result_state": "accepted",
+  "result_hash": "sha256:1f2833d3714c4796f287e1e1499825c8a8e2d86ce4d4b3acacf3d3256805b240",
+  "evidence": {
+    "review": [
+      "warps/dispatch-review/observations/codex-independent-review.json"
+    ]
+  },
+  "reason": null
+}

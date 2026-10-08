@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 mod recur_lang_checked_transition;
 mod recur_lang_init;
+mod recur_lang_plan;
 
 const WARP_PLAN_SCHEMA: &str = "recur-lang-warp-plan-v1";
 const WARP_RECEIPT_SCHEMA: &str = "recur-lang-warp-receipt-v1";
@@ -102,6 +103,16 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Prepare source-bound implementation and test advice without executing bindings
+    Plan {
+        source: PathBuf,
+        #[arg(long)]
+        scope: Option<String>,
+        #[arg(short = 'd', long = "dir", default_value = ".")]
+        dir: PathBuf,
+        #[arg(long)]
+        json: bool,
+    },
     /// Initialize additive project-local Lang policy without executing a planner
     Init {
         #[arg(short = 'd', long = "dir", default_value = ".")]
@@ -582,6 +593,12 @@ fn print_outcome(outcome: &WarpOutcome) {
 fn run() -> Result<()> {
     let cli = Cli::parse();
     match cli.command {
+        Command::Plan { source, scope, dir, json } => {
+            let (value, code) = recur_lang_plan::plan(&dir, &source, scope.as_deref());
+            if json { emit_json(&value)?; }
+            else { println!("{}", recur_lang_plan::text(&value)); }
+            if code != 0 { std::process::exit(code); }
+        }
         Command::Init { dir, dry_run, json } => {
             match recur_lang_init::init(&dir, dry_run) {
                 Ok(value) => {

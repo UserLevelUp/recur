@@ -1,3 +1,5 @@
+artifact.type = lane
+
 # main.improvement.21.recur
 
 recur.gift = contract tests written and passing coordination layer — implement recur lane next
@@ -12,3 +14,5 @@ verify = cargo build --profile release-safe && julia julia-tests/main.command.la
 tool.escape = recur tree "main" -d docs/ --sep . --sep _ --show-sep
 do.not.disturb = do not add agent concepts to recur surface; do not implement config inheritance or merge coordination yet; do not ship directory-to-prefix projection mechanics or per-lane separator override in phase 1 — those are phase 2 (see addendum in docs/main.improvement.21.todo.future-plan.md for doctrine-aligned framing; prior "layer 1 / layer 3" vocabulary is superseded)
 ready.state = I know the exact files to create, the tests to pass, and the scope boundary
+
+consumes: main.recur.reveal.type.lane general work-context capsule classification

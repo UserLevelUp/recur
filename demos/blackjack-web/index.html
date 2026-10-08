@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a23">
+  <title>The Green Room — Blackjack</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' rx='15' fill='%23102a23'/%3E%3Ctext x='30' y='44' text-anchor='middle' font-size='44' fill='%23dfc18c'%3E♠%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/main.blackjack.web.css">
+  <script src="/main.blackjack.rivals.js" defer></script>
+  <script src="/main.blackjack.web.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="The Green Room home"><span class="brand-mark">♠</span><span>THE GREEN ROOM<small>A LITTLE LUCK. A LITTLE STRATEGY.</small></span></a>
+      <nav aria-label="Table options"><button class="text-button" id="rules-open">How to play <span aria-hidden="true">↗</span></button><button class="outline-button" id="reset-open" disabled>New table</button></nav>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow"><span class="live-dot"></span> <span id="table-mode">SOLO · BLACKJACK</span></p><h1 id="page-title">A seat at the table.</h1><p class="subtitle" id="table-subtitle">Just you, the dealer, and the next card.</p></div>
+        <div class="play-badge"><span>♧</span><div>All the play.<br><strong>None of the stakes.</strong><small>Simulated chips only</small></div></div>
+      </section>
+      <div class="error-banner" id="error-banner" role="alert" hidden><span id="error-message"></span><button id="retry">Reconnect</button></div>
+      <div class="game-layout">
+        <section class="play-column" aria-label="Blackjack table">
+          <div class="table-topline"><span><span class="tiny-diamond">◆</span> THE MAIN TABLE</span><span id="hand-number">READY WHEN YOU ARE</span></div>
+          <div class="felt" id="felt">
+            <div class="felt-inset" aria-hidden="true"></div>
+            <div class="dealer-zone">
+              <div class="hand-heading"><span class="avatar">A</span><div><span class="participant">ADA <span class="muted-tag">DEALER</span></span><small>Stands on all 17s</small></div><span class="score-badge" id="dealer-score">—</span></div>
+              <div class="cards" id="dealer-cards" aria-label="Dealer cards"></div>
+            </div>
+            <div class="table-center" aria-hidden="true"><div class="table-wordmark">BLACKJACK</div><div class="table-rule"><span></span> PAYS 3 TO 2 <span></span></div><div class="table-suits">♠ <i>♥</i> ♣ <i>♦</i></div></div>
+            <div class="player-zone" id="player-hands" aria-label="Your hands"></div>
+            
+          </div>
+          <section id="rival-seats" class="rival-seats" aria-label="Computer rival seats" hidden></section>
+          <section class="control-panel" aria-label="Play controls">
+            <div class="status-row" aria-live="polite" aria-atomic="true"><span class="status-symbol" id="status-symbol">♠</span><div><h2 id="status-title">Pull up a chair.</h2><p id="status-detail">Connecting to your table…</p></div><span id="result-profit" class="result-profit"></span></div>
+            <div class="bet-controls" id="bet-controls">
+              <div class="bet-picker"><label for="bet">YOUR BET <span>CHIPS</span></label><div class="bet-input"><button id="bet-minus" aria-label="Decrease bet by 10" disabled>−</button><input id="bet" type="number" min="2" max="500" step="2" value="20" aria-describedby="bet-help"><button id="bet-plus" aria-label="Increase bet by 10" disabled>+</button></div></div>
+              <div class="chip-presets" aria-label="Bet presets"><button class="chip chip-10" data-bet="10">10</button><button class="chip chip-20 selected" data-bet="20">20</button><button class="chip chip-50" data-bet="50">50</button><button class="chip chip-100" data-bet="100">100</button></div>
+              <button id="deal" class="primary-button" disabled>Deal me in <span aria-hidden="true">→</span></button>
+            </div>
+            <div class="action-controls" id="action-controls" hidden><button id="hit" class="primary-button" disabled>Hit <kbd>H</kbd></button><button id="stand" class="light-button" disabled>Stand <kbd>S</kbd></button><button id="double" class="outline-button" disabled>Double down <kbd>D</kbd></button><button id="split" class="outline-button" aria-describedby="split-help" disabled>Split pair <kbd>P</kbd></button></div><p class="control-note" id="split-help" hidden></p>
+            <p class="control-note" id="bet-help">Even bets from 2 to 500 · Blackjack pays 3:2</p>
+          </section>
+        </section>
+        <aside class="session-panel" aria-label="Your session">
+          <div class="session-label"><span>YOUR SESSION</span><span class="session-live" id="session-status">CONNECTING</span></div>
+          <div class="bankroll"><span class="small-label">AVAILABLE CHIPS</span><div><span id="balance">500</span><span class="chip-unit">◉</span></div><p id="net">A fresh start.</p></div>
+          <div class="stats-grid"><div><strong id="wins">0</strong><span>WON</span></div><div><strong id="losses">0</strong><span>LOST</span></div><div><strong id="pushes">0</strong><span>PUSH</span></div></div>
+          <section class="session-summary" aria-label="Settled session statistics"><p id="session-statistics">Settled samples: 0 rounds / 0 hands</p><p>Human capabilities: hit, stand, double, split.</p><p id="rules-provenance" class="rival-detail">Rules version loads with your table.</p><p id="comparison-label">Solo practice; profit is descriptive, not a skill rating.</p></section>
+          <section class="session-tools" aria-label="Session exports and replay"><button class="outline-button" id="report-download" disabled>Download public session report</button><button class="outline-button" id="replay-download-open" disabled>Download PRIVATE replay…</button><p id="export-help">Finish a round to download settled results.</p><label for="replay-file">View a private replay JSON (up to 1 MiB)</label><input id="replay-file" type="file" accept="application/json,.json" aria-describedby="replay-help"><p id="replay-help">Playback opens an isolated, read-only settled snapshot. Your live table keeps its place.</p><p id="session-tools-status" role="status" aria-live="polite"></p></section>
+          <div class="history-heading"><h2>At a glance</h2><span id="round-count">0 hands</span></div>
+          <div id="history" class="history"><div class="empty-history"><span>♧</span><p>Your story starts<br>with the first hand.</p></div></div>
+          <div class="table-tip"><span class="small-label">A NOTE FROM THE DEALER</span><p>Closer to 21 wins.<br>Knowing when to stop is half the game.</p><span class="signature">Ada</span></div>
+        </aside>
+      </div>
+      <div class="below-table"><p><span>♠</span> One deck per round. One more reason to trust your instincts.</p><button class="text-button" id="rules-bottom">Table rules <span aria-hidden="true">↗</span></button></div>
+    </main>
+    <footer><span>THE GREEN ROOM <span class="footer-separator">/</span> RECUR DEMO 02</span><span>Made for the joy of the game.</span></footer>
+  </div>
+  <dialog id="rules-dialog" aria-labelledby="rules-title"><button class="dialog-close" data-close="rules-dialog" aria-label="Close rules">×</button><p class="eyebrow">KNOW YOUR TABLE</p><h2 id="rules-title">A good hand starts here.</h2><p>Get closer to 21 than Ada without going over. Face cards count as 10; an ace is 1 or 11, whichever helps your hand.</p><dl><dt>Hit</dt><dd>Take another card. At 21, your hand automatically stands.</dd><dt>Stand</dt><dd>Keep your hand and let the dealer play.</dd><dt>Double down</dt><dd>Double your initial bet, take exactly one card, then stand. Available on your first two cards when you have enough chips.</dd><dt>Split pair</dt><dd>Split two cards of the same rank once, for a second equal wager. Play the highlighted hand, then the other. Double after split is allowed on non-aces. Split aces receive one card each and stand. Split 21 pays 1:1, not blackjack. No re-splitting.</dd><dt>Blackjack</dt><dd>An ace and a ten-value card on the initial deal pays 3:2. A normal win pays 1:1. A push returns your bet.</dd></dl><p class="rules-footnote">Ada checks for blackjack and stands on soft 17. Fresh deck each round. One split per round. No insurance or surrender. Bets use even amounts for exact payouts. Your table lasts until server restart or two hours without activity. All chips are simulated.</p><button class="primary-button full-width" data-close="rules-dialog">Got it. Let's play.</button></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title"><button class="dialog-close" data-close="reset-dialog" aria-label="Cancel new table">×</button><p class="eyebrow">A FRESH DECK</p><h2 id="reset-title">Make yourself at home.</h2><p>Start a fresh session. Your current chips, stats and hand history will be reset.</p><label class="dialog-label" for="starting-money">STARTING CHIPS</label><select id="starting-money"><option value="100">100 chips</option><option value="500" selected>500 chips</option><option value="1000">1,000 chips</option><option value="2500">2,500 chips</option></select><label class="dialog-label" for="rival-count">COMPUTER RIVALS</label><select id="rival-count"><option value="0" selected>Solo · you and Ada</option><option value="1">One rival</option><option value="2">Two rivals</option></select><div id="rival-policy-row-1" hidden><label class="dialog-label" for="rival-policy-1">RIVAL 1 POLICY</label><select id="rival-policy-1" disabled><option value="stand17-v1">Stand on 17 benchmark · v1</option><option value="dealer-aware-v1">Dealer-aware benchmark · v1</option></select></div><div id="rival-policy-row-2" hidden><label class="dialog-label" for="rival-policy-2">RIVAL 2 POLICY</label><select id="rival-policy-2" disabled><option value="stand17-v1">Stand on 17 benchmark · v1</option><option value="dealer-aware-v1">Dealer-aware benchmark · v1</option></select></div><p class="rival-mode-note">Rivals hit and stand; you may also double and split. Shared deck, seat order, stakes and bankroll affect results. These deterministic benchmarks provide practice comparisons, not a skill rating.</p><button class="primary-button full-width" id="reset-confirm">Take a new seat <span aria-hidden="true">→</span></button></dialog>
+  <dialog id="private-replay-dialog" aria-labelledby="private-replay-title"><button class="dialog-close" data-close="private-replay-dialog" aria-label="Cancel private replay download">×</button><p class="eyebrow">PRIVATE SESSION DATA</p><h2 id="private-replay-title">Export full deck history?</h2><p>This PRIVATE replay includes every realized deck, including hidden cards, plus accepted commands and state hashes. Share it only when you intend to reveal your full deck history. Hashes check consistency; they do not prove authenticity.</p><button class="primary-button full-width" id="replay-download-confirm">Download PRIVATE full deck history</button></dialog>
+  <dialog id="replay-result-dialog" aria-labelledby="replay-result-title"><button class="dialog-close" data-close="replay-result-dialog" aria-label="Close replay snapshot">×</button><p class="eyebrow">ISOLATED · READ ONLY</p><h2 id="replay-result-title">Completed replay snapshot</h2><p>This settled snapshot belongs to the uploaded replay. Your live chips, revision and hand history are unchanged.</p><div id="replay-result"></div><button class="primary-button full-width" data-close="replay-result-dialog">Return to your live table</button></dialog>
+</body>
+</html>

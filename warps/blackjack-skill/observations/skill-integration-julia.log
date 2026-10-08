@@ -1,0 +1,4 @@
+Test Summary:                                   | Pass  Total  Time
+Integrated frozen modules and engine invariants |  656    656  4.3s
+Test Summary:                           | Pass  Total  Time
+HTTP session reports and private replay |  102    102  3.0s

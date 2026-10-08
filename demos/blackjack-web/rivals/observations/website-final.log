@@ -1,0 +1,50 @@
+✔ schema and transport versions (0.4672ms)
+✔ exports work in a browser without CommonJS and in Node without a DOM (0.8448ms)
+✔ version selection is schema based and unsupported schemas fail explicitly (0.759ms)
+✔ repeated renders replace seats and zero rivals clear and hide, then recover (0.3529ms)
+✔ renders accessible cards and authoritative scores and money without mutation (0.3255ms)
+✔ snapshot text stays inert and rendering uses the container document (0.1643ms)
+✔ empty hands, hidden scores, zero amounts and supplied result flags are preserved (0.1924ms)
+✔ zero, one and two rival panels are safe and descriptive (0.1778ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56.1907
+Test Summary:            | Pass  Total  Time
+Blackjack website engine | 8601   8601  1.6s
+Test Summary:            | Pass  Total  Time
+Split runtime acceptance | 6094   6094  1.1s
+Test Summary:                  | Pass  Total  Time
+Split HTTP protocol and replay |   18     18  1.7s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:          | Pass  Total  Time
+Blackjack website HTTP |   41     41  1.5s
+Test Summary:            | Pass  Total  Time
+Blackjack website assets |   14     14  0.0s
+Test Summary:        | Pass  Total  Time
+Rival table contract |  904    904  0.9s
+Test Summary:                 | Pass  Total  Time
+Visible Stand on 17 benchmark |   11     11  0.0s
+Test Summary:              | Pass  Total  Time
+Natural blackjack and peek |   18     18  0.0s
+Test Summary:                                       | Pass  Total  Time
+Two rivals act in seat order before one dealer turn |    7      7  0.0s
+Test Summary:                                           | Pass  Total  Time
+Split aces, split 21, sequential human hands and double |   49     49  0.1s
+Test Summary:                                  | Pass  Total  Time
+Aggregate reserves and affordable rival wagers |   29     29  0.1s
+Test Summary:                                             | Pass  Total  Time
+Command rejection, revision, reset and snapshot isolation |   94     94  0.7s
+Test Summary:                              | Pass  Total  Time
+Repeated rounds and retained human history |   81     81  0.0s
+Test Summary:                             | Pass  Total  Time
+Rival HTTP seats and guarded mode changes |   43     43  1.8s
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Test Summary:                    | Pass  Total  Time
+Blackjack website Lang reference |   76     76  1.4s

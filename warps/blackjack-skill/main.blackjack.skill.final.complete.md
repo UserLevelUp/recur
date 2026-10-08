@@ -1,0 +1,7 @@
+artifact.type = lane
+publish: demo.blackjack.skill.final.acceptance reviewed Warp disposition
+consumer: demo.blackjack.skill.final.attempt.1.result independent high coordinator review
+
+Parent accepts the integrated scope after substantive independent Codex CLI high review and closure of its sole finding F01. The original coordinator recommendation remains revise in observations/coordinator-review-v1.json; it was not rewritten and a second paid full review was not requested. Parent corrected visible policy/rules versions, then ran the exact original independent probe (all five flags true), 15 browser Node tests and the full optional blackjack-web suite (19,868 assertions). Actual browser live table and isolated replay show version provenance. See observations/parent-disposition-v2.json, coordinator-browser-probe-v2.log, integration-worker-report-v2.json and browser-smoke-v2.json.
+
+Acceptance is a reviewed declaration; the current Warp uses declared gates and its status query does not itself certify test execution. All raw evidence and prior receipts remain. Unknowns from the independent review are retained: saved browser download unverified, process-local sessions, final-snapshot playback, non-authenticating hashes, bounded rather than exhaustive replay limits and optional/static Lang target planning. Session ROI is practice data, not a fair skill rating. Follow-up Watch topic/subscription design lives in main.blackjack.skill.watch.topic.current.md; core Watch topic support is not claimed.

@@ -1,0 +1,37 @@
+recur 0.1 class WebRound
+# defines: demo.blackjack.web.play contract-first website stage
+header {
+  scope act {
+    i(a) := (game: PrivateGame, command: Command, order: OptionalDeck)
+    o(b) := (game: PrivateGame)
+    f : i(a) -> o(b) ~ "Validate protocol, revision, active hand, legal phase and aggregate reserves before an atomic copied-state transition" by BlackjackWeb.transition
+  }
+  scope settle {
+    i(a) := (game: PrivateGame)
+    o(b) := (game: PrivateGame)
+    f : i(a) -> o(b) ~ "Settle all hands once; split 21 is ordinary, original natural pays 3:2; conserve player plus escrow plus house money" by Bindings.settlement
+  }
+}
+body {
+  act sync : i(a) -> f(a) -> o(b)
+  settle sync : i(a) -> f(a) -> o(b)
+}
+footer {
+  # Bindings.settlement maps to BlackjackWeb.settle! in the review registry.
+  # WIR1 binding tokens cannot currently contain Julia's exclamation suffix.
+  event act {
+    consume demo.blackjack.web.act.request
+    produce demo.blackjack.web.act.result
+    state demo.blackjack.web.act.complete
+  }
+  warp act : E0(demo.blackjack.web.act.todo.current) -> dE(act.f) -> Ef(demo.blackjack.web.act.complete)
+  event settle {
+    consume demo.blackjack.web.settle.request
+    produce demo.blackjack.web.settle.result
+    state demo.blackjack.web.settle.complete
+  }
+  warp settle : E0(demo.blackjack.web.settle.todo.current) -> dE(settle.f) -> Ef(demo.blackjack.web.settle.complete)
+  # References for implementation review; opaque types need behavioral tests.
+  # Browser event feedback is repeated requests, not a server-to-browser module import.
+}
+

@@ -1,0 +1,33 @@
+{
+  "bubble_uuid": "01a0fc90-c2fa-75d4-8197-5d91ba0ae563",
+  "current_slice": null,
+  "goal": "Specify and then implement two independently wagered player hands sharing one dealer, with revision-safe actions and conserved settlement",
+  "invariants": [],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.demo.blackjack-web.split.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a0fc90-c2fa-7e1a-b009-9a5546652ddf"
+    },
+    {
+      "contract_hash": "contract:main.demo.blackjack-web.split.slice-final:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "acceptance"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0fc90-c2fa-752f-8fb5-05f5b231313e"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.demo.blackjack-web.split",
+  "contract_document": "demos/blackjack-web/split/main.blackjack.web.split.design.todo.current.md"
+}

@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Sudoku teaching Warp
 
 warp.id = main.demo.sudoku.teaching

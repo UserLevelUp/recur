@@ -1,0 +1,21 @@
+recur 0.1 class BlackjackHello
+# defines: demo.blackjack.hello contract-first stage 01.hello
+header {
+  scope hello {
+    i(a) := (name: OptionalText)
+    o(b) := (message: Text)
+    h : i(a) -> o(b) ~ "Default to Hello, World; trim a supplied name and reject blank text" by BlackjackLab.hello
+  }
+}
+body {
+  hello sync : i(a) -> h(a) -> o(b)
+  # Semantic types and rules require Julia tests; bindings are not executed by Lang.
+}
+footer {
+  event hello {
+    consume demo.blackjack.hello.request
+    produce demo.blackjack.hello.result
+    state demo.blackjack.hello.complete
+  }
+  warp hello : E0(demo.blackjack.hello.todo.current) -> dE(hello.h) -> Ef(demo.blackjack.hello.complete)
+}

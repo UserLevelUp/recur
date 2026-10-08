@@ -1,0 +1,4 @@
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Test Summary:                                 | Pass  Total  Time
+Split proposal model (not runtime acceptance) |   12     12  0.5s

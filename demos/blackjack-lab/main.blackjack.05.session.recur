@@ -1,0 +1,34 @@
+recur 0.1 class BlackjackSession
+# defines: demo.blackjack.session contract-first stage 05.session
+header {
+  scope tournament {
+    i(a) := (config: TableConfig)
+    o(b) := (config: TableConfig, rounds: RoundHistory, balances: ChipsByPlayer, bank: Chips, leaders: PlayerIds, profit: ChipsByPlayer, stop_reason: Text)
+    t : i(a) -> o(b) ~ "Run seeded rounds until limit, no funded players or house reserve exhausted; preserve ties for richest final player and report house separately" by BlackjackLab.tournament
+  }
+  scope render {
+    i(c) := tournament.o(b)
+    o(d) := (text: Text)
+    r : i(c) -> o(d) ~ "Show each round outcomes and balances, house bank and final tied leaders without implying every round has one winner" by BlackjackLab.render
+  }
+}
+body {
+  tournament sync : i(a) -> t(a) -> o(b)
+  render sync : i(c) -> r(c) -> o(d)
+  share tournament.o(b) -> render.i(c)
+  # Semantic types and rules require Julia tests; bindings are not executed by Lang.
+}
+footer {
+  event tournament {
+    consume demo.blackjack.tournament.request
+    produce demo.blackjack.tournament.result
+    state demo.blackjack.tournament.complete
+  }
+  warp tournament : E0(demo.blackjack.tournament.todo.current) -> dE(tournament.t) -> Ef(demo.blackjack.tournament.complete)
+  event render {
+    consume demo.blackjack.render.request
+    produce demo.blackjack.render.result
+    state demo.blackjack.render.complete
+  }
+  warp render : E0(demo.blackjack.render.todo.current) -> dE(render.r) -> Ef(demo.blackjack.render.complete)
+}

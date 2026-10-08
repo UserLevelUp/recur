@@ -1,0 +1,4 @@
+artifact.type = lane
+publish: demo.blackjack.skill.integration.revision.2 verified corrected source
+
+Supplemental integration evidence after F01 presentation correction. The original accepted integration layer stays immutable; this receipt supports final parent acceptance of the correction. Source manifest SHA256 b171a8a9b5e2cf6bfde52adc2508df0e64f8afbc79b6768d1e319db5ec32d1e2. All five deterministic integration checks passed: 19,868 selected Julia assertions, 15 browser Node tests, default selection with no demos, static Lang check and companion plan. Lang execution not run; plan remains needs-target. Real browser live/replay provenance verified separately. See observations/integration-worker-report-v2.json, *-v2.log, browser-smoke-v2.json and parent-disposition-v2.json. Original receipt and independent review preserved. Saved native browser download remains unverified.

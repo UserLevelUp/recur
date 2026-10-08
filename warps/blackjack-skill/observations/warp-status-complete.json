@@ -1,0 +1,446 @@
+{
+  "gate_evidence": [
+    {
+      "slice_id": "contracts",
+      "gate": "contract-review",
+      "status": "declared",
+      "satisfied": true,
+      "evidence": [
+        {
+          "reference": "blackjack-skill/main.blackjack.skill.contract-review.complete.md",
+          "status": "declared",
+          "method": "manual-reference; producer not rerun",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "slice_id": "tests",
+      "gate": "red-first-fixtures",
+      "status": "declared",
+      "satisfied": true,
+      "evidence": [
+        {
+          "reference": "blackjack-skill/main.blackjack.skill.tests.complete.md",
+          "status": "declared",
+          "method": "manual-reference; producer not rerun",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "slice_id": "strategy",
+      "gate": "strategy-tests",
+      "status": "declared",
+      "satisfied": true,
+      "evidence": [
+        {
+          "reference": "blackjack-skill/main.blackjack.skill.strategy.complete.md",
+          "status": "declared",
+          "method": "manual-reference; producer not rerun",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "slice_id": "replay",
+      "gate": "replay-tests",
+      "status": "declared",
+      "satisfied": true,
+      "evidence": [
+        {
+          "reference": "blackjack-skill/main.blackjack.skill.replay.complete.md",
+          "status": "declared",
+          "method": "manual-reference; producer not rerun",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "slice_id": "statistics",
+      "gate": "statistics-tests",
+      "status": "declared",
+      "satisfied": true,
+      "evidence": [
+        {
+          "reference": "blackjack-skill/main.blackjack.skill.statistics.complete.md",
+          "status": "declared",
+          "method": "manual-reference; producer not rerun",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "slice_id": "integration",
+      "gate": "http-browser-demo-tests",
+      "status": "declared",
+      "satisfied": true,
+      "evidence": [
+        {
+          "reference": "blackjack-skill/main.blackjack.skill.integration.complete.md",
+          "status": "declared",
+          "method": "manual-reference; producer not rerun",
+          "reasons": []
+        }
+      ]
+    },
+    {
+      "slice_id": "final",
+      "gate": "coordinator-acceptance",
+      "status": "declared",
+      "satisfied": true,
+      "evidence": [
+        {
+          "reference": "blackjack-skill/main.blackjack.skill.final.complete.md",
+          "status": "declared",
+          "method": "manual-reference; producer not rerun",
+          "reasons": []
+        }
+      ]
+    }
+  ],
+  "recorded_state": "completion-present",
+  "evidence_status": "declared",
+  "contract_status": "declared-gates-satisfied",
+  "verdict_scope": "recorded-eventness-and-declared-coverage; does not certify test success",
+  "schema": "warp-status-v1",
+  "lane": "main.demo.blackjack-skill-replay",
+  "scope": "main.demo.blackjack-skill-replay.**",
+  "root": "C:/src/recur",
+  "verdict": "optimum",
+  "objective": -0.0,
+  "files": [
+    {
+      "path": "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.contracts.attempt-1.result.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.final.attempt-1.result.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.integration.attempt-1.result.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.replay.attempt-1.result.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.statistics.attempt-1.result.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.strategy.attempt-1.result.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.tests.attempt-1.result.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.contracts.attempt-1.request.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.contracts.attempt-1.response.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.final.attempt-1.request.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.final.attempt-1.response.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.integration.attempt-1.request.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.integration.attempt-1.response.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.replay.attempt-1.request.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.replay.attempt-1.response.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.statistics.attempt-1.request.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.statistics.attempt-1.response.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.strategy.attempt-1.request.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.strategy.attempt-1.response.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.tests.attempt-1.request.complete.md",
+      "state": "complete",
+      "age_days": 0
+    },
+    {
+      "path": "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.tests.attempt-1.response.complete.md",
+      "state": "complete",
+      "age_days": 0
+    }
+  ],
+  "state_suffixes": {
+    "complete": 21
+  },
+  "state_groups": {
+    "active": 0,
+    "blocked": 0,
+    "complete": 21,
+    "interesting": 0,
+    "other": 0
+  },
+  "trace_id_roles": {
+    "define": 22,
+    "consume": 43,
+    "produce": 65,
+    "trigger": 0
+  },
+  "signals": [
+    {
+      "name": "complete-state-present",
+      "weight": -1.0,
+      "evidence": [
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.contracts.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.final.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.integration.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.replay.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.statistics.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.strategy.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.tests.attempt-1.result.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.contracts.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.contracts.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.final.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.final.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.integration.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.integration.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.replay.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.replay.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.statistics.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.statistics.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.strategy.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.strategy.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.tests.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.tests.attempt-1.response.complete.md"
+      ]
+    },
+    {
+      "name": "trace-id-roles-present",
+      "weight": -0.5,
+      "evidence": [
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.contracts.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.final.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.integration.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.replay.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.statistics.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.strategy.attempt-1.result.complete.md",
+        "warps/blackjack-skill/eventness/main.demo.blackjack-skill-replay.tests.attempt-1.result.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.contracts.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.contracts.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.final.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.final.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.integration.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.integration.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.replay.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.replay.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.statistics.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.statistics.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.strategy.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.strategy.attempt-1.response.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.tests.attempt-1.request.complete.md",
+        "warps/blackjack-skill/observations/main.demo.blackjack-skill-replay.tests.attempt-1.response.complete.md"
+      ]
+    },
+    {
+      "name": "warp-bubble-complete",
+      "weight": -1.0,
+      "evidence": [
+        "contracts@reviewed-1",
+        "final@reviewed-1",
+        "integration@reviewed-1",
+        "replay@reviewed-1",
+        "statistics@reviewed-1",
+        "strategy@reviewed-1",
+        "tests@reviewed-1"
+      ]
+    }
+  ],
+  "residuals": [],
+  "next_actions": [],
+  "bubble": {
+    "evidence_status": "declared",
+    "contract_status": "declared-gates-satisfied",
+    "gate_evidence": [
+      {
+        "slice_id": "contracts",
+        "gate": "contract-review",
+        "status": "declared",
+        "satisfied": true,
+        "evidence": [
+          {
+            "reference": "blackjack-skill/main.blackjack.skill.contract-review.complete.md",
+            "status": "declared",
+            "method": "manual-reference; producer not rerun",
+            "reasons": []
+          }
+        ]
+      },
+      {
+        "slice_id": "tests",
+        "gate": "red-first-fixtures",
+        "status": "declared",
+        "satisfied": true,
+        "evidence": [
+          {
+            "reference": "blackjack-skill/main.blackjack.skill.tests.complete.md",
+            "status": "declared",
+            "method": "manual-reference; producer not rerun",
+            "reasons": []
+          }
+        ]
+      },
+      {
+        "slice_id": "strategy",
+        "gate": "strategy-tests",
+        "status": "declared",
+        "satisfied": true,
+        "evidence": [
+          {
+            "reference": "blackjack-skill/main.blackjack.skill.strategy.complete.md",
+            "status": "declared",
+            "method": "manual-reference; producer not rerun",
+            "reasons": []
+          }
+        ]
+      },
+      {
+        "slice_id": "replay",
+        "gate": "replay-tests",
+        "status": "declared",
+        "satisfied": true,
+        "evidence": [
+          {
+            "reference": "blackjack-skill/main.blackjack.skill.replay.complete.md",
+            "status": "declared",
+            "method": "manual-reference; producer not rerun",
+            "reasons": []
+          }
+        ]
+      },
+      {
+        "slice_id": "statistics",
+        "gate": "statistics-tests",
+        "status": "declared",
+        "satisfied": true,
+        "evidence": [
+          {
+            "reference": "blackjack-skill/main.blackjack.skill.statistics.complete.md",
+            "status": "declared",
+            "method": "manual-reference; producer not rerun",
+            "reasons": []
+          }
+        ]
+      },
+      {
+        "slice_id": "integration",
+        "gate": "http-browser-demo-tests",
+        "status": "declared",
+        "satisfied": true,
+        "evidence": [
+          {
+            "reference": "blackjack-skill/main.blackjack.skill.integration.complete.md",
+            "status": "declared",
+            "method": "manual-reference; producer not rerun",
+            "reasons": []
+          }
+        ]
+      },
+      {
+        "slice_id": "final",
+        "gate": "coordinator-acceptance",
+        "status": "declared",
+        "satisfied": true,
+        "evidence": [
+          {
+            "reference": "blackjack-skill/main.blackjack.skill.final.complete.md",
+            "status": "declared",
+            "method": "manual-reference; producer not rerun",
+            "reasons": []
+          }
+        ]
+      }
+    ],
+    "schema": "warp-bubble-projection-v1",
+    "warp_id": "main.demo.blackjack-skill-replay",
+    "bubble_uuid": "01a11724-8143-7837-85b1-5a94bc2a2c0d",
+    "root": "C:/src/recur",
+    "manifest": "warps/main.demo.blackjack-skill-replay.warp-map.json",
+    "state": "complete",
+    "counts": {
+      "blocked": 0,
+      "conflicting": 0,
+      "covered": 7,
+      "pending": 0,
+      "required": 7,
+      "stale_contract": 0
+    },
+    "covered": [
+      "contracts",
+      "final",
+      "integration",
+      "replay",
+      "statistics",
+      "strategy",
+      "tests"
+    ],
+    "pending": [],
+    "blocked": [],
+    "stale_contract": [],
+    "conflicts": [],
+    "layers": [
+      "contracts@reviewed-1",
+      "final@reviewed-1",
+      "integration@reviewed-1",
+      "replay@reviewed-1",
+      "statistics@reviewed-1",
+      "strategy@reviewed-1",
+      "tests@reviewed-1"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "status": "reviewed",
+  "warp_id": "main.command.warp.dispatch.review",
+  "slice_id": "codex-coordinator",
+  "contract_hash": "contract:dispatch.review.coordinator:v1",
+  "summary": "Recommend conditional acceptance with explicit Windows v1 limits. Current source and root-reported runtime evidence address the independent review's material defects. The proposed pending-contract repair is defensible as baseline-differential evidence, never original chronological TDD. Parent publication still requires the repaired contract and final rebuilt-binary regression result.",
+  "recommendation": "accept-with-limits",
+  "findings": [
+    {
+      "id": "C1",
+      "title": "Explicit contract repair supports prospective acceptance",
+      "assessment": "Seven tests failing against archived HEAD 2ecae66df03c6e7a4dd783ba3e7bd389e53d245a and passing against current implementation establish reconstructed baseline differential behavior. They cannot satisfy original red-first chronology. Changing the still-pending slice-tests contract identity to v2 and gate to baseline-differential is defensible if the parent records the changed obligation and preserves earlier evidence. Separately, expansion tests have actual fresh red/green: four failed and five passed before the fix; all nine passed afterward (evidence.md)."
+    },
+    {
+      "id": "C2",
+      "title": "Previously blocking defects have targeted repairs",
+      "assessment": "Source inspection confirms single-pass expansion, immutable original_outcome feedback, shared startup/recovery/publication fencing with state read after locking, timeout exit/error/fingerprint fields, context endpoint checks, and incremental verification observations with verification_error classification. These address independent R1/R5/R6/R9/R15/R16. Updated tests cover recovered-start refusal, repeated recovery, context-only mutation, partial verification failure, timeout fields and positive prerequisite unlocking. Root reports Cargo 287 passed, zero failed, seven ignored doctests; this coordinator did not rerun Cargo. No remaining demonstrated v1 implementation blocker emerges from these reviewed findings. Coverage is not exhaustive."
+    },
+    {
+      "id": "C3",
+      "title": "Separate contractual behavior from stronger optional policies",
+      "assessment": "Independent R2/R3 correctly qualify Copilot findings 2/3: bounded terminal-job retries do not implicitly recover active interrupted workers, and runtime errors do not increment test-failure feedback. Produced records configured verification success; source changes, nonempty output and a failing baseline are not mandatory. It grants no acceptance. Shared read inputs do not inherently violate canonical workspace disjointness. Host-wide easy-success feedback and budgets spanning contract edits are documented policies, not promised per-contract resets."
+    },
+    {
+      "id": "C4",
+      "title": "Final regression publication remains conditional",
+      "assessment": "Root reports Julia core 4368 passed, 73 expected-broken, 4441 total, exit zero using matching release binaries. Its final rebuilt-companion repeat remains pending in evidence.md. Require that result before publication. Broader race, adapter, portability and branch coverage remain follow-up work; earlier weak assertions must not be cited as proving specific lock contention or exhaustive retry behavior."
+    },
+    {
+      "id": "C5",
+      "title": "Cross-provider participation and timing have bounded evidence",
+      "assessment": "evidence.md reports Copilot 1.0.93 medium at 151 seconds agent and 152 seconds claim-to-finish, and Codex 0.160.1/gpt-6-astra high independent review at 279 seconds agent. These are reported observations, not measurements rerun here. The one-second Copilot difference is aggregate recorded overhead, not isolated inter-provider handoff latency. Unix-second timestamps and 500ms observation polling limit precision. Gemini 0.62.0 returned UNSUPPORTED_CLIENT; its reviewed availability disposition and Codex fallback do not constitute a Gemini code review. This coordinator's completion timing is not yet available."
+    }
+  ],
+  "acceptance_limits": [
+    "Windows v1 with trusted local records and configured host permissions; working directories are not sandboxes. Explicit fingerprint inputs cannot infer dependency closure, and endpoint hashes miss change-then-restore.",
+    "Polling/files, manual stale scheduler/transition lock inspection, host-owned descendants after normal exit, per-command timeouts, supported stdin/file transport for large prompts, compatible empty-level adapters and budgets spanning contract edits remain limits. No universal provider or cross-platform guarantee.",
+    "Supplied packet has lang=null and assignment.lang_source=null. Prepared boundaries are unchanged; static soundness is not runtime evidence. Installed recur-warp help lacks dispatch/recover; runtime claims concern root's tested builds.",
+    "This review uses both actual reports, Gemini disposition, supplied evidence and source inspection. The assigned JSON validator checks structure only. Parent owns gate acceptance; none is marked here."
+  ],
+  "acceptance_conditions": [
+    "Parent explicitly records pending slice-tests v2 with baseline-differential gate and binds reconstructed baseline plus fresh expansion red/green evidence; do not accept or fabricate original red-first history.",
+    "Attach successful Julia core results against final rebuilt companions, retaining binary/source identity and exit observations before publication.",
+    "Retain actual provider attempt and observer records, then append this coordinator's return/verification timing after completion; label unavailable handoff intervals as unknown and independently decide the review gate."
+  ]
+}

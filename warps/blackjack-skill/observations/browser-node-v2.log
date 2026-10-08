@@ -1,0 +1,24 @@
+✔ schema and transport versions (0.4724ms)
+✔ exports work in a browser without CommonJS and in Node without a DOM (0.8689ms)
+✔ version selection is schema based and unsupported schemas fail explicitly (0.6687ms)
+✔ repeated renders replace seats and zero rivals clear and hide, then recover (0.3586ms)
+✔ renders accessible cards and authoritative scores and money without mutation (0.276ms)
+✔ snapshot text stays inert and rendering uses the container document (0.1619ms)
+✔ empty hands, hidden scores, zero amounts and supplied result flags are preserved (0.1817ms)
+✔ zero, one and two rival panels are safe and descriptive (0.1743ms)
+✔ each reset sends exactly its selected rival policies and keeps schema protocol selection (14.5524ms)
+✔ settled summaries preserve authoritative ROI including zero and null sample semantics (1.0159ms)
+✔ live and isolated replay results identify effective strategy and rules versions (1.1776ms)
+✔ public export and deliberate private download use settled GET routes and inert JSON blobs (1.2931ms)
+✔ playback during live play is isolated, inert and does not block a live action (1.3581ms)
+✔ upload limits, JSON errors, invalid replay snapshots and server errors leave live state untouched (4.6746ms)
+✔ download failures and overlapping requests do not share live busy state (0.8114ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.9296
+

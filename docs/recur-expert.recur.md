@@ -1,3 +1,8 @@
+artifact.type = skill
+
+consumes: main.recur.warp.intelligence.tick companion-owned advisory reasoning policy
+consumes: main.command.warp.dispatch.config companion-owned asynchronous host scheduling
+
 # recur-expert.recur
 
 recur.gift = Recover the selected Warp from live projections and durable contracts, not conversation memory.
@@ -6,6 +11,8 @@ agent = inspect and explain first; implement only when the user requests it.
 pull.first = read julia-expert/references/recur-playbook.md Warp specialization; recur warp
 pull.then = select a Warp from the live list; recur warp slices <selected-warp>; read its readme and warp-map.json
 verify = cargo test --locked; julia julia-tests/runtests.jl; run selected standalone red-first suites when implementing their slices.
+skills.focused = recur-warp, recur-lang, recur-watch, recur-trace-id, recur-demo-tests; read the selected skill explicitly
+verify.demos = demo suites are opt-in; use --demo NAME, and --with-core only when core coverage is wanted
 skill.name = recur-expert
 skill.path = recur-expert/SKILL.md
 skill.loading = An agent must explicitly read the skill or use its own skill loader; reveal prints this pointer only.
@@ -22,3 +29,5 @@ recovery.boundary = Check help before recall; use reveal, recorded handoff and b
 lang.dogfood = Inspect main.lang.dogfood -d warps and demos/web-evidence-lab/main.lang.walkthrough.md for the catalog inspector and tests-first WIR1 example.
 reveal.associations = Explicit config records and capsule bindings; inspect source and status rather than inferring relationships from names.
 reveal.packet = recur-reveal next ID --type agent|persona -d ROOT --json; inspect diagnostics context.truncated and source fingerprints.
+
+lang.plan = recur-lang plan SOURCE --scope SYMBOL -d ROOT --json prepares policy-informed work and test advice with source/config fingerprints; no execution or acceptance. See blackjack-lab for behavior and limits.

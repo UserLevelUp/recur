@@ -1,0 +1,16 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.blackjack-computer-player",
+  "slice_id": "engine",
+  "contract_hash": "contract:demo.blackjack.rivals.engine:v1",
+  "attempt_id": "cli-engine-20261006",
+  "result_state": "accepted",
+  "result_hash": "sha256:3e329cc3f420039760c43fdb92adda38be829fdc8820bfeb29dce005a4352c00",
+  "evidence": {
+    "engine-tests": [
+      "demos/blackjack-web/rivals/observations/engine-integrated.log",
+      "demos/blackjack-web/rivals/observations/engine-worker-report.md"
+    ]
+  },
+  "reason": null
+}

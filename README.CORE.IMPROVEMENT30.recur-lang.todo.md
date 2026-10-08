@@ -33,11 +33,12 @@ consumes: recur.lang.init.v1 exact initialization contract
 
 ## Following increments
 
-- [ ] Define and implement the proposed `main.lang.implementation-plan` Warp.
-  Consume initialized policy and existing WIR1/CIR1/SGR1 facts to produce a
-  source-bound work packet with implementation boundaries, prioritized graph
-  findings, suggested tests, unresolved decisions and required evidence.
-  No map or `recur-lang plan` command exists yet.
+- [x] Implement the bounded `main.lang.implementation-plan` Warp.
+  `recur-lang plan` consumes initialized preferences and existing WIR1/CIR1/SGR1
+  packets to report selected work, graph blockers, suggested tests, unresolved
+  decisions and required runtime evidence. It writes nothing and executes no
+  binding. See [usage](docs/main.command.lang.plan.readme.md) and the
+  [blackjack experiment](demos/blackjack-lab/main.blackjack.readme.md).
 
   defines: recur.lang.work.remaining.planning policy-informed implementation and test packets
 

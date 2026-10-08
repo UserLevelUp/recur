@@ -17,10 +17,13 @@ struct Cli {
 }
 #[derive(Subcommand)]
 enum Command {
-    /// Add only missing association tables; preserve existing configuration.
+    /// Add missing association tables and core skill entries; preserve custom records and empty opt-outs.
     Init {
         #[arg(long)]
         dry_run: bool,
+        /// Initialize at -d even if an ancestor already has configuration.
+        #[arg(long)]
+        local: bool,
     },
     /// Prepare local guidance without activating or executing it.
     Next {
@@ -37,7 +40,9 @@ fn main() {
     let cli = Cli::parse();
     let result = (|| -> anyhow::Result<serde_json::Value> {
         match cli.command {
-            Command::Init { dry_run } => recur::reveal_profiles::init(&cli.dir, dry_run),
+            Command::Init { dry_run, local } => {
+                recur::reveal_profiles::init_at(&cli.dir, dry_run, local)
+            }
             Command::Next {
                 id,
                 kind,

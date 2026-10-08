@@ -1,0 +1,82 @@
+recur 0.2 coordination BlackjackSkill
+# publish: demo.blackjack.skill.flow optional static graph; no runtime execution
+header {
+  contract WorkOrder {
+    identity: Text
+  }
+  contract WorkReceipt {
+    identity: Text
+  }
+  coordinator coordinator {
+    scope plan {
+      o(a) := DispatchSet<WorkOrder>
+    }
+    scope finish {
+      o(b) := WorkReceipt
+    }
+  }
+  lane strategy {
+    persona implementer
+    i(a) := project coordinator.plan.o(a).orders["strategy"]
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "strategy reviewed work under frozen interfaces"
+    allow read []
+    allow write []
+    allow tools ["recur", "recur-lang"]
+    require receipt ["strategy.reviewed"]
+  }
+  lane replay {
+    persona implementer
+    i(a) := project coordinator.plan.o(a).orders["replay"]
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "replay reviewed work under frozen interfaces"
+    allow read []
+    allow write []
+    allow tools ["recur", "recur-lang"]
+    require receipt ["replay.reviewed"]
+  }
+  lane statistics {
+    persona implementer
+    i(a) := project coordinator.plan.o(a).orders["statistics"]
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "statistics reviewed work under frozen interfaces"
+    allow read []
+    allow write []
+    allow tools ["recur", "recur-lang"]
+    require receipt ["statistics.reviewed"]
+  }
+  lane integration {
+    persona implementer
+    i(a) := join(project coordinator.plan.o(a).orders["integration"], strategy.o(b), replay.o(b), statistics.o(b))
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "integration reviewed work under frozen interfaces"
+    allow read []
+    allow write []
+    allow tools ["recur", "recur-lang"]
+    require receipt ["integration.reviewed"]
+  }
+  lane final {
+    persona implementer
+    i(a) := join(project coordinator.plan.o(a).orders["final"], integration.o(b))
+    o(b) := WorkReceipt
+    f : i(a) -> o(b) ~ "final reviewed work under frozen interfaces"
+    allow read []
+    allow write []
+    allow tools ["recur", "recur-lang"]
+    require receipt ["final.reviewed"]
+  }
+}
+body {
+  implementation async :
+    i(a) -> coordinator.plan(a)
+    -> fork [strategy(a), replay(a), statistics(a)]
+    -> await [strategy.o(b), replay.o(b), statistics.o(b)]
+    -> integration(a)
+    -> await integration.o(b)
+    -> final(a)
+    -> await final.o(b)
+    -> coordinator.finish(a) -> o(b)
+}
+footer {
+  # Scope begins after reviewed contracts and failing-test gates in the Warp map. Static dependencies only. Julia/HTTP/browser tests and actual Warp gates stay authoritative.
+}

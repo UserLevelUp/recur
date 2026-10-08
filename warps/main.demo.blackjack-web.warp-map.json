@@ -1,0 +1,33 @@
+{
+  "bubble_uuid": "01a0fba7-c8f3-7770-bf92-14f3c9aa2008",
+  "current_slice": "slice-0",
+  "goal": "Build a playable single-player blackjack website through Lang-first stages, Julia tests, trace lineage and observed browser acceptance",
+  "invariants": [],
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.demo.blackjack-web.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-0",
+      "slice_uuid": "01a0fba7-c8f3-7f82-b260-ff97e9e204ae"
+    },
+    {
+      "contract_hash": "contract:main.demo.blackjack-web.slice-final:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "acceptance"
+      ],
+      "evidence_mode": "declared",
+      "slice_id": "slice-final",
+      "slice_uuid": "01a0fba7-c8f3-7aa1-9657-c452487a741b"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.demo.blackjack-web",
+  "contract_document": "demos/blackjack-web/main.blackjack.web.requirements.md"
+}

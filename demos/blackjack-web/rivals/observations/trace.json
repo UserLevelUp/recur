@@ -1,0 +1,708 @@
+[
+  {
+    "identifier": "demo.blackjack.rivals",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.rivals playable benchmark seats",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 70,
+        "line": "# publish: demo.blackjack.rivals.policy.decision visible score only; no table, deck or dealer input",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 122,
+        "line": "# publish: demo.blackjack.rivals.table.projection detached v3 snapshot; no deck, cursor or hole score",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 166,
+        "line": "# publish: demo.blackjack.rivals.table.settlement every participating seat once against one dealer",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 181,
+        "line": "# publish: demo.blackjack.rivals.table.advance human hands, stable rival order, then one dealer turn",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 225,
+        "line": "# publish: demo.blackjack.rivals.table.deal two passes over human, funded rivals, dealer",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 254,
+        "line": "# publish: demo.blackjack.rivals.table.ledger separate nonnegative wallets/escrow and one conserved bank",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 267,
+        "line": "# publish: demo.blackjack.rivals.table.revision validate the whole command and mutate only a deep copy",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 1,
+        "line": "/* publish: demo.blackjack.rivals.browser.seats accessible rival presentation",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 180,
+        "line": "# consumer: demo.blackjack.rivals.policy.decision public score benchmark",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.http.test.jl",
+        "line_number": 6,
+        "line": "# consumer: demo.blackjack.rivals.http.revision replay, isolation and seat validation",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.http.test.jl",
+        "line_number": 7,
+        "line": "# consumer: demo.blackjack.rivals.table.projection hidden-information boundary",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 2,
+        "line": " * consumer: demo.blackjack.rivals.table.projection public snapshots only",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 3,
+        "line": " * consumer: demo.blackjack.rivals.http.revision schema-selected transport version",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 6,
+        "line": "# consumer: demo.blackjack.rivals.table.deal stable shared-deck order",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 7,
+        "line": "# consumer: demo.blackjack.rivals.table.advance finite automatic turns",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 8,
+        "line": "# consumer: demo.blackjack.rivals.table.settlement per-seat outcomes",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 9,
+        "line": "# consumer: demo.blackjack.rivals.table.projection public privacy",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 10,
+        "line": "# consumer: demo.blackjack.rivals.table.ledger conservation",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 11,
+        "line": "# consumer: demo.blackjack.rivals.table.revision copied transitions",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 79,
+        "line": "# consumer: demo.blackjack.rivals.policy.decision no private policy inputs; hard/soft boundary",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.verify.cjs",
+        "line_number": 2,
+        "line": "// consumer: demo.blackjack.rivals.coordination deterministic CLI verification",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 41,
+        "line": "recur trace-id 'demo.blackjack.rivals.**' --scope 'main.blackjack.rivals.**' -d demos/blackjack-web --json",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 70,
+        "line": "# publish: demo.blackjack.rivals.policy.decision visible score only; no table, deck or dealer input",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 122,
+        "line": "# publish: demo.blackjack.rivals.table.projection detached v3 snapshot; no deck, cursor or hole score",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 166,
+        "line": "# publish: demo.blackjack.rivals.table.settlement every participating seat once against one dealer",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 181,
+        "line": "# publish: demo.blackjack.rivals.table.advance human hands, stable rival order, then one dealer turn",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 225,
+        "line": "# publish: demo.blackjack.rivals.table.deal two passes over human, funded rivals, dealer",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 254,
+        "line": "# publish: demo.blackjack.rivals.table.ledger separate nonnegative wallets/escrow and one conserved bank",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 267,
+        "line": "# publish: demo.blackjack.rivals.table.revision validate the whole command and mutate only a deep copy",
+        "edge_type": "produce"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 1,
+        "line": "/* publish: demo.blackjack.rivals.browser.seats accessible rival presentation",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.browser.seats",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 1,
+        "line": "/* publish: demo.blackjack.rivals.browser.seats accessible rival presentation",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 12,
+        "line": "defines: demo.blackjack.rivals.browser.seats safe accessible seat presentation",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 1,
+        "line": "/* publish: demo.blackjack.rivals.browser.seats accessible rival presentation",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.contract",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.review.md",
+        "line_number": 4,
+        "line": "consumes: demo.blackjack.rivals.contract optional competing seats",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.coordination",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 13,
+        "line": "consumes: demo.blackjack.rivals.coordination asynchronous CLI worker verification",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.review.md",
+        "line_number": 5,
+        "line": "consumes: demo.blackjack.rivals.coordination reviewed CLI worker outputs",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.verification.current.md",
+        "line_number": 4,
+        "line": "consumes: demo.blackjack.rivals.coordination asynchronous assignments and gate review",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.verify.cjs",
+        "line_number": 2,
+        "line": "// consumer: demo.blackjack.rivals.coordination deterministic CLI verification",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.verify.ps1",
+        "line_number": 5,
+        "line": "# consumes: demo.blackjack.rivals.coordination existing CLI checks instead of another model invocation",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.verify.cjs",
+        "line_number": 2,
+        "line": "// consumer: demo.blackjack.rivals.coordination deterministic CLI verification",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.http.revision",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.http.test.jl",
+        "line_number": 6,
+        "line": "# consumer: demo.blackjack.rivals.http.revision replay, isolation and seat validation",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 3,
+        "line": " * consumer: demo.blackjack.rivals.http.revision schema-selected transport version",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 11,
+        "line": "defines: demo.blackjack.rivals.http.revision session mode and revision guards",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.http.test.jl",
+        "line_number": 6,
+        "line": "# consumer: demo.blackjack.rivals.http.revision replay, isolation and seat validation",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 3,
+        "line": " * consumer: demo.blackjack.rivals.http.revision schema-selected transport version",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.policy.decision",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 70,
+        "line": "# publish: demo.blackjack.rivals.policy.decision visible score only; no table, deck or dealer input",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 180,
+        "line": "# consumer: demo.blackjack.rivals.policy.decision public score benchmark",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 79,
+        "line": "# consumer: demo.blackjack.rivals.policy.decision no private policy inputs; hard/soft boundary",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.improvements.todo.md",
+        "line_number": 4,
+        "line": "consumes: demo.blackjack.rivals.policy.decision fixed visible benchmark",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 4,
+        "line": "defines: demo.blackjack.rivals.policy.decision visible hand policy",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 70,
+        "line": "# publish: demo.blackjack.rivals.policy.decision visible score only; no table, deck or dealer input",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 180,
+        "line": "# consumer: demo.blackjack.rivals.policy.decision public score benchmark",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 79,
+        "line": "# consumer: demo.blackjack.rivals.policy.decision no private policy inputs; hard/soft boundary",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.review",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.review.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.rivals.review source-bound author review",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.verification.current.md",
+        "line_number": 5,
+        "line": "consumes: demo.blackjack.rivals.review current source-bound author assessment",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.skill.followups",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.improvements.todo.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.rivals.skill.followups measured comparisons after baseline",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.table.advance",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 181,
+        "line": "# publish: demo.blackjack.rivals.table.advance human hands, stable rival order, then one dealer turn",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 7,
+        "line": "# consumer: demo.blackjack.rivals.table.advance finite automatic turns",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 6,
+        "line": "defines: demo.blackjack.rivals.table.advance automatic rivals then dealer",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 181,
+        "line": "# publish: demo.blackjack.rivals.table.advance human hands, stable rival order, then one dealer turn",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 7,
+        "line": "# consumer: demo.blackjack.rivals.table.advance finite automatic turns",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.table.deal",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 225,
+        "line": "# publish: demo.blackjack.rivals.table.deal two passes over human, funded rivals, dealer",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 6,
+        "line": "# consumer: demo.blackjack.rivals.table.deal stable shared-deck order",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 5,
+        "line": "defines: demo.blackjack.rivals.table.deal shared finite deck and seat order",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 225,
+        "line": "# publish: demo.blackjack.rivals.table.deal two passes over human, funded rivals, dealer",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 6,
+        "line": "# consumer: demo.blackjack.rivals.table.deal stable shared-deck order",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.table.ledger",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 254,
+        "line": "# publish: demo.blackjack.rivals.table.ledger separate nonnegative wallets/escrow and one conserved bank",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 10,
+        "line": "# consumer: demo.blackjack.rivals.table.ledger conservation",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 9,
+        "line": "defines: demo.blackjack.rivals.table.ledger conserved wallets, escrow and shared house",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 254,
+        "line": "# publish: demo.blackjack.rivals.table.ledger separate nonnegative wallets/escrow and one conserved bank",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 10,
+        "line": "# consumer: demo.blackjack.rivals.table.ledger conservation",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.table.projection",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 122,
+        "line": "# publish: demo.blackjack.rivals.table.projection detached v3 snapshot; no deck, cursor or hole score",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.http.test.jl",
+        "line_number": 7,
+        "line": "# consumer: demo.blackjack.rivals.table.projection hidden-information boundary",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 2,
+        "line": " * consumer: demo.blackjack.rivals.table.projection public snapshots only",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 9,
+        "line": "# consumer: demo.blackjack.rivals.table.projection public privacy",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 8,
+        "line": "defines: demo.blackjack.rivals.table.projection public detached snapshots",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 122,
+        "line": "# publish: demo.blackjack.rivals.table.projection detached v3 snapshot; no deck, cursor or hole score",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.http.test.jl",
+        "line_number": 7,
+        "line": "# consumer: demo.blackjack.rivals.table.projection hidden-information boundary",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.js",
+        "line_number": 2,
+        "line": " * consumer: demo.blackjack.rivals.table.projection public snapshots only",
+        "edge_type": "consume"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 9,
+        "line": "# consumer: demo.blackjack.rivals.table.projection public privacy",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.table.revision",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 267,
+        "line": "# publish: demo.blackjack.rivals.table.revision validate the whole command and mutate only a deep copy",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 11,
+        "line": "# consumer: demo.blackjack.rivals.table.revision copied transitions",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 10,
+        "line": "defines: demo.blackjack.rivals.table.revision copied guarded transitions",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 267,
+        "line": "# publish: demo.blackjack.rivals.table.revision validate the whole command and mutate only a deep copy",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 11,
+        "line": "# consumer: demo.blackjack.rivals.table.revision copied transitions",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.table.settlement",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 166,
+        "line": "# publish: demo.blackjack.rivals.table.settlement every participating seat once against one dealer",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 8,
+        "line": "# consumer: demo.blackjack.rivals.table.settlement per-seat outcomes",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.improvements.todo.md",
+        "line_number": 5,
+        "line": "consumes: demo.blackjack.rivals.table.settlement observed per-seat results",
+        "edge_type": "define"
+      },
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.readme.md",
+        "line_number": 7,
+        "line": "defines: demo.blackjack.rivals.table.settlement independent outcomes and one settlement",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.engine.jl",
+        "line_number": 166,
+        "line": "# publish: demo.blackjack.rivals.table.settlement every participating seat once against one dealer",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "demos/blackjack-web\\main.blackjack.rivals.test.jl",
+        "line_number": 8,
+        "line": "# consumer: demo.blackjack.rivals.table.settlement per-seat outcomes",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "demo.blackjack.rivals.verification",
+    "define": [
+      {
+        "path": "demos/blackjack-web\\rivals\\main.blackjack.rivals.verification.current.md",
+        "line_number": 3,
+        "line": "defines: demo.blackjack.rivals.verification reviewed observed integration",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "schema": "blackjack-split-analysis-v1",
+  "observed_on": "2026-10-02",
+  "reviewer": "Codex author design review",
+  "implementation": "not-implemented",
+  "model": {
+    "exit_code": 0,
+    "passed": 12
+  },
+  "runtime_gap": {
+    "failed": 2,
+    "exit_code": 1,
+    "expected": true
+  },
+  "inputs_sha256": {
+    "main.blackjack.web.split.analysis.current.md": "fce106c8e55dcde4fc23d27d37e8259d3796f88d02db749dfd8907c9575e7a6b",
+    "main.blackjack.web.split.contract.recur": "fd0b38b45a3b47c399cf0f4826b2d139d4199229a9dae384029a948140812f32",
+    "main.blackjack.web.split.dependencies.recur": "a22187c20c9d9d866434bbc8cd474563a0d9df4a09db7bc8e12b8cf9d1afdea4",
+    "main.blackjack.web.split.design.todo.current.md": "1b29861eeca4cbdb8d2c3d63ee73e6d7ab3b10851684b842bc453d221f6f2849",
+    "main.blackjack.web.split.model.test.jl": "979e7d273fee1b1bc1cd4f0e0c8a55dd05ee9309e02fb38a30d014ba8fc4d383",
+    "main.blackjack.web.split.tests.todo.current.md": "728e688f9d12db333345a540e7d60948a8be9ee3eeda438a71aa450620a87a4f",
+    "../main.blackjack.web.engine.jl": "ccd0c6c83affadcf28e56c01878f0e9d9ce33c89033bdba7cfba177286d6b3df"
+  },
+  "existing_demo_regression": {
+    "passed": 8702,
+    "exit_code": 0
+  },
+  "report": {
+    "source_content_matches": true,
+    "html_sha256": "c36ff133c79afb47fea89c865db8a6ca3e4e0b94d62e17dc44eb7f123c6397ab",
+    "routes_verified": 12
+  }
+}

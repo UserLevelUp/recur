@@ -1,0 +1,31 @@
+{
+  "schema": "blackjack-skill-parent-disposition-v1",
+  "warp": "main.demo.blackjack-skill-replay",
+  "observed_at": "2026-10-08T06:08:01.679Z",
+  "original_review": "coordinator-review-v1.json",
+  "original_recommendation": "revise",
+  "original_report_sha256": "e6cc92708cf7632e2f7a6bdc914c07246033dc550186e75ef4a88171cab079b4",
+  "finding": "F01",
+  "disposition": "closed",
+  "changes": "Explicit effective rules/engine labels in live and isolated replay; explicit versioned rival policy identities; versioned reset choices; browser regression assertion.",
+  "verification": [
+    "Exact unmodified independent coordinator browser probe now passes all five flags",
+    "15/15 Node browser tests",
+    "19,868/19,868 selected Julia assertions",
+    "45-file current source manifest checked by selected suite",
+    "Actual browser live and isolated replay labels observed"
+  ],
+  "current_source_manifest_sha256": "b171a8a9b5e2cf6bfde52adc2508df0e64f8afbc79b6768d1e319db5ec32d1e2",
+  "parent_acceptance": true,
+  "independent_paid_review_repeated": false,
+  "limitations": [
+    "Browser download event remains uncertain: parent browser-smoke.json says the UI reported downloaded, but its download event timed out and no saved browser file was independently located. HTTP bodies and Node Blob/click behavior passed; neither proves a saved file. This review did not rerun native browser download or locate a saved export.",
+    "Browser interactions and live-http-smoke are supplied historical observations. This review inspected the narrow screenshot and reran frozen Node/Julia HTTP tests, but did not independently repeat the reported real browser interaction sequence. Referenced screenshots live outside the frozen evidence directory.",
+    "The replay suite checks primitive canonical golden vectors and actual engine round trips. Fixed cross-implementation private-engine hash fixtures and exhaustive canonical-type coverage are not established by the frozen tests. Worker supplementary test reports describe broader cases, but their extra-tests source/raw execution logs are not supplied here.",
+    "The independent probe exercised the real 200-deal boundary, not 2000 legal accepted commands or a valid envelope of exactly 1 MiB. The frozen command-capacity test seeds private step lists; near-limit rejection and bounded-writer source review do not constitute exhaustive boundary execution.",
+    "Provider history, the three-worker overlap, unsupported Gemini client, and shell-denied Copilot execution are described in supplied reports/deficiencies. Raw provider attempt logs and timing traces are not included here, so provider access, retry classification and comparative speed/cost are not independently established. No provider was invoked or retried by this reviewer.",
+    "Historical red-result.json reports tests executed against unimplemented stubs; raw red logs are absent. Later statistics hardening changed that test fingerprint. Current passing behavior was checked directly; historical red-first provenance is not independently reconstructed.",
+    "Lang planning remains needs-target; static graph soundness excludes function bodies, runtime behavior and receipt validation. A WorkReceipt declaration is not evidence that a reviewed gate has been accepted.",
+    "Sessions/recorders are process-local and playback presents a final settled snapshot. Hashes prove consistency, not authenticity; a replay author can construct a different internally consistent recording. Unequal human/rival actions, shared deck, seat order, wagers and bankroll prevent interpreting profit or ROI as a fair skill rating."
+  ]
+}

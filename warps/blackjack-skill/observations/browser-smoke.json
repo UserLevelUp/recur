@@ -1,0 +1,27 @@
+{
+  "schema": "blackjack-skill-browser-observation-v1",
+  "observed_at": "2026-10-08T05:52:18.902Z",
+  "url": "http://127.0.0.1:8797/",
+  "status": "observed",
+  "checks": [
+    "actual browser zero/one/two rivals mode switches",
+    "two different rival policies shown",
+    "dealer hole card hidden during play",
+    "one-rival human split into two hands and both stands then reset",
+    "solo double settled then reset",
+    "settled ROI and sample labels",
+    "private replay disclosure dialog",
+    "real file-chooser upload of HTTP-exported private replay",
+    "isolated read-only replay showed 520 chips, closing restored live 480 chips",
+    "390px viewport: page scrollWidth 390; no horizontal overflow; screenshot inspected",
+    "viewport reset"
+  ],
+  "limitations": [
+    "Public export UI reported downloaded but browser download event timed out; a saved browser file was not independently verified",
+    "HTTP export bodies and Node Blob/transport tests independently passed; hashes are consistency, not authentication"
+  ],
+  "screenshots": [
+    "C:/Users/marcn/Documents/Codex/2026-10-06/le/outputs/blackjack-replay.jpg",
+    "C:/Users/marcn/Documents/Codex/2026-10-06/le/outputs/blackjack-narrow.jpg"
+  ]
+}

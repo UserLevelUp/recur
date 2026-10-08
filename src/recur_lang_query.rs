@@ -719,6 +719,14 @@ fn text_view(value: &Value) -> String {
     out
 }
 
+/// Pure structured report for companions; identical read bounds and diagnostics
+/// to the CLI projector, without stdout, policy advice or process execution.
+pub fn report_packet(source: &Path, scope: Option<&str>, root: &Path) -> Result<Value, Value> {
+    query(LangCommand::Report { source: source.to_owned(), scope: scope.map(str::to_owned),
+        eventness: None, expand: false }, root)
+        .map_err(|e| json!({"schema":"recur-lang-error-v1","diagnostics":[{"code":e.code,"message":e.message,"detail":e.detail}]}))
+}
+
 pub fn execute(command: LangCommand, root: &Path, json_output: bool) -> i32 {
     if let LangCommand::Evidence(args) = command {
         let value = crate::recur_lang_evidence::assess(root, &args);

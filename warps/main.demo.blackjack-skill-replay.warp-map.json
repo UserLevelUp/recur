@@ -1,0 +1,102 @@
+{
+  "bubble_uuid": "01a11724-8143-7837-85b1-5a94bc2a2c0d",
+  "current_slice": "contracts",
+  "goal": "Versioned public-information rival strategies, deterministic private replay and meaningful session statistics, with optional demo tests and reviewed parallel workers",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Julia owns gameplay and settlement",
+    "No hidden-information input to rival policies",
+    "Zero/one/two rivals and solo behavior retained",
+    "Demo tests run only when selected",
+    "Produced does not accept gates",
+    "Lang optional"
+  ],
+  "required_slices": [
+    {
+      "slice_id": "contracts",
+      "contract_hash": "contract:main.demo.blackjack-skill-replay.contracts:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-review"
+      ],
+      "intelligence_tick": 0,
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "tests",
+      "contract_hash": "contract:main.demo.blackjack-skill-replay.tests:v1",
+      "depends_on": [
+        "contracts"
+      ],
+      "evidence_gates": [
+        "red-first-fixtures"
+      ],
+      "intelligence_tick": 0,
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "strategy",
+      "contract_hash": "contract:main.demo.blackjack-skill-replay.strategy:v1",
+      "depends_on": [
+        "tests"
+      ],
+      "evidence_gates": [
+        "strategy-tests"
+      ],
+      "intelligence_tick": 1,
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "replay",
+      "contract_hash": "contract:main.demo.blackjack-skill-replay.replay:v1",
+      "depends_on": [
+        "tests"
+      ],
+      "evidence_gates": [
+        "replay-tests"
+      ],
+      "intelligence_tick": 1,
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "statistics",
+      "contract_hash": "contract:main.demo.blackjack-skill-replay.statistics:v1",
+      "depends_on": [
+        "tests"
+      ],
+      "evidence_gates": [
+        "statistics-tests"
+      ],
+      "intelligence_tick": 0,
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "integration",
+      "contract_hash": "contract:main.demo.blackjack-skill-replay.integration:v1",
+      "depends_on": [
+        "strategy",
+        "replay",
+        "statistics"
+      ],
+      "evidence_gates": [
+        "http-browser-demo-tests"
+      ],
+      "intelligence_tick": 0,
+      "evidence_mode": "declared"
+    },
+    {
+      "slice_id": "final",
+      "contract_hash": "contract:main.demo.blackjack-skill-replay.final:v1",
+      "depends_on": [
+        "integration"
+      ],
+      "evidence_gates": [
+        "coordinator-acceptance"
+      ],
+      "intelligence_tick": 0,
+      "evidence_mode": "declared"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.demo.blackjack-skill-replay"
+}

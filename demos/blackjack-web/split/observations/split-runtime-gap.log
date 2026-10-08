@@ -1,0 +1,34 @@
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Test Summary:                                 | Pass  Total  Time
+Split proposal model (not runtime acceptance) |   12     12  0.5s
+Split runtime gap (intentionally red until implemented): Test Failed at C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.model.test.jl:40
+  Expression: "split" in BlackjackWeb.allowed(game)
+   Evaluated: "split" in ["hit", "stand", "double"]
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.model.test.jl:38
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.model.test.jl:40 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Split runtime gap (intentionally red until implemented): Test Failed at C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.model.test.jl:41
+  Expression: hasproperty(BlackjackWeb.public_state(game), :hands)
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.model.test.jl:38
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.model.test.jl:41 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Test Summary:                                           | Fail  Total  Time
+Split runtime gap (intentionally red until implemented) |    2      2  0.8s
+RNG of the outermost testset: Random.Xoshiro(0xe320502aeebe3b31, 0x6495e13ea926ccd7, 0xce29823826bad7fc, 0x6bb3fe564bf47d91, 0x099d735bbf884899)
+ERROR: LoadError: Some tests did not pass: 0 passed, 2 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-web\split\main.blackjack.web.split.model.test.jl:1

@@ -1,0 +1,15 @@
+{
+  "schema": "recur-warp-complete-v1",
+  "warp_id": "main.command.warp.dispatch",
+  "slice_id": "slice-tests",
+  "attempt_id": "dispatch-20261007-slice-tests",
+  "state": "planned",
+  "path": "warps/main.command.warp.dispatch.slice-tests.dispatch-20261007-slice-tests.warp-layer.json",
+  "contract_hash": "contract:main.command.warp.dispatch.tests:v2",
+  "result_hash": "sha256:4ef01ca06f2b4e5712eda7c82f9057615011191d869d6179e8588c9006dcc016",
+  "evidence": {
+    "baseline-differential": [
+      "warps/dispatch-review/observations/acceptance/acceptance.complete.md"
+    ]
+  }
+}

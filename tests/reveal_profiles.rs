@@ -1,4 +1,4 @@
-use recur::reveal_profiles::{init, Registry};
+use recur::reveal_profiles::{init, init_at, Registry};
 use serde_json::Value;
 use std::{fs, path::Path};
 
@@ -201,6 +201,62 @@ fn child_root_does_not_collect_parent_profiles() {
     config(r, GRAPH);
     fs::create_dir(r.join("child")).unwrap();
     assert_eq!(packet(&r.join("child"), "worker", None)["state"], "blocked");
+}
+
+#[test]
+fn init_adds_missing_core_skills_preserving_nested_paths_and_opt_outs() {
+    for original in [
+        "# Keep custom location\n[reveal.skills.recur-warp]\npath='guidance/team/warp.md'\n[reveal.skills.custom]\npath='custom.md'\n",
+        "reveal = { skills = { recur-warp = { path = 'guidance/team/warp.md' }, custom = { path = 'custom.md' } } }\n",
+    ] {
+        let dir = tempfile::tempdir().unwrap();
+        config(dir.path(), original);
+        let preview = init(dir.path(), true).unwrap();
+        assert_eq!(fs::read_to_string(dir.path().join(".recur/config.toml")).unwrap(), original);
+        let parsed: toml::Value = toml::from_str(preview["preview"].as_str().unwrap()).unwrap();
+        assert_eq!(parsed["reveal"]["skills"]["recur-warp"]["path"].as_str(), Some("guidance/team/warp.md"));
+        assert_eq!(parsed["reveal"]["skills"]["custom"]["path"].as_str(), Some("custom.md"));
+        for name in ["recur-expert", "recur-lang", "recur-watch", "recur-trace-id", "recur-demo-tests"] {
+            assert_eq!(parsed["reveal"]["skills"][name]["path"].as_str(), Some(format!("{name}/SKILL.md").as_str()));
+        }
+        init(dir.path(), false).unwrap();
+        assert_eq!(init(dir.path(), false).unwrap()["changed"], false);
+        assert!(!dir.path().join("recur-lang/SKILL.md").exists());
+    }
+    let dir = tempfile::tempdir().unwrap();
+    config(
+        dir.path(),
+        "[reveal.agents]\n[reveal.personas]\n[reveal.skills]\n",
+    );
+    assert_eq!(init(dir.path(), false).unwrap()["changed"], false);
+}
+
+#[test]
+fn init_local_isolates_nested_registry_and_preserves_parent() {
+    let dir = tempfile::tempdir().unwrap();
+    config(dir.path(), GRAPH);
+    let child = dir.path().join("team/demo");
+    fs::create_dir_all(&child).unwrap();
+    let preview = init(&child, true).unwrap();
+    assert_eq!(preview["scope"], "nearest-config");
+    assert_eq!(
+        Path::new(preview["path"].as_str().unwrap()),
+        dir.path()
+            .canonicalize()
+            .unwrap()
+            .join(".recur/config.toml")
+    );
+    let local = init_at(&child, true, true).unwrap();
+    assert_eq!(local["scope"], "local");
+    assert!(!child.join(".recur/config.toml").exists());
+    init_at(&child, false, true).unwrap();
+    assert_eq!(
+        fs::read_to_string(dir.path().join(".recur/config.toml")).unwrap(),
+        GRAPH
+    );
+    assert_eq!(init_at(&child, false, true).unwrap()["changed"], false);
+    assert_eq!(packet(&child, "worker", None)["state"], "blocked");
+    assert_eq!(packet(&child, "skippy", None)["state"], "blocked"); // pointers remain unresolved until supplied
 }
 
 #[test]

@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.blackjack-computer-player",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:demo.blackjack.rivals.acceptance:v1",
+  "attempt_id": "rivals-20261006-acceptance",
+  "result_state": "accepted",
+  "result_hash": "sha256:6dbf789e2c212b798056f885061e24371dc53a453f25157bd46e2e218099e804",
+  "evidence": {
+    "browser-acceptance": [
+      "demos/blackjack-web/rivals/observations/browser-acceptance.md"
+    ],
+    "regressions": [
+      "demos/blackjack-web/rivals/main.blackjack.rivals.verification.complete.md"
+    ]
+  },
+  "reason": null
+}

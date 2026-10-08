@@ -219,7 +219,7 @@ impl RecurConfig {
             };
 
             match section.as_str() {
-                "recur-lang" => {}, // Companion policy is never a file-discovery lane.
+                "recur-lang" => {} // Companion policy is never a file-discovery lane.
                 "checkpoint" => {
                     checkpoint = Some(parse_checkpoint_section(section_table));
                 }
@@ -316,23 +316,25 @@ pub fn load_from_root(root: &Path) -> Result<Option<RecurConfig>> {
 
 pub fn init_project(root: &Path, force: bool) -> Result<InitResult> {
     let root = normalize_root(root);
-    let lanes = discover_lanes(&root)?;
 
     let recur_dir = root.join(RECUR_DIR);
     fs::create_dir_all(&recur_dir)
         .with_context(|| format!("Failed to create {}", recur_dir.display()))?;
 
     let config_path = recur_dir.join(CONFIG_FILE);
-    if config_path.exists() && !force {
-        anyhow::bail!(
-            "{} already exists. Use --force to overwrite.",
-            config_path.display()
-        );
-    }
-
-    let config_text = render_config_toml(&lanes);
-    fs::write(&config_path, config_text)
-        .with_context(|| format!("Failed to write {}", config_path.display()))?;
+    let lanes = if config_path.exists() && !force {
+        // Existing project choices remain authoritative; only missing Reveal
+        // registration defaults are added by the shared additive initializer.
+        let configured = load_from_root(&root)?.context("Existing config is missing")?;
+        crate::reveal_profiles::init_at(&root, false, true)?;
+        configured.lanes
+    } else {
+        let lanes = discover_lanes(&root)?;
+        let config_text = render_config_toml(&lanes);
+        fs::write(&config_path, config_text)
+            .with_context(|| format!("Failed to write {}", config_path.display()))?;
+        lanes
+    };
 
     let checkpoints_path = recur_dir.join(CHECKPOINT_FILE);
     let checkpoints_created = if checkpoints_path.exists() {
@@ -1277,6 +1279,55 @@ foo = "bar"
         assert!(config_text.contains("resolve_relative_to_root = true"));
         assert!(config_text.contains("[traits.traversal_budget]"));
         assert!(config_text.contains("[traits.trace_id]"));
+        for skill in [
+            "recur-expert",
+            "recur-warp",
+            "recur-lang",
+            "recur-watch",
+            "recur-trace-id",
+            "recur-demo-tests",
+        ] {
+            assert!(config_text.contains(&format!("[reveal.skills.{skill}]")));
+        }
+        init_project(root, false).unwrap();
+        assert_eq!(
+            fs::read_to_string(root.join(".recur/config.toml")).unwrap(),
+            config_text
+        );
+    }
+
+    #[test]
+    fn init_existing_config_adds_only_missing_skills_and_preserves_opt_out() {
+        let temp = tempdir().unwrap();
+        let root = temp.path();
+        fs::create_dir_all(root.join(".recur")).unwrap();
+        let original = "# Local choices\n[custom]\ndir='.'\nsep='-'\n[reveal.personas]\n[reveal.skills.recur-warp]\npath='guidance/nested/warp.md'\n[warp.dispatch]\nenabled=false\n";
+        fs::write(root.join(".recur/config.toml"), original).unwrap();
+        let result = init_project(root, false).unwrap();
+        assert_eq!(result.lanes[0].name, "custom");
+        let after = fs::read_to_string(root.join(".recur/config.toml")).unwrap();
+        let value: toml::Value = toml::from_str(&after).unwrap();
+        assert!(after.contains("# Local choices"));
+        assert_eq!(value["custom"]["sep"].as_str(), Some("-"));
+        assert_eq!(value["warp"]["dispatch"]["enabled"].as_bool(), Some(false));
+        assert_eq!(
+            value["reveal"]["skills"]["recur-warp"]["path"].as_str(),
+            Some("guidance/nested/warp.md")
+        );
+        assert!(value["reveal"]["personas"].as_table().unwrap().is_empty());
+        assert!(value["reveal"]["skills"].get("recur-demo-tests").is_some());
+        init_project(root, false).unwrap();
+        assert_eq!(
+            fs::read_to_string(root.join(".recur/config.toml")).unwrap(),
+            after
+        );
+        let empty = "[reveal.agents]\n[reveal.personas]\n[reveal.skills]\n";
+        fs::write(root.join(".recur/config.toml"), empty).unwrap();
+        init_project(root, false).unwrap();
+        assert_eq!(
+            fs::read_to_string(root.join(".recur/config.toml")).unwrap(),
+            empty
+        );
     }
 
     #[test]

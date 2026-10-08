@@ -1,0 +1,3 @@
+interface:
+  display_name: "Recur Trace ID"
+  short_description: "Connect contracts, code and tests through trace lineage"

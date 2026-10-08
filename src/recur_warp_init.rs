@@ -26,6 +26,7 @@ pub fn init(root: &Path, dry_run: bool) -> anyhow::Result<Value> {
         original.parse().context("invalid project configuration")?;
     let settings: toml::Value = toml::from_str(&original)?;
     recur::warp_policy::WarpRemovalPolicy::from_config(&settings)?;
+    crate::recur_warp_create::intelligence_policy(&settings)?;
     let creation = settings.get("warp").and_then(|w| w.get("creation"));
     let mut defaults_added = false;
     ensure!(
@@ -35,7 +36,7 @@ pub fn init(root: &Path, dry_run: bool) -> anyhow::Result<Value> {
     if document.get("warp").is_none() {
         document["warp"] = toml_edit::Item::Table(toml_edit::Table::new());
     }
-    for key in ["creation", "removal"] {
+    for key in ["creation", "removal", "intelligence", "dispatch"] {
         if document["warp"].get(key).is_none() {
             document["warp"][key] = if document["warp"].is_inline_table() {
                 toml_edit::value(toml_edit::InlineTable::new())
@@ -44,6 +45,85 @@ pub fn init(root: &Path, dry_run: bool) -> anyhow::Result<Value> {
             };
         }
     }
+    if document["warp"]["intelligence"].get("default_tick").is_none() {
+        document["warp"]["intelligence"]["default_tick"] = toml_edit::value(0);
+        defaults_added = true;
+    }
+    if document["warp"]["intelligence"].get("baseline").is_none() {
+        document["warp"]["intelligence"]["baseline"] = toml_edit::value("host-current");
+        defaults_added = true;
+    }
+    // Companion-owned host and scheduler preferences. Add missing leaves only.
+    let defaults: toml_edit::DocumentMut = r#"
+[warp.dispatch]
+enabled = false
+default_host = "codex"
+max_parallel = 2
+timeout_seconds = 900
+max_attempts = 3
+failure_threshold = 2
+easy_success_threshold = 3
+easy_seconds = 30
+[warp.dispatch.retry]
+delay_seconds = 5
+max_delay_seconds = 60
+auth_required_markers = ["AUTH_REQUIRED", "UNAUTHENTICATED", "LOGIN_REQUIRED", "INVALID_GRANT", "Please set an Auth method"]
+provider_blocked_markers = ["UNSUPPORTED_CLIENT", "MODEL_NOT_FOUND", "UNSUPPORTED_MODEL"]
+transient_markers = ["RATE_LIMIT_EXCEEDED", "RESOURCE_EXHAUSTED", "SERVICE_UNAVAILABLE", "ECONNRESET", "ETIMEDOUT"]
+[warp.dispatch.hosts.codex]
+enabled = true
+program = "codex"
+args = ["exec", "--json", "--sandbox", "workspace-write", "-c", 'model_reasoning_effort="{reasoning}"', "-"]
+prompt_stdin = true
+reasoning_levels = ["low", "medium", "high", "xhigh", "max"]
+baseline_index = 1
+max_parallel = 2
+[warp.dispatch.hosts.copilot]
+enabled = true
+program = "copilot"
+args = ["--silent", "--reasoning-effort", "{reasoning}", "-p", "{prompt}"]
+prompt_stdin = false
+reasoning_levels = ["low", "medium", "high", "xhigh", "max"]
+baseline_index = 1
+max_parallel = 1
+[warp.dispatch.hosts.gemini]
+enabled = false
+program = "gemini"
+args = []
+prompt_stdin = true
+reasoning_levels = []
+baseline_index = 0
+max_parallel = 1
+[warp.dispatch.hosts.antigravity]
+enabled = false
+program = "antigravity"
+args = []
+prompt_stdin = true
+reasoning_levels = []
+baseline_index = 0
+max_parallel = 1
+[watch.dispatch]
+poll_seconds = 2
+"#.parse()?;
+    fn add_missing(target: &mut toml_edit::Item, defaults: &toml_edit::Item) -> bool {
+        let mut changed = false;
+        if let Some(table) = defaults.as_table_like() {
+            if target.is_none() { *target = toml_edit::Item::Table(toml_edit::Table::new()); changed = true; }
+            let inline = target.is_inline_table();
+            if let Some(target_table) = target.as_table_like_mut() {
+                for (key, value) in table.iter() {
+                    if !target_table.contains_key(key) {
+                        let value = if inline { toml_edit::Item::Value(value.clone().into_value().expect("defaults are values or tables")) } else {value.clone()};
+                        target_table.insert(key,value); changed = true;
+                    }
+                    else if value.is_table_like() { changed |= add_missing(target_table.get_mut(key).unwrap(),value); }
+                }
+            }
+        }
+        changed
+    }
+    defaults_added |= add_missing(&mut document["warp"]["dispatch"], &defaults["warp"]["dispatch"]);
+    defaults_added |= add_missing(&mut document["watch"], &defaults["watch"]);
     for (key, default) in [
         ("directory", "warps"),
         ("template", ".recur/warp-template.json"),
@@ -108,7 +188,8 @@ pub fn init(root: &Path, dry_run: bool) -> anyhow::Result<Value> {
     if creation.and_then(|v| v.get("directory")).is_none() {
         rendered = format!("# Warp output alternatives: docs/warps or .recur/warps\n{rendered}");
     }
-    let _: toml::Value = toml::from_str(&rendered).context("generated configuration is invalid")?;
+    let merged: toml::Value = toml::from_str(&rendered).context("generated configuration is invalid")?;
+    crate::recur_warp_dispatch::validate_policy(&merged)?;
     let config_changed = rendered != original;
     let template_missing = !template.exists();
     let mut writes = Vec::new();
@@ -222,5 +303,73 @@ mod tests {
         drop(held);
         init(root.path(), false).unwrap();
         assert!(vault.join("warp-template.json").is_file());
+    }
+}
+
+#[cfg(test)]
+mod intelligence_tests {
+    use super::*;
+
+    #[test]
+    fn retry_defaults_preserve_custom_markers_and_reject_invalid_delays() {
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir(root.path().join(".recur")).unwrap();
+        let config = root.path().join(".recur/config.toml");
+        fs::write(&config, "[warp.dispatch.retry]\ndelay_seconds=7\nauth_required_markers=['CUSTOM_AUTH']\nprovider_blocked_markers=[]\n").unwrap();
+        init(root.path(), false).unwrap();
+        let original = fs::read_to_string(&config).unwrap();
+        let settings: toml::Value = toml::from_str(&original).unwrap();
+        let retry = crate::recur_warp_dispatch::validate_policy(&settings).unwrap().retry;
+        assert_eq!(retry.delay_seconds, 7);
+        assert_eq!(retry.max_delay_seconds, 60);
+        assert_eq!(retry.auth_required_markers, vec!["CUSTOM_AUTH"]);
+        assert!(retry.provider_blocked_markers.is_empty());
+        assert_eq!(init(root.path(), false).unwrap()["state"], "unchanged");
+        for delay in [0, 61, 3601] {
+            let invalid = original.replace("delay_seconds=7", &format!("delay_seconds={delay}"));
+            fs::write(&config, &invalid).unwrap();
+            assert!(init(root.path(), false).is_err());
+            assert_eq!(fs::read_to_string(&config).unwrap(), invalid);
+        }
+    }
+
+    #[test]
+    fn init_defaults_preserve_policy_and_are_idempotent() {
+        let root = tempfile::tempdir().unwrap();
+        init(root.path(), true).unwrap();
+        assert!(!root.path().join(".recur").exists());
+        init(root.path(), false).unwrap();
+        let config = root.path().join(".recur/config.toml");
+        let initial = fs::read_to_string(&config).unwrap();
+        let settings: toml::Value = toml::from_str(&initial).unwrap();
+        assert_eq!(crate::recur_warp_create::intelligence_policy(&settings).unwrap(), (0, "host-current".into()));
+        assert_eq!(init(root.path(), false).unwrap()["state"], "unchanged");
+        assert_eq!(fs::read_to_string(&config).unwrap(), initial);
+        let custom = "# custom intelligence\n[warp.intelligence]\ndefault_tick = -1\nbaseline = 'medium'\n";
+        fs::write(&config, custom).unwrap();
+        init(root.path(), false).unwrap();
+        let rendered = fs::read_to_string(&config).unwrap();
+        assert!(rendered.contains("# custom intelligence"));
+        let settings: toml::Value = toml::from_str(&rendered).unwrap();
+        assert_eq!(crate::recur_warp_create::intelligence_policy(&settings).unwrap(), (-1, "medium".into()));
+        fs::write(&config, "[warp.intelligence]\ndefault_tick = 2\n").unwrap();
+        assert!(init(root.path(), false).is_err());
+        assert_eq!(fs::read_to_string(&config).unwrap(), "[warp.intelligence]\ndefault_tick = 2\n");
+    }
+
+    #[test]
+    fn inline_companion_preferences_preserve_custom_values() {
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir(root.path().join(".recur")).unwrap();
+        let config = root.path().join(".recur/config.toml");
+        fs::write(&config,"# inline settings\nwarp = { removal = { require_confirmation = false } }\nwatch = { dispatch = { poll_seconds = 7 } }\n").unwrap();
+        init(root.path(),false).unwrap();
+        let text = fs::read_to_string(&config).unwrap();
+        let settings:toml::Value = toml::from_str(&text).unwrap();
+        assert!(!settings["warp"]["removal"]["require_confirmation"].as_bool().unwrap());
+        assert_eq!(settings["watch"]["dispatch"]["poll_seconds"].as_integer(),Some(7));
+        assert_eq!(crate::recur_warp_dispatch::validate_policy(&settings).unwrap().max_parallel,2);
+        assert_eq!(init(root.path(),false).unwrap()["state"],"unchanged");
+        assert_eq!(fs::read_to_string(config).unwrap(),text);
     }
 }

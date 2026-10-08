@@ -194,7 +194,7 @@ See [`docs/main.trait.separator-merge.readme.md`](docs/main.trait.separator-merg
 
 ### `recur init` — initialize or analyze project config
 ```bash
-recur init                                  # Create .recur/config.toml from detected lanes
+recur init                                  # Create config or add missing core skill registrations
 recur init --analyze                        # Suggest lane/separator updates
 recur init -d ../another-project --analyze  # Analyze a different project root
 recur init --force                          # Overwrite existing .recur/config.toml

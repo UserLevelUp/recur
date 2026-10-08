@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Project-aware discovery
 
 warp.id = main.command.warp.project-discovery

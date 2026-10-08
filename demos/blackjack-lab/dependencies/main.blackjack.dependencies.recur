@@ -1,0 +1,421 @@
+recur 0.2 coordination BlackjackDependencyReview
+# defines: demo.blackjack.dependencies.reference ideal helper contracts and review dependencies
+# A review workflow, not Julia execution.
+header {
+  contract ReviewOrder {
+    binding: FunctionRef
+    input_contract: ContractRef
+    output_contract: ContractRef
+    source: SourceRef
+  }
+  contract ReviewReceipt {
+    binding: FunctionRef
+    input_contract: ContractRef
+    output_contract: ContractRef
+    conforms: Bool
+    unresolved: Issues
+  }
+  contract helloInput {
+    name: OptionalText
+  }
+  contract helloResult {
+    message: Text
+  }
+  contract integerInput {
+    value: Value
+    low: Int
+    high: Int
+    label: Text
+  }
+  contract integerResult {
+    value: Int
+  }
+  contract configInput {
+    players: Count
+    money: Chips
+    bet: Chips
+    rounds: Count
+    dealer: Text
+    bank: Chips
+    seed: Seed
+  }
+  contract configResult {
+    players: PlayerNames
+    money: Chips
+    bet: Chips
+    rounds: Count
+    dealer: Text
+    bank: Chips
+    seed: Seed
+  }
+  contract describeInput {
+    config: TableConfig
+  }
+  contract describeResult {
+    text: Text
+  }
+  contract cardsInput {
+    cards: Cards
+    full: Bool
+  }
+  contract cardsResult {
+    cards: Cards
+  }
+  contract deckInput {
+    order: Cards
+  }
+  contract deckResult {
+    cards: Cards
+  }
+  contract scoreInput {
+    cards: Cards
+  }
+  contract scoreResult {
+    total: Points
+    soft: Bool
+    natural: Bool
+    bust: Bool
+  }
+  contract drawInput {
+    cards: Cards
+    cursor: Int
+  }
+  contract drawResult {
+    card: Card
+    cursor: Int
+  }
+  contract compareInput {
+    player: Score
+    dealer: Score
+  }
+  contract compareResult {
+    outcome: Outcome
+  }
+  contract handcompareInput {
+    player: Cards
+    dealer: Cards
+  }
+  contract handcompareResult {
+    outcome: Outcome
+  }
+  contract playInput {
+    config: TableConfig
+    balances: ChipsByPlayer
+    bank: Chips
+    order: Cards
+  }
+  contract playResult {
+    config: TableConfig
+    hands: HandsByPlayer
+    dealer_hand: Cards
+    active: PlayerIds
+    balances: ChipsByPlayer
+    bank: Chips
+    remaining: Cards
+  }
+  contract allocateInput {
+    prepared: RoundState
+    player_scores: Scores
+    dealer_score: Score
+  }
+  contract allocateResult {
+    outcomes: Outcomes
+    deltas: ChipsByPlayer
+    balances: ChipsByPlayer
+    bank: Chips
+    winners: PlayerIds
+    dealer_wins: PlayerIds
+    pushes: PlayerIds
+  }
+  contract settleInput {
+    prepared: RoundState
+  }
+  contract settleResult {
+    outcomes: Outcomes
+    deltas: ChipsByPlayer
+    balances: ChipsByPlayer
+    bank: Chips
+    winners: PlayerIds
+    dealer_wins: PlayerIds
+    pushes: PlayerIds
+  }
+  contract sessionInput {
+    config: TableConfig
+    orders: OptionalDecks
+  }
+  contract sessionResult {
+    config: TableConfig
+    rounds: RoundHistory
+    balances: ChipsByPlayer
+    bank: Chips
+    leaders: PlayerIds
+    profit: ChipsByPlayer
+    stop_reason: Text
+  }
+  contract renderInput {
+    session: Session
+  }
+  contract renderResult {
+    text: Text
+  }
+  contract playersInput {
+    order: Order
+  }
+  contract playersResult {
+    producer: Text
+    ids: PlayerIds
+    values: Scores
+  }
+  contract houseInput {
+    order: Order
+  }
+  contract houseResult {
+    producer: Text
+    ids: PlayerIds
+    values: Scores
+  }
+  contract coordinateInput {
+    prepared: RoundState
+    player_worker: Callback
+    house_worker: Callback
+  }
+  contract coordinateResult {
+    conserved: Bool
+    result: Settlement
+  }
+  contract appInput {
+    args: Arguments
+  }
+  contract appResult {
+    exit_code: Int
+  }
+  coordinator review {
+    scope plan {
+      o(a) := DispatchSet<ReviewOrder>
+    }
+    scope seed {
+      o(b) := ReviewReceipt
+    }
+    scope finish {
+      o(b) := ReviewReceipt
+    }
+  }
+  lane hello {
+    persona reviewer
+    i(a) := project review.plan.o(a).orders["hello"]
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review hello against helloInput and helloResult: Trim optional name; reject blank names"
+    allow read ["main.blackjack.01.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.hello"]
+  }
+  lane integer {
+    persona reviewer
+    i(a) := project review.plan.o(a).orders["integer"]
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review bounded_int against integerInput and integerResult: Reject bool and out-of-range values; return Int"
+    allow read ["main.blackjack.02.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.integer"]
+  }
+  lane config {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["config"], integer.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review TableConfig against configInput and configResult: Validate configuration including even stakes"
+    allow read ["main.blackjack.02.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.config"]
+  }
+  lane describe {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["describe"], hello.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review describe against describeInput and describeResult: Describe config through greeting without calling game logic"
+    allow read ["main.blackjack.02.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.describe"]
+  }
+  lane cards {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["cards"], integer.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review cards_checked against cardsInput and cardsResult: Validate unique physical cards and optionally complete deck"
+    allow read ["main.blackjack.03.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.cards"]
+  }
+  lane deck {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["deck"], cards.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review deck against deckInput and deckResult: Copy and validate complete deck"
+    allow read ["main.blackjack.03.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.deck"]
+  }
+  lane score {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["score"], cards.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review score against scoreInput and scoreResult: Score aces with decreasing ace-count loop; never call session"
+    allow read ["main.blackjack.03.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.score"]
+  }
+  lane draw {
+    persona reviewer
+    i(a) := project review.plan.o(a).orders["draw"]
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review prepare_round.draw! against drawInput and drawResult: Local closure advances cursor; exhaustion rejects"
+    allow read ["main.blackjack.04.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.draw"]
+  }
+  lane compare {
+    persona reviewer
+    i(a) := project review.plan.o(a).orders["compare"]
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review compare_scores against compareInput and compareResult: Pure score comparison with natural and bust precedence"
+    allow read ["main.blackjack.04.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.compare"]
+  }
+  lane handcompare {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["handcompare"], score.o(b), compare.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review compare_hands against handcompareInput and handcompareResult: Score both hands then compare"
+    allow read ["main.blackjack.04.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.handcompare"]
+  }
+  lane play {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["play"], integer.o(b), deck.o(b), score.o(b), draw.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review prepare_round against playInput and playResult: Copy input state and play finite hands; draw consumes remaining deck"
+    allow read ["main.blackjack.04.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.play"]
+  }
+  lane allocate {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["allocate"], compare.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review allocate against allocateInput and allocateResult: Allocate conserved chips from verified scores"
+    allow read ["main.blackjack.04.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.allocate"]
+  }
+  lane settle {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["settle"], score.o(b), allocate.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review settle_round against settleInput and settleResult: Evaluate complete hands then allocate"
+    allow read ["main.blackjack.04.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.settle"]
+  }
+  lane session {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["session"], play.o(b), settle.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review tournament against sessionInput and sessionResult: Bounded round loop carries state as data, no recursive call back"
+    allow read ["main.blackjack.05.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.session"]
+  }
+  lane render {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["render"], describe.o(b), score.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review render against renderInput and renderResult: Read completed history and render; never start or change a game"
+    allow read ["main.blackjack.05.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.render"]
+  }
+  lane players {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["players"], score.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review player_receipt against playersInput and playersResult: Score default player worker inputs"
+    allow read ["main.blackjack.06.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.players"]
+  }
+  lane house {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["house"], score.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review house_receipt against houseInput and houseResult: Score default house worker input"
+    allow read ["main.blackjack.06.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.house"]
+  }
+  lane coordinate {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["coordinate"], players.o(b), house.o(b), allocate.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review coordinate against coordinateInput and coordinateResult: Join default workers and audit; substituted callbacks require separate review"
+    allow read ["main.blackjack.06.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.coordinate"]
+  }
+  lane app {
+    persona reviewer
+    i(a) := join(project review.plan.o(a).orders["app"], config.o(b), session.o(b), render.o(b))
+    o(b) := ReviewReceipt
+    f : i(a) -> o(b) ~ "Review main against appInput and appResult: Parse CLI config, run session, render; no lower layer calls CLI"
+    allow read ["main.blackjack.app.jl"]
+    allow write []
+    allow tools []
+    require receipt ["review.app"]
+  }
+}
+body {
+  conformance async :
+    i(a) -> review.plan(a)
+    -> fork [hello(a), integer(a), draw(a), compare(a)]
+    -> await [hello.o(b), integer.o(b), draw.o(b), compare.o(b)] -> review.seed(a)
+    -> await [integer.o(b)] -> config(a)
+    -> await [hello.o(b)] -> describe(a)
+    -> await [integer.o(b)] -> cards(a)
+    -> await [compare.o(b)] -> allocate(a)
+    -> await [cards.o(b)] -> deck(a)
+    -> await [cards.o(b)] -> score(a)
+    -> await [score.o(b), compare.o(b)] -> handcompare(a)
+    -> await [integer.o(b), deck.o(b), score.o(b), draw.o(b)] -> play(a)
+    -> await [score.o(b), allocate.o(b)] -> settle(a)
+    -> await [describe.o(b), score.o(b)] -> render(a)
+    -> await [score.o(b)] -> players(a)
+    -> await [score.o(b)] -> house(a)
+    -> await [play.o(b), settle.o(b)] -> session(a)
+    -> await [players.o(b), house.o(b), allocate.o(b)] -> coordinate(a)
+    -> await [config.o(b), session.o(b), render.o(b)] -> app(a)
+    -> await [handcompare.o(b), coordinate.o(b), app.o(b)] -> review.finish(a) -> o(b)
+}
+footer {
+  # Input/Result contracts document ideal helper behavior for the reviewer;
+  # CIR1 checks review dependencies, not schema conformance inside Julia.
+  # The registry maps arguments, results, source files and direct calls.
+  # Standard-library internals and custom callbacks remain outside this review.
+}

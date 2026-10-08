@@ -1,0 +1,15 @@
+{
+  "schema": "recur-warp-complete-v1",
+  "warp_id": "main.demo.blackjack-skill-replay",
+  "slice_id": "strategy",
+  "attempt_id": "reviewed-1",
+  "state": "planned",
+  "path": "main.demo.blackjack-skill-replay.strategy.reviewed-1.warp-layer.json",
+  "contract_hash": "contract:main.demo.blackjack-skill-replay.strategy:v1",
+  "result_hash": "sha256:5f0034c3811d20ca65d0a8dfdc184054365697eeef5b1cf2b090159ad748ce53",
+  "evidence": {
+    "strategy-tests": [
+      "blackjack-skill/main.blackjack.skill.strategy.complete.md"
+    ]
+  }
+}

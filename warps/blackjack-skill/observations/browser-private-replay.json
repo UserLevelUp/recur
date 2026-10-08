@@ -1,0 +1,95 @@
+{
+  "engine_id": "blackjack-rivals-v3",
+  "rules_id": "s17-3to2-one-split-v1",
+  "initial_hash": "7b44c546a31b086f30c4053dc43e3200cb34c57ee0841f499258143ce19c59c6",
+  "steps": [
+    {
+      "command": {
+        "revision": 1,
+        "action": "deal",
+        "bet": 20,
+        "version": 3
+      },
+      "state_hash": "71591f79a155d3df746cd2746dac3a1659fead0bc5aeafdcd87ae801a7310618",
+      "deck": [
+        51,
+        42,
+        36,
+        52,
+        37,
+        8,
+        27,
+        18,
+        5,
+        9,
+        1,
+        49,
+        11,
+        33,
+        38,
+        39,
+        12,
+        30,
+        25,
+        48,
+        16,
+        40,
+        15,
+        21,
+        34,
+        19,
+        3,
+        22,
+        6,
+        45,
+        17,
+        28,
+        20,
+        7,
+        2,
+        43,
+        29,
+        23,
+        13,
+        50,
+        10,
+        14,
+        24,
+        35,
+        47,
+        26,
+        41,
+        4,
+        46,
+        31,
+        44,
+        32
+      ]
+    },
+    {
+      "command": {
+        "revision": 2,
+        "action": "stand",
+        "hand_id": 1,
+        "version": 3
+      },
+      "state_hash": "c2d5cd903942fedc05e3e8ecb19149f79af15de865e2b4ce01c3ab641ffce77b",
+      "deck": null
+    }
+  ],
+  "initial": {
+    "money": 500,
+    "policies": [
+      "stand17-v1",
+      "dealer-aware-v1"
+    ],
+    "rival_count": 2,
+    "revision": 1
+  },
+  "schema": "blackjack-private-replay-v1",
+  "strategy_ids": [
+    "stand17-v1",
+    "dealer-aware-v1"
+  ],
+  "final_hash": "c2d5cd903942fedc05e3e8ecb19149f79af15de865e2b4ce01c3ab641ffce77b"
+}

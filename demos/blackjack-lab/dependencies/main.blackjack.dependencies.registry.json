@@ -1,0 +1,355 @@
+{
+  "schema": "blackjack-dependency-reference-v1",
+  "direction": "calls lists required helper results; SGR dependency edges point from helper to caller",
+  "review_scope": "Authored application functions and local draw closure; default callbacks only; not an independent audit",
+  "nodes": [
+    {
+      "id": "hello",
+      "binding": "hello",
+      "file": "main.blackjack.01.jl",
+      "calls": [],
+      "input": [
+        "name:OptionalText"
+      ],
+      "output": [
+        "message:Text"
+      ],
+      "meaning": "Trim optional name; reject blank names"
+    },
+    {
+      "id": "integer",
+      "binding": "bounded_int",
+      "file": "main.blackjack.02.jl",
+      "calls": [],
+      "input": [
+        "value:Value",
+        "low:Int",
+        "high:Int",
+        "label:Text"
+      ],
+      "output": [
+        "value:Int"
+      ],
+      "meaning": "Reject bool and out-of-range values; return Int"
+    },
+    {
+      "id": "config",
+      "binding": "TableConfig",
+      "file": "main.blackjack.02.jl",
+      "calls": [
+        "integer"
+      ],
+      "input": [
+        "players:Count",
+        "money:Chips",
+        "bet:Chips",
+        "rounds:Count",
+        "dealer:Text",
+        "bank:Chips",
+        "seed:Seed"
+      ],
+      "output": [
+        "players:PlayerNames",
+        "money:Chips",
+        "bet:Chips",
+        "rounds:Count",
+        "dealer:Text",
+        "bank:Chips",
+        "seed:Seed"
+      ],
+      "meaning": "Validate configuration including even stakes"
+    },
+    {
+      "id": "describe",
+      "binding": "describe",
+      "file": "main.blackjack.02.jl",
+      "calls": [
+        "hello"
+      ],
+      "input": [
+        "config:TableConfig"
+      ],
+      "output": [
+        "text:Text"
+      ],
+      "meaning": "Describe config through greeting without calling game logic"
+    },
+    {
+      "id": "cards",
+      "binding": "cards_checked",
+      "file": "main.blackjack.03.jl",
+      "calls": [
+        "integer"
+      ],
+      "input": [
+        "cards:Cards",
+        "full:Bool"
+      ],
+      "output": [
+        "cards:Cards"
+      ],
+      "meaning": "Validate unique physical cards and optionally complete deck"
+    },
+    {
+      "id": "deck",
+      "binding": "deck",
+      "file": "main.blackjack.03.jl",
+      "calls": [
+        "cards"
+      ],
+      "input": [
+        "order:Cards"
+      ],
+      "output": [
+        "cards:Cards"
+      ],
+      "meaning": "Copy and validate complete deck"
+    },
+    {
+      "id": "score",
+      "binding": "score",
+      "file": "main.blackjack.03.jl",
+      "calls": [
+        "cards"
+      ],
+      "input": [
+        "cards:Cards"
+      ],
+      "output": [
+        "total:Points",
+        "soft:Bool",
+        "natural:Bool",
+        "bust:Bool"
+      ],
+      "meaning": "Score aces with decreasing ace-count loop; never call session"
+    },
+    {
+      "id": "draw",
+      "binding": "prepare_round.draw!",
+      "file": "main.blackjack.04.jl",
+      "calls": [],
+      "input": [
+        "cards:Cards",
+        "cursor:Int"
+      ],
+      "output": [
+        "card:Card",
+        "cursor:Int"
+      ],
+      "meaning": "Local closure advances cursor; exhaustion rejects"
+    },
+    {
+      "id": "compare",
+      "binding": "compare_scores",
+      "file": "main.blackjack.04.jl",
+      "calls": [],
+      "input": [
+        "player:Score",
+        "dealer:Score"
+      ],
+      "output": [
+        "outcome:Outcome"
+      ],
+      "meaning": "Pure score comparison with natural and bust precedence"
+    },
+    {
+      "id": "handcompare",
+      "binding": "compare_hands",
+      "file": "main.blackjack.04.jl",
+      "calls": [
+        "score",
+        "compare"
+      ],
+      "input": [
+        "player:Cards",
+        "dealer:Cards"
+      ],
+      "output": [
+        "outcome:Outcome"
+      ],
+      "meaning": "Score both hands then compare"
+    },
+    {
+      "id": "play",
+      "binding": "prepare_round",
+      "file": "main.blackjack.04.jl",
+      "calls": [
+        "integer",
+        "deck",
+        "score",
+        "draw"
+      ],
+      "input": [
+        "config:TableConfig",
+        "balances:ChipsByPlayer",
+        "bank:Chips",
+        "order:Cards"
+      ],
+      "output": [
+        "config:TableConfig",
+        "hands:HandsByPlayer",
+        "dealer_hand:Cards",
+        "active:PlayerIds",
+        "balances:ChipsByPlayer",
+        "bank:Chips",
+        "remaining:Cards"
+      ],
+      "meaning": "Copy input state and play finite hands; draw consumes remaining deck"
+    },
+    {
+      "id": "allocate",
+      "binding": "allocate",
+      "file": "main.blackjack.04.jl",
+      "calls": [
+        "compare"
+      ],
+      "input": [
+        "prepared:RoundState",
+        "player_scores:Scores",
+        "dealer_score:Score"
+      ],
+      "output": [
+        "outcomes:Outcomes",
+        "deltas:ChipsByPlayer",
+        "balances:ChipsByPlayer",
+        "bank:Chips",
+        "winners:PlayerIds",
+        "dealer_wins:PlayerIds",
+        "pushes:PlayerIds"
+      ],
+      "meaning": "Allocate conserved chips from verified scores"
+    },
+    {
+      "id": "settle",
+      "binding": "settle_round",
+      "file": "main.blackjack.04.jl",
+      "calls": [
+        "score",
+        "allocate"
+      ],
+      "input": [
+        "prepared:RoundState"
+      ],
+      "output": [
+        "outcomes:Outcomes",
+        "deltas:ChipsByPlayer",
+        "balances:ChipsByPlayer",
+        "bank:Chips",
+        "winners:PlayerIds",
+        "dealer_wins:PlayerIds",
+        "pushes:PlayerIds"
+      ],
+      "meaning": "Evaluate complete hands then allocate"
+    },
+    {
+      "id": "session",
+      "binding": "tournament",
+      "file": "main.blackjack.05.jl",
+      "calls": [
+        "play",
+        "settle"
+      ],
+      "input": [
+        "config:TableConfig",
+        "orders:OptionalDecks"
+      ],
+      "output": [
+        "config:TableConfig",
+        "rounds:RoundHistory",
+        "balances:ChipsByPlayer",
+        "bank:Chips",
+        "leaders:PlayerIds",
+        "profit:ChipsByPlayer",
+        "stop_reason:Text"
+      ],
+      "meaning": "Bounded round loop carries state as data, no recursive call back"
+    },
+    {
+      "id": "render",
+      "binding": "render",
+      "file": "main.blackjack.05.jl",
+      "calls": [
+        "describe",
+        "score"
+      ],
+      "input": [
+        "session:Session"
+      ],
+      "output": [
+        "text:Text"
+      ],
+      "meaning": "Read completed history and render; never start or change a game"
+    },
+    {
+      "id": "players",
+      "binding": "player_receipt",
+      "file": "main.blackjack.06.jl",
+      "calls": [
+        "score"
+      ],
+      "input": [
+        "order:Order"
+      ],
+      "output": [
+        "producer:Text",
+        "ids:PlayerIds",
+        "values:Scores"
+      ],
+      "meaning": "Score default player worker inputs"
+    },
+    {
+      "id": "house",
+      "binding": "house_receipt",
+      "file": "main.blackjack.06.jl",
+      "calls": [
+        "score"
+      ],
+      "input": [
+        "order:Order"
+      ],
+      "output": [
+        "producer:Text",
+        "ids:PlayerIds",
+        "values:Scores"
+      ],
+      "meaning": "Score default house worker input"
+    },
+    {
+      "id": "coordinate",
+      "binding": "coordinate",
+      "file": "main.blackjack.06.jl",
+      "calls": [
+        "players",
+        "house",
+        "allocate"
+      ],
+      "input": [
+        "prepared:RoundState",
+        "player_worker:Callback",
+        "house_worker:Callback"
+      ],
+      "output": [
+        "conserved:Bool",
+        "result:Settlement"
+      ],
+      "meaning": "Join default workers and audit; substituted callbacks require separate review"
+    },
+    {
+      "id": "app",
+      "binding": "main",
+      "file": "main.blackjack.app.jl",
+      "calls": [
+        "config",
+        "session",
+        "render"
+      ],
+      "input": [
+        "args:Arguments"
+      ],
+      "output": [
+        "exit_code:Int"
+      ],
+      "meaning": "Parse CLI config, run session, render; no lower layer calls CLI"
+    }
+  ]
+}

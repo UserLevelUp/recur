@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Warp discovery
 
 warp.id = main.command.warp.discovery

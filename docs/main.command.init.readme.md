@@ -16,6 +16,7 @@ Creates:
 - `.recur/config.toml` with detected lanes (for example `src/`, `docs/`, `julia-tests/`)
 - `.recur/checkpoints.md` (if missing)
 - default `[reveal]` sections for lane-local `*.recur.md` ignition capsules
+- core workflow skill registrations: expert, Warp, Lang, Watch, trace-id and demo tests
 - all default `[traits.*]` sections used by `recur trait`
 - capability-trait preference/notes sections for warp, watch, merge, unmerge and git
 - `[warp.discovery]` roots and directory exclusions for project-aware Warp inventory
@@ -51,7 +52,12 @@ Reports:
 
 ## Overwrite behavior
 
-`recur init` is safe by default. If `.recur/config.toml` already exists, it exits with code 2 and does not overwrite.
+When `.recur/config.toml` already exists, `recur init` preserves project settings
+and adds only missing Reveal registration defaults. Custom skill paths, persona
+associations and empty opt-outs remain authoritative. Repeated runs become a
+no-op; `--analyze` remains a read-only lane/separator report. Skill registration
+does not install bodies or execute agents. See
+[core skill initialization](main.command.reveal.core-skills.readme.md) for scope.
 
 Use:
 

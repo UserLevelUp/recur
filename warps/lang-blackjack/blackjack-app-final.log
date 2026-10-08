@@ -1,0 +1,52 @@
+Hello, Ada! 4 players, 100 chips each, bet 10, 8 rounds.
+Round 1: Ada hand [24, 44, 19], score 21
+  Player 1: loss, delta -10, balance 90
+  Player 2: loss, delta -10, balance 90
+  Player 3: loss, delta -10, balance 90
+  Player 4: push, delta 0, balance 100
+  Player winners: Int64[]; house wins against: [1, 2, 3]; pushes: [4]; house bank: 1030
+Round 2: Ada hand [38, 12], score 20
+  Player 1: loss, delta -10, balance 80
+  Player 2: loss, delta -10, balance 80
+  Player 3: loss, delta -10, balance 80
+  Player 4: loss, delta -10, balance 90
+  Player winners: Int64[]; house wins against: [1, 2, 3, 4]; pushes: Int64[]; house bank: 1070
+Round 3: Ada hand [41, 6, 49], score 18
+  Player 1: win, delta 10, balance 90
+  Player 2: loss, delta -10, balance 70
+  Player 3: win, delta 10, balance 90
+  Player 4: loss, delta -10, balance 80
+  Player winners: [1, 3]; house wins against: [2, 4]; pushes: Int64[]; house bank: 1070
+Round 4: Ada hand [15, 2, 40, 22, 25], score 24
+  Player 1: win, delta 10, balance 100
+  Player 2: loss, delta -10, balance 60
+  Player 3: win, delta 10, balance 100
+  Player 4: blackjack, delta 15, balance 95
+  Player winners: [1, 3, 4]; house wins against: [2]; pushes: Int64[]; house bank: 1045
+Round 5: Ada hand [38, 24], score 20
+  Player 1: win, delta 10, balance 110
+  Player 2: loss, delta -10, balance 50
+  Player 3: loss, delta -10, balance 90
+  Player 4: loss, delta -10, balance 85
+  Player winners: [1]; house wins against: [2, 3, 4]; pushes: Int64[]; house bank: 1065
+Round 6: Ada hand [5, 28, 2, 6, 11], score 25
+  Player 1: loss, delta -10, balance 100
+  Player 2: win, delta 10, balance 60
+  Player 3: win, delta 10, balance 100
+  Player 4: win, delta 10, balance 95
+  Player winners: [2, 3, 4]; house wins against: [1]; pushes: Int64[]; house bank: 1045
+Round 7: Ada hand [3, 38, 43], score 17
+  Player 1: win, delta 10, balance 110
+  Player 2: win, delta 10, balance 70
+  Player 3: win, delta 10, balance 110
+  Player 4: loss, delta -10, balance 85
+  Player winners: [1, 2, 3]; house wins against: [4]; pushes: Int64[]; house bank: 1025
+Round 8: Ada hand [38, 43, 29], score 17
+  Player 1: win, delta 10, balance 120
+  Player 2: win, delta 10, balance 80
+  Player 3: win, delta 10, balance 120
+  Player 4: loss, delta -10, balance 75
+  Player winners: [1, 2, 3]; house wins against: [4]; pushes: Int64[]; house bank: 1005
+Final leaders: Player 1, Player 3; balances [120, 80, 120, 75]; net profits [20, -20, 20, -25]
+Ada final bank: 1005; stop: round_limit
+

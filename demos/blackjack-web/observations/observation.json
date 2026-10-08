@@ -1,0 +1,48 @@
+{
+  "schema": "blackjack-web-verification-observation-v1",
+  "observed_on": "2026-10-02",
+  "branch": "recur-lang",
+  "base_commit": "2ecae66df03c6e7a4dd783ba3e7bd389e53d245a",
+  "dirty": true,
+  "julia": "1.12.7",
+  "standalone": {
+    "passed": 8702,
+    "errors": 0,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "full_suite": {
+    "qualification": "Sudoku ReadOnlyMemoryError; prior ordinary run had Holdem compiler access violation",
+    "passed": 27974,
+    "errors": 1,
+    "expected_broken": 73,
+    "exit_code": 1
+  },
+  "isolated_sudoku": {
+    "passed": 139,
+    "exit_code": 0
+  },
+  "browser": "Observed manual browser play-through; normal viewport and 390x844; no console warnings/errors",
+  "source_sha256": {
+    "demos/blackjack-web/index.html": "a75a9990d76c11a691c059e3a7335c20c87ca7c6b687ad72f20aff8bf1868349",
+    "demos/blackjack-web/main.blackjack.web.01.table.recur": "941bff3d6cc7332fd2d30bdaad28efd18c39d700fd7da3ca35159a3f439fde9c",
+    "demos/blackjack-web/main.blackjack.web.02.play.recur": "5e48dc418549f04e6a2d74af8e138a01a9072a0679c0e4764887084c2c638870",
+    "demos/blackjack-web/main.blackjack.web.03.http.recur": "cccc03081a0971cf10f18f88163b662e8d37685d0e59eade988af1349efa1591",
+    "demos/blackjack-web/main.blackjack.web.04.browser.recur": "3f446431e90e7a3dc3943caff9347b40eda40b2cb0f145a6ef534acff5550467",
+    "demos/blackjack-web/main.blackjack.web.05.dependencies.recur": "8cf87963eb715d44b5587b43246a204f67211248d2674b738a2da91636595de9",
+    "demos/blackjack-web/main.blackjack.web.css": "fd58214c60bc5784d4086da61b1d37f73cded342362d234a103de936522a805f",
+    "demos/blackjack-web/main.blackjack.web.engine.jl": "ccd0c6c83affadcf28e56c01878f0e9d9ce33c89033bdba7cfba177286d6b3df",
+    "demos/blackjack-web/main.blackjack.web.http.test.jl": "7a73f2f39afd8d3a77381e6138369e32b81044bfddd88fe3524bade2b2a4dab6",
+    "demos/blackjack-web/main.blackjack.web.js": "9ce7071a247f63cc67d6605fe22254e3f9cd5fae35eb3f3c8eabb2beeb90f63c",
+    "demos/blackjack-web/main.blackjack.web.reference.test.jl": "480c34c70199ef5450d1b3b761a8e469ee5a0eea42240d002bc35772b7c32d09",
+    "demos/blackjack-web/main.blackjack.web.server.jl": "401e356fd32be04841a3d6f82a9648d0724cc1665b1dfb4d011567adc8411906",
+    "demos/blackjack-web/main.blackjack.web.start.ps1": "eb34c2b381f811ca053fb033f2a192da9df028fc7931b2ff7bbf9eee0e322d09",
+    "demos/blackjack-web/main.blackjack.web.test.jl": "bffe6504bb60d1e915225f38c6825b8b2475d4fe290958abba5b2ff470e81edd",
+    "demos/web-evidence-lab/Project.toml": "76e40e4bb2000989fb67b0942319e93b41ab24c0b1a7a81223c548a7e741743c",
+    "demos/web-evidence-lab/Manifest.toml": "b391bb1f71cb77b8fbc8ad95db2a407781c410277ce8bb14facdd94d560caa53",
+    "julia-tests/main.demo.blackjack-web.test.jl": "3d1848678450d968ea24e6187390fe86a466990310c0808f2fa23ca95304b2b6",
+    "julia-tests/runtests.jl": "13b6b15cad009ae6cfe2d4f7f4408be5a3b8c47a5238fd28a3aff7c587b9b263"
+  },
+  "core_binary_sha256": "2a5cbaeb10d12b6f23040eb40da7e009021aae74333c9b29465d81dc2bdcffd0",
+  "scope": "Explicit source inputs, not whole-program closure. Review input manifest adds reused rule dependencies."
+}

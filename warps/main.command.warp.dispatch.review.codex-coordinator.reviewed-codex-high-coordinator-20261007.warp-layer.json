@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.dispatch.review",
+  "slice_id": "codex-coordinator",
+  "contract_hash": "contract:dispatch.review.coordinator:v1",
+  "attempt_id": "reviewed-codex-high-coordinator-20261007",
+  "result_state": "accepted",
+  "result_hash": "sha256:84ffb9a9063ee18fd429b01e8d1a809dfc69b2a71d82cfd79f8c98348cec38f1",
+  "evidence": {
+    "review": [
+      "warps/dispatch-review/observations/codex-coordinator-review.json"
+    ]
+  },
+  "reason": null
+}

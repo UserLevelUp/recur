@@ -1,0 +1,161 @@
+{
+  "status": "reviewed",
+  "summary": "Static review of contract.md, policy.md, dispatch.rs and tests.rs only; no runtime logs were supplied, so no runtime or live-adapter claim is made. The design is mostly sound: claims are serialized, drift is checked, produced is not acceptance, and recovery is explicit. Several concrete defects remain. Placeholder expansion re-substitutes inside the prompt. Auto-retry of host_failed, verification_error and verification_stale claims contradicts 'no guessed completion or unbounded retries'. Produced can come from an agent that did nothing. Attempt accounting ignores contract changes. Tests are Windows-only, use only powershell mocks, and leave key boundaries unproven (locks, 30s recovery, test_failure_codes, positive gate unlocking). Recommend accept-with-limits for mock-verified preview/claim/produce behavior only, with the findings below tracked as future Warps before relying on real Codex/Copilot hosts or on 'produced' as evidence.",
+  "recommendation": "accept-with-limits",
+  "findings": [
+    {
+      "id": 1,
+      "type": "bug",
+      "severity": "high",
+      "file": "dispatch.rs",
+      "lines": "167-172",
+      "title": "Sequential placeholder replacement re-expands placeholders inside the prompt",
+      "evidence": "expand() replaces {prompt} first, then {prompt_file}, {reasoning} and {workspace} on the already-substituted string. The prompt embeds up to 64 KiB of context file bodies (plan, bodies loop). Docs such as contract.md and policy.md literally contain {prompt}, {prompt_file}, {reasoning}, {workspace}, so those tokens inside the agent prompt are rewritten when passed as argv.",
+      "recommendation": "Single-pass substitution (tokenize the template once and substitute each placeholder without re-scanning inserted text). Add a test whose context contains the literal '{workspace}'.",
+      "future_warp": "main.command.warp.dispatch.argv-single-pass-expansion"
+    },
+    {
+      "id": 2,
+      "type": "bug",
+      "severity": "high",
+      "file": "dispatch.rs",
+      "lines": "493-510, 710-713, 741-750",
+      "title": "Automatic re-dispatch of non-test failures conflicts with 'recovery is explicit, no unbounded retries'",
+      "evidence": "The scheduler skips a slice only when the latest attempt is active, produced, or attempt >= max_attempts. host_failed, verification_error, verification_stale, test_failed and interrupted all fall through to a new claim on the next poll. A misconfigured or unauthenticated paid host, a timeout, or a scheduler/worker spawn failure is therefore retried automatically up to max_attempts (default 3) without any explicit recovery. Contract says recovery of interrupted attempts is explicit and runtime/adapter failures are not test failures.",
+      "recommendation": "Make host_failed/verification_error/verification_stale/interrupted blocking until explicit recover (or a documented per-state retry policy), and distinguish transient spawn failure from agent failure. Test it.",
+      "future_warp": "main.command.warp.dispatch.retry-state-policy"
+    },
+    {
+      "id": 3,
+      "type": "bug",
+      "severity": "medium",
+      "file": "dispatch.rs",
+      "lines": "710-753",
+      "title": "produced can be reached with an agent that made no change or only an exit-0 refusal",
+      "evidence": "Agent success is just exit status 0. Tests run afterwards and, if they already pass, state becomes produced. No pre-agent test baseline, no check that inputs or agent output changed, and no check that the agent output is non-empty. Copilot prompt mode without tool permissions can exit 0 having done nothing (policy.md says no permission bypass is added). The only recorded input fingerprints are post-agent (verification_inputs); input_fingerprints from planning are never compared.",
+      "recommendation": "Record pre-agent input fingerprints and test baseline; record an 'inputs_changed' observation (not an acceptance rule) so reviewers see no-op produced attempts; optionally fail produced when the agent was a no-op and tests had no red phase.",
+      "future_warp": "main.command.warp.dispatch.noop-attempt-observation"
+    },
+    {
+      "id": 4,
+      "type": "bug",
+      "severity": "medium",
+      "file": "dispatch.rs",
+      "lines": "161-166, 494-503, 244-251",
+      "title": "Attempt accounting ignores contract_hash; failure and easy counters disagree",
+      "evidence": "latest() and the skip check use only slice_id, so a produced/awaiting-acceptance attempt for an old contract_hash still blocks dispatch after the map's contract changes, and old attempts count toward max_attempts. Failures are filtered by contract_hash but easy successes are not (host-wide, all slices, all contracts, cumulative, not consecutive). In tests.rs 263 slice b's success lowers slice a's reasoning, which looks like intended behavior but contradicts 'sustained fast successes' wording.",
+      "recommendation": "Scope latest/attempt limits to the current contract_hash (or mark superseded attempts), and decide whether easy counting is per slice/contract and consecutive. Document the rule.",
+      "future_warp": "main.command.warp.dispatch.contract-scoped-attempts"
+    },
+    {
+      "id": 5,
+      "type": "bug",
+      "severity": "medium",
+      "file": "dispatch.rs",
+      "lines": "829-834, 244-257",
+      "title": "Recovery rewrites state to interrupted, erasing the attempt from failure/easy heuristics",
+      "evidence": "recover() sets state=interrupted and keeps the old value only in previous_state. The failure counter (state == test_failed) and easy counter (state == produced) read state, so recovering a test_failed attempt removes its contribution to reasoning escalation and recovering a produced one removes a success. This may be unintended; not covered by tests.",
+      "recommendation": "Count previous_state, or document that recovery resets heuristics. Test it.",
+      "future_warp": "main.command.warp.dispatch.recovery-heuristic-history"
+    },
+    {
+      "id": 6,
+      "type": "bug",
+      "severity": "medium",
+      "file": "dispatch.rs",
+      "lines": "301-308, 545-556, 634-650, 820-834",
+      "title": "'Published without clobbering' is not enforced; worker and recover can overwrite each other",
+      "evidence": "write() uses NamedTempFile::persist, which replaces an existing file. The create path checks exists() then writes (TOCTOU, protected only by scheduler.lock). worker() rewrites the same record at running and final states from its own in-memory copy, and recover() rewrites it without any lock. If recover marks an active attempt interrupted when no worker.lock exists (allowed after 30 s), a late worker can still start (it only checks state==claimed at read time) and later overwrite interrupted with produced/test_failed. Also an Err in the final write leaves the claim as running.",
+      "recommendation": "Use create_new for claim publication; make worker transitions compare-and-swap on a version/state; have recover take the scheduler lock and fence the attempt (e.g. write a recovery tombstone the worker checks before each write).",
+      "future_warp": "main.command.warp.dispatch.record-cas-and-fencing"
+    },
+    {
+      "id": 7,
+      "type": "bug",
+      "severity": "medium",
+      "file": "dispatch.rs",
+      "lines": "513-535",
+      "title": "Disjointness covers workspace only; shared inputs/context allow parallel interference",
+      "evidence": "occupied/overlap checks compare only canonical workspace paths. Inputs and context may be any file inside root (files()), so two assignments with disjoint workspaces can list the same input; one agent's edits make the other's verification_stale, giving nondeterministic outcomes that the heuristics may classify as non-test failures. Host permissions, not workspaces, bound writes (documented), so agents can also write outside their workspace.",
+      "recommendation": "Also serialize assignments whose input sets intersect or fall under another active workspace; report the reason in skipped.",
+      "future_warp": "main.command.warp.dispatch.input-overlap-serialization"
+    },
+    {
+      "id": 8,
+      "type": "bug",
+      "severity": "medium",
+      "file": "dispatch.rs",
+      "lines": "167-172, 276-278, 573-632",
+      "title": "Adapter argv assumptions: large prompt in argv, 'host-default' literal, no prompt/placeholder coverage",
+      "evidence": "Prompt can be ~64 KiB of context plus text; if a host template passes {prompt} as an argument, Windows CreateProcess limits the command line to ~32 K characters, so the spawn fails and becomes host_failed (and is auto-retried, see finding 2). Prompt is also visible in process listings. With empty reasoning_levels the value 'host-default' is substituted literally into {reasoning}, which a host flag would reject. available() on Windows only probes <name> and <name>.exe, so npm shim hosts (.cmd/.ps1) are reported unavailable unless the full file name is configured. The Codex/Copilot presets are asserted from 'observed' CLIs but no observation logs were supplied; I cannot verify them.",
+      "recommendation": "Prefer {prompt_file}/stdin for large prompts and reject (plan-time) templates whose expanded argv exceeds the platform limit; do not substitute a literal host-default (drop the argument pair or fail validation); document shim handling; attach observed adapter logs as evidence.",
+      "future_warp": "main.command.warp.dispatch.adapter-argv-limits"
+    },
+    {
+      "id": 9,
+      "type": "bug",
+      "severity": "medium",
+      "file": "dispatch.rs",
+      "lines": "573-632",
+      "title": "Timeout and process-tree handling gaps; timed-out runs lack exit/fingerprints",
+      "evidence": "On normal agent exit, surviving child/grandchild processes are not terminated and may keep editing while tests run (no job object). Timeout kill uses taskkill /T only on Windows; elsewhere only the direct child is killed. The timeout branch returns no exit_code and no stdout/stderr fingerprints although the contract says output and exit observations are retained with fingerprints. Each command (agent plus every test) gets the full timeout, so worst case is (1+N)*timeout; stdout/stderr files are fingerprinted by reading them wholly into memory.",
+      "recommendation": "Run each worker child in a Windows Job Object / process group, fingerprint timed-out output, add an overall attempt deadline and log size limits.",
+      "future_warp": "main.command.warp.dispatch.process-tree-and-deadline"
+    },
+    {
+      "id": 10,
+      "type": "limitation",
+      "severity": "low",
+      "file": "policy.md",
+      "lines": "Evidence, feedback and recovery",
+      "title": "Documented limitations that still affect the acceptance boundary",
+      "evidence": "Documented: Windows-only recovery (process_alive bails elsewhere, dispatch.rs 790), no automated stale scheduler-lock reclamation (scheduler.lock is only removed by Drop), polling only, input list cannot infer dependency closure, test_failure_codes defaults to [1] so runners using other failure codes (e.g. 101) become verification_error, Gemini/Antigravity disabled. These are accurately stated and are not defects, but a crashed scheduler blocks all confirmed dispatch until manual intervention, and a dead worker keeps its slot/workspace occupied until recovery. I cannot confirm from the supplied sources how recur-watch behaves while a dead worker holds an active claim (watcher source not supplied); it may poll indefinitely.",
+      "recommendation": "Keep as stated limits; add a stale-lock diagnostic with PID liveness in the busy error and verify the watcher's exit condition with an observed log.",
+      "future_warp": "main.command.warp.dispatch.stale-lock-diagnostics"
+    },
+    {
+      "id": 11,
+      "type": "bug",
+      "severity": "low",
+      "file": "dispatch.rs",
+      "lines": "88-99, 634-692",
+      "title": "Trust boundaries: ancestor config lookup and worker trusting the record",
+      "evidence": "config() searches root.ancestors() for .recur/config.toml, so a root without its own config silently uses a parent directory's config (contract says project-local, and hosts/tests are executed programs). The worker executes host/tests taken from the record JSON, authenticated only by a config fingerprint stored in the same record, and does not recheck the live gate or compare input_fingerprints at launch. Record location is path-checked, so this needs write access to .recur/dispatch; low severity.",
+      "recommendation": "Require config under -d (or report its path prominently), and have the worker re-derive host/tests from the config whose fingerprint matches, and re-evaluate the live gate before launch.",
+      "future_warp": "main.command.warp.dispatch.config-trust"
+    },
+    {
+      "id": 12,
+      "type": "test-gap",
+      "severity": "high",
+      "file": "tests.rs",
+      "lines": "1-371",
+      "title": "Test sufficiency: platform, adapter and branch coverage",
+      "evidence": "File is #![cfg(windows)] and every host and test is a powershell.exe mock, so spawn_worker on non-Windows, real Codex/Copilot argv templates, prompt_stdin, {prompt_file}, quoting of args with spaces/quotes and finding 1 are untested. Not exercised: verification_error and test_failure_codes, test-command timeout, per-host and global limits across Warps, max_attempts exhaustion, scheduler.lock busy/stale, worker.lock, the 30-second settling window and live-worker refusal in recover, preview-with-active-claim, non-UTF8 or >64 KiB context, context drift, and retention of stdout/stderr/exit_code files and fingerprints (never read by assertions). No mock agent modifies files, so ordering 'agent exits then tests run' and no-op produced (finding 3) are unobserved.",
+      "recommendation": "Add Windows and Unix mock-process tests for each listed branch, plus argv capture mocks that record received arguments.",
+      "future_warp": "main.command.warp.dispatch.test-matrix"
+    },
+    {
+      "id": 13,
+      "type": "test-gap",
+      "severity": "medium",
+      "file": "tests.rs",
+      "lines": "124-148, 210-239, 241-264",
+      "title": "Several assertions are weak or do not prove the claimed property",
+      "evidence": "Line 147 only asserts launched is empty; it would pass for any error or skip and does not check the reason or the absence of records. Line 238 only asserts state != produced for the second drift case, so a timing change could land in host_failed or verification_stale undetected. The simultaneous-scheduler test (241-264) discards the second scheduler's result (let _ at 257), so it never demonstrates that scheduler.lock rejected it; sequential execution plus active-claim dedup would also yield 2 attempts. It also asserts 'low' by relying on cross-slice easy counting. The 'finite coordinator' test checks only pass==1, not that a second attempt launched or terminated. Sleeping and timing windows (300 ms, 3 s) make drift tests timing-dependent.",
+      "recommendation": "Assert exact skip reasons and state, assert the lock error text for the losing scheduler by holding the lock with a barrier mock, and make drift timing deterministic with a mock that waits on a file signal.",
+      "future_warp": "main.command.warp.dispatch.deterministic-race-tests"
+    },
+    {
+      "id": 14,
+      "type": "test-gap",
+      "severity": "medium",
+      "file": "tests.rs",
+      "lines": "92-122",
+      "title": "Dependent-gate boundary only tested negatively",
+      "evidence": "The test shows final is not ready after a and b are produced, which proves produced is not acceptance. Nothing shows the positive path: after receipt/evidence acceptance of a and b, final becomes ready and dispatchable, and that a produced/accepted slice is not redispatched. The reviewed dependency gate is therefore only half-verified, and the interaction of 'produced blocks redispatch' with a rejected review (only recover can unblock) is not exercised.",
+      "recommendation": "Add an end-to-end test using the existing receipt/evidence/confirm commands to flip gates, then assert final eligibility; add a rejected-review recovery case.",
+      "future_warp": "main.command.warp.dispatch.gate-unlock-e2e"
+    }
+  ]
+}

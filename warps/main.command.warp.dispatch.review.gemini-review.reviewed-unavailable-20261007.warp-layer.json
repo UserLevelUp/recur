@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.dispatch.review",
+  "slice_id": "gemini-review",
+  "contract_hash": "contract:dispatch.review.gemini-availability:v2",
+  "attempt_id": "reviewed-unavailable-20261007",
+  "result_state": "accepted",
+  "result_hash": "sha256:3a3f9f5a40023072b0783d2a5f1954a6353fd5a7991e68a6657e5b42ea430300",
+  "evidence": {
+    "review": [
+      "warps/dispatch-review/main.command.warp.dispatch.gemini.blocked.md"
+    ]
+  },
+  "reason": null
+}

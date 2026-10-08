@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Identity and policy initialization
 warp.id = main.command.warp.identity-policy
 warp.root = docs

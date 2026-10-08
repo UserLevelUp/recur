@@ -1,0 +1,170 @@
+{
+  "schema": "warp-intelligence-efficiency-observation-v1",
+  "warp": "main.demo.blackjack-skill-replay",
+  "trace_id": "demo.blackjack.skill.intelligence.efficiency",
+  "observed_at": "2026-10-08T06:09:22.301Z",
+  "objective": "Useful verified work per intelligence/token budget; scheduling speed is secondary.",
+  "rows": [
+    {
+      "trace_id": "demo.blackjack.skill.contracts.attempt.1.result",
+      "slice": "contracts",
+      "host": "acceptance-codex-high",
+      "reasoning": "high",
+      "state": "produced",
+      "agent_seconds": 165,
+      "request_response_seconds": 166,
+      "provider_usage": [
+        {
+          "event": "turn.completed",
+          "usage": {
+            "input_tokens": 467997,
+            "cached_input_tokens": 420480,
+            "output_tokens": 6856
+          }
+        }
+      ],
+      "usage_status": "provider-reported",
+      "test_failures": 0,
+      "adjustment": 0,
+      "level_limited": false,
+      "legacy_trace_id": "main.demo.blackjack-skill-replay.contracts.attempt.1"
+    },
+    {
+      "trace_id": "demo.blackjack.skill.final.attempt.1.result",
+      "slice": "final",
+      "host": "acceptance-codex-high",
+      "reasoning": "high",
+      "state": "produced",
+      "agent_seconds": 301,
+      "request_response_seconds": 301,
+      "provider_usage": [
+        {
+          "event": "turn.completed",
+          "usage": {
+            "input_tokens": 1500407,
+            "cached_input_tokens": 1395968,
+            "output_tokens": 11018
+          }
+        }
+      ],
+      "usage_status": "provider-reported",
+      "test_failures": 0,
+      "adjustment": 0,
+      "level_limited": false,
+      "legacy_trace_id": "main.demo.blackjack-skill-replay.final.attempt.1"
+    },
+    {
+      "trace_id": "demo.blackjack.skill.integration.attempt.1.result",
+      "slice": "integration",
+      "host": "blackjack-skill-verifier",
+      "reasoning": "host-default",
+      "state": "produced",
+      "agent_seconds": 22,
+      "request_response_seconds": 23,
+      "provider_usage": [],
+      "usage_status": "not-applicable-no-llm",
+      "test_failures": 0,
+      "adjustment": 0,
+      "level_limited": true,
+      "legacy_trace_id": "main.demo.blackjack-skill-replay.integration.attempt.1"
+    },
+    {
+      "trace_id": "demo.blackjack.skill.replay.attempt.1.result",
+      "slice": "replay",
+      "host": "blackjack-skill-codex",
+      "reasoning": "high",
+      "state": "produced",
+      "agent_seconds": 286,
+      "request_response_seconds": 290,
+      "provider_usage": [
+        {
+          "event": "turn.completed",
+          "usage": {
+            "input_tokens": 516056,
+            "cached_input_tokens": 463232,
+            "output_tokens": 11454
+          }
+        }
+      ],
+      "usage_status": "provider-reported",
+      "test_failures": 0,
+      "adjustment": 1,
+      "level_limited": true,
+      "legacy_trace_id": "main.demo.blackjack-skill-replay.replay.attempt.1"
+    },
+    {
+      "trace_id": "demo.blackjack.skill.statistics.attempt.1.result",
+      "slice": "statistics",
+      "host": "blackjack-skill-copilot",
+      "reasoning": "medium",
+      "state": "produced",
+      "agent_seconds": 45,
+      "request_response_seconds": 46,
+      "provider_usage": [],
+      "usage_status": "not-exposed-in-captured-output",
+      "test_failures": 0,
+      "adjustment": 0,
+      "level_limited": false,
+      "legacy_trace_id": "main.demo.blackjack-skill-replay.statistics.attempt.1"
+    },
+    {
+      "trace_id": "demo.blackjack.skill.strategy.attempt.1.result",
+      "slice": "strategy",
+      "host": "blackjack-skill-codex",
+      "reasoning": "high",
+      "state": "produced",
+      "agent_seconds": 129,
+      "request_response_seconds": 130,
+      "provider_usage": [
+        {
+          "event": "turn.completed",
+          "usage": {
+            "input_tokens": 404926,
+            "cached_input_tokens": 361088,
+            "output_tokens": 5937
+          }
+        }
+      ],
+      "usage_status": "provider-reported",
+      "test_failures": 0,
+      "adjustment": 1,
+      "level_limited": true,
+      "legacy_trace_id": "main.demo.blackjack-skill-replay.strategy.attempt.1"
+    },
+    {
+      "trace_id": "demo.blackjack.skill.tests.attempt.1.result",
+      "slice": "tests",
+      "host": "blackjack-skill-red-check",
+      "reasoning": "host-default",
+      "state": "produced",
+      "agent_seconds": 3,
+      "request_response_seconds": 4,
+      "provider_usage": [],
+      "usage_status": "not-applicable-no-llm",
+      "test_failures": 0,
+      "adjustment": 0,
+      "level_limited": true,
+      "legacy_trace_id": "main.demo.blackjack-skill-replay.tests.attempt.1"
+    }
+  ],
+  "limitations": [
+    "Different providers and cached/uncached tokens are not directly interchangeable cost units.",
+    "No inference of optimal token use, cost savings or end-to-end speedup.",
+    "Desktop coordinator and native browser helper usage is not included in CLI receipts.",
+    "Codex worker hosts support high only in this trial; downward ticks cannot lower those host levels."
+  ],
+  "evaluation": [
+    "Substantive contract findings before coding",
+    "Separate author and companion test evidence",
+    "Parent-detected defects and rework",
+    "Independent coordinator findings",
+    "Repeated model work compared with deterministic CLI checks"
+  ],
+  "reported_codex_totals": {
+    "input_tokens": 2889386,
+    "cached_input_tokens": 2640768,
+    "output_tokens": 35265,
+    "reported_codex_turns": 4,
+    "uncached_input_tokens": 248618
+  }
+}

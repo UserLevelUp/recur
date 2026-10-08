@@ -1,0 +1,16 @@
+Test Summary:            | Pass  Total  Time
+Blackjack website engine | 8601   8601  2.3s
+Test Summary:            | Pass  Total  Time
+Split runtime acceptance | 6094   6094  2.2s
+Test Summary:                  | Pass  Total  Time
+Split HTTP protocol and replay |   18     18  3.3s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:          | Pass  Total  Time
+Blackjack website HTTP |   41     41  2.5s
+Test Summary:            | Pass  Total  Time
+Blackjack website assets |   14     14  0.0s
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Mapped split dependency fault: [{"span":{"end_byte":1726,"start_byte":1408,"end_line":60,"start_line":51},"subjects":["dealer","settlement","hands","turns"],"message":"Dependency cycle: dealer -> settlement -> hands -> turns -> dealer","code":"SGR001","path":["dealer","settlement","hands","turns","dealer"]}]
+Test Summary:                    | Pass  Total  Time
+Blackjack website Lang reference |   67     67  2.2s

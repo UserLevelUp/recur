@@ -1,0 +1,54 @@
+{
+  "bubble_uuid": "01a1115f-6616-7f98-bdbb-64b1ca6c1562",
+  "current_slice": "engine",
+  "goal": "Add optional one or two autonomous rival seats to the Julia blackjack website, coordinated through disjoint CLI worker slices and reviewed integration",
+  "intelligence_baseline": "host-current",
+  "invariants": [],
+  "required_slices": [
+    {
+      "slice_id": "engine",
+      "contract_hash": "contract:demo.blackjack.rivals.engine:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "engine-tests"
+      ],
+      "intelligence_tick": 1
+    },
+    {
+      "slice_id": "browser",
+      "contract_hash": "contract:demo.blackjack.rivals.browser:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "browser-tests"
+      ],
+      "intelligence_tick": 0
+    },
+    {
+      "slice_id": "integration",
+      "contract_hash": "contract:demo.blackjack.rivals.integration:v1",
+      "depends_on": [
+        "engine",
+        "browser"
+      ],
+      "evidence_gates": [
+        "http-regressions"
+      ],
+      "intelligence_tick": 1
+    },
+    {
+      "slice_id": "slice-final",
+      "contract_hash": "contract:demo.blackjack.rivals.acceptance:v1",
+      "depends_on": [
+        "integration"
+      ],
+      "evidence_gates": [
+        "browser-acceptance",
+        "regressions"
+      ],
+      "intelligence_tick": 0
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.demo.blackjack-computer-player",
+  "contract_document": "warps/main.demo.blackjack-computer-player.contract.md"
+}

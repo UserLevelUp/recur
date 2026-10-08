@@ -1,0 +1,27 @@
+{
+  "schema": "blackjack-web-source-review-v1",
+  "reviewer": "Codex author self-review",
+  "observed_on": "2026-10-02",
+  "whole_program_proof": false,
+  "scope": "Explicit local source and contract files; excludes standard library, HTTP, JSON3 and browser internals",
+  "inputs_sha256": {
+    "main.blackjack.web.engine.jl": "ccd0c6c83affadcf28e56c01878f0e9d9ce33c89033bdba7cfba177286d6b3df",
+    "main.blackjack.web.server.jl": "401e356fd32be04841a3d6f82a9648d0724cc1665b1dfb4d011567adc8411906",
+    "main.blackjack.web.js": "9ce7071a247f63cc67d6605fe22254e3f9cd5fae35eb3f3c8eabb2beeb90f63c",
+    "main.blackjack.web.css": "fd58214c60bc5784d4086da61b1d37f73cded342362d234a103de936522a805f",
+    "index.html": "a75a9990d76c11a691c059e3a7335c20c87ca7c6b687ad72f20aff8bf1868349",
+    "main.blackjack.web.requirements.md": "7f4eae63dae2da47da99c0958090a39a5100ed7831c46b5c8a0cfcdd81395f84",
+    "main.blackjack.web.review.md": "027fcc36ef2b222ac156d3a35729befd94bcbe2979b3ece7c6230fb71d0d450e",
+    "main.blackjack.web.01.table.recur": "941bff3d6cc7332fd2d30bdaad28efd18c39d700fd7da3ca35159a3f439fde9c",
+    "main.blackjack.web.02.play.recur": "5e48dc418549f04e6a2d74af8e138a01a9072a0679c0e4764887084c2c638870",
+    "main.blackjack.web.03.http.recur": "cccc03081a0971cf10f18f88163b662e8d37685d0e59eade988af1349efa1591",
+    "main.blackjack.web.04.browser.recur": "3f446431e90e7a3dc3943caff9347b40eda40b2cb0f145a6ef534acff5550467",
+    "main.blackjack.web.05.dependencies.recur": "8cf87963eb715d44b5587b43246a204f67211248d2674b738a2da91636595de9",
+    "../blackjack-lab/main.blackjack.01.jl": "99794c1e25d2c2f0b347beb695f5d50830f33a948be10add00d1549fcb9a6c30",
+    "../blackjack-lab/main.blackjack.02.jl": "f981430bd9a70ef86509133dfa09ad0de4d9ee63ab716beca3b43480863c2fda",
+    "../blackjack-lab/main.blackjack.03.jl": "766be0cf1bfa8b4913b15c129337ac1ae5482f5618091a55df04f08ceae03c5d",
+    "../blackjack-lab/main.blackjack.04.jl": "8127b6716c45945995a3c3d095013347ba948111f39ccab75e6766910683f4df",
+    "../web-evidence-lab/Project.toml": "76e40e4bb2000989fb67b0942319e93b41ab24c0b1a7a81223c548a7e741743c",
+    "../web-evidence-lab/Manifest.toml": "b391bb1f71cb77b8fbc8ad95db2a407781c410277ce8bb14facdd94d560caa53"
+  }
+}

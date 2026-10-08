@@ -31,10 +31,20 @@ Comprehensive integration test suite for the `recur` hierarchical search tool.
 
 ## Usage
 
-### Run all tests:
+### Run core tests (demos excluded):
 ```bash
 julia runtests.jl
 ```
+
+### Run an optional demo:
+```bash
+julia runtests.jl --list-demos
+julia runtests.jl --demo blackjack-web
+julia runtests.jl --demo sudoku --with-core
+```
+
+`--demo NAME` runs only that demo. Repeat it to select more demos.
+`--with-core` adds core tests; `--dry-run` prints the selection without setup.
 
 ### Run with verbose output:
 ```bash

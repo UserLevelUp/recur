@@ -1,3 +1,5 @@
+artifact.type = lane
+
 # main.improvement.22.recur
 
 recur.gift = phase 1 shipped — next slice is current_thread in [reveal] so recur reveal with no args opens the right capsule
@@ -12,3 +14,5 @@ verify = cargo build --profile release-safe && julia julia-tests/main.command.re
 tool.escape = recur tree "main" -d docs/ --sep . --sep _ --show-sep
 do.not.disturb = do not solve vault migration or multi-root inheritance in this slice
 ready.state = I know the one field to add, the one behavior to change, and the tests to update
+
+consumes: main.recur.reveal.type.lane general work-context capsule classification

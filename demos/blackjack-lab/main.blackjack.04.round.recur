@@ -1,0 +1,34 @@
+recur 0.1 class BlackjackRound
+# defines: demo.blackjack.round contract-first stage 04.round
+header {
+  scope play {
+    i(a) := (config: TableConfig, balances: ChipsByPlayer, bank: Chips, order: Cards)
+    o(b) := (config: TableConfig, hands: HandsByPlayer, dealer_hand: Cards, active: PlayerIds, balances: ChipsByPlayer, bank: Chips, remaining: Cards)
+    p : i(a) -> o(b) ~ "Deal clockwise with dealer last, let each active player hit to seventeen then dealer stand on soft seventeen, without mutating inputs" by BlackjackLab.prepare_round
+  }
+  scope settle {
+    i(c) := play.o(b)
+    o(d) := (outcomes: ResultsByPlayer, deltas: ChipsByPlayer, balances: ChipsByPlayer, bank: Chips, winners: PlayerIds, dealer_wins: PlayerIds, pushes: PlayerIds)
+    s : i(c) -> o(d) ~ "Compare each player against dealer independently; pay naturals three to two, ordinary wins one to one, pushes zero" by BlackjackLab.settle_round
+  }
+}
+body {
+  play sync : i(a) -> p(a) -> o(b)
+  settle sync : i(c) -> s(c) -> o(d)
+  share play.o(b) -> settle.i(c)
+  # Semantic types and rules require Julia tests; bindings are not executed by Lang.
+}
+footer {
+  event play {
+    consume demo.blackjack.play.request
+    produce demo.blackjack.play.result
+    state demo.blackjack.play.complete
+  }
+  warp play : E0(demo.blackjack.play.todo.current) -> dE(play.p) -> Ef(demo.blackjack.play.complete)
+  event settle {
+    consume demo.blackjack.settle.request
+    produce demo.blackjack.settle.result
+    state demo.blackjack.settle.complete
+  }
+  warp settle : E0(demo.blackjack.settle.todo.current) -> dE(settle.s) -> Ef(demo.blackjack.settle.complete)
+}

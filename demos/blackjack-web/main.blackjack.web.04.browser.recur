@@ -1,0 +1,35 @@
+recur 0.1 class WebPlayer
+# defines: demo.blackjack.web.browser contract-first website stage
+header {
+  scope render {
+    i(a) := (snapshot: PublicState)
+    o(b) := (screen: AccessibleTable)
+    f : i(a) -> o(b) ~ "Render cards, scores, bankroll, active hand, legal controls and round history from the server snapshot" by Browser.render
+  }
+  scope send {
+    i(a) := (action: Action, version: ProtocolVersion, revision: Revision, hand_id: OptionalHandId, bet: OptionalChips, money: OptionalChips)
+    o(b) := (snapshot: PublicState)
+    f : i(a) -> o(b) ~ "Submit one action at a time, refresh on conflict, and never compute outcomes in the browser" by Browser.command
+  }
+}
+body {
+  render sync : i(a) -> f(a) -> o(b)
+  send sync : i(a) -> f(a) -> o(b)
+}
+footer {
+  event render {
+    consume demo.blackjack.web.render.request
+    produce demo.blackjack.web.render.result
+    state demo.blackjack.web.render.complete
+  }
+  warp render : E0(demo.blackjack.web.render.todo.current) -> dE(render.f) -> Ef(demo.blackjack.web.render.complete)
+  event send {
+    consume demo.blackjack.web.send.request
+    produce demo.blackjack.web.send.result
+    state demo.blackjack.web.send.complete
+  }
+  warp send : E0(demo.blackjack.web.send.todo.current) -> dE(send.f) -> Ef(demo.blackjack.web.send.complete)
+  # References for implementation review; opaque types need behavioral tests.
+  # Browser event feedback is repeated requests, not a server-to-browser module import.
+}
+

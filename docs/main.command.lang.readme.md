@@ -342,3 +342,8 @@ result. It never repairs or reruns them.
 - `docs/main.command.watch.readme.md`
 - `docs/main.command.version.readme.md`
 - `recur_language_start.md`
+
+Companion [implementation planning](main.command.lang.plan.readme.md) reuses pure
+query packets and project preferences without executing bindings. The
+[blackjack lab](../demos/blackjack-lab/main.blackjack.readme.md) exercises growing
+contracts, configurable game sessions, deliberate graph faults and evidence.

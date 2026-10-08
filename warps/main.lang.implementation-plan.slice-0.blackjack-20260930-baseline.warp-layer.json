@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.lang.implementation-plan",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.lang.implementation-plan.slice-0:v1",
+  "attempt_id": "blackjack-20260930-baseline",
+  "result_state": "accepted",
+  "result_hash": "sha256:a2fe4793833af8f3f28f9dd1caf81529570e4c28d65a7bfe9b1d9e85c41d8a57",
+  "evidence": {
+    "baseline": [
+      "warps/main.lang.implementation-plan.verification.md"
+    ]
+  },
+  "reason": null
+}

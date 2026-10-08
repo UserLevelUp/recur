@@ -1,0 +1,72 @@
+Test Summary:            | Pass  Total  Time
+Blackjack website engine | 8601   8601  0.9s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:          | Pass  Total  Time
+Blackjack website HTTP |   41     41  3.0s
+Test Summary:            | Pass  Total  Time
+Blackjack website assets |   14     14  0.0s
+Blackjack website Lang reference: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:22
+  Expression: Set((f["name"] for f = contract["fields"])) == Set(string.(propertynames(B.public_state(B.newgame()))))
+   Evaluated: Set(["revision", "player", "history", "balance", "stake", "dealer", "allowed", "bank", "dealer_score", "player_score", "phase"]) == Set(["balance", "escrow", "stake", "revision", "dealer", "allowed", "max_bet", "profit", "bank", "dealer_score", "player", "player_score", "history", "stats", "starting", "net", "phase", "result"])
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:10
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:22 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website Lang reference: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:25
+  Expression: ((q.data["header"])[1])["binding"] == "BlackjackWebServer.handler"
+   Evaluated: "BlackjackWeb.handler" == "BlackjackWebServer.handler"
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:10
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:25 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website Lang reference: Error During Test at C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:9
+  Got exception outside of a @test
+  SystemError: opening file "C:\\src\\recur\\demos\\blackjack-web\\main.blackjack.web.review.json": No such file or directory
+  Stacktrace:
+    [1] systemerror(p::String, errno::Int32; extrainfo::Nothing)
+      @ Base .\error.jl:186
+    [2] open(fname::String; lock::Bool, read::Nothing, write::Nothing, create::Nothing, truncate::Nothing, append::Nothing)
+      @ Base .\iostream.jl:317
+    [3] open
+      @ .\iostream.jl:296 [inlined]
+    [4] open(f::Base.var"#read##2#read##3"{String}, args::String; kwargs::@Kwargs{})
+      @ Base .\io.jl:410
+    [5] open
+      @ .\io.jl:409 [inlined]
+    [6] read(filename::String, ::Type{String})
+      @ Base .\io.jl:509
+    [7] top-level scope
+      @ C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:10
+    [8] macro expansion
+      @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+    [9] macro expansion
+      @ C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:41 [inlined]
+   [10] include(mapexpr::Function, mod::Module, _path::String)
+      @ Base .\Base.jl:307
+   [11] top-level scope
+      @ C:\src\recur\demos\blackjack-web\main.blackjack.web.test.jl:97
+   [12] include(mod::Module, _path::String)
+      @ Base .\Base.jl:306
+   [13] exec_options(opts::Base.JLOptions)
+      @ Base .\client.jl:317
+   [14] _start()
+      @ Base .\client.jl:550
+Test Summary:                    | Pass  Fail  Error  Total  Time
+Blackjack website Lang reference |   21     2      1     24  1.2s
+RNG of the outermost testset: Random.Xoshiro(0x2186b690e0ff40f5, 0x7b4da2e1fb67089e, 0xa7ef7170d3b4e3ec, 0x01fcedb66083c0b5, 0xe90756679957135e)
+ERROR: LoadError: Some tests did not pass: 21 passed, 2 failed, 1 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-web\main.blackjack.web.reference.test.jl:9
+in expression starting at C:\src\recur\demos\blackjack-web\main.blackjack.web.test.jl:1

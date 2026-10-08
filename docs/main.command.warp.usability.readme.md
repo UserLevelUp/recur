@@ -24,3 +24,12 @@ duplicate target preservation, and legacy suites. Gate evidence is reviewed decl
 evidence, not independent producer execution by Recur.
 
 Remaining larger features: main.command.warp.roadmap.md.
+
+Creation also supports repeatable `--slice-intelligence SLICE=-1|0|1` overrides.
+Every generated slice uses `[warp.intelligence].default_tick` (initially `0`);
+`recur-warp init` installs missing baseline and tick defaults. Template values are retained
+unless explicitly overridden. Ticks are advisory relative to the Warp's starting
+reasoning level. Existing maps without the optional field remain valid.
+See main.recur.warp.intelligence.tick.recurring.md for the convention and limits.
+
+consumes: main.recur.warp.intelligence.tick advisory per-slice reasoning adjustment

@@ -1,3 +1,5 @@
+artifact.type = warp
+
 # Warp 10 Tourist Experience
 
 Status: closed in Recur — misplaced external-project plan, not implemented here.

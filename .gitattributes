@@ -106,3 +106,11 @@
 /src/recur_lang_init.rs -text
 /demos/pathing/path_validation.jl -text
 /julia-tests/main.lang.pathing.test.jl -text
+/demos/blackjack-lab/** -text
+/src/recur_lang_plan.rs -text
+/julia-tests/main.command.recur-lang.plan.test.jl -text
+/julia-tests/main.demo.blackjack-lab.test.jl -text
+/warps/lang-blackjack/** -text
+/warps/main.lang.implementation-plan.verification.md -text
+/demos/blackjack-web/** -text
+/julia-tests/main.demo.blackjack-web.test.jl -text

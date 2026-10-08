@@ -1,0 +1,968 @@
+{
+  "body": {
+    "boundary_edges": [
+      {
+        "consumer": "strategy",
+        "identity": "coordinator.plan.o(a)orders[\"strategy\"]->strategy",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"strategy\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 686,
+          "end_line": 27,
+          "start_byte": 367,
+          "start_line": 18
+        }
+      },
+      {
+        "consumer": "replay",
+        "identity": "coordinator.plan.o(a)orders[\"replay\"]->replay",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"replay\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 1000,
+          "end_line": 37,
+          "start_byte": 689,
+          "start_line": 28
+        }
+      },
+      {
+        "consumer": "statistics",
+        "identity": "coordinator.plan.o(a)orders[\"statistics\"]->statistics",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"statistics\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 1330,
+          "end_line": 47,
+          "start_byte": 1003,
+          "start_line": 38
+        }
+      },
+      {
+        "consumer": "integration",
+        "identity": "coordinator.plan.o(a)orders[\"integration\"]->integration",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"integration\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 1715,
+          "end_line": 57,
+          "start_byte": 1333,
+          "start_line": 48
+        }
+      },
+      {
+        "consumer": "final",
+        "identity": "coordinator.plan.o(a)orders[\"final\"]->final",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"final\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 2049,
+          "end_line": 67,
+          "start_byte": 1718,
+          "start_line": 58
+        }
+      },
+      {
+        "consumer": "coordinator.finish",
+        "identity": "final.o(b)->coordinator.finish",
+        "message": {
+          "contract": "WorkReceipt",
+          "identity": "final.o(b)",
+          "producer": "final",
+          "projection": null
+        },
+        "producer": "final",
+        "span": {
+          "end_byte": 2345,
+          "end_line": 78,
+          "start_byte": 2302,
+          "start_line": 77
+        }
+      }
+    ],
+    "edges": [
+      {
+        "consumer": "strategy",
+        "identity": "coordinator.plan.o(a)orders[\"strategy\"]->strategy",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"strategy\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 686,
+          "end_line": 27,
+          "start_byte": 367,
+          "start_line": 18
+        }
+      },
+      {
+        "consumer": "replay",
+        "identity": "coordinator.plan.o(a)orders[\"replay\"]->replay",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"replay\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 1000,
+          "end_line": 37,
+          "start_byte": 689,
+          "start_line": 28
+        }
+      },
+      {
+        "consumer": "statistics",
+        "identity": "coordinator.plan.o(a)orders[\"statistics\"]->statistics",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"statistics\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 1330,
+          "end_line": 47,
+          "start_byte": 1003,
+          "start_line": 38
+        }
+      },
+      {
+        "consumer": "integration",
+        "identity": "coordinator.plan.o(a)orders[\"integration\"]->integration",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"integration\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 1715,
+          "end_line": 57,
+          "start_byte": 1333,
+          "start_line": 48
+        }
+      },
+      {
+        "consumer": "integration",
+        "identity": "strategy.o(b)->integration",
+        "message": {
+          "contract": "WorkReceipt",
+          "identity": "strategy.o(b)",
+          "producer": "strategy",
+          "projection": null
+        },
+        "producer": "strategy",
+        "span": {
+          "end_byte": 1715,
+          "end_line": 57,
+          "start_byte": 1333,
+          "start_line": 48
+        }
+      },
+      {
+        "consumer": "integration",
+        "identity": "replay.o(b)->integration",
+        "message": {
+          "contract": "WorkReceipt",
+          "identity": "replay.o(b)",
+          "producer": "replay",
+          "projection": null
+        },
+        "producer": "replay",
+        "span": {
+          "end_byte": 1715,
+          "end_line": 57,
+          "start_byte": 1333,
+          "start_line": 48
+        }
+      },
+      {
+        "consumer": "integration",
+        "identity": "statistics.o(b)->integration",
+        "message": {
+          "contract": "WorkReceipt",
+          "identity": "statistics.o(b)",
+          "producer": "statistics",
+          "projection": null
+        },
+        "producer": "statistics",
+        "span": {
+          "end_byte": 1715,
+          "end_line": 57,
+          "start_byte": 1333,
+          "start_line": 48
+        }
+      },
+      {
+        "consumer": "final",
+        "identity": "coordinator.plan.o(a)orders[\"final\"]->final",
+        "message": {
+          "contract": "WorkOrder",
+          "identity": "coordinator.plan.o(a)",
+          "producer": "coordinator.plan",
+          "projection": "orders[\"final\"]"
+        },
+        "producer": "coordinator.plan",
+        "span": {
+          "end_byte": 2049,
+          "end_line": 67,
+          "start_byte": 1718,
+          "start_line": 58
+        }
+      },
+      {
+        "consumer": "final",
+        "identity": "integration.o(b)->final",
+        "message": {
+          "contract": "WorkReceipt",
+          "identity": "integration.o(b)",
+          "producer": "integration",
+          "projection": null
+        },
+        "producer": "integration",
+        "span": {
+          "end_byte": 2049,
+          "end_line": 67,
+          "start_byte": 1718,
+          "start_line": 58
+        }
+      },
+      {
+        "consumer": "coordinator.finish",
+        "identity": "final.o(b)->coordinator.finish",
+        "message": {
+          "contract": "WorkReceipt",
+          "identity": "final.o(b)",
+          "producer": "final",
+          "projection": null
+        },
+        "producer": "final",
+        "span": {
+          "end_byte": 2345,
+          "end_line": 78,
+          "start_byte": 2302,
+          "start_line": 77
+        }
+      }
+    ],
+    "flows": [
+      {
+        "flow": {
+          "awaits": [
+            {
+              "next_consumer": "integration",
+              "required": [
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "strategy.o(b)",
+                  "producer": "strategy",
+                  "projection": null
+                },
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "replay.o(b)",
+                  "producer": "replay",
+                  "projection": null
+                },
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "statistics.o(b)",
+                  "producer": "statistics",
+                  "projection": null
+                }
+              ],
+              "span": {
+                "end_byte": 2246,
+                "end_line": 74,
+                "start_byte": 2175,
+                "start_line": 73
+              }
+            },
+            {
+              "next_consumer": "final",
+              "required": [
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "integration.o(b)",
+                  "producer": "integration",
+                  "projection": null
+                }
+              ],
+              "span": {
+                "end_byte": 2292,
+                "end_line": 76,
+                "start_byte": 2256,
+                "start_line": 75
+              }
+            },
+            {
+              "next_consumer": "coordinator.finish",
+              "required": [
+                {
+                  "contract": "WorkReceipt",
+                  "identity": "final.o(b)",
+                  "producer": "final",
+                  "projection": null
+                }
+              ],
+              "span": {
+                "end_byte": 2345,
+                "end_line": 78,
+                "start_byte": 2302,
+                "start_line": 77
+              }
+            }
+          ],
+          "expression": "i(a) -> coordinator.plan(a) -> fork [strategy(a), replay(a), statistics(a)] -> await [strategy.o(b), replay.o(b), statistics.o(b)] -> integration(a) -> await integration.o(b) -> final(a) -> await final.o(b) -> coordinator.finish(a) -> o(b)",
+          "fork_lanes": [
+            "strategy",
+            "replay",
+            "statistics"
+          ],
+          "mode": "async",
+          "name": "implementation",
+          "span": {
+            "end_byte": 2356,
+            "end_line": 78,
+            "start_byte": 2059,
+            "start_line": 70
+          }
+        },
+        "scope": "implementation"
+      }
+    ]
+  },
+  "contracts": [
+    {
+      "canonical_identity": "WorkOrder",
+      "fields": [
+        {
+          "name": "identity",
+          "type_name": "Text"
+        }
+      ]
+    },
+    {
+      "canonical_identity": "WorkReceipt",
+      "fields": [
+        {
+          "name": "identity",
+          "type_name": "Text"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "analysis": "entire selected CIR1 flow, before filtering",
+    "diagnostics": [
+      {
+        "code": "LANG101",
+        "message": "Only the named IR fragment is validated; excluded syntax and runtime behavior remain unvalidated",
+        "severity": "capability"
+      }
+    ],
+    "excluded": [
+      "Coordinator input signatures and function bodies",
+      "Whole-document grammar, expansions, watch/runtime/grid/import/feedback sections",
+      "Lane Eventness and receipt validation (CIR1 has no lifecycle model)"
+    ],
+    "whole_source_validated": false
+  },
+  "expanded": false,
+  "footer": {
+    "eventness_filter": null,
+    "eventness_vocabulary": [
+      "current.md",
+      "todo.md",
+      "complete.md"
+    ],
+    "events": [
+      {
+        "checked_receipts": [],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_receipts": [
+          "strategy.reviewed"
+        ],
+        "scope": "strategy"
+      },
+      {
+        "checked_receipts": [],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_receipts": [
+          "replay.reviewed"
+        ],
+        "scope": "replay"
+      },
+      {
+        "checked_receipts": [],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_receipts": [
+          "statistics.reviewed"
+        ],
+        "scope": "statistics"
+      },
+      {
+        "checked_receipts": [],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_receipts": [
+          "integration.reviewed"
+        ],
+        "scope": "integration"
+      },
+      {
+        "checked_receipts": [],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_receipts": [
+          "final.reviewed"
+        ],
+        "scope": "final"
+      }
+    ],
+    "execution": "not-run",
+    "findings": [],
+    "graph": {
+      "edges": [
+        {
+          "consumer": "strategy",
+          "message": {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "producer": "coordinator.plan",
+            "projection": "orders[\"strategy\"]"
+          },
+          "producer": "coordinator.plan",
+          "span": {
+            "end_byte": 686,
+            "end_line": 27,
+            "start_byte": 367,
+            "start_line": 18
+          }
+        },
+        {
+          "consumer": "replay",
+          "message": {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "producer": "coordinator.plan",
+            "projection": "orders[\"replay\"]"
+          },
+          "producer": "coordinator.plan",
+          "span": {
+            "end_byte": 1000,
+            "end_line": 37,
+            "start_byte": 689,
+            "start_line": 28
+          }
+        },
+        {
+          "consumer": "statistics",
+          "message": {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "producer": "coordinator.plan",
+            "projection": "orders[\"statistics\"]"
+          },
+          "producer": "coordinator.plan",
+          "span": {
+            "end_byte": 1330,
+            "end_line": 47,
+            "start_byte": 1003,
+            "start_line": 38
+          }
+        },
+        {
+          "consumer": "integration",
+          "message": {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "producer": "coordinator.plan",
+            "projection": "orders[\"integration\"]"
+          },
+          "producer": "coordinator.plan",
+          "span": {
+            "end_byte": 1715,
+            "end_line": 57,
+            "start_byte": 1333,
+            "start_line": 48
+          }
+        },
+        {
+          "consumer": "integration",
+          "message": {
+            "contract": "WorkReceipt",
+            "identity": "strategy.o(b)",
+            "producer": "strategy",
+            "projection": null
+          },
+          "producer": "strategy",
+          "span": {
+            "end_byte": 1715,
+            "end_line": 57,
+            "start_byte": 1333,
+            "start_line": 48
+          }
+        },
+        {
+          "consumer": "integration",
+          "message": {
+            "contract": "WorkReceipt",
+            "identity": "replay.o(b)",
+            "producer": "replay",
+            "projection": null
+          },
+          "producer": "replay",
+          "span": {
+            "end_byte": 1715,
+            "end_line": 57,
+            "start_byte": 1333,
+            "start_line": 48
+          }
+        },
+        {
+          "consumer": "integration",
+          "message": {
+            "contract": "WorkReceipt",
+            "identity": "statistics.o(b)",
+            "producer": "statistics",
+            "projection": null
+          },
+          "producer": "statistics",
+          "span": {
+            "end_byte": 1715,
+            "end_line": 57,
+            "start_byte": 1333,
+            "start_line": 48
+          }
+        },
+        {
+          "consumer": "final",
+          "message": {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "producer": "coordinator.plan",
+            "projection": "orders[\"final\"]"
+          },
+          "producer": "coordinator.plan",
+          "span": {
+            "end_byte": 2049,
+            "end_line": 67,
+            "start_byte": 1718,
+            "start_line": 58
+          }
+        },
+        {
+          "consumer": "final",
+          "message": {
+            "contract": "WorkReceipt",
+            "identity": "integration.o(b)",
+            "producer": "integration",
+            "projection": null
+          },
+          "producer": "integration",
+          "span": {
+            "end_byte": 2049,
+            "end_line": 67,
+            "start_byte": 1718,
+            "start_line": 58
+          }
+        },
+        {
+          "consumer": "coordinator.finish",
+          "message": {
+            "contract": "WorkReceipt",
+            "identity": "final.o(b)",
+            "producer": "final",
+            "projection": null
+          },
+          "producer": "final",
+          "span": {
+            "end_byte": 2345,
+            "end_line": 78,
+            "start_byte": 2302,
+            "start_line": 77
+          }
+        }
+      ],
+      "entries": [
+        "strategy",
+        "replay",
+        "statistics"
+      ],
+      "findings": [],
+      "flow": "implementation",
+      "ir_schema": "recur-lang-concurrent-ir-v1",
+      "nodes": [
+        {
+          "identity": "strategy",
+          "kind": "lane",
+          "span": {
+            "end_byte": 686,
+            "end_line": 27,
+            "start_byte": 367,
+            "start_line": 18
+          }
+        },
+        {
+          "identity": "replay",
+          "kind": "lane",
+          "span": {
+            "end_byte": 1000,
+            "end_line": 37,
+            "start_byte": 689,
+            "start_line": 28
+          }
+        },
+        {
+          "identity": "statistics",
+          "kind": "lane",
+          "span": {
+            "end_byte": 1330,
+            "end_line": 47,
+            "start_byte": 1003,
+            "start_line": 38
+          }
+        },
+        {
+          "identity": "integration",
+          "kind": "lane",
+          "span": {
+            "end_byte": 1715,
+            "end_line": 57,
+            "start_byte": 1333,
+            "start_line": 48
+          }
+        },
+        {
+          "identity": "final",
+          "kind": "lane",
+          "span": {
+            "end_byte": 2049,
+            "end_line": 67,
+            "start_byte": 1718,
+            "start_line": 58
+          }
+        },
+        {
+          "identity": "coordinator.plan",
+          "kind": "coordinator",
+          "span": {
+            "end_byte": 308,
+            "end_line": 13,
+            "start_byte": 266,
+            "start_line": 11
+          }
+        },
+        {
+          "identity": "coordinator.finish",
+          "kind": "coordinator",
+          "span": {
+            "end_byte": 359,
+            "end_line": 16,
+            "start_byte": 328,
+            "start_line": 14
+          }
+        }
+      ],
+      "orchestration_sound": true,
+      "reachable": [
+        "strategy",
+        "replay",
+        "statistics",
+        "integration",
+        "final",
+        "coordinator.finish"
+      ],
+      "schema": "recur-lang-static-graph-report-v1",
+      "source": "warps/blackjack-skill/main.blackjack.skill.flow.recur",
+      "source_hash": "fnv1a64:85d2b2c7bf799dbf",
+      "waits": [
+        {
+          "consumer": "integration",
+          "identity": "implementation.wait.1",
+          "required": [
+            {
+              "contract": "WorkReceipt",
+              "identity": "strategy.o(b)",
+              "producer": "strategy",
+              "projection": null
+            },
+            {
+              "contract": "WorkReceipt",
+              "identity": "replay.o(b)",
+              "producer": "replay",
+              "projection": null
+            },
+            {
+              "contract": "WorkReceipt",
+              "identity": "statistics.o(b)",
+              "producer": "statistics",
+              "projection": null
+            }
+          ],
+          "span": {
+            "end_byte": 2246,
+            "end_line": 74,
+            "start_byte": 2175,
+            "start_line": 73
+          }
+        },
+        {
+          "consumer": "final",
+          "identity": "implementation.wait.2",
+          "required": [
+            {
+              "contract": "WorkReceipt",
+              "identity": "integration.o(b)",
+              "producer": "integration",
+              "projection": null
+            }
+          ],
+          "span": {
+            "end_byte": 2292,
+            "end_line": 76,
+            "start_byte": 2256,
+            "start_line": 75
+          }
+        },
+        {
+          "consumer": "coordinator.finish",
+          "identity": "implementation.wait.3",
+          "required": [
+            {
+              "contract": "WorkReceipt",
+              "identity": "final.o(b)",
+              "producer": "final",
+              "projection": null
+            }
+          ],
+          "span": {
+            "end_byte": 2345,
+            "end_line": 78,
+            "start_byte": 2302,
+            "start_line": 77
+          }
+        }
+      ]
+    },
+    "validation": "sound-within-coverage"
+  },
+  "header": [
+    {
+      "binding": null,
+      "identity": "strategy.f",
+      "input": {
+        "expression": "project coordinator.plan.o(a).orders[\"strategy\"]",
+        "identity": "strategy.i(a)",
+        "members": [
+          {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "projection": "orders[\"strategy\"]"
+          }
+        ]
+      },
+      "meaning": "strategy reviewed work under frozen interfaces",
+      "output": {
+        "contract": "WorkReceipt",
+        "identity": "strategy.o(b)",
+        "producer": "strategy",
+        "projection": null
+      },
+      "persona": "implementer",
+      "scope": "strategy",
+      "span": {
+        "end_byte": 563,
+        "end_line": 22,
+        "start_byte": 492,
+        "start_line": 22
+      },
+      "symbol": "f"
+    },
+    {
+      "binding": null,
+      "identity": "replay.f",
+      "input": {
+        "expression": "project coordinator.plan.o(a).orders[\"replay\"]",
+        "identity": "replay.i(a)",
+        "members": [
+          {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "projection": "orders[\"replay\"]"
+          }
+        ]
+      },
+      "meaning": "replay reviewed work under frozen interfaces",
+      "output": {
+        "contract": "WorkReceipt",
+        "identity": "replay.o(b)",
+        "producer": "replay",
+        "projection": null
+      },
+      "persona": "implementer",
+      "scope": "replay",
+      "span": {
+        "end_byte": 879,
+        "end_line": 32,
+        "start_byte": 810,
+        "start_line": 32
+      },
+      "symbol": "f"
+    },
+    {
+      "binding": null,
+      "identity": "statistics.f",
+      "input": {
+        "expression": "project coordinator.plan.o(a).orders[\"statistics\"]",
+        "identity": "statistics.i(a)",
+        "members": [
+          {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "projection": "orders[\"statistics\"]"
+          }
+        ]
+      },
+      "meaning": "statistics reviewed work under frozen interfaces",
+      "output": {
+        "contract": "WorkReceipt",
+        "identity": "statistics.o(b)",
+        "producer": "statistics",
+        "projection": null
+      },
+      "persona": "implementer",
+      "scope": "statistics",
+      "span": {
+        "end_byte": 1205,
+        "end_line": 42,
+        "start_byte": 1132,
+        "start_line": 42
+      },
+      "symbol": "f"
+    },
+    {
+      "binding": null,
+      "identity": "integration.f",
+      "input": {
+        "expression": "join(project coordinator.plan.o(a).orders[\"integration\"], strategy.o(b), replay.o(b), statistics.o(b))",
+        "identity": "integration.i(a)",
+        "members": [
+          {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "projection": "orders[\"integration\"]"
+          },
+          {
+            "contract": "WorkReceipt",
+            "identity": "strategy.o(b)",
+            "projection": null
+          },
+          {
+            "contract": "WorkReceipt",
+            "identity": "replay.o(b)",
+            "projection": null
+          },
+          {
+            "contract": "WorkReceipt",
+            "identity": "statistics.o(b)",
+            "projection": null
+          }
+        ]
+      },
+      "meaning": "integration reviewed work under frozen interfaces",
+      "output": {
+        "contract": "WorkReceipt",
+        "identity": "integration.o(b)",
+        "producer": "integration",
+        "projection": null
+      },
+      "persona": "implementer",
+      "scope": "integration",
+      "span": {
+        "end_byte": 1589,
+        "end_line": 52,
+        "start_byte": 1515,
+        "start_line": 52
+      },
+      "symbol": "f"
+    },
+    {
+      "binding": null,
+      "identity": "final.f",
+      "input": {
+        "expression": "join(project coordinator.plan.o(a).orders[\"final\"], integration.o(b))",
+        "identity": "final.i(a)",
+        "members": [
+          {
+            "contract": "WorkOrder",
+            "identity": "coordinator.plan.o(a)",
+            "projection": "orders[\"final\"]"
+          },
+          {
+            "contract": "WorkReceipt",
+            "identity": "integration.o(b)",
+            "projection": null
+          }
+        ]
+      },
+      "meaning": "final reviewed work under frozen interfaces",
+      "output": {
+        "contract": "WorkReceipt",
+        "identity": "final.o(b)",
+        "producer": "final",
+        "projection": null
+      },
+      "persona": "implementer",
+      "scope": "final",
+      "span": {
+        "end_byte": 1929,
+        "end_line": 62,
+        "start_byte": 1861,
+        "start_line": 62
+      },
+      "symbol": "f"
+    }
+  ],
+  "ir_schema": "recur-lang-concurrent-ir-v1",
+  "schema": "recur-lang-query-v1",
+  "scope": null,
+  "source": "warps/blackjack-skill/main.blackjack.skill.flow.recur",
+  "source_hash": "fnv1a64:85d2b2c7bf799dbf"
+}
+

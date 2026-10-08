@@ -1,0 +1,202 @@
+{
+  "status": "reviewed",
+  "summary": "Independent static review confirms recursive placeholder corruption and supplies a single-pass replacement plus nine regression tests. Bounded retries and no-op produced observations are compatible with v1. Recovery races, context drift and incomplete verification observations remain material issues for parent integration; no runtime dispatch or project-test success is claimed.",
+  "warp_id": "main.command.warp.dispatch.review",
+  "slice_id": "codex-independent",
+  "contract_hash": "contract:dispatch.review.codex-independent:v1",
+  "recommendation": "revise",
+  "recommendation_scope": "Recommendation concerns the supplied dispatch v1 implementation, not acceptance of this review slice. Only proposal files were changed; the parent owns integration, runtime testing and acceptance.",
+  "artifacts": {
+    "replacement-function.rs": "Complete replacement for expand with unchanged signature and existing imports. Scans only original template suffixes, copies unmatched UTF-8 byte spans, and appends inserted values without scanning them. Retains existing packet string assumptions and Path::to_string_lossy behavior. No dependencies added.",
+    "regression-tests.rs": "Append beside expand in the same Rust module. Nine cfg(test) tests cover all four inserted values containing literal tokens, repeated and adjacent tokens, unknown and incomplete tokens, nested literal braces, Unicode, CRLF, tabs, NUL, empty values and tokens assembled across substitution boundaries. Prepared, not compiled or executed here."
+  },
+  "evidence_boundary": {
+    "reviewed_sources": ["task.md", "contract.md", "policy.md", "dispatch.rs", "copilot-review.json", "tests.rs", "validate-review.cjs", "packet.preview.json"],
+    "method": "Static source inspection and local CLI help discovery. Code references refer to the supplied workspace copies. Schedules and failure examples below are source-derived counterexamples, not observed executions.",
+    "cli_discovery": "recur-warp --help and recur warp --help succeeded. Installed help does not expose dispatch or recover. No dispatch, recovery, acceptance, agent launch or repository test command was run.",
+    "lang": "The prepared packet has lang=null and assignment.lang_source=null. No Lang boundaries were changed or inferred. Static soundness is not runtime evidence.",
+    "assigned_verification": {
+      "program": "C:/Users/marcn/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "args": ["validate-review.cjs"],
+      "test_failure_codes": [1],
+      "coverage": "Checks review status, summary length, findings array and recommendation only. Does not compile Rust, check finding accuracy, execute dispatch, or accept a gate. Execution observations are reported separately."
+    },
+    "handoff_timing": "The supplied preview identifies attempt 1 and requested reasoning high but contains no worker start/finish or handoff timestamps. Cross-provider handoff latency is unverified; the parent must correlate actual attempt records. Requested reasoning does not establish observed provider behavior.",
+    "project_tests_executed": false,
+    "acceptance_marked": false
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "copilot_ids": [1],
+      "classification": "confirmed-contract-defect",
+      "severity": "high",
+      "title": "Inserted values are rescanned by expand",
+      "evidence": ["dispatch.rs:167-172 replaces prompt, prompt_file, reasoning and workspace sequentially on the growing result.", "For template {prompt} and prompt literal {workspace}, the old function substitutes the workspace into the inserted prompt. Prompt-file and reasoning values can also be corrupted by later replacements.", "dispatch.rs:681-688 applies expand separately to host argv values; prompt stdin at 698-705 bypasses expand. Thus the actual effect depends on the configured argv, not every prompt transport."],
+      "assessment": "Violates literal template substitution. The supplied single-pass proposal interprets tokens only in the original template, including repeated occurrences. It preserves unknown-token bytes and never interprets tokens formed by concatenating inserted and original text.",
+      "action": "Integrate the replacement and run the supplied unit tests red against the old function and green against the proposal. No red/green execution is claimed here."
+    },
+    {
+      "id": "R2",
+      "copilot_ids": [2],
+      "classification": "not-a-contract-violation",
+      "severity": "info",
+      "title": "Bounded terminal-failure retries differ from interrupted-worker recovery",
+      "evidence": ["dispatch.rs:497-505 skips active, produced and max_attempts-exhausted attempts; terminal host_failed, verification_error, verification_stale and test_failed records can be retried below the bound.", "active at 158-160 includes claimed and running regardless of worker liveness. Those states stay blocked until explicit recover changes the record at 794-835.", "plan at 244-251 counts only same-slice, same-contract state=test_failed. run/worker runtime failures are not counted as test failures."],
+      "assessment": "The contract prohibits unbounded retries and implicit interrupted-attempt recovery, not all automatic retries. An interrupted record already represents an explicit recover operation; requiring another recover for that state would defeat the documented operation. Automatic retries may consume the configured budget but do not establish the claimed v1 violation.",
+      "action": "Document the terminal retry states and add deterministic max_attempts and interrupted-worker blocking tests. Keep this separate from the real recovery race in R6."
+    },
+    {
+      "id": "R3",
+      "copilot_ids": [3],
+      "classification": "not-a-contract-violation",
+      "severity": "info",
+      "title": "Produced does not require a source change or a red baseline",
+      "evidence": ["dispatch.rs:709-748 requires agent exit success, then independently runs tests and checks recorded input/config/map stability before produced.", "plan at 242 and 298 retains planning input_fingerprints; worker at 714-730 separately obtains post-agent verification fingerprints. The Copilot statement that the only recorded input fingerprints are post-agent is inaccurate.", "tests.rs:116-122 checks that produced does not complete slices or unlock final."],
+      "assessment": "An exit-zero refusal or no-op can produce passing observations, but v1 intentionally leaves adequacy and acceptance to review gates. No change, nonempty output or pre-agent failing test is required. The planning-versus-verification fingerprints can already support an optional change observation.",
+      "action": "Treat no-op visibility as an optional review aid, not a mandatory failure condition. Root must assess output and verification sufficiency."
+    },
+    {
+      "id": "R4",
+      "copilot_ids": [4],
+      "classification": "lifecycle-limitation-and-policy-clarification",
+      "severity": "medium",
+      "title": "Attempts span contract changes; easy successes are host-wide",
+      "evidence": ["dispatch.rs:161-166 selects latest by slice_id only; 242-243 increments its attempt number and 497-505 uses its state and count for dispatch eligibility.", "dispatch.rs:244-251 scopes failure feedback to the current contract, whereas 252-258 counts produced fast observations for the selected host.", "tests.rs:261-263 expects the two host successes to lower slice a's requested reasoning."],
+      "assessment": "Old produced or exhausted attempts can block a changed contract. This is a concrete lifecycle limitation, but v1 does not promise per-contract attempt resets. Host-wide cumulative easy counting matches policy.md's selected-host rule; neither consecutive nor per-slice successes are specified there. The contract's word sustained is less precise than that policy.",
+      "action": "Clarify supersession and whether contract changes should reset eligibility. If changing accounting, keep monotonically unique attempt identities and never ignore an old active worker merely because its contract differs."
+    },
+    {
+      "id": "R5",
+      "copilot_ids": [5],
+      "classification": "confirmed-policy-defect",
+      "severity": "medium",
+      "title": "Recovery hides recorded outcomes from feedback counters",
+      "evidence": ["dispatch.rs:830-833 stores previous_state and changes state to interrupted; test_results and agent_result remain in the clone.", "dispatch.rs:244-258 counts only current state=test_failed or state=produced, ignoring previous_state and retained results.", "Calling recover twice before a new attempt overwrites previous_state with interrupted because recover has no already-interrupted guard."],
+      "assessment": "Recovering a finished test_failed record removes its contribution to the policy's count of distinct failed attempts; recovering a produced record likewise removes a fast observation. Results are not wholly erased as the finding title suggests, but feedback history is not stable under administrative recovery.",
+      "action": "Retain an immutable original outcome or recovery history and count qualified observations from it. Test repeated recovery and failure/easy feedback; a single previous_state fallback alone does not handle repeated recovery."
+    },
+    {
+      "id": "R6",
+      "copilot_ids": [6],
+      "classification": "confirmed-contract-defect-by-static-interleaving",
+      "severity": "high",
+      "title": "Worker startup and recovery lack a shared transition fence",
+      "evidence": ["dispatch.rs:441-451 serializes confirmed schedulers with create_new scheduler.lock. Claim publication at 543-550 is inside that lock, so exists plus write is not by itself proof that two conforming schedulers clobber a claim.", "worker at 641-652 reads claimed before acquiring its worker lock and never rereads the record afterward; it publishes its cached copy at 693 and 758.", "recover at 806-835 takes no shared transition lock. For an aged active claim it can observe no worker.lock and then overwrite the attempt.", "Possible schedule: worker reads claimed and pauses; recovery reads the aged claim and observes no lock; recovery writes interrupted; scheduler sees interrupted and may assign another attempt; original worker resumes, obtains its old attempt lock and writes running/produced from its stale copy."],
+      "assessment": "A 30-second settling interval cannot exclude this interleaving. It can invalidate explicit recovery, overwrite newer state and allow duplicate active work despite distinct per-attempt locks. No race was executed here. A final write error leaving running is instead a fail-closed recovery case, not proof of completion.",
+      "action": "Serialize recovery and worker state transitions or use a durable version/fence checked atomically before launching and publishing. Verify with barriers that a recovered attempt cannot resume or overwrite its recovery and cannot overlap its successor. A scheduler lock alone does not fence worker startup."
+    },
+    {
+      "id": "R7",
+      "copilot_ids": [7],
+      "classification": "documented-boundary-with-residual-risk",
+      "severity": "low",
+      "title": "Workspace disjointness does not prove input ownership",
+      "evidence": ["dispatch.rs:518-527 compares canonical workspace ancestor relationships, not input/context sets.", "files at 143-155 permits explicitly listed contained root files, including files outside an assignment workspace.", "worker at 714-725 compares declared verification inputs before and after tests."],
+      "assessment": "The contract explicitly requires disjoint canonical workspaces and delegates actual write boundaries to host permissions. Shared-read inputs are allowed and cannot automatically imply conflicting writes. Shared input mutation remains a risk bounded only by configured permissions and the observed stability checks; serializing every overlap would be an additional conservative policy.",
+      "action": "Document read/write ownership and consider conflict-aware scheduling if needed. Do not present workspace paths as a sandbox. Context-only drift has a separate concrete gap in R15."
+    },
+    {
+      "id": "R8",
+      "copilot_ids": [8],
+      "classification": "adapter-limits-and-conditional-policy-gap",
+      "severity": "medium",
+      "title": "Adapter configuration has limits beyond local executable discovery",
+      "evidence": ["dispatch.rs:273-282 caps context bodies by bytes; expand and Command args at 596-599 add no command-line-size validation or alternate transport.", "plan at 269-270 selects literal host-default for an empty reasoning_levels list; worker at 684-688 expands it into any configured {reasoning} argument.", "available at 126-141 probes exact names and Windows .exe names; policy.md explicitly recommends native executables or explicit platform wrappers.", "packet.preview.json configures this slice's Codex host with prompt_stdin=true and a nonempty high reasoning list. That packet is configuration evidence, not adapter execution evidence."],
+      "assessment": "Large argv transport and shim handling are compatibility limits; their actual platform failure thresholds were not measured here. Empty levels do not reliably preserve host defaults if an adapter uses a reasoning flag that rejects or interprets host-default. Such templates should be rejected or given explicit omission semantics. Live CLI support and authentication are not demonstrated by supplied tests.",
+      "action": "Use a verified supported prompt transport, validate incompatible empty-level templates, and obtain argv-capture mock evidence. No live paid provider job is necessary for v1 verification."
+    },
+    {
+      "id": "R9",
+      "copilot_ids": [9],
+      "classification": "confirmed-evidence-defect-plus-process-limits",
+      "severity": "medium",
+      "title": "Timeout observations omit available exit and output fingerprint data",
+      "evidence": ["dispatch.rs:609-611 records exit_code and stdout/stderr fingerprints on normal exit.", "dispatch.rs:623-628 ignores kill and wait outcomes and returns timed_out with output paths but no exit_code or fingerprints.", "run watches only the direct child on normal exit; timeout tree termination is attempted on Windows, and each invocation receives its own timeout at 698-707 and 716-723."],
+      "assessment": "The timeout record falls short of the contract's retained exit observations and policy's output fingerprints. It must not invent an exit code when unavailable; retain a nullable code plus an explicit wait/kill error. Descendant containment, total-attempt deadlines and log memory bounds are additional runtime limits, not all explicit v1 requirements. A surviving descendant could compromise stability and needs a separate controlled reproduction.",
+      "action": "Retain timeout log fingerprints and observed termination results, then verify with deterministic timeout mocks. Specify descendant and total-deadline guarantees separately."
+    },
+    {
+      "id": "R10",
+      "copilot_ids": [10],
+      "classification": "documented-limitations",
+      "severity": "info",
+      "title": "Platform recovery, stale locks and explicit input coverage are bounded limitations",
+      "evidence": ["dispatch.rs:789-791 refuses process inspection on non-Windows; recovery only calls process_alive when an active attempt has a worker.lock.", "Lock::drop at 311-315 removes scheduler.lock on normal scope exit, while create_new at 445-451 fails closed on an existing lock.", "Invocation at 24-31 defaults assertion failures to code 1; worker at 733-744 distinguishes other exits and timeouts from assertion failures.", "policy.md documents polling, manual stale-lock handling, explicit dependency closure, disabled unconfigured adapters and host permission boundaries."],
+      "assessment": "These limitations do not establish contract defects. Watcher source and observed watcher logs were not supplied, so an indefinite dead-worker polling claim remains unverified. Non-Windows recovery is not categorically rejected for every state; the process-inspection path is the explicit unsupported case.",
+      "action": "Retain the stated limits and scope platform claims to actual evidence. Do not remove locks or launch recovery as part of this review."
+    },
+    {
+      "id": "R11",
+      "copilot_ids": [11],
+      "classification": "trust-boundary-and-unproven-hardening-claims",
+      "severity": "low",
+      "title": "Ancestor configuration and trusted records need explicit ownership assumptions",
+      "evidence": ["dispatch.rs:88-99 selects the nearest ancestor .recur/config.toml and plan at 298 records its path and fingerprint.", "worker at 654-668 checks config/map/context fingerprints but deserializes assignment and host from the local record at 665 and 681.", "worker does not compare planning input_fingerprints at launch or re-query bubble_progress. dispatch at 453 and 494 obtains live readiness before assignments."],
+      "assessment": "An ancestor config can be project-local when -d is nested; this alone does not prove a violation. Local record fingerprints are drift observations, not authentication against someone able to rewrite both records and host configuration. Planning inputs are recorded even though pre-launch equality is not enforced. The supplied v1 text does not clearly require unchanged editable inputs across planning and agent work or a second worker-time gate query.",
+      "action": "Clarify dispatch-root/config ownership and the trusted writer model. Treat launch-input and gate rechecks as policy questions until their required timing is specified; do not claim an observed exploit."
+    },
+    {
+      "id": "R12",
+      "copilot_ids": [12],
+      "classification": "test-coverage-gap",
+      "severity": "medium",
+      "title": "Supplied tests establish intended mock cases, not complete runtime coverage",
+      "evidence": ["tests.rs:1 is Windows-only; 41-57 configures PowerShell mocks with fixed host argv and exit-zero tests.", "No supplied test captures all argv placeholders, stdin, timeout log fingerprints, test_failure_codes overrides, or the startup/recovery race.", "tests.rs:334-370 covers Lang packet guidance and a static implementation gate, not runtime binding behavior."],
+      "assessment": "Mock processes are explicitly sufficient as the v1 verification method; lack of live paid-provider tests is not a defect. Missing boundary assertions limit what those tests could prove even if run. This review only inspected them.",
+      "action": "Parent should prioritize the supplied expansion unit tests, deterministic recovery fencing, context stability and observation retention tests, then add only platform/adapter branches covered by the intended support claim."
+    },
+    {
+      "id": "R13",
+      "copilot_ids": [13],
+      "classification": "test-evidence-limit",
+      "severity": "medium",
+      "title": "Several assertions do not isolate their claimed cause",
+      "evidence": ["tests.rs:147 asserts only empty launched, not the unavailable-host skip reason.", "tests.rs:234-238 accepts any non-produced state for asynchronous config drift; this establishes no success, not which drift stage rejected it.", "tests.rs:257 discards the second scheduler result, so total attempts at 260 tests deduplication but cannot isolate scheduler.lock contention.", "tests.rs:185-189 asserts pass=1 and waits, but does not assert max_attempts exhaustion or exactly which successor attempts ran."],
+      "assessment": "These are limitations on evidence attribution, not automatically failures of the behavior being tested. A sequential interleaving can satisfy deduplication without observing a lock rejection; prelaunch host_failed is a valid outcome if config changes before launch.",
+      "action": "Use explicit synchronization to select the intended phase, then assert exact states, reasons and retained records. Keep separate tests for prelaunch and during-verification drift."
+    },
+    {
+      "id": "R14",
+      "copilot_ids": [14],
+      "classification": "test-coverage-gap-with-correction",
+      "severity": "medium",
+      "title": "Positive dependency unlocking lacks supplied evidence",
+      "evidence": ["tests.rs:116-122 asserts produced does not accept slices or make final ready; no supplied test accepts prerequisite gates and then dispatches final.", "tests.rs:266-331 does exercise a produced attempt followed by preview/confirmed recovery with reason Review requires another attempt, redispatch and retained test_results."],
+      "assessment": "The positive gate-unlock path is untested in this file. Copilot's claim that rejected-review recovery is wholly unexercised overstates the gap: administrative reopening is tested, though no actual review rejection artifact is used.",
+      "action": "Parent can use a disposable deterministic fixture with the established receipt/evidence/completion CLI to test positive unlocking. Do not publish acceptance for the actual assigned Warp here."
+    },
+    {
+      "id": "R15",
+      "copilot_ids": [7, 11, 12],
+      "classification": "confirmed-context-stability-gap",
+      "severity": "high",
+      "title": "Context-only changes after launch are absent from final stability checks",
+      "evidence": ["Assignment has separate context and inputs vectors at dispatch.rs:58-63; plan at 228-236 fingerprints both separately.", "worker compares context_fingerprints once before launch at 666-669.", "worker at 714-741 checks only assignment.inputs and config/map at verification completion; it does not recompute context_paths."],
+      "assessment": "A scope-defining context file omitted from inputs can change during tests while all listed inputs, config and map remain unchanged; exit-zero tests then select produced. This contradicts unqualified policy claims that context drift is refused and the contract requirement to invalidate scope-changing inputs during tests. Requiring users to duplicate every scope context in inputs would be an additional restriction, not enforced here. This is a static counterexample, not an observed run.",
+      "action": "Recheck bound context fingerprints before and after verification (against the bound packet), or explicitly enforce a complete verification-input union. Test a context-only file change with a barrier. Endpoint hashes alone also do not detect change-then-restore activity; keep the stability claim bounded to observations."
+    },
+    {
+      "id": "R16",
+      "copilot_ids": [9, 12],
+      "classification": "confirmed-evidence-retention-defect",
+      "severity": "medium",
+      "title": "A later verification execution error discards earlier result observations",
+      "evidence": ["dispatch.rs:715-723 accumulates results in a local vector and propagates run errors with ?.", "test_results is assigned to record only at 739, after every run, input reread and policy/map reread succeeds.", "The outer error handler at 753-755 sets host_failed and error, without recovering that local vector."],
+      "assessment": "If one test finishes and a later test cannot spawn, the completed test's stdout/stderr files may remain on disk but its exit/fingerprint observation is never retained in the attempt record. Similar loss occurs when a post-test fingerprint read fails. These paths also use host_failed rather than the policy's verification execution-error category, though they correctly do not increment test-failure feedback.",
+      "action": "Persist each completed test observation incrementally, preserve explicit errors for commands that never started, and classify verification infrastructure errors separately from host failures. Test a first successful command followed by a deterministic execution error."
+    }
+  ],
+  "acceptance_conditions": [
+    "Parent integrates the expand proposal and observes failing old-function regression cases followed by passing replacement cases, including literal tokens in every inserted field. No project-test result is supplied by this review.",
+    "Before claiming full v1 behavior, resolve or explicitly narrow the contract for R6 transition fencing, R15 context stability and R9/R16 observation retention; obtain deterministic mock evidence for the retained claims.",
+    "Resolve R5 recovery feedback history and document remaining lifecycle and adapter policy decisions. A bounded limitation must not be reported as an observed runtime guarantee.",
+    "Parent correlates actual dispatch claim/start/finish and provider return records for handoff timing, reviews the outputs and separately decides the review gate. Structural JSON validation alone does not establish acceptance."
+  ],
+  "unresolved_questions": [
+    "Does changing a slice contract create a new attempt budget, or must supersession/recovery be explicit while old active work remains fenced?",
+    "Should empty reasoning_levels reject argv templates containing {reasoning}, or is omission represented explicitly by the adapter?",
+    "What descendant lifetime and verification stability guarantees are intended beyond direct-child completion and before/after fingerprints?",
+    "Which actual attempt timestamps will the parent use to measure cross-provider handoff latency? None are present in the supplied preview."
+  ]
+}

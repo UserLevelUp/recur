@@ -1,0 +1,159 @@
+{
+  "blocked": [],
+  "completed_slices": [
+    "slice-contract",
+    "slice-final",
+    "slice-implementation",
+    "slice-tests"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 4,
+    "pending": 0,
+    "required": 4,
+    "stale_contract": 0
+  },
+  "covered": [
+    "slice-contract",
+    "slice-final",
+    "slice-implementation",
+    "slice-tests"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/observations/acceptance/acceptance.complete.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "contract-review",
+      "satisfied": true,
+      "slice_id": "slice-contract",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/observations/acceptance/acceptance.complete.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "baseline-differential",
+      "satisfied": true,
+      "slice_id": "slice-tests",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/observations/acceptance/acceptance.complete.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "dispatch-tests",
+      "satisfied": true,
+      "slice_id": "slice-implementation",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "warps/dispatch-review/observations/acceptance/acceptance.complete.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "regressions",
+      "satisfied": true,
+      "slice_id": "slice-final",
+      "status": "declared"
+    }
+  ],
+  "goal": "Dispatch dependency-ready Warp slices to configured asynchronous CLI hosts with observed evidence and bounded feedback",
+  "layers": [
+    "slice-contract@dispatch-20261007-slice-contract",
+    "slice-final@dispatch-20261007-slice-final",
+    "slice-implementation@dispatch-20261007-implementation-root-corrected",
+    "slice-tests@dispatch-20261007-slice-tests"
+  ],
+  "manifest": "main.command.warp.dispatch.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "//?/C:/src/recur/warps",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.command.warp.dispatch.contract:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-review"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-contract",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.dispatch.tests:v2",
+      "depends_on": [
+        "slice-contract"
+      ],
+      "evidence_gates": [
+        "baseline-differential"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-tests",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.dispatch.implementation:v1",
+      "depends_on": [
+        "slice-tests"
+      ],
+      "evidence_gates": [
+        "dispatch-tests"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-implementation",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.dispatch.final:v1",
+      "depends_on": [
+        "slice-implementation"
+      ],
+      "evidence_gates": [
+        "regressions"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "ready": false,
+      "slice_id": "slice-final",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [
+    "Declared current_slice 'slice-contract' is no longer ready; selection not inferred."
+  ],
+  "warp_id": "main.command.warp.dispatch"
+}

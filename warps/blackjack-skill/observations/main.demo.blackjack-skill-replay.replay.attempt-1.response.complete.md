@@ -1,0 +1,87 @@
+artifact.type = lane
+publish: main.demo.blackjack-skill-replay.replay.attempt.1.response observed response
+consumer: main.demo.blackjack-skill-replay.coordination saved asynchronous handoff
+
+# replay: response
+
+Observed UTC: 2026-10-08T05:37:30.083Z
+Host: blackjack-skill-codex; requested reasoning: high
+Attempt state: produced
+Claimed Unix seconds: 1791437560
+Agent execution seconds: 286
+Gate acceptance: not implied
+
+```text
+FILE ARTIFACT: report.json
+{
+  "status": "implemented",
+  "warp": "main.demo.blackjack-skill-replay",
+  "slice": "replay",
+  "contract": "contract:main.demo.blackjack-skill-replay.replay:v1",
+  "files_changed": [
+    "main.blackjack.skill.replay.jl",
+    "extra-tests.jl",
+    "report.json"
+  ],
+  "changes": [
+    "Implemented BlackjackReplay Recorder construction with engine identity, validated base revision, detached initial parameters and explicit-only optional policies keyword.",
+    "Implemented canonical private-state SHA-256 hashing, sorted string object keys, recursive struct fields, UTF-8 JSON primitives, and rejection of unsupported, nonfinite or cyclic data.",
+    "Implemented transactional recording using isolated engine transitions, complete realized decks, command and deal limits, bounded canonical envelope bytes, and detached returned games.",
+    "Implemented settled-only detached export and strict playback preflight followed by initial, per-step and final hash verification.",
+    "Preserved frozen tests, interfaces, reference engine/rules and prepared Lang boundaries. No commits, pushes, provider changes or acceptance operations."
+  ],
+  "tests_run": [
+    {
+      "program": "C:/Users/marcn/.julia/juliaup/julia-1.12.7+0.x64.w64.mingw32/bin/julia.exe",
+      "args": ["--startup-file=no", "-O0", "-C", "generic", "--project=C:/src/recur/demos/web-evidence-lab", "main.blackjack.skill.replay.test.jl"],
+      "executed_by": "implementation agent",
+      "exit_code": 0,
+      "passed": 38,
+      "failed": 0,
+      "summary": "Frozen private replay: 38/38."
+    },
+    {
+      "program": "C:/Users/marcn/.julia/juliaup/julia-1.12.7+0.x64.w64.mingw32/bin/julia.exe",
+      "args": ["--startup-file=no", "-O0", "-C", "generic", "--project=C:/src/recur/demos/web-evidence-lab", "extra-tests.jl"],
+      "executed_by": "implementation agent",
+      "exit_code": 0,
+      "passed": 144,
+      "failed": 0,
+      "testsets": {
+        "Canonical private state": 16,
+        "Detachment and transactional recording": 26,
+        "Complete envelope validation before engine work": 80,
+        "Limits, revisions and API compatibility": 18,
+        "Split, double and multiple rounds": 4
+      }
+    }
+  ],
+  "static_advice": {
+    "commands_run_once": [
+      "recur lang check workflow.recur -d . --json",
+      "recur-lang plan workflow.recur -d . --json",
+      "recur lang show workflow.recur --scope replay -d . --json"
+    ],
+    "observed_validation": "sound-within-coverage",
+    "observed_graph_findings": [],
+    "source_hash": "fnv1a64:85d2b2c7bf799dbf",
+    "whole_source_validated": false,
+    "execution": "not-run",
+    "limitations": "Lang describes the prepared implementation join only. It does not execute Julia, prove implementation behavior, validate receipts or accept gates. Combined CLI output was truncated; independent check/plan exit codes were not retained. Runtime results above come from separately observed Julia invocations."
+  },
+  "failures": [],
+  "remaining_concerns": [
+    "The frozen reference engine has no policies keyword. Explicit non-null policies are forwarded only when requested; that baseline rejects them. A test adapter verifies forwarding and detachment, not actual future dealer-aware engine behavior.",
+    "The solo one-argument constructor and protocol-v2 path were tested through an adapter using the frozen reference rules. Integrated solo engine, HTTP and browser behavior remain integration-slice work.",
+    "Count-limit recorder tests seed private step lists to exercise rejection directly; they do not simulate 2000 accepted commands. The bounded canonical writer and oversized malformed-envelope rejection are tested separately.",
+    "Canonicalization rejects cycles and nesting deeper than 128. Consumers must not mutate Recorder.game directly. State hashes check consistency, not authenticity."
+  ],
+  "unresolved_questions": [],
+  "acceptance": {
+    "required_gate": "replay-tests",
+    "marked": false,
+    "note": "Passing local runtime evidence is reported for coordinator review; no acceptance state was changed."
+  }
+}
+
+```

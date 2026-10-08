@@ -1,0 +1,49 @@
+{
+  "bubble_uuid": "01a1170a-50bc-7196-ae0e-ca70760dbcf6",
+  "current_slice": "copilot-review",
+  "goal": "Cross-provider review and Codex high coordination for dispatch acceptance, with observed handoff timing",
+  "intelligence_baseline": "host-current",
+  "invariants": [],
+  "required_slices": [
+    {
+      "evidence_gates": [
+        "review"
+      ],
+      "intelligence_tick": 0,
+      "contract_hash": "contract:dispatch.review.copilot:v1",
+      "slice_id": "copilot-review"
+    },
+    {
+      "evidence_gates": [
+        "review"
+      ],
+      "intelligence_tick": 0,
+      "contract_hash": "contract:dispatch.review.gemini-availability:v2",
+      "slice_id": "gemini-review",
+      "description": "Review the blocked Gemini availability outcome; this gate does not claim a Gemini code review."
+    },
+    {
+      "slice_id": "codex-independent",
+      "contract_hash": "contract:dispatch.review.codex-independent:v1",
+      "evidence_gates": [
+        "review"
+      ],
+      "intelligence_tick": 0
+    },
+    {
+      "evidence_gates": [
+        "review"
+      ],
+      "intelligence_tick": 0,
+      "contract_hash": "contract:dispatch.review.coordinator:v1",
+      "slice_id": "codex-coordinator",
+      "depends_on": [
+        "copilot-review",
+        "gemini-review",
+        "codex-independent"
+      ]
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.dispatch.review"
+}

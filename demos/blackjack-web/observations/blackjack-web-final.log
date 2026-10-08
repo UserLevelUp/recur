@@ -1,0 +1,10 @@
+Test Summary:            | Pass  Total  Time
+Blackjack website engine | 8601   8601  1.0s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:          | Pass  Total  Time
+Blackjack website HTTP |   41     41  3.3s
+Test Summary:            | Pass  Total  Time
+Blackjack website assets |   14     14  0.0s
+Test Summary:                    | Pass  Total  Time
+Blackjack website Lang reference |   46     46  0.5s

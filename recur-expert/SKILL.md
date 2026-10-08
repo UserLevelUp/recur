@@ -5,6 +5,12 @@ description: Inspect or implement Recur CLI, capability prompt discovery and War
 
 # Recur expert
 
+For a focused workflow, use the project's typed Reveal capsule and read the
+matching skill: `recur-warp` for slice lifecycle and acceptance, `recur-lang`
+for optional contracts and planning, `recur-watch` for active polling/subscriptions,
+`recur-trace-id` for lineage, and `recur-demo-tests` for opt-in demo verification.
+These specialize this orientation skill; Reveal discovery alone does not load them.
+
 Resolve the requested repository root first. In the Recur source repository,
 read julia-expert/references/recur-playbook.md, starting with its Warp specialization
 when relevant. Paths below are repository-relative, not relative to this installed
@@ -43,6 +49,16 @@ string. Prefer the matching local binary when installed help lags; do not build
 or install merely to answer an orientation question if source suffices.
 
 Core `recur warp` queries declarations and computes qualified progress.
+Companion creation supports `--slice-intelligence SLICE=-1|0|1` and editable
+`[warp.intelligence]` init defaults. These ticks are advisory relative to the
+recorded Warp baseline, never automatic host/model changes or acceptance gates.
+See docs/main.recur.warp.intelligence.tick.recurring.md and selected binary help.
+For async CLI hosts, inspect `recur-warp llm plan`, `dispatch`, `recover`,
+`recur-watch dispatch` and docs/main.command.warp.dispatch.readme.md. Core
+`recur warp dispatch` only reads attempt records. Configuration, host availability,
+disjoint workspaces and dependency gates bound assignment. Produced observations
+are not gate acceptance. Optional Lang design/report context must not become a
+mandatory prerequisite for ordinary work or a claim of runtime proof.
 `status`, `explain`, `next` and `collapse-plan` inspect lane attention;
 `map` and `merge` inspect declared maps and compose acceptance layers.
 `recur-warp` is the separate writer: `init`, `create`, `receipt`, `complete`,
@@ -78,7 +94,10 @@ packets remain separate. See docs/main.command.reveal.artifact-types.contract.md
 For agent/persona/skill associations, inspect `recur reveal --type agent|persona|skill`
 and the reported config/capsule sources. Explicit registry IDs and capsule bindings
 are distinct; do not infer relationships from matching names. `recur-reveal init`
-previews with `--dry-run` and otherwise adds only missing association tables.
+previews with `--dry-run` and adds missing association tables and core skill
+entries to populated registries, preserving custom records and empty opt-outs.
+`--local` initializes the explicit root instead of its nearest ancestor config.
+Init registers project-relative pointers and does not install skill bodies.
 `recur-reveal next ID --type agent|persona -d ROOT --json` prepares bounded local
 guidance. Inspect blocked references, fingerprints and `context.truncated` before
 using it. Available context is not activation or acceptance. See
@@ -137,6 +156,13 @@ preferences in the nearest project config; omit `--dry-run` to install them.
 Existing values/comments are preserved and invalid inputs do not publish.
 These preferences do not implement a planner. See docs/main.command.lang.init.readme.md
 and query `main.lang.init` for acceptance rather than inferring it from command availability.
+
+Use `recur-lang plan SOURCE [--scope SYMBOL] -d ROOT --json` for bounded advice
+from existing query packets and initialized project preferences. Inspect source
+and policy fingerprints, graph findings, suggested tests and unresolved decisions.
+`planned` is advice, not runtime acceptance; `blocked` retains graph findings even
+under a scoped view. The command writes nothing and executes no binding or model.
+See docs/main.command.lang.plan.readme.md and the blackjack-lab feature matrix.
 
 For a worked tests-first WIR1 capability, inspect `main.lang.dogfood` under
 `warps` and `demos/web-evidence-lab/main.lang.walkthrough.md`. Its server catalog

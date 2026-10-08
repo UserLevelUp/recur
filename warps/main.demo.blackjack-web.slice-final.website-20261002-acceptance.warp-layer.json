@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.blackjack-web",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.demo.blackjack-web.slice-final:v1",
+  "attempt_id": "website-20261002-acceptance",
+  "result_state": "accepted",
+  "result_hash": "sha256:802952d0c043e831ff83fc3e5fb72a6226b6bbf87ebe17531e20fc39881ca16b",
+  "evidence": {
+    "acceptance": [
+      "demos/blackjack-web/main.blackjack.web.verification.complete.md"
+    ]
+  },
+  "reason": null
+}

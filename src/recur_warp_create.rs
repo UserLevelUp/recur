@@ -98,7 +98,47 @@ fn uuid7() -> anyhow::Result<String> {
     ))
 }
 
-pub fn create(root: &Path, warp: &str, goal: &str, confirm: bool) -> anyhow::Result<Value> {
+pub(crate) fn intelligence_policy(settings: &toml::Value) -> anyhow::Result<(i8, String)> {
+    let policy = settings.get("warp").and_then(|w| w.get("intelligence"));
+    ensure!(policy.map_or(true, |p| p.is_table()), "warp.intelligence must be a table");
+    let tick = match policy.and_then(|p| p.get("default_tick")) {
+        Some(value) => value.as_integer().context("warp.intelligence.default_tick must be an integer")?,
+        None => 0,
+    };
+    ensure!((-1..=1).contains(&tick), "warp.intelligence.default_tick must be -1, 0 or 1");
+    let baseline = match policy.and_then(|p| p.get("baseline")) {
+        Some(value) => value.as_str().context("warp.intelligence.baseline must be a string")?,
+        None => "host-current",
+    };
+    ensure!(!baseline.trim().is_empty(), "warp.intelligence.baseline must not be blank");
+    Ok((tick as i8, baseline.to_owned()))
+}
+
+fn apply_intelligence_ticks(map: &mut Value, requests: &[String], default_tick: i8) -> anyhow::Result<()> {
+    let slices = map["required_slices"].as_array_mut().context("required_slices must be an array")?;
+    for slice in slices.iter_mut() {
+        if slice.get("intelligence_tick").is_none() {
+            slice["intelligence_tick"] = default_tick.into();
+        }
+    }
+    let mut seen = std::collections::BTreeSet::new();
+    for request in requests {
+        let (id, value) = request.split_once('=').context("slice intelligence must be SLICE=-1|0|1")?;
+        ensure!(seen.insert(id), "duplicate slice intelligence request for '{id}'");
+        let tick: i8 = value.parse().context("intelligence tick must be -1, 0 or 1")?;
+        ensure!((-1..=1).contains(&tick), "intelligence tick must be -1, 0 or 1");
+        let slice = slices.iter_mut().find(|s| s["slice_id"].as_str() == Some(id))
+            .with_context(|| format!("unknown slice intelligence target '{id}'"))?;
+        slice["intelligence_tick"] = tick.into();
+    }
+    for slice in slices {
+        let tick = slice["intelligence_tick"].as_i64().context("slice intelligence_tick must be an integer")?;
+        ensure!((-1..=1).contains(&tick), "slice intelligence_tick must be -1, 0 or 1");
+    }
+    Ok(())
+}
+
+pub fn create(root: &Path, warp: &str, goal: &str, slice_intelligence: &[String], confirm: bool) -> anyhow::Result<Value> {
     ensure!(
         portable_component(warp)
             && warp.len() <= 128
@@ -126,6 +166,7 @@ pub fn create(root: &Path, warp: &str, goal: &str, confirm: bool) -> anyhow::Res
         None => toml::Value::Table(Default::default()),
     };
     recur::warp_policy::WarpRemovalPolicy::from_config(&settings)?;
+    let (default_tick, baseline) = intelligence_policy(&settings)?;
     let creation = settings.get("warp").and_then(|v| v.get("creation"));
     if let Some(value) = creation {
         ensure!(value.is_table(), "warp.creation must be a table");
@@ -160,6 +201,8 @@ pub fn create(root: &Path, warp: &str, goal: &str, confirm: bool) -> anyhow::Res
         starter_template()
     };
     render(&mut map, warp, goal);
+    apply_intelligence_ticks(&mut map, slice_intelligence, default_tick)?;
+    map["intelligence_baseline"] = baseline.into();
     map.as_object_mut()
         .context("template must be a JSON object")?
         .insert("goal".into(), goal.into());
@@ -223,4 +266,64 @@ pub fn create(root: &Path, warp: &str, goal: &str, confirm: bool) -> anyhow::Res
         json!({"schema":"warp-create-v1", "state":if confirm {"written"} else {"planned"},
         "warp_id":warp, "path":target, "configuration_source":config, "map":map}),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn configured_policy_template_and_cli_precedence() {
+        let root = tempfile::tempdir().unwrap();
+        fs::create_dir(root.path().join(".recur")).unwrap();
+        fs::write(root.path().join(".recur/config.toml"), "[warp.creation]\ntemplate = '.recur/template.json'\n[warp.intelligence]\ndefault_tick = -1\nbaseline = 'medium'\n").unwrap();
+        let mut template = starter_template();
+        template["required_slices"][1]["intelligence_tick"] = json!(1);
+        fs::write(root.path().join(".recur/template.json"), serde_json::to_vec(&template).unwrap()).unwrap();
+        let preview = create(root.path(), "demo", "Goal", &[], false).unwrap();
+        assert_eq!(preview["map"]["intelligence_baseline"], "medium");
+        assert_eq!(preview["map"]["required_slices"][0]["intelligence_tick"], -1);
+        assert_eq!(preview["map"]["required_slices"][1]["intelligence_tick"], 1);
+        let override_map = create(root.path(), "demo", "Goal", &["slice-final=0".into()], false).unwrap();
+        assert_eq!(override_map["map"]["required_slices"][1]["intelligence_tick"], 0);
+        for policy in ["default_tick = 2", "default_tick = 'high'", "baseline = ''", "baseline = 1"] {
+            let settings: toml::Value = toml::from_str(&format!("[warp.intelligence]\n{policy}")).unwrap();
+            assert!(intelligence_policy(&settings).is_err());
+        }
+    }
+
+    #[test]
+    fn intelligence_ticks_preview_publish_and_reject_without_writing() {
+        let root = tempfile::tempdir().unwrap();
+        let requests = vec!["slice-0=-1".into(), "slice-final=1".into()];
+        let preview = create(root.path(), "demo", "Goal", &requests, false).unwrap();
+        assert_eq!(preview["map"]["required_slices"][0]["intelligence_tick"], -1);
+        assert_eq!(preview["map"]["required_slices"][1]["intelligence_tick"], 1);
+        assert!(!root.path().join("warps").exists());
+        for request in ["missing=1", "slice-0=2", "slice-0=high", "slice-0"] {
+            assert!(create(root.path(), "bad", "Goal", &[request.into()], true).is_err());
+            assert!(!root.path().join("warps").exists());
+        }
+        assert!(create(root.path(), "bad", "Goal", &["slice-0=1".into(), "slice-0=-1".into()], true).is_err());
+        let written = create(root.path(), "demo", "Goal", &requests, true).unwrap();
+        let stored: Value = serde_json::from_slice(&fs::read(written["path"].as_str().unwrap()).unwrap()).unwrap();
+        assert_eq!(stored, written["map"]);
+        let parsed: WarpBubbleMap = serde_json::from_value(stored).unwrap();
+        assert_eq!(parsed.required_slices[0].intelligence_tick, Some(-1));
+        assert_eq!(parsed.required_slices[1].intelligence_tick, Some(1));
+        assert!(create(root.path(), "demo", "Goal", &requests, true).is_err());
+    }
+
+    #[test]
+    fn creation_defaults_to_hold_and_invalid_template_ticks_fail() {
+        let root = tempfile::tempdir().unwrap();
+        let legacy = create(root.path(), "legacy", "Goal", &[], false).unwrap();
+        assert_eq!(legacy["map"]["required_slices"][0]["intelligence_tick"], 0);
+        let mut map = starter_template();
+        apply_intelligence_ticks(&mut map, &["slice-0=0".into()], 0).unwrap();
+        assert_eq!(map["required_slices"][0]["intelligence_tick"], 0);
+        render(&mut map, "demo", "Goal");
+        map["required_slices"][0]["intelligence_tick"] = json!(2);
+        assert!(apply_intelligence_ticks(&mut map, &[], 0).is_err());
+    }
 }

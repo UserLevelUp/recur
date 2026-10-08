@@ -14,7 +14,32 @@ use std::{
     path::{Component, Path, PathBuf},
 };
 
-pub const DEFAULTS: &str = "\n# Explicit local associations; pointers are not installed or activated.\n[reveal.agents]\n\n[reveal.personas.skippy]\nskills = [\"recur-expert\", \"recur-warp\"]\nguidance_level = \"advanced\"\n\n[reveal.skills.recur-expert]\npath = \"recur-expert/SKILL.md\"\n\n[reveal.skills.recur-warp]\npath = \"recur-warp/SKILL.md\"\n";
+pub const DEFAULTS: &str = r#"
+# Explicit local associations; pointers are not installed or activated.
+[reveal.agents]
+
+[reveal.personas.skippy]
+skills = ["recur-expert", "recur-warp"]
+guidance_level = "advanced"
+
+[reveal.skills.recur-expert]
+path = "recur-expert/SKILL.md"
+
+[reveal.skills.recur-warp]
+path = "recur-warp/SKILL.md"
+
+[reveal.skills.recur-lang]
+path = "recur-lang/SKILL.md"
+
+[reveal.skills.recur-watch]
+path = "recur-watch/SKILL.md"
+
+[reveal.skills.recur-trace-id]
+path = "recur-trace-id/SKILL.md"
+
+[reveal.skills.recur-demo-tests]
+path = "recur-demo-tests/SKILL.md"
+"#;
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
@@ -326,11 +351,22 @@ impl Registry {
                         value: n.status.clone(),
                     },
                 ];
-                if let Some(path)=&n.record.path {
-                    fields.push(RevealField {key: if n.kind=="skill" {"skill.path"} else {"body.path"}.into(),value:path.clone()});
+                if let Some(path) = &n.record.path {
+                    fields.push(RevealField {
+                        key: if n.kind == "skill" {
+                            "skill.path"
+                        } else {
+                            "body.path"
+                        }
+                        .into(),
+                        value: path.clone(),
+                    });
                 }
-                if let Some(level)=&n.record.guidance_level {
-                    fields.push(RevealField {key:"guidance_level".into(),value:level.clone()});
+                if let Some(level) = &n.record.guidance_level {
+                    fields.push(RevealField {
+                        key: "guidance_level".into(),
+                        value: level.clone(),
+                    });
                 }
                 Some(RevealEntry {
                     lane: n.id.clone(),
@@ -549,13 +585,21 @@ impl Registry {
 }
 
 pub fn init(root: &Path, dry_run: bool) -> Result<Value> {
+    init_at(root, dry_run, false)
+}
+
+/// Local mode initializes this root rather than its nearest ancestor config.
+pub fn init_at(root: &Path, dry_run: bool, local: bool) -> Result<Value> {
     let root = root.canonicalize()?;
     ensure!(root.is_dir(), "Root must be a directory");
-    let path = root
-        .ancestors()
-        .map(|p| p.join(".recur/config.toml"))
-        .find(|p| p.exists())
-        .unwrap_or_else(|| root.join(".recur/config.toml"));
+    let path = if local {
+        root.join(".recur/config.toml")
+    } else {
+        root.ancestors()
+            .map(|p| p.join(".recur/config.toml"))
+            .find(|p| p.exists())
+            .unwrap_or_else(|| root.join(".recur/config.toml"))
+    };
     let base = path
         .parent()
         .and_then(Path::parent)
@@ -589,6 +633,18 @@ pub fn init(root: &Path, dry_run: bool) -> Result<Value> {
             };
         }
     }
+    // A populated skill registry can be extended, while an explicitly empty
+    // registry is a deliberate opt-out. Existing records remain authoritative.
+    let skills = document["reveal"]["skills"]
+        .as_table_like_mut()
+        .context("skills must be table")?;
+    if !skills.is_empty() {
+        for (id, item) in defaults["reveal"]["skills"].as_table().unwrap().iter() {
+            if !skills.contains_key(id) {
+                skills.insert(id, item.clone());
+            }
+        }
+    }
     let updated = document.to_string();
     let checked: toml::Value = toml::from_str(&updated)?;
     Profiles::parse(
@@ -613,6 +669,6 @@ pub fn init(root: &Path, dry_run: bool) -> Result<Value> {
         temp.persist(&path).map_err(|e| e.error)?;
     }
     Ok(
-        json!({"schema":"recur-reveal-init-v1","path":path,"changed":changed,"dry_run":dry_run,"preview":updated,"mutation":if changed&&!dry_run{"config-written"}else{"none"}}),
+        json!({"schema":"recur-reveal-init-v1","path":path,"scope":if local{"local"}else{"nearest-config"},"changed":changed,"dry_run":dry_run,"preview":updated,"mutation":if changed&&!dry_run{"config-written"}else{"none"}}),
     )
 }

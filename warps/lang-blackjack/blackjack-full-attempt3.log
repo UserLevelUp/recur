@@ -1,0 +1,65 @@
+
+Please submit a bug report with steps to reproduce this fault, and any error messages that follow (in their entirety). Thanks.
+Exception: EXCEPTION_ACCESS_VIOLATION at 0x7ffb41c5d663 -- _ZL7AddGluePN4llvm6SDNodeENS_7SDValueEbPNS_12SelectionDAGE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+in expression starting at C:\src\recur\demos\blackjack-lab\main.blackjack.05.test.jl:2
+_ZL7AddGluePN4llvm6SDNodeENS_7SDValueEbPNS_12SelectionDAGE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm18ScheduleDAGSDNodes23ClusterNeighboringLoadsEPNS_6SDNodeE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm18ScheduleDAGSDNodes15BuildSchedGraphEPNS_9AAResultsE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN12_GLOBAL__N_117ScheduleDAGRRList8ScheduleEv at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm16SelectionDAGISel17CodeGenAndEmitDAGEv at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm16SelectionDAGISel16SelectBasicBlockENS_21ilist_iterator_w_bitsINS_12ilist_detail12node_optionsINS_11InstructionELb0ELb0EvLb1EEELb0ELb1EEES6_Rb at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm16SelectionDAGISel20SelectAllBasicBlocksERKNS_8FunctionE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm16SelectionDAGISel20runOnMachineFunctionERNS_15MachineFunctionE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN12_GLOBAL__N_115X86DAGToDAGISel20runOnMachineFunctionERN4llvm15MachineFunctionE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm19MachineFunctionPass13runOnFunctionERNS_8FunctionE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm13FPPassManager13runOnFunctionERNS_8FunctionE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm13FPPassManager11runOnModuleERNS_6ModuleE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm6legacy15PassManagerImpl3runERNS_6ModuleE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+_ZN4llvm3orc14SimpleCompilerclERNS_6ModuleE at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\bin\libLLVM-18jl.dll (unknown line)
+operator() at C:/workdir/src\jitlayers.cpp:1561
+addModule at C:/workdir/src\jitlayers.cpp:2056
+jl_compile_codeinst_now at C:/workdir/src\jitlayers.cpp:626
+jl_compile_codeinst_impl at C:/workdir/src\jitlayers.cpp:824
+jl_compile_method_internal at C:/workdir/src\gf.c:3528
+_jl_invoke at C:/workdir/src\gf.c:4006 [inlined]
+ijl_apply_generic at C:/workdir/src\gf.c:4214
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+do_call at C:/workdir/src\interpreter.c:123
+eval_value at C:/workdir/src\interpreter.c:243
+eval_body at C:/workdir/src\interpreter.c:581
+eval_body at C:/workdir/src\interpreter.c:558
+eval_body at C:/workdir/src\interpreter.c:558
+jl_interpret_toplevel_thunk at C:/workdir/src\interpreter.c:898
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:1035
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:975
+ijl_toplevel_eval at C:/workdir/src\toplevel.c:1047 [inlined]
+ijl_toplevel_eval_in at C:/workdir/src\toplevel.c:1092
+eval at .\boot.jl:489
+include_string at .\loading.jl:2952
+_include at .\loading.jl:3012
+include at .\Base.jl:307
+IncludeInto at .\Base.jl:308
+jfptr_IncludeInto_55095 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+macro expansion at C:\src\recur\demos\blackjack-lab\main.blackjack.test.jl:7 [inlined]
+macro expansion at C:\workdir\usr\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+top-level scope at C:\src\recur\demos\blackjack-lab\main.blackjack.test.jl:6
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:1024
+jl_eval_module_expr at C:/workdir/src\toplevel.c:197 [inlined]
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:814
+jl_toplevel_eval_flex at C:/workdir/src\toplevel.c:975
+ijl_toplevel_eval at C:/workdir/src\toplevel.c:1047 [inlined]
+ijl_toplevel_eval_in at C:/workdir/src\toplevel.c:1092
+eval at .\boot.jl:489
+include_string at .\loading.jl:2952
+_include at .\loading.jl:3012
+include at .\Base.jl:306
+exec_options at .\client.jl:317
+_start at .\client.jl:550
+jfptr__start_59066 at C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\lib\julia\sys.dll (unknown line)
+jl_apply at C:/workdir/src\julia.h:2394 [inlined]
+true_main at C:/workdir/src\jlapi.c:985
+jl_repl_entrypoint at C:/workdir/src\jlapi.c:1153
+mainCRTStartup at C:/workdir/cli\loader_exe.c:58
+BaseThreadInitThunk at C:\WINDOWS\System32\KERNEL32.DLL (unknown line)
+RtlUserThreadStart at C:\WINDOWS\SYSTEM32\ntdll.dll (unknown line)
+Allocations: 6117701 (Pool: 6117628; Big: 73); GC: 6

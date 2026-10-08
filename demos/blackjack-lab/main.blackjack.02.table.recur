@@ -1,0 +1,34 @@
+recur 0.1 class BlackjackTable
+# defines: demo.blackjack.table contract-first stage 02.table
+header {
+  scope configure {
+    i(a) := (players: PlayerCount, money: Chips, bet: Chips, rounds: RoundCount, dealer: OptionalText, bank: Chips, seed: Seed)
+    o(b) := (players: PlayerNames, money: Chips, bet: Chips, rounds: RoundCount, dealer: Text, bank: Chips, seed: Seed)
+    c : i(a) -> o(b) ~ "Validate one to six players, positive bounded balances and rounds, and even fixed stakes" by BlackjackLab.TableConfig
+  }
+  scope describe {
+    i(c) := configure.o(b)
+    o(d) := (message: Text)
+    d : i(c) -> o(d) ~ "Call the table object and describe the whole configuration through a single bundle" by BlackjackLab.describe
+  }
+}
+body {
+  configure sync : i(a) -> c(a) -> o(b)
+  describe sync : i(c) -> d(c) -> o(d)
+  share configure.o(b) -> describe.i(c)
+  # Semantic types and rules require Julia tests; bindings are not executed by Lang.
+}
+footer {
+  event configure {
+    consume demo.blackjack.configure.request
+    produce demo.blackjack.configure.result
+    state demo.blackjack.configure.complete
+  }
+  warp configure : E0(demo.blackjack.configure.todo.current) -> dE(configure.c) -> Ef(demo.blackjack.configure.complete)
+  event describe {
+    consume demo.blackjack.describe.request
+    produce demo.blackjack.describe.result
+    state demo.blackjack.describe.complete
+  }
+  warp describe : E0(demo.blackjack.describe.todo.current) -> dE(describe.d) -> Ef(demo.blackjack.describe.complete)
+}

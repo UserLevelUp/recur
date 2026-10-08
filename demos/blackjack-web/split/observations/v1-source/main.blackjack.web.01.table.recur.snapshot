@@ -1,0 +1,35 @@
+recur 0.1 class WebTable
+# defines: demo.blackjack.web.table contract-first website stage
+header {
+  scope create {
+    i(a) := (money: Chips)
+    o(b) := (game: PrivateGame)
+    f : i(a) -> o(b) ~ "Create a single-player table with 20 to 10000 simulated chips and a separate house bank" by BlackjackWeb.newgame
+  }
+  scope view {
+    i(a) := (game: PrivateGame)
+    o(b) := (revision: Revision, phase: Phase, balance: Chips, starting: Chips, bank: Chips, stake: Chips, escrow: Chips, player: PublicCards, dealer: PublicCards, player_score: OptionalScore, dealer_score: OptionalScore, result: Outcome, profit: Chips, net: Chips, allowed: Actions, history: Rounds, stats: Counts, max_bet: Chips)
+    f : i(a) -> o(b) ~ "Project only public information; conceal the hole card and dealer score until settlement" by BlackjackWeb.public_state
+  }
+}
+body {
+  create sync : i(a) -> f(a) -> o(b)
+  view sync : i(a) -> f(a) -> o(b)
+}
+footer {
+  event create {
+    consume demo.blackjack.web.create.request
+    produce demo.blackjack.web.create.result
+    state demo.blackjack.web.create.complete
+  }
+  warp create : E0(demo.blackjack.web.create.todo.current) -> dE(create.f) -> Ef(demo.blackjack.web.create.complete)
+  event view {
+    consume demo.blackjack.web.view.request
+    produce demo.blackjack.web.view.result
+    state demo.blackjack.web.view.complete
+  }
+  warp view : E0(demo.blackjack.web.view.todo.current) -> dE(view.f) -> Ef(demo.blackjack.web.view.complete)
+  # References for implementation review; opaque types need behavioral tests.
+  # Browser event feedback is repeated requests, not a server-to-browser module import.
+}
+

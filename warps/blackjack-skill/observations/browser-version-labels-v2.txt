@@ -1,0 +1,92 @@
+×
+
+ISOLATED · READ ONLY
+
+Completed replay snapshot
+
+This settled snapshot belongs to the uploaded replay. Your live chips, revision and hand history are unchanged.
+
+Rules: s17-3to2-one-split-v1 · Engine: blackjack-rivals-v3
+
+Practice results only: rivals hit/stand; you may split/double. Shared deck, seat order, stakes and bankroll affect results; this is not a skill rating.
+
+Human
+
+Bankroll: 520 chips · Net: +20 · Capabilities: hit, stand, double, split
+
+ROI (Net chips / resolved wager): 1 · Net chips: 20 · Resolved wager: 20 · Settled samples: 1 rounds / 1 hands
+
+Hand 1 · 20 · Bet 20 · Outcome win · Profit +20
+
+Q
+♦
+Q
+♦
+♦
+J
+♣
+J
+♣
+♣
+Dealer · 26 · BUST
+K
+♦
+K
+♦
+♦
+5
+♥
+5
+♥
+♥
+A
+♠
+A
+♠
+♠
+10
+♦
+10
+♦
+♦
+Rival 1
+
+Bankroll: 480 chips · Net: -20 · In play: 0
+
+Policy: Stand on 17 benchmark · stand17-v1 · version 1
+
+Capabilities: hit, stand
+
+ROI (Net chips / resolved wager): -1 · Net chips: -20 · Resolved wager: 20 · Settled samples: 1 rounds / 1 hands
+
+Outcome: loss · Round profit: -20
+
+Score: 25 · Bust
+
+3 of diamonds
+8 of spades
+5 of spades
+9 of spades
+
+Bet: 20 · Status: settled · Outcome: loss · Profit: -20
+
+Rival 2
+
+Bankroll: 530 chips · Net: +30 · In play: 0
+
+Policy: Dealer-aware benchmark · dealer-aware-v1 · version 1
+
+Capabilities: hit, stand
+
+ROI (Net chips / resolved wager): 1.5 · Net chips: 30 · Resolved wager: 20 · Settled samples: 1 rounds / 1 hands
+
+Outcome: blackjack · Round profit: +30
+
+Score: 21 · Soft · Blackjack
+
+10 of clubs
+A of clubs
+
+Bet: 20 · Status: settled · Outcome: blackjack · Profit: +30
+
+Return to your live table

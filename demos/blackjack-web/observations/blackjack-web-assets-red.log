@@ -1,0 +1,161 @@
+Test Summary:            | Pass  Total  Time
+Blackjack website engine | 8601   8601  0.9s
+[ Info: Listening on: 127.0.0.1:0, thread id: 1
+[ Info: Server on 127.0.0.1:0 closing
+Test Summary:          | Pass  Total  Time
+Blackjack website HTTP |   41     41  2.9s
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:79
+  Expression: response.status == 200
+   Evaluated: 404 == 200
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:79 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:80
+  Expression: startswith(HTTP.header(response, "Content-Type"), mime)
+   Evaluated: startswith("application/json; charset=utf-8", "text/html")
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:80 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:81
+  Expression: length(response.body) > 100
+   Evaluated: 29 > 100
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:81 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:79
+  Expression: response.status == 200
+   Evaluated: 404 == 200
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:79 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:80
+  Expression: startswith(HTTP.header(response, "Content-Type"), mime)
+   Evaluated: startswith("application/json; charset=utf-8", "text/css")
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:80 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:81
+  Expression: length(response.body) > 100
+   Evaluated: 29 > 100
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:81 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:79
+  Expression: response.status == 200
+   Evaluated: 404 == 200
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:79 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:80
+  Expression: startswith(HTTP.header(response, "Content-Type"), mime)
+   Evaluated: startswith("application/json; charset=utf-8", "application/javascript")
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:80 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Test Failed at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:81
+  Expression: length(response.body) > 100
+   Evaluated: 29 > 100
+
+Stacktrace:
+ [1] top-level scope
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+ [2] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+ [3] macro expansion
+   @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:81 [inlined]
+ [4] macro expansion
+   @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+Blackjack website assets: Error During Test at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:75
+  Got exception outside of a @test
+  SystemError: opening file "C:\\src\\recur\\demos\\blackjack-web\\index.html": No such file or directory
+  Stacktrace:
+    [1] systemerror(p::String, errno::Int32; extrainfo::Nothing)
+      @ Base .\error.jl:186
+    [2] open(fname::String; lock::Bool, read::Nothing, write::Nothing, create::Nothing, truncate::Nothing, append::Nothing)
+      @ Base .\iostream.jl:317
+    [3] open
+      @ .\iostream.jl:296 [inlined]
+    [4] open(f::Base.var"#read##2#read##3"{String}, args::String; kwargs::@Kwargs{})
+      @ Base .\io.jl:410
+    [5] open
+      @ .\io.jl:409 [inlined]
+    [6] read(filename::String, ::Type{String})
+      @ Base .\io.jl:509
+    [7] top-level scope
+      @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:76
+    [8] macro expansion
+      @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+    [9] macro expansion
+      @ C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:84 [inlined]
+   [10] include(mapexpr::Function, mod::Module, _path::String)
+      @ Base .\Base.jl:307
+   [11] top-level scope
+      @ C:\src\recur\demos\blackjack-web\main.blackjack.web.test.jl:96
+   [12] include(mod::Module, _path::String)
+      @ Base .\Base.jl:306
+   [13] exec_options(opts::Base.JLOptions)
+      @ Base .\client.jl:317
+   [14] _start()
+      @ Base .\client.jl:550
+Test Summary:            | Pass  Fail  Error  Total  Time
+Blackjack website assets |    3     9      1     13  0.7s
+RNG of the outermost testset: Random.Xoshiro(0x6d64eedb66bb1192, 0x69f114b15f06207e, 0x4b63a0a4538885b2, 0x89f5a4993fa053d8, 0xe9e1d055e2da5a6e)
+ERROR: LoadError: Some tests did not pass: 3 passed, 9 failed, 1 errored, 0 broken.
+in expression starting at C:\src\recur\demos\blackjack-web\main.blackjack.web.http.test.jl:74
+in expression starting at C:\src\recur\demos\blackjack-web\main.blackjack.web.test.jl:1

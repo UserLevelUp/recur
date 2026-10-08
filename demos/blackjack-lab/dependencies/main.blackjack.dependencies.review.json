@@ -1,0 +1,26 @@
+{
+  "reference_files": {
+    "main.blackjack.dependencies.registry.json": "6ed4efbd8e599c57f1693a58743b5d1d7b4f6cc658ad6c4e4f21f535d2495c29",
+    "main.blackjack.dependencies.recur": "2b50707166b6364c011a90b8a5b6b04612db29388ba2883b6957619d78534423"
+  },
+  "scope": "default-bindings-only",
+  "schema": "blackjack-llm-dependency-review-v1",
+  "reviewer": "Codex author self-review",
+  "source_files": {
+    "main.blackjack.01.jl": "99794c1e25d2c2f0b347beb695f5d50830f33a948be10add00d1549fcb9a6c30",
+    "main.blackjack.jl": "afb2097c74bf0877517c8d443a27e2db6f83ef4529e3ab449685dab3620657ed",
+    "main.blackjack.app.jl": "a518d9dd8208cce96ebefa163056a9082c96dada06471326654ed5cbfc4db5ad",
+    "main.blackjack.04.jl": "8127b6716c45945995a3c3d095013347ba948111f39ccab75e6766910683f4df",
+    "main.blackjack.05.jl": "5565f650462e37970c4296d2e9bdf4c9e9745d90fe315de364a28ccf1f68ae29",
+    "main.blackjack.02.jl": "f981430bd9a70ef86509133dfa09ad0de4d9ee63ab716beca3b43480863c2fda",
+    "main.blackjack.06.jl": "0d83ba1b85b8ba8e10f308c1ef5cf4f0e147b417246904e1970f8bb652810a18",
+    "main.blackjack.03.jl": "766be0cf1bfa8b4913b15c129337ac1ae5482f5618091a55df04f08ceae03c5d"
+  },
+  "overall_complete": false,
+  "unresolved": [
+    "Custom callback effects",
+    "Standard-library and external dispatch internals",
+    "Independent review"
+  ],
+  "reviewed_call_model": "main.blackjack.dependencies.registry.json"
+}

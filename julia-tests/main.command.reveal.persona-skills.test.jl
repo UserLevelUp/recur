@@ -153,8 +153,39 @@ end
             @test snapshot(root)==before
             ok,_,_=invoke(COMPANION,["init","-d",root,"--json"])
             @test ok
-            @test snapshot(root)==before # all tables already exist; exact no-op
+            after=snapshot(root)
+            configkey=joinpath(".recur","config.toml")
+            @test Dict(k=>v for (k,v) in after if k!=configkey)==Dict(k=>v for (k,v) in before if k!=configkey)
+            initialized=TOML.parsefile(joinpath(root,configkey))
+            @test initialized["reveal"]["skills"]["craft"]["path"]=="bodies/craft.md"
+            @test haskey(initialized["reveal"]["skills"],"recur-demo-tests")
+            ok,out,_=invoke(COMPANION,["init","-d",root,"--json"])
+            @test ok
+            @test !JSON3.read(out)["changed"]
+            @test snapshot(root)==after
         end
+    end
+end
+
+@testset "Reveal local nested initialization" begin
+    mktempdir() do root
+        parent="[reveal.skills]\n"
+        put(root,".recur/config.toml",parent)
+        child=joinpath(root,"nested","demo")
+        mkpath(child)
+        ok,out,_=invoke(COMPANION,["init","--local","--dry-run","-d",child,"--json"])
+        @test ok
+        @test JSON3.read(out)["scope"]=="local"
+        @test !isfile(joinpath(child,".recur/config.toml"))
+        ok,_,_=invoke(COMPANION,["init","--local","-d",child,"--json"])
+        @test ok
+        @test read(joinpath(root,".recur/config.toml"),String)==parent
+        childconfig=TOML.parsefile(joinpath(child,".recur/config.toml"))
+        @test haskey(childconfig["reveal"]["skills"],"recur-watch")
+        @test !isdir(joinpath(child,"recur-watch"))
+        ok,out,_=invoke(COMPANION,["init","--local","-d",child,"--json"])
+        @test ok
+        @test !JSON3.read(out)["changed"]
     end
 end
 end

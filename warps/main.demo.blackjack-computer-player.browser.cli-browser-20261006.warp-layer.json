@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.demo.blackjack-computer-player",
+  "slice_id": "browser",
+  "contract_hash": "contract:demo.blackjack.rivals.browser:v1",
+  "attempt_id": "cli-browser-20261006",
+  "result_state": "accepted",
+  "result_hash": "sha256:6f2ae09a51af4e2c2bb7e7e236d5539d6b7f7b882821f967c5a6216faf625c80",
+  "evidence": {
+    "browser-tests": [
+      "demos/blackjack-web/rivals/observations/browser-worker-report.md"
+    ]
+  },
+  "reason": null
+}

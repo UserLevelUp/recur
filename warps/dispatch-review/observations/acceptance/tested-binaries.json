@@ -1,0 +1,30 @@
+[
+  {
+    "file": "recur-git.exe",
+    "sha256": "sha256:a40843289bba97b9946a795ab89ad4e8bbd6a8e0b75355bcb4aafd025304c7a6"
+  },
+  {
+    "file": "recur-lang.exe",
+    "sha256": "sha256:319ef5aa4a36b4a021e459865f6df004d1597e0b67491b469d976dcde2b0a100"
+  },
+  {
+    "file": "recur-reveal.exe",
+    "sha256": "sha256:4ece7705ab997ba432f9b9304e2188731ddcb277c92bb98c9eacdf6fe4f3ac6d"
+  },
+  {
+    "file": "recur-version.exe",
+    "sha256": "sha256:8a3234fb4919b0b6473da9b603d2553a24e55061f8580746f0b8d16504f77eba"
+  },
+  {
+    "file": "recur-warp.exe",
+    "sha256": "sha256:e3545aaf8b6d8bc5f0caf945a3d7d8d43fc3e6e3fac5aaab4a541c5e9c00dcf8"
+  },
+  {
+    "file": "recur-watch.exe",
+    "sha256": "sha256:d1887ae07a878b852988255590f2caa0ca34887627b62a4441d597a19eab0725"
+  },
+  {
+    "file": "recur.exe",
+    "sha256": "sha256:305fe19124e14370e4cdaf8a2b800045df5e6f76f9e3fa96e2bd3ae8b1ead1c8"
+  }
+]

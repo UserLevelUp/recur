@@ -14,6 +14,9 @@ pub const MERGE_SCHEMA: &str = "warp-bubble-projection-v1";
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct WarpRequiredSlice {
     pub slice_id: String,
+    /// Advisory adjustment relative to the Warp's starting reasoning level.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub intelligence_tick: Option<i8>,
     #[serde(
         default,
         deserialize_with = "present_uuid",

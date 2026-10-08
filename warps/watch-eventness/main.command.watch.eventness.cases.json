@@ -1,0 +1,19 @@
+{
+  "schema": "watch-eventness-test-plan-v1",
+  "warp": "main.command.watch.eventness",
+  "notification_keys": ["trace_ids"],
+  "cases": [
+    {"id":"registration", "purpose":"Register durable interest without launching work"},
+    {"id":"minimal", "purpose":"A minimal publication works without Warp, attempt or revision metadata"},
+    {"id":"project-scope", "purpose":"A project-scoped topic works without a Warp map or binding"},
+    {"id":"single", "purpose":"Signal one persisted result using only its trace ID"},
+    {"id":"multiple-empty", "purpose":"Resolve multiple files including an empty referenced marker"},
+    {"id":"deduplicate-restart", "purpose":"Fresh drain process does not repeat an unchanged publication"},
+    {"id":"missed-wakeup", "purpose":"Reconcile a publication created while no drainer is running"},
+    {"id":"foreign-warp", "purpose":"Ignore a foreign-Warp publication even if its trace pattern matches"},
+    {"id":"new-revision", "purpose":"Observe a later revision under the same semantic trace ID"},
+    {"id":"missing-reference", "purpose":"Do not advance cursor until every referenced artifact exists"},
+    {"id":"reference-escape", "purpose":"Reject a root-escaping artifact reference without a signal"}
+  ],
+  "integration_pending": ["cursor-write-failure", "crash-publication-ack-boundary", "bounded-backlog", "subscription-self-updates", "pure-query-no-write", "legacy-watch-dispatch", "coordinator-produced-versus-accepted"]
+}
