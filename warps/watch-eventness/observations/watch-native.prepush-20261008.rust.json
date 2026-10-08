@@ -1,0 +1,21 @@
+{
+  "schema": "watch-native-promotion-test-v1",
+  "mode": "rust",
+  "started": "2026-10-08T19:37:09.727Z",
+  "finished": "2026-10-08T19:38:10.091Z",
+  "program": "cargo",
+  "args": [
+    "test",
+    "--profile",
+    "release-safe",
+    "--lib",
+    "--bins",
+    "--tests"
+  ],
+  "exit_code": 0,
+  "passed": 305,
+  "failed": 0,
+  "skipped": 0,
+  "log": "watch-native.prepush-20261008.rust.log.txt",
+  "log_sha256": "15f0614560a21ae4c0b0927871259bdb11aee9e904b19d3fb2ebd5d1b631ad11"
+}

@@ -1,0 +1,41 @@
+{
+  "create": {
+    "binding": {
+      "eventness_dir": ".recur\\watch-native-evidence",
+      "filter": "main.command.watch.eventness.**.ready",
+      "producer_keywords": [
+        "emit",
+        "enqueue",
+        "publish",
+        "send"
+      ],
+      "root": "\\\\?\\C:\\src\\recur",
+      "schema": "watch-eventness-topic-v1",
+      "topic": "main.command.watch.eventness.results",
+      "warp": "main.command.watch.eventness",
+      "warp_uuid": "01a11a3f-14c9-76f0-a4f6-62956194944b"
+    },
+    "confirmed": true,
+    "operation": "create"
+  },
+  "subscribe": {
+    "committed_batches": 0,
+    "confirmed": true,
+    "operation": "subscribe",
+    "subscriber": "coordinator",
+    "topic": "main.command.watch.eventness.results"
+  },
+  "notifications": [
+    {
+      "trace_ids": [
+        "main.command.watch.eventness.final.ready",
+        "main.command.watch.eventness.implementation.ready",
+        "main.command.watch.eventness.integration.ready"
+      ]
+    }
+  ],
+  "restart_deduplicated": true,
+  "replayed": true,
+  "topic_inventory_read": true,
+  "eventness": ".recur/watch-native-evidence/native.complete.md"
+}

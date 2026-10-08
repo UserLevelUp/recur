@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: retained artifact survives replacement of mutable build output
+ok 1 - retained artifact survives replacement of mutable build output
+  ---
+  duration_ms: 33.9864
+  type: 'test'
+  ...
+# Subtest: whole-file integrity rejects a one-byte metadata-like mutation
+ok 2 - whole-file integrity rejects a one-byte metadata-like mutation
+  ---
+  duration_ms: 24.1969
+  type: 'test'
+  ...
+# Subtest: successful work cannot hide mutation during a guarded check
+ok 3 - successful work cannot hide mutation during a guarded check
+  ---
+  duration_ms: 37.6838
+  type: 'test'
+  ...
+# Subtest: missing retained executable fails before executing work
+ok 4 - missing retained executable fails before executing work
+  ---
+  duration_ms: 21.9741
+  type: 'test'
+  ...
+# Subtest: duplicate and partial bundle names are refused without overwriting
+ok 5 - duplicate and partial bundle names are refused without overwriting
+  ---
+  duration_ms: 29.7813
+  type: 'test'
+  ...
+# Subtest: invalid prefixes and contained path escapes fail closed
+ok 6 - invalid prefixes and contained path escapes fail closed
+  ---
+  duration_ms: 16.9622
+  type: 'test'
+  ...
+# Subtest: linked artifact and linked storage directories are refused
+ok 7 - linked artifact and linked storage directories are refused
+  ---
+  duration_ms: 4.8703
+  type: 'test'
+  ...
+# Subtest: all required artifact roles and immutable output writes are enforced
+ok 8 - all required artifact roles and immutable output writes are enforced
+  ---
+  duration_ms: 17.0855
+  type: 'test'
+  ...
+# Subtest: failed postcheck retains the completed child output and failure reason
+ok 9 - failed postcheck retains the completed child output and failure reason
+  ---
+  duration_ms: 31.4358
+  type: 'test'
+  ...
+# Subtest: retained artifacts preserve executable permission where supported
+ok 10 - retained artifacts preserve executable permission where supported
+  ---
+  duration_ms: 19.7434
+  type: 'test'
+  ...
+# Subtest: fast fingerprint preserves the canonical FNV-1a64 identity
+ok 11 - fast fingerprint preserves the canonical FNV-1a64 identity
+  ---
+  duration_ms: 6.3472
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 294.3587

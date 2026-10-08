@@ -1,0 +1,17 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.watch.eventness.evidence",
+  "slice_id": "implementation",
+  "contract_hash": "contract:main.command.watch.eventness.evidence.implementation:v1",
+  "attempt_id": "watch-native-v9",
+  "result_state": "accepted",
+  "result_hash": "sha256:581e6214ef42434b3809f63e91eb98f15b4ac1ae69ca4b0ccc9ae92a5911592f",
+  "evidence": {
+    "binary-bundle-tests": [
+      "evidence:warps/watch-eventness/observations/watch-native-v9.bundle.evidence.json",
+      "evidence:warps/watch-eventness/observations/watch-native-v9.integration.evidence.json",
+      "evidence:warps/watch-eventness/observations/watch-native-v9.native.evidence.json"
+    ]
+  },
+  "reason": null
+}

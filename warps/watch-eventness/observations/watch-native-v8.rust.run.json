@@ -1,0 +1,46 @@
+{
+  "started": "2026-10-08T20:18:25.665Z",
+  "finished": "2026-10-08T20:18:54.591Z",
+  "program": "cargo",
+  "args": [
+    "test",
+    "--profile",
+    "release-safe",
+    "--lib",
+    "--bins",
+    "--tests"
+  ],
+  "exit_code": 101,
+  "child_exit_code": 101,
+  "verification_errors": [],
+  "outcome": {
+    "schema": "warp-external-result-v1",
+    "kind": "test",
+    "outcome": "failed",
+    "exit_code": 101,
+    "tests": {
+      "discovered": 108,
+      "executed": 108,
+      "passed": 106,
+      "failed": 2,
+      "skipped": 0
+    }
+  },
+  "log": "watch-native-v8.rust.log.txt",
+  "log_sha256": "69286a90b8bacce85b980e4c432274660623a9d0efb79c9244adf91c52c2fbdb",
+  "binary_bundle": "warps/watch-eventness/observations/watch-native-v8.binaries.json",
+  "binaries_sha256": {
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur.exe": "ec9e938ab54f97816af3c7d43ae90c39cc0889fc0740524ce004a689d8a6c263",
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur-watch.exe": "9b2f83f560d26606eee8030e18ee0e05fd40d7c3bd709965099106f8881da217",
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur-warp.exe": "0b3d2a9d4a479f0f68258729d0bedd733e6db832706d55323c70c3dacfb7a09e",
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur-watch-fault.exe": "9479af11514864db2bc3bd8181df7bf16f842aab597c96b3f61dc86c9670b030"
+  },
+  "binary_binding": "post-build products",
+  "selected_environment": {
+    "RECUR_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur.exe",
+    "RECUR_WATCH_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur-watch.exe",
+    "RECUR_WARP_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur-warp.exe",
+    "WATCH_TEST_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v8\\recur-watch-fault.exe",
+    "RECUR_WATCH_EVIDENCE_PREFIX": "watch-native-v8"
+  }
+}

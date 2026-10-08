@@ -1,0 +1,53 @@
+TAP version 13
+# Subtest: native: current evidence is checked with no missing or skipped tests
+ok 1 - native: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 54.5114
+  type: 'test'
+  ...
+# Subtest: integration: current evidence is checked with no missing or skipped tests
+ok 2 - integration: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 53.4021
+  type: 'test'
+  ...
+# Subtest: rust: current evidence is checked with no missing or skipped tests
+ok 3 - rust: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 53.6847
+  type: 'test'
+  ...
+# Subtest: julia: current evidence is checked with no missing or skipped tests
+ok 4 - julia: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 54.159
+  type: 'test'
+  ...
+# Subtest: negative control: source drift and failed results cannot masquerade as checked
+ok 5 - negative control: source drift and failed results cannot masquerade as checked
+  ---
+  duration_ms: 49.0569
+  type: 'test'
+  ...
+# Subtest: historical expected-red contract and native suite remain frozen
+ok 6 - historical expected-red contract and native suite remain frozen
+  ---
+  duration_ms: 0.4344
+  type: 'test'
+  ...
+# Subtest: skills retain narrow names and optional native workflow guidance
+ok 7 - skills retain narrow names and optional native workflow guidance
+  ---
+  duration_ms: 0.5391
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 319.5164
+

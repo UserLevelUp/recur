@@ -422,12 +422,13 @@ pub fn bubble_progress(root: &Path, warp: &str) -> anyhow::Result<serde_json::Va
     let scope = PathBuf::from(entry["scope"].as_str().context("missing scope")?);
     let (manifest, map) = load_bubble_map_scoped(&scope, warp, true)?.context("map disappeared")?;
     let raw: serde_json::Value = serde_json::from_slice(&fs::read(scope.join(&manifest))?)?;
-    let projection = compose_bubble(
+    let projection = compose_bubble_scoped(
+        root,
         &scope,
         manifest,
         map.clone(),
         load_warp_layers_scoped(&scope, warp, true)?,
-    );
+    )?;
     let mut ready = Vec::new();
     let mut slices = Vec::new();
     for slice in &map.required_slices {
@@ -535,18 +536,19 @@ fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_js
             );
             if ring_count == 1 {
                 Ok(serde_json::to_value(
-                    merge_ring_inner(&scope, &id, None, &mut BTreeSet::new(), true)?
+                    merge_ring_inner(&scope, &id, None, &mut BTreeSet::new(), true, &root)?
                         .context("ring map disappeared during discovery")?,
                 )?)
             } else {
                 let (manifest, map) = load_bubble_map_scoped(&scope, &id, true)?
                     .context("bubble map disappeared during discovery")?;
-                Ok(serde_json::to_value(compose_bubble(
+                Ok(serde_json::to_value(compose_bubble_scoped(
+                    &root,
                     &scope,
                     manifest,
                     map,
                     load_warp_layers_scoped(&scope, &id, true)?,
-                ))?)
+                )?)?)
             }
         })();
         match projection {
@@ -791,7 +793,7 @@ fn merge_bubble(root: &Path, raw_warp: &str) -> anyhow::Result<WarpMergeOutput> 
         )
     })?;
     let layers = load_warp_layers(root, warp)?;
-    Ok(compose_bubble(root, manifest, map, layers))
+    compose_bubble_scoped(root, root, manifest, map, layers)
 }
 
 fn ring_map(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMapOutput>> {
@@ -864,7 +866,7 @@ fn merge_ring(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMerg
     let canonical_root = fs::canonicalize(root)
         .with_context(|| format!("failed to resolve Warp ring root '{}'", root.display()))?;
     let mut visited = BTreeSet::new();
-    merge_ring_inner(&canonical_root, warp, None, &mut visited, false)
+    merge_ring_inner(&canonical_root, warp, None, &mut visited, false, &canonical_root)
 }
 
 fn merge_ring_inner(
@@ -873,6 +875,7 @@ fn merge_ring_inner(
     remaining_depth: Option<usize>,
     visited: &mut BTreeSet<(PathBuf, String)>,
     local: bool,
+    requested_root: &Path,
 ) -> anyhow::Result<Option<WarpRingMergeOutput>> {
     let Some((manifest, map)) = load_ring_map_scoped(root, warp, local)? else {
         return Ok(None);
@@ -894,8 +897,8 @@ fn merge_ring_inner(
 
     let coordinator_projection = load_bubble_map_scoped(root, warp, local)?
         .map(|(bubble_manifest, bubble_map)| {
-            load_warp_layers_scoped(root, warp, local)
-                .map(|layers| compose_bubble(root, bubble_manifest, bubble_map, layers))
+            let layers = load_warp_layers_scoped(root, warp, local)?;
+            compose_bubble_scoped(requested_root, root, bubble_manifest, bubble_map, layers)
         })
         .transpose()?;
     let mut domains = Vec::new();
@@ -940,17 +943,19 @@ fn merge_ring_inner(
             Some(allowed_depth - 1),
             visited,
             local,
+            requested_root,
         )? {
             projection.state
         } else if let Some((child_manifest, child_map)) =
             load_bubble_map_scoped(&child_root, &domain.warp_id, local)?
         {
-            compose_bubble(
+            compose_bubble_scoped(
+                requested_root,
                 &child_root,
                 child_manifest,
                 child_map,
                 load_warp_layers_scoped(&child_root, &domain.warp_id, local)?,
-            )
+            )?
             .state
         } else {
             "missing".to_string()
@@ -1348,6 +1353,27 @@ pub fn project_snapshot(
     ))?)
 }
 
+fn compose_bubble_scoped(
+    requested: &Path,
+    scope: &Path,
+    manifest: String,
+    map: WarpBubbleMap,
+    mut layers: Vec<LocatedWarpLayer>,
+) -> anyhow::Result<WarpMergeOutput> {
+    let manifest_path = scope.join(&manifest);
+    let root = crate::warp_evidence::resolve_root(requested, &manifest_path, scope)?;
+    if root == scope.canonicalize()? {
+        return Ok(compose_bubble(scope, manifest, map, layers));
+    }
+    let rebase = |name: &str| -> anyhow::Result<String> {
+        let path = scope.join(name).canonicalize()?;
+        Ok(normalize_path(path.strip_prefix(&root).context("Warp metadata outside evidence_root")?))
+    };
+    let manifest = rebase(&manifest)?;
+    for layer in &mut layers { layer.path = rebase(&layer.path)?; }
+    Ok(compose_bubble(&root, manifest, map, layers))
+}
+
 fn compose_bubble(
     root: &Path,
     manifest: String,
@@ -1624,12 +1650,13 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
     let policy = load_suffix_policy(root)?;
     let mut files = collect_lane_files(root, lane, &policy)?;
     let bubble = match load_bubble_map(root, lane)? {
-        Some((manifest, map)) => Some(compose_bubble(
+        Some((manifest, map)) => Some(compose_bubble_scoped(
+            root,
             root,
             manifest,
             map,
             load_warp_layers(root, lane)?,
-        )),
+        )?),
         None => None,
     };
     let ring = merge_ring(root, lane)?;

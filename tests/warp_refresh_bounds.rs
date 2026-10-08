@@ -73,3 +73,16 @@ fn file_count_and_path_limits() {
         assert!(Reads::default().read(r, p, false).is_err(), "{p}");
     }
 }
+
+#[test]
+fn cached_non_json_reads_cannot_bypass_json_byte_limit() {
+    let d = tempdir().unwrap();
+    let r = d.path();
+    fs::File::create(r.join("large.json"))
+        .unwrap()
+        .set_len(2 * 1024 * 1024 + 1)
+        .unwrap();
+    let mut reads = Reads::default();
+    reads.read(r, "large.json", false).unwrap();
+    assert!(reads.read(r, "large.json", true).is_err());
+}

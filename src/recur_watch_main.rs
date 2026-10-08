@@ -13,12 +13,61 @@ mod recur_watch_dispatch;
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Register or reconcile durable Eventness subscriptions (never launches workers)
+    Topic {
+        #[command(subcommand)]
+        command: TopicCommand,
+    },
     /// Coordinate configured asynchronous Warp assignments until quiescent
     Dispatch {
         warp: String,
-        #[arg(long)] confirm: bool,
+        #[arg(long)]
+        confirm: bool,
         /// Limit scheduler passes; zero runs until no active work remains
-        #[arg(long, default_value_t = 0)] cycles: u64,
+        #[arg(long, default_value_t = 0)]
+        cycles: u64,
+    },
+}
+
+#[derive(Subcommand)]
+enum TopicCommand {
+    /// Bind a trace pattern to an explicit Eventness directory
+    Create {
+        topic: String,
+        #[arg(long)]
+        warp: Option<String>,
+        #[arg(long)]
+        filter: String,
+        #[arg(long)]
+        eventness_dir: PathBuf,
+        #[arg(long)]
+        confirm: bool,
+    },
+    /// Persist interest; existing publications remain discoverable
+    Subscribe {
+        topic: String,
+        #[arg(long)]
+        id: String,
+        #[arg(long)]
+        confirm: bool,
+    },
+    /// Reconcile artifacts and commit a bounded batch before emitting trace IDs
+    Drain {
+        topic: String,
+        #[arg(long)]
+        id: String,
+        #[arg(long, default_value_t = 100)]
+        max_events: usize,
+        #[arg(long)]
+        confirm: bool,
+    },
+    /// Read a previously committed batch after a lost response; never advances the cursor
+    Replay {
+        topic: String,
+        #[arg(long)]
+        id: String,
+        #[arg(long)]
+        sequence: u64,
     },
 }
 
@@ -77,9 +126,58 @@ struct Cli {
 
 fn main() {
     let cli = Cli::parse();
-    if let Some(Commands::Dispatch { warp, confirm, cycles }) = cli.command {
-        if let Err(error) = recur_watch_dispatch::coordinate(&cli.dir,&warp,confirm,cycles) {
-            eprintln!("Error: {error:#}"); process::exit(2);
+    if let Some(command) = cli.command {
+        let result = match command {
+            Commands::Dispatch {
+                warp,
+                confirm,
+                cycles,
+            } => recur_watch_dispatch::coordinate(&cli.dir, &warp, confirm, cycles),
+            Commands::Topic { command } => {
+                use recur::watch_eventness as topics;
+                let value = match command {
+                    TopicCommand::Create {
+                        topic,
+                        warp,
+                        filter,
+                        eventness_dir,
+                        confirm,
+                    } => topics::create(
+                        &cli.dir,
+                        &topic,
+                        warp.as_deref(),
+                        &filter,
+                        &eventness_dir,
+                        confirm,
+                    ),
+                    TopicCommand::Subscribe { topic, id, confirm } => {
+                        topics::subscribe(&cli.dir, &topic, &id, confirm)
+                    }
+                    TopicCommand::Drain {
+                        topic,
+                        id,
+                        max_events,
+                        confirm,
+                    } => topics::drain(&cli.dir, &topic, &id, max_events, confirm),
+                    TopicCommand::Replay {
+                        topic,
+                        id,
+                        sequence,
+                    } => topics::replay(&cli.dir, &topic, &id, sequence),
+                };
+                value.and_then(|value| {
+                    use std::io::Write;
+                    let mut out = std::io::stdout().lock();
+                    serde_json::to_writer(&mut out, &value)?;
+                    writeln!(out)?;
+                    out.flush()?;
+                    Ok(())
+                })
+            }
+        };
+        if let Err(error) = result {
+            eprintln!("Error: {error:#}");
+            process::exit(2);
         }
         return;
     }

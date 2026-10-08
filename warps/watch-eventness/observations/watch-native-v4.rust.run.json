@@ -1,0 +1,35 @@
+{
+  "started": "2026-10-08T07:06:10.121Z",
+  "finished": "2026-10-08T07:06:39.889Z",
+  "program": "cargo",
+  "args": [
+    "test",
+    "--profile",
+    "release-safe",
+    "--lib",
+    "--bins",
+    "--tests"
+  ],
+  "exit_code": 0,
+  "outcome": {
+    "schema": "warp-external-result-v1",
+    "kind": "test",
+    "outcome": "passed",
+    "exit_code": 0,
+    "tests": {
+      "discovered": 301,
+      "executed": 301,
+      "passed": 301,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "log": "watch-native-v4.rust.log.txt",
+  "log_sha256": "61779c70cb57f94482cd22139d79e23e79d0f74144078b5d624190cbdccb87cd",
+  "binaries_sha256": {
+    "C:\\src\\recur\\target\\release-safe\\recur.exe": "c9c23b29297bed1525ed988547837fce6db44a7cfe56484391a0f352757a2dfe",
+    "C:\\src\\recur\\target\\release-safe\\recur-watch.exe": "5ef117460832edcd1d9c80f3e0a634b66148ba662e5f342e906df417c8475885",
+    "C:\\src\\recur\\target\\release-safe\\recur-warp.exe": "b1b861d45f8007e26deb8df078c2acc39db888cf10945b77f0ad49afb995b5c4",
+    "C:\\src\\recur\\target\\watch-fault-tests\\release-safe\\recur-watch.exe": "36154215bf1dca0ed3236d0492d384b496d4204f82ef8a8ade5a7db36452a0d4"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "watch-retained-binary-rebuild-proof-v1",
+  "bundle": "watch-native-v9",
+  "mutable_before_sha256": "d6c4b0d0a5cb467cb7f1ea3fa4d8194df9e6f19be0ffe6f8dd84547cc5fd4dc4",
+  "mutable_after_sha256": "d57058fb8e80e6d17c53d259269019ad6e668aed5d32e6f0e21900384c9e61d8",
+  "retained_core_sha256": "d6c4b0d0a5cb467cb7f1ea3fa4d8194df9e6f19be0ffe6f8dd84547cc5fd4dc4",
+  "retained_identity_unchanged": true,
+  "evidence_still_checked": [
+    "rust",
+    "native",
+    "integration",
+    "julia",
+    "bundle"
+  ]
+}

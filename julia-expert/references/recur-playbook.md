@@ -1085,6 +1085,13 @@ If one lane is missing for the feature query, treat that as a visible gap and ei
 
 ## Code-First Eventness Rule
 
+Native optional Watch topics are implemented by `recur-watch topic`, with pure
+`recur watch topics` inventory. Read docs/main.command.watch.eventness.readme.md
+for bounded reconciliation, signature-only responses and durable replay. Topic
+registration starts no agent; coordinator review still separates produced work
+from checked gate acceptance. Existing path subscriptions and polling dispatch
+remain available. No Lang translation is required.
+
 Eventness should follow code, not lead it:
 1. Implement and validate the code change first.
 2. Mirror the resulting state in eventness artifacts (`.todo/.current/.complete`).

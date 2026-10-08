@@ -12,13 +12,38 @@ use std::{
     io::Read,
     path::{Path, PathBuf},
 };
-#[derive(Default)]
+const DEFAULT_MAX_FILES: usize = 128;
+const MAX_SELECTED_FILES: u64 = 1024;
 pub struct Reads {
     pub hashes: BTreeMap<String, String>,
     cache: BTreeMap<PathBuf, Vec<u8>>,
     total: usize,
+    max_files: usize,
+}
+impl Default for Reads {
+    fn default() -> Self {
+        Self {
+            hashes: BTreeMap::new(),
+            cache: BTreeMap::new(),
+            total: 0,
+            max_files: DEFAULT_MAX_FILES,
+        }
+    }
 }
 impl Reads {
+    fn map(&mut self, root: &Path, path: &str) -> Result<WarpBubbleMap> {
+        // Read the raw map under the default byte/count bounds before selecting
+        // any larger scope. The map itself counts toward the selected budget.
+        let value: serde_json::Value = serde_json::from_slice(&self.read(root, path, true)?)?;
+        if let Some(selected) = value.get("evidence_refresh_max_files") {
+            let limit = selected
+                .as_u64()
+                .filter(|n| (1..=MAX_SELECTED_FILES).contains(n))
+                .context("evidence_refresh_max_files must be an integer in 1..=1024")?;
+            self.max_files = usize::try_from(limit)?;
+        }
+        Ok(serde_json::from_value(value)?)
+    }
     pub fn read(&mut self, root: &Path, path: &str, json: bool) -> Result<Vec<u8>> {
         let actual = safe(root, path)?.canonicalize()?;
         ensure!(
@@ -34,7 +59,7 @@ impl Reads {
             ensure!(bytes.len() <= limit, "file byte limit: {path}");
             bytes.clone()
         } else {
-            ensure!(self.cache.len() < 128, "unique file limit");
+            ensure!(self.cache.len() < self.max_files, "unique file limit");
             let file = File::open(&actual)?;
             let n = usize::try_from(file.metadata()?.len())?;
             ensure!(
@@ -56,7 +81,10 @@ impl Reads {
         Ok(bytes)
     }
     pub fn verify(&self, root: &Path) -> Result<()> {
-        let mut now = Reads::default();
+        let mut now = Reads {
+            max_files: self.max_files,
+            ..Reads::default()
+        };
         for (p, h) in &self.hashes {
             ensure!(
                 fingerprint(&now.read(root, p, false)?) == *h,
@@ -115,6 +143,7 @@ pub struct Record {
     pub reason: String,
 }
 pub struct Plan {
+    pub root: PathBuf,
     pub record: Record,
     pub target: String,
     pub state: &'static str,
@@ -345,23 +374,33 @@ pub fn gates(
     layer: &WarpSliceLayer,
 ) -> Vec<GateAssessment> {
     let fallback = || evidence::gates(root, required, &layer.evidence);
-    // Pure snapshot callers already reject external references. No-refresh paths
-    // preserve legacy behavior and do not invent acceptance from sidecar metadata.
-    if !layer
-        .evidence
-        .values()
-        .flatten()
-        .any(|r| r.starts_with("evidence:"))
-    {
-        return fallback();
-    }
     let result = (|| -> Result<Vec<GateAssessment>> {
-        let dir = directory(map_path, &layer.warp_id)?;
-        if !safe(root, &dir)?.try_exists()? {
-            return Ok(fallback());
+        let has_external = layer
+            .evidence
+            .values()
+            .flatten()
+            .any(|r| r.starts_with("evidence:"));
+        if !has_external {
+            // Pure declared snapshots may have only an in-memory map. Check
+            // metadata without following links; malformed real paths still fail.
+            match fs::symlink_metadata(safe(root, map_path)?) {
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(fallback()),
+                Err(e) => return Err(e.into()),
+                Ok(_) => {}
+            }
         }
         let mut reads = Reads::default();
-        let map: WarpBubbleMap = serde_json::from_slice(&reads.read(root, map_path, true)?)?;
+        let map = reads.map(root, map_path)?;
+        // Real maps validate explicit scope even for declared-only gates.
+        if !has_external {
+            return Ok(fallback());
+        }
+        let dir = directory(map_path, &layer.warp_id)?;
+        if !safe(root, &dir)?.try_exists()? {
+            // A valid map without refresh history retains legacy assessment.
+            // The selected file budget governs refresh, not existing evidence.
+            return Ok(fallback());
+        }
         let (records, _) = records(root, map_path, &map, &mut reads, None)?;
         required
             .evidence_gates
@@ -383,22 +422,67 @@ pub fn gates(
             .collect()
     })();
     result.unwrap_or_else(|e| {
-        let mut gates = fallback();
-        for g in &mut gates {
-            g.satisfied = false;
-            g.status = "failed".into();
-            g.evidence.push(Assessment {
-                reference: map_path.into(),
+        // A bounded failure must not trigger legacy unbounded evidence reads.
+        required
+            .evidence_gates
+            .iter()
+            .map(|gate| GateAssessment {
+                slice_id: required.slice_id.clone(),
+                gate: gate.clone(),
+                satisfied: false,
                 status: "failed".into(),
-                method: "immutable-refresh-validation".into(),
-                reasons: vec![format!("{e:#}")],
-            });
-        }
-        gates
+                evidence: vec![Assessment {
+                    reference: map_path.into(),
+                    status: "failed".into(),
+                    method: "immutable-refresh-validation".into(),
+                    reasons: vec![format!("{e:#}")],
+                }],
+            })
+            .collect()
     })
 }
 #[allow(clippy::too_many_arguments)] // Exact explicit wire request; no implicit discovery.
 pub fn plan(
+    root: &Path,
+    map_path: &str,
+    layer_path: &str,
+    gate: &str,
+    from: &str,
+    to: &str,
+    id: &str,
+    reason: &str,
+) -> Result<Plan> {
+    // Bound and validate the raw map before resolving its optional evidence root.
+    Reads::default().map(root, map_path)?;
+    let map = safe(root, map_path)?.canonicalize()?;
+    let selected = evidence::resolve_root(root, &map, root)?;
+    let layer = safe(root, layer_path)?.canonicalize()?;
+    let map_name = map
+        .strip_prefix(&selected)
+        .context("map outside evidence_root")?
+        .to_str()
+        .context("non UTF8 map path")?
+        .replace('\\', "/");
+    let layer_name = layer
+        .strip_prefix(&selected)
+        .context("layer outside evidence_root")?
+        .to_str()
+        .context("non UTF8 layer path")?
+        .replace('\\', "/");
+    plan_at_root(
+        &selected,
+        &map_name,
+        &layer_name,
+        gate,
+        from,
+        to,
+        id,
+        reason,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn plan_at_root(
     root: &Path,
     map_path: &str,
     layer_path: &str,
@@ -413,7 +497,7 @@ pub fn plan(
         "invalid refresh ID/reason"
     );
     let mut reads = Reads::default();
-    let map: WarpBubbleMap = serde_json::from_slice(&reads.read(root, map_path, true)?)?;
+    let map = reads.map(root, map_path)?;
     crate::warp_bubble::validate_bubble_map(&map, &map.warp_id, &root.join(map_path))?;
     let bytes = reads.read(root, layer_path, true)?;
     let layer: WarpSliceLayer = serde_json::from_slice(&bytes)?;
@@ -515,6 +599,7 @@ pub fn plan(
         );
     }
     Ok(Plan {
+        root: root.to_path_buf(),
         record,
         target,
         state,

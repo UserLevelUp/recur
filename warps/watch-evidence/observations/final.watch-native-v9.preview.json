@@ -1,0 +1,15 @@
+{
+  "schema": "recur-warp-complete-v1",
+  "warp_id": "main.command.watch.eventness.evidence",
+  "slice_id": "final",
+  "attempt_id": "watch-native-v9",
+  "state": "planned",
+  "path": "warps/main.command.watch.eventness.evidence.final.watch-native-v9.warp-layer.json",
+  "contract_hash": "contract:main.command.watch.eventness.evidence.final:v1",
+  "result_hash": "sha256:a051b13b6fb73cd1b892232d5fe4dbf32f63abc95c46cc39eda167868a792a9d",
+  "evidence": {
+    "renewed-watch-acceptance": [
+      "evidence:warps/watch-eventness/observations/watch-native-v9.final.evidence.json"
+    ]
+  }
+}

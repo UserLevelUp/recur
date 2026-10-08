@@ -35,27 +35,28 @@ pub fn run(root: &Path, args: &Args, confirm: bool) -> anyhow::Result<serde_json
         let fresh = make()?;
         anyhow::ensure!(
             initial.record == fresh.record
+                && initial.root == fresh.root
                 && initial.reads.hashes == fresh.reads.hashes
                 && initial.inventory == fresh.inventory,
             "refresh changed before publication"
         );
-        fresh.reads.verify(&root)?;
-        let target = safe(&root, &fresh.target)?;
+        fresh.reads.verify(&fresh.root)?;
+        let target = safe(&fresh.root, &fresh.target)?;
         let parent = target
             .parent()
             .ok_or_else(|| anyhow::anyhow!("missing receipt parent"))?;
         let dir = parent
-            .strip_prefix(&root)?
+            .strip_prefix(&fresh.root)?
             .to_str()
             .ok_or_else(|| anyhow::anyhow!("non UTF8 path"))?
             .replace('\\', "/");
         anyhow::ensure!(
-            inventory(&root, &dir)? == fresh.inventory,
+            inventory(&fresh.root, &dir)? == fresh.inventory,
             "refresh inventory changed before publication"
         );
         std::fs::create_dir_all(parent)?;
         publish(
-            &root,
+            &fresh.root,
             &fresh.target,
             &serde_json::to_vec_pretty(&fresh.record)?,
             |_| Ok(()),

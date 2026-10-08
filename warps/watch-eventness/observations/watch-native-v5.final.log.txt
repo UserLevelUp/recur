@@ -1,0 +1,117 @@
+TAP version 13
+# Subtest: native: current evidence is checked with no missing or skipped tests
+not ok 1 - native: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 57.4068
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs:7:59'
+  failureType: 'testCodeFailure'
+  error: |-
+    binary drift: C:\src\recur\target\release-safe\recur.exe
+    + actual - expected
+    
+    + 'e826f50343f90b5f17e33d4766bce9b8234a87d3d48277050c05ddda08976761'
+    - 'b198e28a4b0e0b1dac416c19a0b6caebc0573dafe6d8f6fbc003ade7acae24d1'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'b198e28a4b0e0b1dac416c19a0b6caebc0573dafe6d8f6fbc003ade7acae24d1'
+  actual: 'e826f50343f90b5f17e33d4766bce9b8234a87d3d48277050c05ddda08976761'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.acceptance.test.cjs:13:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: integration: current evidence is checked with no missing or skipped tests
+not ok 2 - integration: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 45.9256
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs:7:59'
+  failureType: 'testCodeFailure'
+  error: |-
+    binary drift: C:\src\recur\target\release-safe\recur.exe
+    + actual - expected
+    
+    + 'e826f50343f90b5f17e33d4766bce9b8234a87d3d48277050c05ddda08976761'
+    - 'b198e28a4b0e0b1dac416c19a0b6caebc0573dafe6d8f6fbc003ade7acae24d1'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'b198e28a4b0e0b1dac416c19a0b6caebc0573dafe6d8f6fbc003ade7acae24d1'
+  actual: 'e826f50343f90b5f17e33d4766bce9b8234a87d3d48277050c05ddda08976761'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.acceptance.test.cjs:13:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: rust: current evidence is checked with no missing or skipped tests
+ok 3 - rust: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 54.5168
+  type: 'test'
+  ...
+# Subtest: julia: current evidence is checked with no missing or skipped tests
+not ok 4 - julia: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 46.7028
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs:7:59'
+  failureType: 'testCodeFailure'
+  error: |-
+    binary drift: C:\src\recur\target\release-safe\recur.exe
+    + actual - expected
+    
+    + 'e826f50343f90b5f17e33d4766bce9b8234a87d3d48277050c05ddda08976761'
+    - 'b198e28a4b0e0b1dac416c19a0b6caebc0573dafe6d8f6fbc003ade7acae24d1'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'b198e28a4b0e0b1dac416c19a0b6caebc0573dafe6d8f6fbc003ade7acae24d1'
+  actual: 'e826f50343f90b5f17e33d4766bce9b8234a87d3d48277050c05ddda08976761'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.acceptance.test.cjs:13:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: negative control: source drift and failed results cannot masquerade as checked
+ok 5 - negative control: source drift and failed results cannot masquerade as checked
+  ---
+  duration_ms: 56.614
+  type: 'test'
+  ...
+# Subtest: historical expected-red contract and native suite remain frozen
+ok 6 - historical expected-red contract and native suite remain frozen
+  ---
+  duration_ms: 0.472
+  type: 'test'
+  ...
+# Subtest: skills retain narrow names and optional native workflow guidance
+ok 7 - skills retain narrow names and optional native workflow guidance
+  ---
+  duration_ms: 0.4873
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 4
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 314.2414
+

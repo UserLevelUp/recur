@@ -1,0 +1,257 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a11d10-5e20-7023-a567-6d2d57373cce",
+  "completed_slices": [
+    "final",
+    "implementation",
+    "initial",
+    "integration",
+    "tests"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 5,
+    "pending": 0,
+    "required": 5,
+    "stale_contract": 0
+  },
+  "covered": [
+    "final",
+    "implementation",
+    "initial",
+    "integration",
+    "tests"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "artifact:warps/main.command.watch.eventness.hash-investigation.current.md",
+          "status": "declared"
+        },
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "artifact:warps/watch-evidence/main.command.watch.eventness.evidence.contract.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "diagnosis-contract",
+      "satisfied": true,
+      "slice_id": "initial",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 280 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/watch-eventness/observations/watch-native-v9.bundle.evidence.json",
+          "status": "checked"
+        },
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 280 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/watch-eventness/observations/watch-native-v9.rust.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "negative-controls",
+      "satisfied": true,
+      "slice_id": "tests",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 280 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/watch-eventness/observations/watch-native-v9.bundle.evidence.json",
+          "status": "checked"
+        },
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 280 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/watch-eventness/observations/watch-native-v9.integration.evidence.json",
+          "status": "checked"
+        },
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 280 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/watch-eventness/observations/watch-native-v9.native.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "binary-bundle-tests",
+      "satisfied": true,
+      "slice_id": "implementation",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 280 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/watch-eventness/observations/watch-native-v9.rust.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "full-scope-refresh-tests",
+      "satisfied": true,
+      "slice_id": "integration",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 280 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/watch-eventness/observations/watch-native-v9.final.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "renewed-watch-acceptance",
+      "satisfied": true,
+      "slice_id": "final",
+      "status": "checked"
+    }
+  ],
+  "goal": "Preserve exact tested executables, publish immutable verification bundles, and renew full-scope Watch evidence without weakening integrity or bounds",
+  "layers": [
+    "final@watch-native-v9",
+    "implementation@watch-native-v9",
+    "initial@watch-native-v9",
+    "integration@watch-native-v9",
+    "tests@watch-native-v9"
+  ],
+  "manifest": "warps/main.command.watch.eventness.evidence.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "\\\\?\\C:\\src\\recur",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.initial:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "diagnosis-contract"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "initial",
+      "slice_uuid": "01a11d10-5e20-7657-bc85-a570089d130a",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.tests:v1",
+      "depends_on": [
+        "initial"
+      ],
+      "evidence_gates": [
+        "negative-controls"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "negative-controls": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "tests",
+      "slice_uuid": "01a11d10-c47e-7e32-9724-af2c6034a52e",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.implementation:v1",
+      "depends_on": [
+        "tests"
+      ],
+      "evidence_gates": [
+        "binary-bundle-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "binary-bundle-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": false,
+      "slice_id": "implementation",
+      "slice_uuid": "01a11d10-c480-7b38-b7c2-a974f2c4bd63",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.integration:v1",
+      "depends_on": [
+        "implementation"
+      ],
+      "evidence_gates": [
+        "full-scope-refresh-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "full-scope-refresh-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": false,
+      "slice_id": "integration",
+      "slice_uuid": "01a11d10-c480-7164-ae9b-66d3217fc2db",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.final:v1",
+      "depends_on": [
+        "integration"
+      ],
+      "evidence_gates": [
+        "renewed-watch-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "renewed-watch-acceptance": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "final",
+      "slice_uuid": "01a11d10-5e20-7b67-a9dc-ee942a305b7d",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [],
+  "warp_id": "main.command.watch.eventness.evidence"
+}

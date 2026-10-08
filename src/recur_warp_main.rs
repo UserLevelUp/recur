@@ -339,6 +339,7 @@ fn receipt(
     validate_identity("Slice", slice, true)?;
     validate_identity("attempt", attempt, false)?;
     let (manifest, map) = find_map(root, warp)?;
+    recur::warp_evidence::resolve_root(root, &manifest, root)?;
     let required = map
         .required_slices
         .iter()
@@ -450,7 +451,8 @@ fn complete(
         })?;
     let evidence = parse_evidence(evidence_values)?;
     validate_evidence_gates(&evidence, &required.evidence_gates)?;
-    let assessments = recur::warp_evidence::gates(root, required, &evidence);
+    let evidence_root = recur::warp_evidence::resolve_root(root, &manifest_path, root)?;
+    let assessments = recur::warp_evidence::gates(&evidence_root, required, &evidence);
     if let Some(gate) = assessments.iter().find(|g| !g.satisfied) {
         anyhow::bail!(
             "evidence gate '{}' is {}: {}",

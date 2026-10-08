@@ -85,6 +85,7 @@ try
             include("main.command.reveal.artifact-types.test.jl") # Shared typed artifacts, filtering and bounded discovery
             include("main.command.reveal.persona-skills.test.jl") # Agent/persona/skill associations and inert companion packets
             include("main.command.watch.test.jl")    # IMPROVEMENT23 - pure watcher-state query surface
+            include("main.command.watch.eventness.test.jl") # Native optional Eventness topics (core, no demo)
             include("main.command.version.test.jl")  # IMPROVEMENT26 - pure version query + recur-version writer
             include("main.command.capability.test.jl")  # IMPROVEMENT28 - capability-card query surface
             include("main.improvement.27.warp.contract.test.jl")  # IMPROVEMENT27 - frozen warp-status-v1 fixtures

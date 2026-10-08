@@ -32,9 +32,21 @@ drift requires a new ID and `--from` equal to the current leaf. Preserve all old
 records. Changing the contract requires a separately supported evolution path;
 refresh does not bypass evolve's explosion condition.
 
-Reads are bounded: 2 MiB JSON, 32 MiB other inputs, 128 canonical files and
-64 MiB total per assessment; the local receipt directory has at most 64 entries.
-Publication reserves room for staging. Root-relative forward-slash paths and
+Reads are bounded: 2 MiB JSON, 32 MiB other inputs, 128 canonical files by
+default and 64 MiB total per assessment; the local receipt directory has at most
+64 entries. A map may explicitly select `"evidence_refresh_max_files": 512`
+(or another integer in 1..=1024) when the full predecessor source scope requires
+more files. The map is read under the default bounds before this selection;
+its own canonical file, manifests, results, layers and refresh receipts all count
+toward the selected limit. Null, fractional, string, zero and out-of-range values
+fail closed, including gate queries without refresh history. Planning, live
+show/list/merge assessments of refresh history and publication byte revalidation
+use the same selected file limit. With a valid map and no refresh directory,
+existing gate evidence retains its legacy assessment behavior; the refresh file
+budget applies when planning or resolving refreshes. This selection changes no
+byte, receipt, containment or predecessor-path preservation bound. Declared-only
+in-memory composition without a raw map retains legacy behavior; external
+evidence requires a readable map. Publication reserves room for staging. Root-relative forward-slash paths and
 contained files are required; symlink/reparse ancestors are refused. The writer
 revalidates bytes and directory inventory, stages with create-new/sync and
 publishes without overwriting. An identical confirmed retry can recover matching

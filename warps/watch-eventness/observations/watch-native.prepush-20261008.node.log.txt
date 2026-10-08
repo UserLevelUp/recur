@@ -1,0 +1,391 @@
+TAP version 13
+# Subtest: native: current evidence is checked with no missing or skipped tests
+not ok 1 - native: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 961.7523
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs:7:59'
+  failureType: 'testCodeFailure'
+  error: |-
+    binary drift: C:\src\recur\target\release-safe\recur.exe
+    + actual - expected
+    
+    + '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+    - 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+  actual: '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.acceptance.test.cjs:13:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: integration: current evidence is checked with no missing or skipped tests
+not ok 2 - integration: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 62.1189
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs:7:59'
+  failureType: 'testCodeFailure'
+  error: |-
+    binary drift: C:\src\recur\target\release-safe\recur.exe
+    + actual - expected
+    
+    + '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+    - 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+  actual: '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.acceptance.test.cjs:13:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: rust: current evidence is checked with no missing or skipped tests
+not ok 3 - rust: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 70.5761
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs:7:59'
+  failureType: 'testCodeFailure'
+  error: |-
+    binary drift: C:\src\recur\target\release-safe\recur.exe
+    + actual - expected
+    
+    + '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+    - 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+  actual: '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.acceptance.test.cjs:13:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: julia: current evidence is checked with no missing or skipped tests
+not ok 4 - julia: current evidence is checked with no missing or skipped tests
+  ---
+  duration_ms: 72.3872
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs:7:59'
+  failureType: 'testCodeFailure'
+  error: |-
+    binary drift: C:\src\recur\target\release-safe\recur.exe
+    + actual - expected
+    
+    + '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+    - 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'a8f5515347712ddfa8547ad2f0788c16c2f9e554fc2e6d4a8df72160ba6d4ff9'
+  actual: '1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.acceptance.test.cjs:13:71)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: negative control: source drift and failed results cannot masquerade as checked
+ok 5 - negative control: source drift and failed results cannot masquerade as checked
+  ---
+  duration_ms: 56.667
+  type: 'test'
+  ...
+# Subtest: historical expected-red contract and native suite remain frozen
+ok 6 - historical expected-red contract and native suite remain frozen
+  ---
+  duration_ms: 5.4402
+  type: 'test'
+  ...
+# Subtest: skills retain narrow names and optional native workflow guidance
+ok 7 - skills retain narrow names and optional native workflow guidance
+  ---
+  duration_ms: 0.5631
+  type: 'test'
+  ...
+# Subtest: bounded-backlog: max N acknowledges only N publications across process restarts
+ok 8 - bounded-backlog: max N acknowledges only N publications across process restarts
+  ---
+  duration_ms: 133.1884
+  type: 'test'
+  ...
+# Subtest: bounded-signatures: max-events counts publications and preserves distinct signatures together
+ok 9 - bounded-signatures: max-events counts publications and preserves distinct signatures together
+  ---
+  duration_ms: 91.1432
+  type: 'test'
+  ...
+# Subtest: bounds: invalid max-events fails before changing subscription state
+ok 10 - bounds: invalid max-events fails before changing subscription state
+  ---
+  duration_ms: 128.5661
+  type: 'test'
+  ...
+# Subtest: existing-publications: each subscriber begins with existing durable artifacts
+ok 11 - existing-publications: each subscriber begins with existing durable artifacts
+  ---
+  duration_ms: 123.1825
+  type: 'test'
+  ...
+# Subtest: binding-drift: recreating a topic cannot replace existing interest or acknowledged history
+ok 12 - binding-drift: recreating a topic cannot replace existing interest or acknowledged history
+  ---
+  duration_ms: 160.654
+  type: 'test'
+  ...
+# Subtest: content-change: same publication and referenced bytes wake without revision metadata
+ok 13 - content-change: same publication and referenced bytes wake without revision metadata
+  ---
+  duration_ms: 106.6158
+  type: 'test'
+  ...
+# Subtest: self-updates: private status and subscription journal never wake their own topic
+ok 14 - self-updates: private status and subscription journal never wake their own topic
+  ---
+  duration_ms: 170.9093
+  type: 'test'
+  ...
+# Subtest: previews: create, subscribe and drain leave all bytes and directories unchanged
+ok 15 - previews: create, subscribe and drain leave all bytes and directories unchanged
+  ---
+  duration_ms: 108.9594
+  type: 'test'
+  ...
+# Subtest: pure-query: core watch/warp and topic replay never write state
+ok 16 - pure-query: core watch/warp and topic replay never write state
+  ---
+  duration_ms: 158.7205
+  type: 'test'
+  ...
+# Subtest: configured-producer: explicit producer roles control publication discovery
+ok 17 - configured-producer: explicit producer roles control publication discovery
+  ---
+  duration_ms: 71.5829
+  type: 'test'
+  ...
+# Subtest: invalid-ids: malformed producer declarations fail without acknowledging valid siblings
+ok 18 - invalid-ids: malformed producer declarations fail without acknowledging valid siblings
+  ---
+  duration_ms: 112.6473
+  type: 'test'
+  ...
+# Subtest: foreign-warp: filter match does not turn foreign scope into publication
+ok 19 - foreign-warp: filter match does not turn foreign scope into publication
+  ---
+  duration_ms: 77.2677
+  type: 'test'
+  ...
+# Subtest: conflicting-warp: same Warp ID with conflicting UUID cannot advance the cursor
+ok 20 - conflicting-warp: same Warp ID with conflicting UUID cannot advance the cursor
+  ---
+  duration_ms: 79.7189
+  type: 'test'
+  ...
+# Subtest: scope-boundaries: root, private runtime and traversal cannot be Eventness directories
+ok 21 - scope-boundaries: root, private runtime and traversal cannot be Eventness directories
+  ---
+  duration_ms: 81.7214
+  type: 'test'
+  ...
+# Subtest: private-reference: publication cannot fingerprint private watch runtime
+ok 22 - private-reference: publication cannot fingerprint private watch runtime
+  ---
+  duration_ms: 89.9524
+  type: 'test'
+  ...
+# Subtest: symlink-escape: linked producer directories and references cannot escape the root
+ok 23 - symlink-escape: linked producer directories and references cannot escape the root
+  ---
+  duration_ms: 84.3342
+  type: 'test'
+  ...
+# Subtest: recovery-before-commit: unsuccessful drain leaves publication recoverable
+ok 24 - recovery-before-commit: unsuccessful drain leaves publication recoverable
+  ---
+  duration_ms: 201.8522
+  type: 'test'
+  ...
+# Subtest: recovery-partial-commit: unsuccessful drain leaves publication recoverable
+ok 25 - recovery-partial-commit: unsuccessful drain leaves publication recoverable
+  ---
+  duration_ms: 116.5755
+  type: 'test'
+  ...
+# Subtest: recovery-write-failure: unsuccessful drain leaves publication recoverable
+ok 26 - recovery-write-failure: unsuccessful drain leaves publication recoverable
+  ---
+  duration_ms: 110.4559
+  type: 'test'
+  ...
+# Subtest: recovery-after-commit: durable replay recovers lost stdout without repeating reconciliation
+ok 27 - recovery-after-commit: durable replay recovers lost stdout without repeating reconciliation
+  ---
+  duration_ms: 119.6669
+  type: 'test'
+  ...
+# Subtest: journal-history: committed observations append and remain replayable after later revisions
+ok 28 - journal-history: committed observations append and remain replayable after later revisions
+  ---
+  duration_ms: 141.5194
+  type: 'test'
+  ...
+# Subtest: torn-tail: read-only replay preserves tail and confirmed drain repairs it before append
+ok 29 - torn-tail: read-only replay preserves tail and confirmed drain repairs it before append
+  ---
+  duration_ms: 122.048
+  type: 'test'
+  ...
+# Subtest: corrupt-committed-line: complete journal corruption fails closed
+ok 30 - corrupt-committed-line: complete journal corruption fails closed
+  ---
+  duration_ms: 111.5009
+  type: 'test'
+  ...
+# Subtest: production-binary: fault injection variable cannot interrupt normal publication
+ok 31 - production-binary: fault injection variable cannot interrupt normal publication
+  ---
+  duration_ms: 66.7743
+  type: 'test'
+  ...
+# Subtest: concurrent-drains: OS ownership fence prevents duplicate acknowledgements
+ok 32 - concurrent-drains: OS ownership fence prevents duplicate acknowledgements
+  ---
+  duration_ms: 137.7007
+  type: 'test'
+  ...
+# Subtest: legacy-subscription: file polling still signals unannotated artifacts and exposes query status
+ok 33 - legacy-subscription: file polling still signals unannotated artifacts and exposes query status
+  ---
+  duration_ms: 1059.8887
+  type: 'test'
+  ...
+# Subtest: bounded-coordinator: real verified worker signals Eventness while review remains pending
+ok 34 - bounded-coordinator: real verified worker signals Eventness while review remains pending
+  ---
+  duration_ms: 1269.7493
+  type: 'test'
+  ...
+# Subtest: registration: durable subscription does not mutate producer artifacts or launch dispatch
+ok 35 - registration: durable subscription does not mutate producer artifacts or launch dispatch
+  ---
+  duration_ms: 62.677
+  type: 'test'
+  ...
+# Subtest: minimal: a producer declaration needs no Warp, attempt or revision metadata
+ok 36 - minimal: a producer declaration needs no Warp, attempt or revision metadata
+  ---
+  duration_ms: 62.246
+  type: 'test'
+  ...
+# Subtest: project-scope: a topic needs no Warp map when --warp is omitted
+ok 37 - project-scope: a topic needs no Warp map when --warp is omitted
+  ---
+  duration_ms: 62.3132
+  type: 'test'
+  ...
+# Subtest: single: persisted intelligence is announced only by trace ID
+ok 38 - single: persisted intelligence is announced only by trace ID
+  ---
+  duration_ms: 63.5492
+  type: 'test'
+  ...
+# Subtest: multiple-empty: two signatures resolve rich files and an empty referenced marker
+ok 39 - multiple-empty: two signatures resolve rich files and an empty referenced marker
+  ---
+  duration_ms: 64.0069
+  type: 'test'
+  ...
+# Subtest: deduplicate-restart: separate processes retain cursor and repeated registration does not reset it
+ok 40 - deduplicate-restart: separate processes retain cursor and repeated registration does not reset it
+  ---
+  duration_ms: 88.0093
+  type: 'test'
+  ...
+# Subtest: missed-wakeup: subscribe and later drain recover publications without an active listener
+ok 41 - missed-wakeup: subscribe and later drain recover publications without an active listener
+  ---
+  duration_ms: 62.1618
+  type: 'test'
+  ...
+# Subtest: foreign-warp: matching trace pattern cannot bypass Warp identity
+ok 42 - foreign-warp: matching trace pattern cannot bypass Warp identity
+  ---
+  duration_ms: 63.1826
+  type: 'test'
+  ...
+# Subtest: new-revision: a later immutable artifact under the same signature wakes again
+ok 43 - new-revision: a later immutable artifact under the same signature wakes again
+  ---
+  duration_ms: 88.3385
+  type: 'test'
+  ...
+# Subtest: missing-reference: unsuccessful drain cannot acknowledge an incomplete publication
+ok 44 - missing-reference: unsuccessful drain cannot acknowledge an incomplete publication
+  ---
+  duration_ms: 92.5886
+  type: 'test'
+  ...
+# Subtest: reference-escape: out-of-root attachment cannot signal successful publication
+ok 45 - reference-escape: out-of-root attachment cannot signal successful publication
+  ---
+  duration_ms: 60.4947
+  type: 'test'
+  ...
+# Subtest: test plan retains eleven distinct obligations and explicit remaining integration work
+ok 46 - test plan retains eleven distinct obligations and explicit remaining integration work
+  ---
+  duration_ms: 10.2135
+  type: 'test'
+  ...
+# Subtest: negative controls reject duplicate obligations and an intelligence-carrying notification shape
+ok 47 - negative controls reject duplicate obligations and an intelligence-carrying notification shape
+  ---
+  duration_ms: 1.2033
+  type: 'test'
+  ...
+# Subtest: map uses live slice readiness and implementation/final require checked, non-skipped test evidence
+ok 48 - map uses live slice readiness and implementation/final require checked, non-skipped test evidence
+  ---
+  duration_ms: 5.6246
+  type: 'test'
+  ...
+# Subtest: legacy core Watch list is a working no-write positive control
+ok 49 - legacy core Watch list is a working no-write positive control
+  ---
+  duration_ms: 19.3191
+  type: 'test'
+  ...
+1..49
+# tests 49
+# suites 0
+# pass 45
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5307.8288
+

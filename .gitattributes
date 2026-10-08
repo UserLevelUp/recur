@@ -114,3 +114,11 @@
 /warps/main.lang.implementation-plan.verification.md -text
 /demos/blackjack-web/** -text
 /julia-tests/main.demo.blackjack-web.test.jl -text
+# Native Watch inputs retain the exact verified checkout bytes.
+/src/watch_eventness.rs text eol=lf
+/tests/warp_evidence_scope.rs text eol=lf
+/julia-tests/main.command.watch.eventness.test.jl text eol=lf
+/docs/main.command.watch.eventness.readme.md text eol=lf
+/recur-watch/SKILL.md text eol=crlf
+/julia-tests/main.command.warp.query-compatibility.test.jl text eol=lf
+/docs/main.command.watch.eventness.evidence.readme.md text eol=lf

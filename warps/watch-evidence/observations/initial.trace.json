@@ -1,0 +1,288 @@
+[
+  {
+    "identifier": "main.command.watch.eventness.evidence",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 2,
+        "line": "defines: main.command.watch.eventness.evidence exact tested artifact retention and immutable full-scope renewal",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 4,
+        "line": "warp.id = main.command.watch.eventness.evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 108,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 7,
+        "line": "warp.id = main.command.watch.eventness.evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 27,
+        "line": ".\\target\\release-safe\\recur.exe warp show main.command.watch.eventness.evidence -d . --json",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 28,
+        "line": ".\\target\\release-safe\\recur.exe warp slices main.command.watch.eventness.evidence -d . --json",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 3,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "consume"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.identity",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 3,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 3,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.investigation.ready",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.contract",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 4,
+        "line": "defines: main.command.watch.eventness.evidence.contract",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.contract.md",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 10,
+        "line": "pull.then = read warps/watch-evidence/main.command.watch.eventness.evidence.contract.md; inspect live gates",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 110,
+        "line": "  \"contract_document\": \"warps/watch-evidence/main.command.watch.eventness.evidence.contract.md\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 18,
+        "line": "2. `warps/watch-evidence/main.command.watch.eventness.evidence.contract.md`",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.final",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 90,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.final:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.implementation",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 52,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.implementation:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.initial",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 22,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.initial:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 4,
+        "line": "defines: main.command.watch.eventness.evidence.initial",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.initial.current.md",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 9,
+        "line": "pull.first = read warps/watch-evidence/main.command.watch.eventness.evidence.initial.current.md",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.integration",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 71,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.integration:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.tests",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 33,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.tests:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.warp",
+    "define": [
+      {
+        "path": "C:/src/recur\\warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 5,
+        "line": "warp.map = warps/main.command.watch.eventness.evidence.warp-map.json",
+        "edge_type": "define"
+      },
+      {
+        "path": "C:/src/recur\\warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 19,
+        "line": "3. `warps/main.command.watch.eventness.evidence.warp-map.json`",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  }
+]

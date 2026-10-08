@@ -1,0 +1,62 @@
+{
+  "schema": "recur-tested-binaries-v1",
+  "bundle": "watch-native-v8",
+  "created_at": "2026-10-08T20:18:53.754Z",
+  "provenance": {
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)\nbinary: rustc\ncommit-hash: 8bab26f4f68e0e26f0bb7960be334d5b520ea452\ncommit-date: 2026-07-14\nhost: x86_64-pc-windows-msvc\nrelease: 1.97.1\nLLVM version: 22.1.6",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "profile": "release-safe",
+    "normal_features": [
+      "default"
+    ],
+    "fault_features": [
+      "default",
+      "watch-test-hooks"
+    ],
+    "commands": {
+      "normal": [
+        "cargo",
+        "test",
+        "--profile",
+        "release-safe",
+        "--lib",
+        "--bins",
+        "--tests"
+      ],
+      "fault": [
+        "cargo",
+        "build",
+        "--profile",
+        "release-safe",
+        "--features",
+        "watch-test-hooks",
+        "--bin",
+        "recur-watch"
+      ]
+    },
+    "binary_binding": "Rust build products retained after Cargo; native and Julia suites execute retained paths",
+    "build_environment": {}
+  },
+  "artifacts": {
+    "core": {
+      "path": ".recur/evidence-binaries/watch-native-v8/recur.exe",
+      "sha256": "ec9e938ab54f97816af3c7d43ae90c39cc0889fc0740524ce004a689d8a6c263",
+      "source": "target/release-safe/recur.exe"
+    },
+    "watch": {
+      "path": ".recur/evidence-binaries/watch-native-v8/recur-watch.exe",
+      "sha256": "9b2f83f560d26606eee8030e18ee0e05fd40d7c3bd709965099106f8881da217",
+      "source": "target/release-safe/recur-watch.exe"
+    },
+    "warp": {
+      "path": ".recur/evidence-binaries/watch-native-v8/recur-warp.exe",
+      "sha256": "0b3d2a9d4a479f0f68258729d0bedd733e6db832706d55323c70c3dacfb7a09e",
+      "source": "target/release-safe/recur-warp.exe"
+    },
+    "fault": {
+      "path": ".recur/evidence-binaries/watch-native-v8/recur-watch-fault.exe",
+      "sha256": "9479af11514864db2bc3bd8181df7bf16f842aab597c96b3f61dc86c9670b030",
+      "source": "target/watch-fault-tests/release-safe/recur-watch.exe"
+    }
+  }
+}

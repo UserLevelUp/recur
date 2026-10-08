@@ -1,0 +1,12 @@
+{
+  "schema": "watch-verification-interruption-v1",
+  "bundle": "watch-native-v7",
+  "mode": "rust",
+  "outcome": "aborted",
+  "phase": "retained binary source fingerprinting",
+  "reason": "The superseded verifier spent several minutes in the original BigInt fingerprint loop. Its source inputs had subsequently changed. Stop this owned process and use a fresh prefix with the equivalent tested two-word FNV calculation.",
+  "test_counts": null,
+  "passing_evidence_published": false,
+  "retained_residue": ["watch-native-v7.rust.reservation.json", "watch-native-v7.binaries.json", ".recur/evidence-binaries/watch-native-v7/"],
+  "limitation": "The interrupted wrapper did not persist its buffered child output. The independent v8 full run retains the observed compatibility failures; subsequent source revisions require a fresh verification attempt."
+}

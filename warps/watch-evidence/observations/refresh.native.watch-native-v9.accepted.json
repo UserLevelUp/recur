@@ -1,0 +1,24 @@
+{
+  "execution": "not-run",
+  "path": "warps/main.command.watch.eventness.evidence-refresh/watch-native-v9-native.json",
+  "record": {
+    "bubble_uuid": "01a11a3f-14c9-76f0-a4f6-62956194944b",
+    "contract_hash": "contract:main.command.watch.eventness.implementation:v1",
+    "from_hash": "fnv1a64:c78d553af5e20180",
+    "from_reference": "evidence:warps/watch-eventness/observations/watch-native-v6.native.evidence.json",
+    "gate": "native-conformance-tests",
+    "layer": "warps/main.command.watch.eventness.implementation.native-v6.warp-layer.json",
+    "layer_hash": "fnv1a64:1b00903675e053d0",
+    "map": "warps/main.command.watch.eventness.warp-map.json",
+    "policy_hash": "fnv1a64:acb64a459f7c21a8",
+    "reason": "Observed rerun with retained exact binaries and full predecessor source scope",
+    "refresh_id": "watch-native-v9-native",
+    "schema": "warp-evidence-refresh-v1",
+    "slice_id": "implementation",
+    "to_hash": "fnv1a64:ec367e2a22b7cb42",
+    "to_reference": "evidence:warps/watch-eventness/observations/watch-native-v9.native.evidence.json",
+    "warp_id": "main.command.watch.eventness"
+  },
+  "schema": "recur-warp-refresh-v1",
+  "state": "written"
+}

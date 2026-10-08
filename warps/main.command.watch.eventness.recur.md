@@ -3,8 +3,8 @@ defines: main.command.watch.eventness native topics and artifact rehydration
 warp.id = main.command.watch.eventness
 warp.map = warps/main.command.watch.eventness.warp-map.json
 recur.gift = Durable project intelligence; compact trace-ID wake-ups; restart reconciliation.
-status = initial-contract-and-tests
+status = native-implemented-verification
 pull.first = read warps/watch-eventness/main.command.watch.eventness.contract.md
-pull.then = inspect initial baseline and expected-red conformance observations
+pull.then = read docs/main.command.watch.eventness.readme.md; inspect current checked evidence and live Warp gates
 verify = explicitly selected native Watch tests; no demo suites needed
-ready.state = setup only; native implementation, recovery and acceptance remain pending
+ready.state = native topic commands implemented; query live checked gates for acceptance

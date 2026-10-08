@@ -435,3 +435,246 @@ fn orphan_cycle_changed_policy_and_result_conflict_are_not_hidden() {
         );
     }
 }
+
+fn full_scope_fixture(r: &Path, max_files: Option<Value>) {
+    fixture(r);
+    let mut files = get(r, "old.json")["source"]["files"]
+        .as_object()
+        .unwrap()
+        .clone();
+    for i in 1..265 {
+        let name = format!("input-{i}.rs");
+        fs::write(r.join(&name), format!("source {i}")).unwrap();
+        files.insert(name, json!(fingerprint(format!("source {i}").as_bytes())));
+    }
+    let mut old = get(r, "old.json");
+    old["source"]["files"] = json!(files);
+    put(r, "old.json", &old);
+    files.insert("source.rs".into(), json!(fingerprint(b"new")));
+    let mut new = get(r, "new.json");
+    new["source"]["files"] = json!(files);
+    put(r, "new.json", &new);
+    if let Some(limit) = max_files {
+        let mut map = get(r, "demo.warp-map.json");
+        map["evidence_refresh_max_files"] = limit;
+        put(r, "demo.warp-map.json", &map);
+    }
+}
+fn refresh_plan(r: &Path) -> anyhow::Result<recur::warp_refresh::Plan> {
+    recur::warp_refresh::plan(
+        r,
+        "demo.warp-map.json",
+        "demo.s0.first.warp-layer.json",
+        "tests",
+        "evidence:old.json",
+        "evidence:new.json",
+        "r1",
+        "full predecessor scope rerun",
+    )
+}
+#[test]
+fn full_scope_refresh_265_inputs_uses_selected_limit_through_publication_and_queries() {
+    let d = tempdir().unwrap();
+    let r = d.path();
+    full_scope_fixture(r, Some(json!(512)));
+    let original = old_bytes(r);
+    let predecessor = get(r, "old.json")["source"]["files"]
+        .as_object()
+        .unwrap()
+        .clone();
+    assert_eq!(predecessor.len(), 265);
+    let plan = refresh_plan(r).unwrap();
+    assert!(plan.reads.hashes.len() > 265);
+    plan.reads.verify(r).unwrap();
+    let o = call(
+        r,
+        "r1",
+        "evidence:old.json",
+        "evidence:new.json",
+        &["--confirm"],
+    );
+    assert!(o.status.success(), "{}", String::from_utf8_lossy(&o.stderr));
+    assert_eq!(show(r)["covered"], json!(["s0"]));
+    assert_eq!(old_bytes(r), original);
+    let replacement = get(r, "new.json")["source"]["files"]
+        .as_object()
+        .unwrap()
+        .clone();
+    assert!(predecessor.keys().all(|p| replacement.contains_key(p)));
+    for command in ["merge", "list"] {
+        let mut c = Command::new(env!("CARGO_BIN_EXE_recur"));
+        c.args(["warp", command]);
+        if command == "merge" {
+            c.arg("demo");
+        }
+        c.args(["--json", "-d"]).arg(r);
+        let o = c.output().unwrap();
+        assert!(
+            o.status.success(),
+            "{command}: {}",
+            String::from_utf8_lossy(&o.stderr)
+        );
+        let v: Value = serde_json::from_slice(&o.stdout).unwrap();
+        if command == "merge" {
+            assert_eq!(v["covered"], json!(["s0"]));
+        } else {
+            assert_eq!(v["entries"][0]["counts"]["covered"], json!(1), "{v}");
+        }
+    }
+    fs::write(r.join("input-264.rs"), "drift after planning").unwrap();
+    assert!(plan
+        .reads
+        .verify(r)
+        .unwrap_err()
+        .to_string()
+        .contains("input changed before publication"));
+    assert_eq!(show(r)["state"], "blocked");
+    assert_eq!(old_bytes(r), original);
+}
+#[test]
+fn full_scope_refresh_legacy_default_and_insufficient_selection_fail() {
+    for limit in [None, Some(json!(128)), Some(json!(1))] {
+        let d = tempdir().unwrap();
+        let r = d.path();
+        full_scope_fixture(r, limit);
+        let error = refresh_plan(r).err().expect("insufficient limit must fail");
+        assert!(
+            format!("{error:#}").contains("unique file limit"),
+            "{error:#}"
+        );
+        assert!(!r.join("demo.evidence-refresh").exists());
+    }
+}
+#[test]
+fn invalid_refresh_limits_fail_closed_without_history() {
+    for limit in [
+        json!(0),
+        json!(1025),
+        json!(-1),
+        json!(1.5),
+        json!("512"),
+        json!(null),
+        json!(true),
+        json!({}),
+    ] {
+        let d = tempdir().unwrap();
+        let r = d.path();
+        fixture(r);
+        let mut map = get(r, "demo.warp-map.json");
+        map["evidence_refresh_max_files"] = limit.clone();
+        put(r, "demo.warp-map.json", &map);
+        assert!(refresh_plan(r).is_err(), "invalid selection: {limit}");
+        let mut layer = get(r, "demo.s0.first.warp-layer.json");
+        layer["evidence"]["tests"] = json!(["evidence:new.json"]);
+        put(r, "demo.s0.first.warp-layer.json", &layer);
+        let progress = show(r);
+        assert_eq!(
+            progress["covered"],
+            json!([]),
+            "invalid selection: {limit}; {progress}"
+        );
+        assert_eq!(progress["state"], "blocked");
+        layer["evidence"]["tests"] = json!(["native:ACK"]);
+        map["required_slices"][0]["evidence_mode"] = json!("declared");
+        put(r, "demo.s0.first.warp-layer.json", &layer);
+        put(r, "demo.warp-map.json", &map);
+        assert_eq!(
+            show(r)["covered"],
+            json!([]),
+            "invalid declared-gate selection: {limit}"
+        );
+        assert!(!r.join("demo.evidence-refresh").exists());
+    }
+}
+#[test]
+fn selected_refresh_limit_upper_boundary_is_accepted() {
+    let d = tempdir().unwrap();
+    let r = d.path();
+    full_scope_fixture(r, Some(json!(1024)));
+    let mut reads = refresh_plan(r).unwrap().reads;
+    for i in reads.hashes.len()..1024 {
+        let name = format!("extra-{i}.rs");
+        fs::write(r.join(&name), "x").unwrap();
+        reads.read(r, &name, false).unwrap();
+    }
+    assert_eq!(reads.hashes.len(), 1024);
+    reads.verify(r).unwrap();
+    fs::write(r.join("over-limit.rs"), "x").unwrap();
+    assert!(reads
+        .read(r, "over-limit.rs", false)
+        .unwrap_err()
+        .to_string()
+        .contains("unique file limit"));
+}
+
+#[test]
+fn selected_scope_cannot_widen_raw_map_json_byte_limit() {
+    let d = tempdir().unwrap();
+    let r = d.path();
+    full_scope_fixture(r, Some(json!(1024)));
+    let mut bytes = fs::read(r.join("demo.warp-map.json")).unwrap();
+    bytes.resize(2 * 1024 * 1024 + 1, b' ');
+    fs::write(r.join("demo.warp-map.json"), bytes).unwrap();
+    let error = refresh_plan(r).err().expect("raw map must remain bounded");
+    assert!(
+        format!("{error:#}").contains("file or aggregate byte limit"),
+        "{error:#}"
+    );
+    assert!(!r.join("demo.evidence-refresh").exists());
+}
+
+#[test]
+fn legacy_no_history_large_current_gate_stays_checked_but_refresh_needs_selection() {
+    let d = tempdir().unwrap();
+    let r = d.path();
+    full_scope_fixture(r, None);
+    let historical_layer = get(r, "demo.s0.first.warp-layer.json");
+    let mut current_layer = historical_layer.clone();
+    current_layer["evidence"]["tests"] = json!(["evidence:new.json"]);
+    put(r, "demo.s0.first.warp-layer.json", &current_layer);
+    assert_eq!(show(r)["covered"], json!(["s0"]));
+    assert!(!r.join("demo.evidence-refresh").exists());
+    put(r, "demo.s0.first.warp-layer.json", &historical_layer);
+    let error = refresh_plan(r)
+        .err()
+        .expect("refresh keeps its legacy 128-file bound");
+    assert!(
+        format!("{error:#}").contains("unique file limit"),
+        "{error:#}"
+    );
+    let mut map = get(r, "demo.warp-map.json");
+    map["evidence_refresh_max_files"] = json!(512);
+    put(r, "demo.warp-map.json", &map);
+    let o = call(
+        r,
+        "r1",
+        "evidence:old.json",
+        "evidence:new.json",
+        &["--confirm"],
+    );
+    assert!(o.status.success(), "{}", String::from_utf8_lossy(&o.stderr));
+    assert_eq!(show(r)["covered"], json!(["s0"]));
+}
+
+#[test]
+fn missing_raw_map_cannot_accept_external_evidence() {
+    let d = tempdir().unwrap();
+    let r = d.path();
+    fixture(r);
+    let map: recur::warp_bubble::WarpBubbleMap =
+        serde_json::from_value(get(r, "demo.warp-map.json")).unwrap();
+    let mut value = get(r, "demo.s0.first.warp-layer.json");
+    value["evidence"]["tests"] = json!(["evidence:new.json"]);
+    let layer: recur::warp_bubble::WarpSliceLayer = serde_json::from_value(value).unwrap();
+    fs::remove_file(r.join("demo.warp-map.json")).unwrap();
+    let gates = recur::warp_refresh::gates(
+        r,
+        "demo.warp-map.json",
+        &map.required_slices[0],
+        "demo.s0.first.warp-layer.json",
+        &layer,
+    );
+    assert_eq!(gates.len(), 1);
+    assert_eq!(gates[0].status, "failed");
+    assert!(!gates[0].satisfied);
+}

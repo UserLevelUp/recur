@@ -1,0 +1,8 @@
+{
+  "schema": "watch-evidence-overwrite-proof-v1",
+  "bundle": "watch-native-v9",
+  "mode": "native",
+  "exit_code": 1,
+  "refused": true,
+  "all_existing_observations_unchanged": true
+}

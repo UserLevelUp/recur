@@ -1,7 +1,7 @@
 module WarpQueryCompatibilityTests
 using Test, JSON3
 const ROOT=normpath(joinpath(@__DIR__,".."))
-const CORE=joinpath(ROOT,"target",get(ENV,"RECUR_PROFILE","release-safe"),Sys.iswindows() ? "recur.exe" : "recur")
+const CORE=get(ENV,"RECUR_BIN",joinpath(ROOT,"target",get(ENV,"RECUR_PROFILE","release-safe"),Sys.iswindows() ? "recur.exe" : "recur"))
 function query(args)
     out=IOBuffer(); err=IOBuffer()
     p=run(pipeline(ignorestatus(`$CORE $args`),stdout=out,stderr=err))

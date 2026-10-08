@@ -20,6 +20,8 @@ const STATUS_SUFFIX: &str = ".status.current.md";
 
 #[derive(Subcommand)]
 pub enum WatchQuerySubcommand {
+    /// Inspect durable Eventness topic bindings without registering or draining
+    Topics,
     /// List known watcher state records
     List {
         /// Filter virtual watcher names such as docs-monkey.active
@@ -62,6 +64,13 @@ pub fn execute(
     json: bool,
 ) -> anyhow::Result<()> {
     match command.unwrap_or(WatchQuerySubcommand::List { filter: None }) {
+        WatchQuerySubcommand::Topics => {
+            let topics = recur::watch_eventness::inspect(&dir)?;
+            let mut out = io::stdout().lock();
+            serde_json::to_writer_pretty(&mut out, &topics)?;
+            writeln!(out)?;
+            Ok(())
+        }
         WatchQuerySubcommand::List { filter } => {
             let states = collect_states(&dir, filter.as_deref())?;
             emit_states(&states, json)

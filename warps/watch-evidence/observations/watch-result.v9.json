@@ -1,0 +1,38 @@
+{
+  "create": {
+    "binding": {
+      "eventness_dir": ".recur\\watch-evidence-results",
+      "filter": "main.command.watch.eventness.evidence.**.ready",
+      "producer_keywords": [
+        "emit",
+        "enqueue",
+        "publish",
+        "send"
+      ],
+      "root": "\\\\?\\C:\\src\\recur",
+      "schema": "watch-eventness-topic-v1",
+      "topic": "main.command.watch.eventness.evidence.results",
+      "warp": "main.command.watch.eventness.evidence",
+      "warp_uuid": "01a11d10-5e20-7023-a567-6d2d57373cce"
+    },
+    "confirmed": true,
+    "operation": "create"
+  },
+  "subscribe": {
+    "committed_batches": 0,
+    "confirmed": true,
+    "operation": "subscribe",
+    "subscriber": "coordinator",
+    "topic": "main.command.watch.eventness.evidence.results"
+  },
+  "notifications": [
+    {
+      "trace_ids": [
+        "main.command.watch.eventness.evidence.final.ready"
+      ]
+    }
+  ],
+  "restart_deduplicated": true,
+  "replayed": true,
+  "eventness": ".recur/watch-evidence-results/main.command.watch.eventness.evidence.final.complete.md"
+}

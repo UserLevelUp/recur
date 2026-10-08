@@ -23,6 +23,7 @@ radar screen for cognitive orientation:
 - `recur reveal` lists rehydration capsules, personas, agents, and skills.
 - `recur warp` (or `recur warp list`) lists remaining task bubbles, rings, and lanes.
 - `recur watch list` lists active watcher daemon subscriptions and status records.
+- `recur watch topics` reads durable Eventness topic bindings; companion topic drains announce only trace IDs.
 - `recur lang` (or `recur lang list`) lists the source hierarchy with static status
   and recorded Eventness; `--json` includes exact symbols and diagnostics.
 - `recur version` lists artifact version lanes and manifests.

@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: bounded-backlog: max N acknowledges only N publications across process restarts
+ok 1 - bounded-backlog: max N acknowledges only N publications across process restarts
+  ---
+  duration_ms: 145.8061
+  type: 'test'
+  ...
+# Subtest: bounded-signatures: max-events counts publications and preserves distinct signatures together
+ok 2 - bounded-signatures: max-events counts publications and preserves distinct signatures together
+  ---
+  duration_ms: 90.4979
+  type: 'test'
+  ...
+# Subtest: bounds: invalid max-events fails before changing subscription state
+ok 3 - bounds: invalid max-events fails before changing subscription state
+  ---
+  duration_ms: 129.273
+  type: 'test'
+  ...
+# Subtest: existing-publications: each subscriber begins with existing durable artifacts
+ok 4 - existing-publications: each subscriber begins with existing durable artifacts
+  ---
+  duration_ms: 134.934
+  type: 'test'
+  ...
+# Subtest: binding-drift: recreating a topic cannot replace existing interest or acknowledged history
+ok 5 - binding-drift: recreating a topic cannot replace existing interest or acknowledged history
+  ---
+  duration_ms: 155.7586
+  type: 'test'
+  ...
+# Subtest: content-change: same publication and referenced bytes wake without revision metadata
+ok 6 - content-change: same publication and referenced bytes wake without revision metadata
+  ---
+  duration_ms: 134.125
+  type: 'test'
+  ...
+# Subtest: self-updates: private status and subscription journal never wake their own topic
+ok 7 - self-updates: private status and subscription journal never wake their own topic
+  ---
+  duration_ms: 172.1043
+  type: 'test'
+  ...
+# Subtest: previews: create, subscribe and drain leave all bytes and directories unchanged
+ok 8 - previews: create, subscribe and drain leave all bytes and directories unchanged
+  ---
+  duration_ms: 133.8485
+  type: 'test'
+  ...
+# Subtest: pure-query: core watch/warp and topic replay never write state
+ok 9 - pure-query: core watch/warp and topic replay never write state
+  ---
+  duration_ms: 160.559
+  type: 'test'
+  ...
+# Subtest: configured-producer: explicit producer roles control publication discovery
+ok 10 - configured-producer: explicit producer roles control publication discovery
+  ---
+  duration_ms: 70.3127
+  type: 'test'
+  ...
+# Subtest: invalid-ids: malformed producer declarations fail without acknowledging valid siblings
+ok 11 - invalid-ids: malformed producer declarations fail without acknowledging valid siblings
+  ---
+  duration_ms: 109.7253
+  type: 'test'
+  ...
+# Subtest: foreign-warp: filter match does not turn foreign scope into publication
+ok 12 - foreign-warp: filter match does not turn foreign scope into publication
+  ---
+  duration_ms: 99.8458
+  type: 'test'
+  ...
+# Subtest: conflicting-warp: same Warp ID with conflicting UUID cannot advance the cursor
+ok 13 - conflicting-warp: same Warp ID with conflicting UUID cannot advance the cursor
+  ---
+  duration_ms: 75.8518
+  type: 'test'
+  ...
+# Subtest: scope-boundaries: root, private runtime and traversal cannot be Eventness directories
+ok 14 - scope-boundaries: root, private runtime and traversal cannot be Eventness directories
+  ---
+  duration_ms: 77.2489
+  type: 'test'
+  ...
+# Subtest: private-reference: publication cannot fingerprint private watch runtime
+ok 15 - private-reference: publication cannot fingerprint private watch runtime
+  ---
+  duration_ms: 101.512
+  type: 'test'
+  ...
+# Subtest: symlink-escape: linked producer directories and references cannot escape the root
+ok 16 - symlink-escape: linked producer directories and references cannot escape the root
+  ---
+  duration_ms: 90.4354
+  type: 'test'
+  ...
+# Subtest: recovery-before-commit: unsuccessful drain leaves publication recoverable
+ok 17 - recovery-before-commit: unsuccessful drain leaves publication recoverable
+  ---
+  duration_ms: 118.4895
+  type: 'test'
+  ...
+# Subtest: recovery-partial-commit: unsuccessful drain leaves publication recoverable
+ok 18 - recovery-partial-commit: unsuccessful drain leaves publication recoverable
+  ---
+  duration_ms: 111.4861
+  type: 'test'
+  ...
+# Subtest: recovery-write-failure: unsuccessful drain leaves publication recoverable
+ok 19 - recovery-write-failure: unsuccessful drain leaves publication recoverable
+  ---
+  duration_ms: 131.484
+  type: 'test'
+  ...
+# Subtest: recovery-after-commit: durable replay recovers lost stdout without repeating reconciliation
+ok 20 - recovery-after-commit: durable replay recovers lost stdout without repeating reconciliation
+  ---
+  duration_ms: 112.7277
+  type: 'test'
+  ...
+# Subtest: journal-history: committed observations append and remain replayable after later revisions
+ok 21 - journal-history: committed observations append and remain replayable after later revisions
+  ---
+  duration_ms: 154.9762
+  type: 'test'
+  ...
+# Subtest: torn-tail: read-only replay preserves tail and confirmed drain repairs it before append
+ok 22 - torn-tail: read-only replay preserves tail and confirmed drain repairs it before append
+  ---
+  duration_ms: 119.074
+  type: 'test'
+  ...
+# Subtest: corrupt-committed-line: complete journal corruption fails closed
+ok 23 - corrupt-committed-line: complete journal corruption fails closed
+  ---
+  duration_ms: 110.3855
+  type: 'test'
+  ...
+# Subtest: production-binary: fault injection variable cannot interrupt normal publication
+ok 24 - production-binary: fault injection variable cannot interrupt normal publication
+  ---
+  duration_ms: 57.1707
+  type: 'test'
+  ...
+# Subtest: concurrent-drains: OS ownership fence prevents duplicate acknowledgements
+ok 25 - concurrent-drains: OS ownership fence prevents duplicate acknowledgements
+  ---
+  duration_ms: 174.7751
+  type: 'test'
+  ...
+# Subtest: legacy-subscription: file polling still signals unannotated artifacts and exposes query status
+ok 26 - legacy-subscription: file polling still signals unannotated artifacts and exposes query status
+  ---
+  duration_ms: 1048.2009
+  type: 'test'
+  ...
+# Subtest: bounded-coordinator: real verified worker signals Eventness while review remains pending
+ok 27 - bounded-coordinator: real verified worker signals Eventness while review remains pending
+  ---
+  duration_ms: 1231.8969
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5306.1227

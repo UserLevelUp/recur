@@ -66,6 +66,15 @@ behavior; inventory scoping does not silently change those APIs. For legacy layo
 with layers spread across subdirectories, use the explicit merge at the intended
 root; the inventory may conservatively show missing coverage.
 
+A map can opt into a shared source/evidence root with `"evidence_root": ".."`
+when its manifest lives in `warps/` and its checked inputs are project source
+files. The path is relative to the manifest's directory and uses forward slashes.
+It must resolve to a directory containing the map, wholly within the explicit
+`-d` requested root. Show, inventory, merge, completion and evidence refresh use
+that declared root consistently while maps/layers remain together. A narrower
+`-d warps` cannot silently widen to its parent and fails closed. Missing metadata
+preserves the existing behavior described above; this field remains optional.
+
 ## Initialize editable creation defaults
 
 ```powershell

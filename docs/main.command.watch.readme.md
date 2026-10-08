@@ -9,6 +9,11 @@ It does not arm a filesystem listener, run a polling loop, or stream events.
 The active runner is `recur-watch`. Core `recur watch` reads watcher eventness
 left under `.recur/watch/` and exits.
 
+Optional native Eventness topics preserve intelligence in files and announce only
+trace IDs. See [Eventness topics](main.command.watch.eventness.readme.md) for first
+use, confirmed registration/drain, replay and recovery bounds. `recur watch topics`
+reads their bindings without registering interest or advancing a cursor.
+
 ## Command Split
 
 ```text

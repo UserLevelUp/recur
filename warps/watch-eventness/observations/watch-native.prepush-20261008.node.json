@@ -1,0 +1,21 @@
+{
+  "schema": "watch-native-promotion-test-v1",
+  "mode": "node",
+  "started": "2026-10-08T19:38:44.187Z",
+  "finished": "2026-10-08T19:38:49.544Z",
+  "program": "C:\\Users\\marcn\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+  "args": [
+    "--test",
+    "--test-reporter=tap",
+    "warps/watch-eventness/main.command.watch.eventness.native.red.test.cjs",
+    "warps/watch-eventness/main.command.watch.eventness.scaffold.test.cjs",
+    "warps/watch-eventness/main.command.watch.eventness.integration.test.cjs",
+    "warps/watch-eventness/main.command.watch.eventness.acceptance.test.cjs"
+  ],
+  "exit_code": 1,
+  "passed": 45,
+  "failed": 4,
+  "skipped": 0,
+  "log": "watch-native.prepush-20261008.node.log.txt",
+  "log_sha256": "954a38cac01f6938da1c129f4dd01340aa143bf80d86d69d2bc24832dfdf627a"
+}

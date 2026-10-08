@@ -1,0 +1,31 @@
+{
+  "started": "2026-10-08T07:05:31.447Z",
+  "finished": "2026-10-08T07:05:34.818Z",
+  "program": "C:/Users/marcn/.julia/juliaup/julia-1.12.7+0.x64.w64.mingw32/bin/julia.exe",
+  "args": [
+    "--project=demos/web-evidence-lab",
+    "warps/watch-eventness/main.command.watch.eventness.julia.verify.jl"
+  ],
+  "exit_code": 1,
+  "outcome": {
+    "schema": "warp-external-result-v1",
+    "kind": "test",
+    "outcome": "failed",
+    "exit_code": 1,
+    "tests": {
+      "discovered": 0,
+      "executed": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "log": "watch-native-v3.julia.log.txt",
+  "log_sha256": "9b2c0e823bef544058d5a05b7ebb11dc1d6056ee9f44628c99ddb00eaf83c137",
+  "binaries_sha256": {
+    "C:\\src\\recur\\target\\release-safe\\recur.exe": "d9cce3be0e445e4f693b5d412b95c7beaa4471ad5bc4848d4d7d239d7a777013",
+    "C:\\src\\recur\\target\\release-safe\\recur-watch.exe": "fbcb9ba3c4607cc1b32eca21d545dc8a8f4a6ac8e5ca965dc4a53c1e45cf3523",
+    "C:\\src\\recur\\target\\release-safe\\recur-warp.exe": "f413827606ed1c9cdfed9c662d76b0e847ce44b63401d9f3f47e2f57ca8f5e89",
+    "C:\\src\\recur\\target\\watch-fault-tests\\release-safe\\recur-watch.exe": "36154215bf1dca0ed3236d0492d384b496d4204f82ef8a8ade5a7db36452a0d4"
+  }
+}

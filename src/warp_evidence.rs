@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::{
     collections::BTreeMap,
     fs,
+    io::Read,
     path::{Component, Path, PathBuf},
     time::{SystemTime, UNIX_EPOCH},
 };
@@ -79,6 +80,35 @@ pub fn fingerprint(bytes: &[u8]) -> String {
         hash = hash.wrapping_mul(0x100000001b3);
     }
     format!("fnv1a64:{hash:016x}")
+}
+
+/// Resolve an explicitly declared evidence root without widening the caller's scope.
+/// Omitted metadata preserves the caller-specific legacy default.
+pub fn resolve_root(requested: &Path, manifest: &Path, default: &Path) -> Result<PathBuf> {
+    let requested = requested.canonicalize()?;
+    let manifest = manifest.canonicalize()?;
+    anyhow::ensure!(manifest.starts_with(&requested), "Warp manifest escapes requested root");
+    let file = fs::File::open(&manifest)?;
+    const MAP_LIMIT: u64 = 2 * 1024 * 1024;
+    anyhow::ensure!(file.metadata()?.len() <= MAP_LIMIT, "Warp map exceeds 2 MiB JSON limit");
+    let mut bytes = Vec::new();
+    file.take(MAP_LIMIT + 1).read_to_end(&mut bytes)?;
+    anyhow::ensure!(bytes.len() as u64 <= MAP_LIMIT, "Warp map exceeds 2 MiB JSON limit");
+    let raw: serde_json::Value = serde_json::from_slice(&bytes)?;
+    let Some(value) = raw.get("evidence_root") else { return Ok(default.canonicalize()?); };
+    let name = value.as_str().context("evidence_root must be a relative directory string")?;
+    anyhow::ensure!(
+        !name.is_empty() && name.len() <= 4096 && !name.contains(['\\', ':'])
+            && !name.chars().any(char::is_control)
+            && name.split('/').all(|part| !part.is_empty())
+            && Path::new(name).components().all(|part| matches!(part, Component::Normal(_) | Component::CurDir | Component::ParentDir)),
+        "evidence_root must be a nonempty relative directory path"
+    );
+    let selected = manifest.parent().context("manifest has no parent")?.join(name).canonicalize()
+        .with_context(|| format!("missing evidence_root '{name}'"))?;
+    anyhow::ensure!(selected.is_dir() && selected.starts_with(&requested), "evidence_root escapes requested -d root or is not a directory");
+    anyhow::ensure!(manifest.starts_with(&selected), "evidence_root must contain its Warp manifest");
+    Ok(selected)
 }
 
 pub fn contained_file(root: &Path, relative: &str) -> Result<PathBuf> {

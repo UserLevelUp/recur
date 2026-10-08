@@ -27,6 +27,7 @@ pub mod warp_refresh;
 pub mod warp_policy;
 #[path = "main_command_warp_impl.rs"]
 pub mod warp_query;
+pub mod watch_eventness;
 
 // Traits for dogfooding hierarchical organization
 #[path = "trait/mod.rs"]

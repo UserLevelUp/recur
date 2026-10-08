@@ -1,0 +1,25 @@
+{
+  "schema": "warp-list-v1",
+  "entries": [
+    {
+      "contract_status": "unresolved",
+      "counts": {
+        "blocked": 0,
+        "conflicting": 0,
+        "covered": 0,
+        "pending": 5,
+        "required": 5,
+        "stale_contract": 0
+      },
+      "error": null,
+      "evidence_status": "absent",
+      "kind": "bubble",
+      "manifests": [
+        "warps/main.command.watch.eventness.evidence.warp-map.json"
+      ],
+      "scope": "//?/C:/src/recur/warps",
+      "state": "incomplete",
+      "warp_id": "main.command.watch.eventness.evidence"
+    }
+  ]
+}

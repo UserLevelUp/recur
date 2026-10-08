@@ -16,8 +16,10 @@ recur warp show main.command.watch.eventness -d . --json
 recur warp slices main.command.watch.eventness -d . --json
 ```
 
-Read the contract and the latest baseline under observations/. The topic commands
-in the contract are proposed and expected-red today. Existing `recur watch list`
+Read the frozen initial contract and current implementation guide at
+`docs/main.command.watch.eventness.readme.md`. Historical baseline observations
+retain the original expected-red results; newer observations record implemented
+native behavior. Existing `recur watch list`
 is a query; `recur-watch --filter PATTERN -d ROOT` is the active file runner.
 Use each executable's --help before running it. No subscription is started by
 this initial setup.

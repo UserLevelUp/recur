@@ -1,0 +1,174 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a11d10-5e20-7023-a567-6d2d57373cce",
+  "completed_slices": [],
+  "conflicts": [],
+  "contract_status": "unresolved",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 0,
+    "pending": 5,
+    "required": 5,
+    "stale_contract": 0
+  },
+  "covered": [],
+  "current_slice": "initial",
+  "evidence_status": "absent",
+  "gate_evidence": [
+    {
+      "evidence": [],
+      "gate": "diagnosis-contract",
+      "satisfied": false,
+      "slice_id": "initial",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "negative-controls",
+      "satisfied": false,
+      "slice_id": "tests",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "binary-bundle-tests",
+      "satisfied": false,
+      "slice_id": "implementation",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "full-scope-refresh-tests",
+      "satisfied": false,
+      "slice_id": "integration",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "renewed-watch-acceptance",
+      "satisfied": false,
+      "slice_id": "final",
+      "status": "absent"
+    }
+  ],
+  "goal": "Preserve exact tested executables, publish immutable verification bundles, and renew full-scope Watch evidence without weakening integrity or bounds",
+  "layers": [],
+  "manifest": "warps/main.command.watch.eventness.evidence.warp-map.json",
+  "pending": [
+    "final",
+    "implementation",
+    "initial",
+    "integration",
+    "tests"
+  ],
+  "ready_slices": [
+    "initial"
+  ],
+  "root": "\\\\?\\C:\\src\\recur",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.initial:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "diagnosis-contract"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": true,
+      "slice_id": "initial",
+      "slice_uuid": "01a11d10-5e20-7657-bc85-a570089d130a",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.tests:v1",
+      "depends_on": [
+        "initial"
+      ],
+      "evidence_gates": [
+        "negative-controls"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "negative-controls": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "tests",
+      "slice_uuid": "01a11d10-c47e-7e32-9724-af2c6034a52e",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.implementation:v1",
+      "depends_on": [
+        "tests"
+      ],
+      "evidence_gates": [
+        "binary-bundle-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "binary-bundle-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": false,
+      "slice_id": "implementation",
+      "slice_uuid": "01a11d10-c480-7b38-b7c2-a974f2c4bd63",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.integration:v1",
+      "depends_on": [
+        "implementation"
+      ],
+      "evidence_gates": [
+        "full-scope-refresh-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "full-scope-refresh-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": false,
+      "slice_id": "integration",
+      "slice_uuid": "01a11d10-c480-7164-ae9b-66d3217fc2db",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.evidence.final:v1",
+      "depends_on": [
+        "integration"
+      ],
+      "evidence_gates": [
+        "renewed-watch-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "renewed-watch-acceptance": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "final",
+      "slice_uuid": "01a11d10-5e20-7b67-a9dc-ee942a305b7d",
+      "state": "pending"
+    }
+  ],
+  "stale_contract": [],
+  "state": "incomplete",
+  "warnings": [],
+  "warp_id": "main.command.watch.eventness.evidence"
+}

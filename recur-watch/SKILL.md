@@ -1,6 +1,6 @@
 ---
 name: recur-watch
-description: Inspect Recur watcher state or coordinate asynchronous Warp workers through recur-watch polling and bounded recovery. Use for Recur subscriptions and dispatch, not recurring Codex reminders.
+description: Inspect Recur watcher state, reconcile durable Eventness topics, or coordinate asynchronous Warp workers through polling and bounded recovery. Use for Recur subscriptions and dispatch, not recurring Codex reminders.
 ---
 
 # Recur Watch
@@ -10,6 +10,17 @@ reads status records and exits. The separate `recur-watch` companion owns active
 subscriptions and coordinator polling. A status file or configured host is not
 proof of a running or authenticated process. Check current help and inspect the
 recorded PID, timestamps, ACK/NAK and actual outputs when liveness matters.
+
+For durable Eventness signatures, read `docs/main.command.watch.eventness.readme.md`
+and `recur-watch topic --help`. Topic create/subscribe/drain preview unless
+`--confirm` is supplied. Bind an explicit Eventness directory; optional `--warp`
+adds UUID scope. Keep useful intelligence in producer files and optional refs;
+notifications carry only `trace_ids`. Resolve those IDs in the bound directory,
+read their artifacts and review evidence before accepting a Warp slice. Repeated
+subscription preserves history. On a lost drain response, replay its committed
+sequence; downstream work must be idempotent. Registration launches no daemon or
+agent. `recur watch topics` is a pure query. Trace IDs and topics are not required
+for existing file subscriptions. Do not equate a topic notification with acceptance.
 
 For filesystem subscriptions in this repository, consult
 `docs/main.command.watch.readme.md`. Use an explicit root, filter, subscription

@@ -1,0 +1,44 @@
+
+============================================================
+  Testing: recur watch query
+============================================================
+  -> recur watch --help -d test_environment
+  -> recur watch explain -d test_environment
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_zHX2oB
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_Z1mhkv
+  -> recur watch list --filter **.active -d C:\Users\marcn\AppData\Local\Temp\jl_Z1mhkv
+  -> recur watch list --filter **.stale -d C:\Users\marcn\AppData\Local\Temp\jl_Z1mhkv
+  -> recur --json watch status docs-monkey -d C:\Users\marcn\AppData\Local\Temp\jl_Z1mhkv
+  -> recur watch status missing-watch -d C:\Users\marcn\AppData\Local\Temp\jl_db9AsS
+  -> recur watch topics -d C:\Users\marcn\AppData\Local\Temp\jl_Qg8TeK --json
+  -> recur watch topics -d C:\Users\marcn\AppData\Local\Temp\jl_Qg8TeK --json
+
+============================================================
+  Testing: recur trace-id
+============================================================
+
+============================================================
+  Setting up test environment
+============================================================
+  -> recur trace-id -d test_environment --help
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json -d test_environment
+  -> recur trace-id ulu.topic.dot.** --scope ** --ext .cs --json -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json -d test_environment
+  -> <stdin> | recur trace-id ulu.topic.dot.ownership.create --scope ** --stdin --ext .cs --depth 6 --depth-guard clamp --json -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --save-run --run-name ownership-create-primary -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --check-run --run-name ownership-create-primary -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --reuse-if-fresh --run-name ownership-create-primary -d test_environment
+  -> recur trace-id ulu.topic.dot.ownership.create --scope ** --ext .cs --json --check-run --run-name ownership-create-primary -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --save-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --check-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --check-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --save-run --run-name transition.audit.order.42 -d test_environment
+  -> recur trace-id transition.audit.order.42 --scope transition.audit.** --ext .txt --json --check-run --run-name transition.audit.order.42 -d test_environment
+  -> <piped> | recur merge --stdin --base pipeline.trace-id --sep . --json
+
+============================================================
+  Cleaning up test environment
+============================================================
+Test Summary:                     | Pass  Broken  Total  Time
+Watch affected core compatibility |  260       3    263  8.1s
+

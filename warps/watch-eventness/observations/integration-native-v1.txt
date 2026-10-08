@@ -1,0 +1,35 @@
+✔ bounded-backlog: max N acknowledges only N publications across process restarts (162.1745ms)
+✔ bounded-signatures: max-events counts publications and preserves distinct signatures together (140.7189ms)
+✔ bounds: invalid max-events fails before changing subscription state (134.4446ms)
+✔ existing-publications: each subscriber begins with existing durable artifacts (124.8069ms)
+✔ binding-drift: recreating a topic cannot replace existing interest or acknowledged history (167.0593ms)
+✔ content-change: same publication and referenced bytes wake without revision metadata (106.5229ms)
+✔ self-updates: private status and subscription journal never wake their own topic (169.4465ms)
+✔ previews: create, subscribe and drain leave all bytes and directories unchanged (123.6307ms)
+✔ pure-query: core watch/warp and topic replay never write state (156.3745ms)
+✔ configured-producer: explicit producer roles control publication discovery (68.0698ms)
+✔ invalid-ids: malformed producer declarations fail without acknowledging valid siblings (121.7452ms)
+✔ foreign-warp: filter match does not turn foreign scope into publication (87.3358ms)
+✔ conflicting-warp: same Warp ID with conflicting UUID cannot advance the cursor (93.0137ms)
+✔ scope-boundaries: root, private runtime and traversal cannot be Eventness directories (76.5033ms)
+✔ private-reference: publication cannot fingerprint private watch runtime (85.2523ms)
+✔ symlink-escape: linked producer directories and references cannot escape the root (92.1999ms)
+✔ recovery-before-commit: unsuccessful drain leaves publication recoverable (202.6389ms)
+✔ recovery-partial-commit: unsuccessful drain leaves publication recoverable (118.4822ms)
+✔ recovery-write-failure: unsuccessful drain leaves publication recoverable (115.9527ms)
+✔ recovery-after-commit: durable replay recovers lost stdout without repeating reconciliation (135.5628ms)
+✔ journal-history: committed observations append and remain replayable after later revisions (164.4228ms)
+✔ torn-tail: read-only replay preserves tail and confirmed drain repairs it before append (120.6215ms)
+✔ corrupt-committed-line: complete journal corruption fails closed (98.865ms)
+✔ production-binary: fault injection variable cannot interrupt normal publication (67.5021ms)
+✔ concurrent-drains: OS ownership fence prevents duplicate acknowledgements (169.1754ms)
+✔ legacy-subscription: file polling still signals unannotated artifacts and exposes query status (1086.5433ms)
+✔ bounded-coordinator: real verified worker signals Eventness while review remains pending (1757.3767ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5998.8814

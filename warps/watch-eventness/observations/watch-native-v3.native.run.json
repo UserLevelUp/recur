@@ -1,0 +1,33 @@
+{
+  "started": "2026-10-08T07:05:31.439Z",
+  "finished": "2026-10-08T07:05:33.554Z",
+  "program": "C:\\Users\\marcn\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+  "args": [
+    "--test",
+    "--test-reporter=tap",
+    "warps/watch-eventness/main.command.watch.eventness.native.red.test.cjs",
+    "warps/watch-eventness/main.command.watch.eventness.scaffold.test.cjs"
+  ],
+  "exit_code": 0,
+  "outcome": {
+    "schema": "warp-external-result-v1",
+    "kind": "test",
+    "outcome": "passed",
+    "exit_code": 0,
+    "tests": {
+      "discovered": 15,
+      "executed": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "log": "watch-native-v3.native.log.txt",
+  "log_sha256": "b1c3ed60c335760d542bec3987bebc78e17ff75e1fbd36ede8a8190dba0fbb16",
+  "binaries_sha256": {
+    "C:\\src\\recur\\target\\release-safe\\recur.exe": "d9cce3be0e445e4f693b5d412b95c7beaa4471ad5bc4848d4d7d239d7a777013",
+    "C:\\src\\recur\\target\\release-safe\\recur-watch.exe": "fbcb9ba3c4607cc1b32eca21d545dc8a8f4a6ac8e5ca965dc4a53c1e45cf3523",
+    "C:\\src\\recur\\target\\release-safe\\recur-warp.exe": "f413827606ed1c9cdfed9c662d76b0e847ce44b63401d9f3f47e2f57ca8f5e89",
+    "C:\\src\\recur\\target\\watch-fault-tests\\release-safe\\recur-watch.exe": "36154215bf1dca0ed3236d0492d384b496d4204f82ef8a8ade5a7db36452a0d4"
+  }
+}

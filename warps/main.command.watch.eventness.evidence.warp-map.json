@@ -1,0 +1,116 @@
+{
+  "bubble_uuid": "01a11d10-5e20-7023-a567-6d2d57373cce",
+  "current_slice": null,
+  "goal": "Preserve exact tested executables, publish immutable verification bundles, and renew full-scope Watch evidence without weakening integrity or bounds",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Retain exact tested executable bytes outside mutable Cargo output",
+    "Immutable evidence bundles and historical accepted layers",
+    "Keep exact executable SHA-256 integrity; no PE normalization for acceptance",
+    "Retain every predecessor evidence input path",
+    "Preserve default assessment bounds; optional larger scope remains explicitly bounded",
+    "Core queries remain read-only; companions own publication",
+    "Eventness holds intelligence; optional Watch notifications contain trace_ids only",
+    "Trace IDs, Watch, Warp and Lang remain optional",
+    "No unselected demo suites",
+    "Produced results do not automatically accept gates"
+  ],
+  "required_slices": [
+    {
+      "slice_id": "initial",
+      "slice_uuid": "01a11d10-5e20-7657-bc85-a570089d130a",
+      "contract_hash": "contract:main.command.watch.eventness.evidence.initial:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "diagnosis-contract"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0
+    },
+    {
+      "slice_id": "tests",
+      "slice_uuid": "01a11d10-c47e-7e32-9724-af2c6034a52e",
+      "contract_hash": "contract:main.command.watch.eventness.evidence.tests:v1",
+      "depends_on": [
+        "initial"
+      ],
+      "evidence_gates": [
+        "negative-controls"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "negative-controls": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0
+    },
+    {
+      "slice_id": "implementation",
+      "slice_uuid": "01a11d10-c480-7b38-b7c2-a974f2c4bd63",
+      "contract_hash": "contract:main.command.watch.eventness.evidence.implementation:v1",
+      "depends_on": [
+        "tests"
+      ],
+      "evidence_gates": [
+        "binary-bundle-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "binary-bundle-tests": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 1
+    },
+    {
+      "slice_id": "integration",
+      "slice_uuid": "01a11d10-c480-7164-ae9b-66d3217fc2db",
+      "contract_hash": "contract:main.command.watch.eventness.evidence.integration:v1",
+      "depends_on": [
+        "implementation"
+      ],
+      "evidence_gates": [
+        "full-scope-refresh-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "full-scope-refresh-tests": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 1
+    },
+    {
+      "slice_id": "final",
+      "slice_uuid": "01a11d10-5e20-7b67-a9dc-ee942a305b7d",
+      "contract_hash": "contract:main.command.watch.eventness.evidence.final:v1",
+      "depends_on": [
+        "integration"
+      ],
+      "evidence_gates": [
+        "renewed-watch-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "renewed-watch-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.watch.eventness.evidence",
+  "evidence_root": "..",
+  "evidence_refresh_max_files": 512,
+  "contract_document": "warps/watch-evidence/main.command.watch.eventness.evidence.contract.md",
+  "predicted_final_eventness": "warps/watch-evidence/main.command.watch.eventness.evidence.final.predicted.md",
+  "parent_context": "main.command.watch.eventness",
+  "planning_status": "verified-locally",
+  "observed_final_eventness": "warps/watch-evidence/main.command.watch.eventness.evidence.final.observed.complete.md"
+}

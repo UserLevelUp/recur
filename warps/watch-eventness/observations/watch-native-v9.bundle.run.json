@@ -1,0 +1,43 @@
+{
+  "started": "2026-10-08T20:23:20.753Z",
+  "finished": "2026-10-08T20:23:21.506Z",
+  "program": "C:\\Users\\marcn\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+  "args": [
+    "--test",
+    "--test-reporter=tap",
+    "warps/watch-evidence/main.command.watch.eventness.evidence.bundle.test.cjs"
+  ],
+  "exit_code": 0,
+  "child_exit_code": 0,
+  "verification_errors": [],
+  "outcome": {
+    "schema": "warp-external-result-v1",
+    "kind": "test",
+    "outcome": "passed",
+    "exit_code": 0,
+    "tests": {
+      "discovered": 11,
+      "executed": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "log": "watch-native-v9.bundle.log.txt",
+  "log_sha256": "b0030dc9b5bbcc98786c74f9cae2ab47ebe32dafea6c1bc6beeab8a777cf5c04",
+  "binary_bundle": "warps/watch-eventness/observations/watch-native-v9.binaries.json",
+  "binaries_sha256": {
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur.exe": "d6c4b0d0a5cb467cb7f1ea3fa4d8194df9e6f19be0ffe6f8dd84547cc5fd4dc4",
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur-watch.exe": "88d794135707d3fe7a3eb375ac924390ca900bb6793698223d75529f6634514e",
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur-warp.exe": "945ba2d294b3a3e11ef725ed1ca1a1f7cbe48e1000bb4726eb3b6681d1570603",
+    "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur-watch-fault.exe": "0b0766efd28c92c3cfb0a29bcf4f79048c7e42b8ab282ff1985381e5ba508e0f"
+  },
+  "binary_binding": "retained executables; verified before and after",
+  "selected_environment": {
+    "RECUR_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur.exe",
+    "RECUR_WATCH_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur-watch.exe",
+    "RECUR_WARP_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur-warp.exe",
+    "WATCH_TEST_BIN": "C:\\src\\recur\\.recur\\evidence-binaries\\watch-native-v9\\recur-watch-fault.exe",
+    "RECUR_WATCH_EVIDENCE_PREFIX": "watch-native-v9"
+  }
+}

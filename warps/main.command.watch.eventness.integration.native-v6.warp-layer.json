@@ -1,0 +1,16 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.watch.eventness",
+  "slice_id": "integration",
+  "contract_hash": "contract:main.command.watch.eventness.integration:v1",
+  "attempt_id": "native-v6",
+  "result_state": "accepted",
+  "result_hash": "sha256:6b1f318ae6a3e8b4012d65fb5584d874f7aefd956fc60bcf2b9f30fde928914c",
+  "evidence": {
+    "restart-and-compatibility-tests": [
+      "evidence:warps/watch-eventness/observations/watch-native-v6.integration.evidence.json",
+      "evidence:warps/watch-eventness/observations/watch-native-v6.julia.evidence.json"
+    ]
+  },
+  "reason": null
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "recur-warp-complete-v1",
+  "warp_id": "main.command.watch.eventness",
+  "slice_id": "implementation",
+  "attempt_id": "native-v6",
+  "state": "written",
+  "path": "warps/main.command.watch.eventness.implementation.native-v6.warp-layer.json",
+  "contract_hash": "contract:main.command.watch.eventness.implementation:v1",
+  "result_hash": "sha256:48a295bb987ae5cb4a06ebd75a2a89b764b42ef5554a5ba9575eb992c0d55ed6",
+  "evidence": {
+    "native-conformance-tests": [
+      "evidence:warps/watch-eventness/observations/watch-native-v6.native.evidence.json",
+      "evidence:warps/watch-eventness/observations/watch-native-v6.rust.evidence.json"
+    ]
+  }
+}

@@ -37,7 +37,7 @@ pub const CAPABILITIES: &[CapabilityTrait] = &[
     CapabilityTrait {
         name: "watch",
         status: "implemented",
-        description: "Inspect watcher state; run an explicitly requested companion watcher.",
+        description: "Inspect watcher state and Eventness topics; companion subscriptions announce paths or persisted trace IDs.",
         commands: &["recur watch", "recur-watch"],
         configuration: &["recur-watch --help"],
         effect: EFFECT,

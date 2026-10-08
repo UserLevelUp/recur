@@ -1,0 +1,45 @@
+
+============================================================
+  Testing: recur watch query
+============================================================
+  -> recur watch --help -d test_environment
+  -> recur watch explain -d test_environment
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_4b6U8D
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_vPeWwj
+  -> recur watch list --filter **.active -d C:\Users\marcn\AppData\Local\Temp\jl_vPeWwj
+  -> recur watch list --filter **.stale -d C:\Users\marcn\AppData\Local\Temp\jl_vPeWwj
+  -> recur --json watch status docs-monkey -d C:\Users\marcn\AppData\Local\Temp\jl_vPeWwj
+  -> recur watch status missing-watch -d C:\Users\marcn\AppData\Local\Temp\jl_uKPDJ6
+Watch affected core compatibility: Error During Test at C:\src\recur\warps\watch-eventness\main.command.watch.eventness.julia.verify.jl:3
+  Got exception outside of a @test
+  LoadError: cannot document the following expression:
+  
+  include("runtests.setup.jl")
+  
+  Stacktrace:
+   [1] error(::String, ::String)
+     @ Base .\error.jl:54
+   [2] top-level scope
+     @ C:\src\recur\julia-tests\main.command.watch.eventness.test.jl:1
+   [3] include(mapexpr::Function, mod::Module, _path::String)
+     @ Base .\Base.jl:307
+   [4] top-level scope
+     @ C:\src\recur\warps\watch-eventness\main.command.watch.eventness.julia.verify.jl:4
+   [5] macro expansion
+     @ C:\Users\marcn\.julia\juliaup\julia-1.12.7+0.x64.w64.mingw32\share\julia\stdlib\v1.12\Test\src\Test.jl:1777 [inlined]
+   [6] macro expansion
+     @ C:\src\recur\warps\watch-eventness\main.command.watch.eventness.julia.verify.jl:5 [inlined]
+   [7] include(mod::Module, _path::String)
+     @ Base .\Base.jl:306
+   [8] exec_options(opts::Base.JLOptions)
+     @ Base .\client.jl:317
+   [9] _start()
+     @ Base .\client.jl:550
+  in expression starting at C:\src\recur\julia-tests\main.command.watch.eventness.test.jl:1
+Test Summary:                     | Pass  Error  Total  Time
+Watch affected core compatibility |   28      1     29  2.2s
+  recur watch query command       |   28            28  0.7s
+RNG of the outermost testset: Random.Xoshiro(0x2e6bc4f77a0b883b, 0x4d065dd2ed97793f, 0xf13a0d4e55a1cac6, 0x04bb863a619a5799, 0xecc1cc909a334f05)
+
+ERROR: LoadError: Some tests did not pass: 28 passed, 0 failed, 1 errored, 0 broken.
+in expression starting at C:\src\recur\warps\watch-eventness\main.command.watch.eventness.julia.verify.jl:3

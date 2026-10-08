@@ -1,0 +1,17 @@
+
+============================================================
+  Testing: recur watch query
+============================================================
+  -> recur watch --help -d test_environment
+  -> recur watch explain -d test_environment
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_iFUv5n
+  -> recur watch -d C:\Users\marcn\AppData\Local\Temp\jl_fQVy2Z
+  -> recur watch list --filter **.active -d C:\Users\marcn\AppData\Local\Temp\jl_fQVy2Z
+  -> recur watch list --filter **.stale -d C:\Users\marcn\AppData\Local\Temp\jl_fQVy2Z
+  -> recur --json watch status docs-monkey -d C:\Users\marcn\AppData\Local\Temp\jl_fQVy2Z
+  -> recur watch status missing-watch -d C:\Users\marcn\AppData\Local\Temp\jl_r4d00U
+  -> recur watch topics -d C:\Users\marcn\AppData\Local\Temp\jl_yoPA04 --json
+  -> recur watch topics -d C:\Users\marcn\AppData\Local\Temp\jl_yoPA04 --json
+Test Summary:                     | Pass  Total  Time
+Watch affected core compatibility |  172    172  2.8s
+

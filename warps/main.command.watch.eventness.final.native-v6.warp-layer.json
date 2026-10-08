@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.watch.eventness",
+  "slice_id": "final",
+  "contract_hash": "contract:main.command.watch.eventness.final:v1",
+  "attempt_id": "native-v6",
+  "result_state": "accepted",
+  "result_hash": "sha256:062df8317017b01bcbf2fe73f0de38d1dc8e23f6e40c56ac3fe77cd4dba96e7c",
+  "evidence": {
+    "source-bound-acceptance-tests": [
+      "evidence:warps/watch-eventness/observations/watch-native-v6.final.evidence.json"
+    ]
+  },
+  "reason": null
+}

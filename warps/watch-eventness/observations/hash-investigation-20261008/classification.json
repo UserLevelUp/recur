@@ -1,0 +1,227 @@
+{
+  "schema": "watch-binary-hash-classification-v1",
+  "same_command_rebuild": {
+    "first": {
+      "sha256": "152fdde3e4559060390556430759a04bddb8f45c5975506beae0b33fe6b4de7a",
+      "size": 8240128,
+      "sections": [
+        {
+          "name": ".text",
+          "sha256": "47259c6541769feb37c0641d0df9591a771ae3aae44bd8ebb472e8f17346d068"
+        },
+        {
+          "name": ".rdata",
+          "sha256": "718bb9152dacf7ba1dd3b235064f5190521bd73691e5456affcbc71a95dab1a1"
+        },
+        {
+          "name": ".data",
+          "sha256": "7ef72982e0faae64ab3841f29721abdac1d6af53b45d52a548e43509f43ed798"
+        },
+        {
+          "name": ".pdata",
+          "sha256": "2dbcc87b6ceb749f358b97dabe27c47dee9eb9e3bb1d86487ed995ca25c845cc"
+        },
+        {
+          "name": ".reloc",
+          "sha256": "884f7f2463f79eab86afe61bcde081d23e0644b3fb5d53e8d082a1bcc53f8154"
+        }
+      ],
+      "metadata": [
+        {
+          "kind": "COFF timestamp",
+          "start": 248,
+          "end": 252
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696052,
+          "end": 6696056
+        },
+        {
+          "kind": "CodeView PDB GUID",
+          "start": 6696428,
+          "end": 6696444
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696080,
+          "end": 6696084
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696108,
+          "end": 6696112
+        }
+      ]
+    },
+    "second": {
+      "sha256": "e52aaf0e46efb418b2e414af4c6b121ffe6dfa805372294ad943875df381db02",
+      "size": 8240128,
+      "sections": [
+        {
+          "name": ".text",
+          "sha256": "47259c6541769feb37c0641d0df9591a771ae3aae44bd8ebb472e8f17346d068"
+        },
+        {
+          "name": ".rdata",
+          "sha256": "72d290cc5cf6fca379d683f3c44fb7472c1235eddf83e57c6f324ad0add3584a"
+        },
+        {
+          "name": ".data",
+          "sha256": "7ef72982e0faae64ab3841f29721abdac1d6af53b45d52a548e43509f43ed798"
+        },
+        {
+          "name": ".pdata",
+          "sha256": "2dbcc87b6ceb749f358b97dabe27c47dee9eb9e3bb1d86487ed995ca25c845cc"
+        },
+        {
+          "name": ".reloc",
+          "sha256": "884f7f2463f79eab86afe61bcde081d23e0644b3fb5d53e8d082a1bcc53f8154"
+        }
+      ],
+      "metadata": [
+        {
+          "kind": "COFF timestamp",
+          "start": 248,
+          "end": 252
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696052,
+          "end": 6696056
+        },
+        {
+          "kind": "CodeView PDB GUID",
+          "start": 6696428,
+          "end": 6696444
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696080,
+          "end": 6696084
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696108,
+          "end": 6696112
+        }
+      ]
+    },
+    "changed_bytes_by_kind": {
+      "COFF timestamp": 1,
+      "debug directory timestamp": 3,
+      "CodeView PDB GUID": 16
+    },
+    "all_differences_are_metadata": true
+  },
+  "cargo_test_variant": {
+    "before": {
+      "sha256": "1089a09d53d9f52903edbe1b6c951b462c770fd5300c992361acdb1dce47f5d5",
+      "size": 8238080,
+      "sections": [
+        {
+          "name": ".text",
+          "sha256": "4a4ad21b158dc78cc575bdb44f959cb703b2a6feefe401a85a21e4d79da240ad"
+        },
+        {
+          "name": ".rdata",
+          "sha256": "91166b6820bb78fbc56ddbdc674a92b0733a69b921b0f6875d600c7b93868178"
+        },
+        {
+          "name": ".data",
+          "sha256": "a711c3024d407cd7ba3e6494ca674475166298de3a293fb0ddad5093f627c94e"
+        },
+        {
+          "name": ".pdata",
+          "sha256": "a70952b35a6e01f56295dee5fe4cec39febc8b6967862cd1e555ff6aa16fdc52"
+        },
+        {
+          "name": ".reloc",
+          "sha256": "c44db6390a679dbf432e47ccc2f516f694258409ad2ae49c2fa9a307b3faa3d7"
+        }
+      ],
+      "metadata": [
+        {
+          "kind": "COFF timestamp",
+          "start": 248,
+          "end": 252
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6695956,
+          "end": 6695960
+        },
+        {
+          "kind": "CodeView PDB GUID",
+          "start": 6696300,
+          "end": 6696316
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6695984,
+          "end": 6695988
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696012,
+          "end": 6696016
+        }
+      ]
+    },
+    "test_build": {
+      "sha256": "9a7577a47370bad746c7aae2c250d2b6c69fb1ee8abd872ee155c5f718bee69a",
+      "size": 8238080,
+      "sections": [
+        {
+          "name": ".text",
+          "sha256": "4a4ad21b158dc78cc575bdb44f959cb703b2a6feefe401a85a21e4d79da240ad"
+        },
+        {
+          "name": ".rdata",
+          "sha256": "17105b85aa8c00ba6ce0bd4e9091f23e622060fd41e71b5ced71cdacd38e4ae7"
+        },
+        {
+          "name": ".data",
+          "sha256": "a711c3024d407cd7ba3e6494ca674475166298de3a293fb0ddad5093f627c94e"
+        },
+        {
+          "name": ".pdata",
+          "sha256": "a70952b35a6e01f56295dee5fe4cec39febc8b6967862cd1e555ff6aa16fdc52"
+        },
+        {
+          "name": ".reloc",
+          "sha256": "c44db6390a679dbf432e47ccc2f516f694258409ad2ae49c2fa9a307b3faa3d7"
+        }
+      ],
+      "metadata": [
+        {
+          "kind": "COFF timestamp",
+          "start": 248,
+          "end": 252
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6695956,
+          "end": 6695960
+        },
+        {
+          "kind": "CodeView PDB GUID",
+          "start": 6696300,
+          "end": 6696316
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6695984,
+          "end": 6695988
+        },
+        {
+          "kind": "debug directory timestamp",
+          "start": 6696012,
+          "end": 6696016
+        }
+      ]
+    },
+    "machine_code_unchanged": true
+  },
+  "limitation": "The historical v6 executable was not retained; its exact bytes cannot be compared. Reproduction demonstrates the same-source rebuild mechanism rather than proving every historical byte difference."
+}
