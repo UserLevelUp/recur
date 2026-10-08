@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: test plan retains eleven distinct obligations and explicit remaining integration work
+ok 1 - test plan retains eleven distinct obligations and explicit remaining integration work
+  ---
+  duration_ms: 0.923
+  type: 'test'
+  ...
+# Subtest: negative controls reject duplicate obligations and an intelligence-carrying notification shape
+ok 2 - negative controls reject duplicate obligations and an intelligence-carrying notification shape
+  ---
+  duration_ms: 0.9886
+  type: 'test'
+  ...
+# Subtest: map uses live slice readiness and implementation/final require checked, non-skipped test evidence
+ok 3 - map uses live slice readiness and implementation/final require checked, non-skipped test evidence
+  ---
+  duration_ms: 0.3065
+  type: 'test'
+  ...
+# Subtest: legacy core Watch list is a working no-write positive control
+ok 4 - legacy core Watch list is a working no-write positive control
+  ---
+  duration_ms: 19.9256
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 72.8812
+

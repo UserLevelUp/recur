@@ -1,0 +1,190 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a11a3f-14c9-76f0-a4f6-62956194944b",
+  "completed_slices": [
+    "initial",
+    "tests"
+  ],
+  "conflicts": [],
+  "contract_status": "unresolved",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 2,
+    "pending": 3,
+    "required": 5,
+    "stale_contract": 0
+  },
+  "covered": [
+    "initial",
+    "tests"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "watch-eventness/main.command.watch.eventness.initial.complete.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "contract-baseline",
+      "satisfied": true,
+      "slice_id": "initial",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "watch-eventness/main.command.watch.eventness.tests.complete.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "observed-red-tests",
+      "satisfied": true,
+      "slice_id": "tests",
+      "status": "declared"
+    },
+    {
+      "evidence": [],
+      "gate": "native-conformance-tests",
+      "satisfied": false,
+      "slice_id": "implementation",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "restart-and-compatibility-tests",
+      "satisfied": false,
+      "slice_id": "integration",
+      "status": "absent"
+    },
+    {
+      "evidence": [],
+      "gate": "source-bound-acceptance-tests",
+      "satisfied": false,
+      "slice_id": "final",
+      "status": "absent"
+    }
+  ],
+  "goal": "Native opt-in Eventness topics/subscriptions, trace-ID-only wake-ups and restart reconciliation",
+  "layers": [
+    "initial@setup-v1",
+    "tests@setup-v1"
+  ],
+  "manifest": "main.command.watch.eventness.warp-map.json",
+  "pending": [
+    "final",
+    "implementation",
+    "integration"
+  ],
+  "ready_slices": [
+    "implementation"
+  ],
+  "root": "//?/C:/src/recur/warps",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.command.watch.eventness.initial:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "contract-baseline"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "initial",
+      "slice_uuid": "01a11a3f-14c9-7342-987a-3648c60be8c8",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.tests:v1",
+      "depends_on": [
+        "initial"
+      ],
+      "evidence_gates": [
+        "observed-red-tests"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "tests",
+      "slice_uuid": "01a11a3f-14c9-7525-a93e-23b7667ff420",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.implementation:v1",
+      "depends_on": [
+        "tests"
+      ],
+      "evidence_gates": [
+        "native-conformance-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "native-conformance-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": true,
+      "slice_id": "implementation",
+      "slice_uuid": "01a11a3f-14c9-7d53-8bc7-c79947fd049a",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.integration:v1",
+      "depends_on": [
+        "implementation"
+      ],
+      "evidence_gates": [
+        "restart-and-compatibility-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "restart-and-compatibility-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": false,
+      "slice_id": "integration",
+      "slice_uuid": "01a11a3f-14c9-76ca-8194-e0da4eb23bed",
+      "state": "pending"
+    },
+    {
+      "contract_hash": "contract:main.command.watch.eventness.final:v1",
+      "depends_on": [
+        "integration"
+      ],
+      "evidence_gates": [
+        "source-bound-acceptance-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "source-bound-acceptance-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "final",
+      "slice_uuid": "01a11a3f-14c9-7803-b471-4e82f3128286",
+      "state": "pending"
+    }
+  ],
+  "stale_contract": [],
+  "state": "incomplete",
+  "warnings": [],
+  "warp_id": "main.command.watch.eventness"
+}

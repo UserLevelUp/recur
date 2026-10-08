@@ -1,7 +1,7 @@
 {
   "bubble_uuid": "01a11a3f-14c9-76f0-a4f6-62956194944b",
   "contract_document": "warps/watch-eventness/main.command.watch.eventness.contract.md",
-  "current_slice": "initial",
+  "current_slice": null,
   "goal": "Native opt-in Eventness topics/subscriptions, trace-ID-only wake-ups and restart reconciliation",
   "intelligence_baseline": "host-current",
   "invariants": [

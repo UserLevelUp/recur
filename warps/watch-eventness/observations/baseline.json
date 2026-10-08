@@ -1,0 +1,56 @@
+{
+  "schema": "watch-eventness-initial-baseline-v1",
+  "warp": "main.command.watch.eventness",
+  "observed_at": "2026-10-08T06:44:31.143Z",
+  "scope": "contract and executable test setup only",
+  "runs": [
+    {
+      "name": "scaffold",
+      "program": "C:\\Users\\marcn\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "C:/src/recur/warps/watch-eventness/main.command.watch.eventness.scaffold.test.cjs"
+      ],
+      "exit_code": 0,
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "log": "scaffold.txt",
+      "expectation": "passing setup and legacy no-write control"
+    },
+    {
+      "name": "native-red",
+      "program": "C:\\Users\\marcn\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "C:/src/recur/warps/watch-eventness/main.command.watch.eventness.native.red.test.cjs"
+      ],
+      "exit_code": 1,
+      "total": 11,
+      "passed": 0,
+      "failed": 11,
+      "log": "native-red.txt",
+      "expectation": "expected-red: proposed topic commands absent"
+    }
+  ],
+  "inputs_sha256": {
+    "warps/main.command.watch.eventness.warp-map.json": "0bdc34465aa0a04ae1e40aa157749ddff86d088f206516093733357c5f0e4ea5",
+    "warps/watch-eventness/main.command.watch.eventness.cases.json": "4a40b5e914860b95e3b1686457c326b84755ef93900c77dbf9f4fd41b9b1e824",
+    "warps/watch-eventness/main.command.watch.eventness.contract.md": "1f62caa60511749f456a2cc26fef162e1393164632416853d592c75736457cbd",
+    "warps/watch-eventness/main.command.watch.eventness.current.md": "68321bc789e34a0c5563882fb564863d7c1e95ead21bcce42817d7dd24aa0457",
+    "warps/watch-eventness/main.command.watch.eventness.helpers.cjs": "17d285da0d479b16f59e46a71811e489647b74815a5fc0dcc72a7d3269241a18",
+    "warps/watch-eventness/main.command.watch.eventness.native.red.test.cjs": "8ff2e7f9175b5ea93f8b71d255ebcb657e3fcf0cff581ee2a145ac0e7e13f4c9",
+    "warps/watch-eventness/main.command.watch.eventness.scaffold.test.cjs": "16873c6d33659d731ce6688ee6b7bad7e626ec9f7d9d6948ca9283bcf5b78621",
+    "warps/watch-eventness/main.command.watch.eventness.start.md": "e708ce2d2e603ff632a3ea6716f20903b221aa28e5752451b1a6b0223735f90f"
+  },
+  "binaries_sha256": {
+    "C:/Users/marcn/.cargo/bin/recur.exe": "ad5a2b70017482e74afc2e333cf6813458b3988e6b9ab262d5ef1c5df694ea48",
+    "C:/Users/marcn/.cargo/bin/recur-watch.exe": "162dc1939c8fb0f075f6f343afcc47b07fa44c037031c6b701a1c3650d9ac87f"
+  },
+  "native_semantics_exercised": false,
+  "first_blocker": "All native cases stop at topic creation: the installed CLI lacks the proposed topic command. Assertions after creation are not exercised.",
+  "pending": "implementation, interruption/recovery integration, affected native Rust/Julia regressions and source-bound final review",
+  "acceptance": "initial and observed-red setup only; no runtime feature acceptance"
+}

@@ -1,0 +1,390 @@
+TAP version 13
+# Subtest: registration: durable subscription does not mutate producer artifacts or launch dispatch
+not ok 1 - registration: durable subscription does not mutate producer artifacts or launch dispatch
+  ---
+  duration_ms: 20.053
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:6:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:6:151)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: minimal: a producer declaration needs no Warp, attempt or revision metadata
+not ok 2 - minimal: a producer declaration needs no Warp, attempt or revision metadata
+  ---
+  duration_ms: 16.0149
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:7:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:7:99)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: project-scope: a topic needs no Warp map when --warp is omitted
+not ok 3 - project-scope: a topic needs no Warp map when --warp is omitted
+  ---
+  duration_ms: 14.7233
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:8:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:8:159)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: single: persisted intelligence is announced only by trace ID
+not ok 4 - single: persisted intelligence is announced only by trace ID
+  ---
+  duration_ms: 14.835
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:9:84)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: multiple-empty: two signatures resolve rich files and an empty referenced marker
+not ok 5 - multiple-empty: two signatures resolve rich files and an empty referenced marker
+  ---
+  duration_ms: 15.4748
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:10:104)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: deduplicate-restart: separate processes retain cursor and repeated registration does not reset it
+not ok 6 - deduplicate-restart: separate processes retain cursor and repeated registration does not reset it
+  ---
+  duration_ms: 14.3507
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:11:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:11:121)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: missed-wakeup: subscribe and later drain recover publications without an active listener
+not ok 7 - missed-wakeup: subscribe and later drain recover publications without an active listener
+  ---
+  duration_ms: 15.4461
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:12:123)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: foreign-warp: matching trace pattern cannot bypass Warp identity
+not ok 8 - foreign-warp: matching trace pattern cannot bypass Warp identity
+  ---
+  duration_ms: 14.7678
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:13:88)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: new-revision: a later immutable artifact under the same signature wakes again
+not ok 9 - new-revision: a later immutable artifact under the same signature wakes again
+  ---
+  duration_ms: 17.7244
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:14:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:14:101)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: missing-reference: unsuccessful drain cannot acknowledge an incomplete publication
+not ok 10 - missing-reference: unsuccessful drain cannot acknowledge an incomplete publication
+  ---
+  duration_ms: 15.0347
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:15:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:15:106)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: reference-escape: out-of-root attachment cannot signal successful publication
+not ok 11 - reference-escape: out-of-root attachment cannot signal successful publication
+  ---
+  duration_ms: 13.7789
+  type: 'test'
+  location: 'C:\\src\\recur\\warps\\watch-eventness\\main.command.watch.eventness.native.red.test.cjs:16:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Native command unavailable or failed: error: unrecognized subcommand 'topic'
+    
+    Usage: recur-watch.exe [OPTIONS] --filter <PATTERN>
+           recur-watch.exe [OPTIONS] <COMMAND>
+    
+    For more information, try '--help'.
+    
+    
+    2 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    success (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:16:28)
+    create (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.helpers.cjs:17:30)
+    setup (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:5:41)
+    TestContext.<anonymous> (C:\src\recur\warps\watch-eventness\main.command.watch.eventness.native.red.test.cjs:16:101)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 0
+# fail 11
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 221.9734
+

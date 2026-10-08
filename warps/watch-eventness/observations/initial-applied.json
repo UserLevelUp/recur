@@ -1,0 +1,15 @@
+{
+  "schema": "recur-warp-complete-v1",
+  "warp_id": "main.command.watch.eventness",
+  "slice_id": "initial",
+  "attempt_id": "setup-v1",
+  "state": "idempotent",
+  "path": "main.command.watch.eventness.initial.setup-v1.warp-layer.json",
+  "contract_hash": "contract:main.command.watch.eventness.initial:v1",
+  "result_hash": "sha256:1909d5d83002ad28a0a6087ce33a95cf085466b940d8eba3552a15be0a0b0447",
+  "evidence": {
+    "contract-baseline": [
+      "watch-eventness/main.command.watch.eventness.initial.complete.md"
+    ]
+  }
+}
