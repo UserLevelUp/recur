@@ -1,0 +1,169 @@
+{
+  "schema": "watch-evidence-lineage-query-observations-v1",
+  "observed_at": "2026-10-08T21:03:05.534Z",
+  "revision": "a87e59d16bcdddb99827b174f1b409428c41eea6",
+  "source_hash": "fnv1a64:2898f1f31991c3ce",
+  "lang_validation": "sound-within-coverage",
+  "lang_execution": "not-run",
+  "whole_source_validated": false,
+  "lang_excluded": [
+    "Expansion bodies and worker semantics",
+    "Whole-document composition, unknown statements and nonselected flows",
+    "Runtime checks, receipt contents and execution"
+  ],
+  "trace_roles": [
+    {
+      "id": "main.command.watch.eventness.evidence.lineage",
+      "define": 2,
+      "produce": 2,
+      "consume": 1,
+      "trigger": 0
+    },
+    {
+      "id": "main.command.watch.eventness.evidence.binary.cause.metadata",
+      "define": 1,
+      "produce": 1,
+      "consume": 0,
+      "trigger": 0
+    },
+    {
+      "id": "main.command.watch.eventness.evidence.binary.cause.build.graph",
+      "define": 1,
+      "produce": 1,
+      "consume": 0,
+      "trigger": 0
+    },
+    {
+      "id": "main.command.watch.eventness.evidence.binary.retained",
+      "define": 5,
+      "produce": 1,
+      "consume": 1,
+      "trigger": 0
+    },
+    {
+      "id": "main.command.watch.eventness.evidence.binary.rebuild",
+      "define": 3,
+      "produce": 1,
+      "consume": 1,
+      "trigger": 0
+    },
+    {
+      "id": "main.command.watch.eventness.evidence.lineage.model",
+      "define": 2,
+      "produce": 1,
+      "consume": 0,
+      "trigger": 0
+    },
+    {
+      "id": "main.command.watch.eventness.evidence.final.ready",
+      "define": 5,
+      "produce": 1,
+      "consume": 2,
+      "trigger": 0
+    }
+  ],
+  "warps": [
+    {
+      "id": "main.command.watch.eventness",
+      "state": "complete",
+      "counts": {
+        "blocked": 0,
+        "conflicting": 0,
+        "covered": 5,
+        "pending": 0,
+        "required": 5,
+        "stale_contract": 0
+      }
+    },
+    {
+      "id": "main.command.watch.eventness.evidence",
+      "state": "complete",
+      "counts": {
+        "blocked": 0,
+        "conflicting": 0,
+        "covered": 5,
+        "pending": 0,
+        "required": 5,
+        "stale_contract": 0
+      }
+    }
+  ],
+  "binary_bundle": "watch-native-v9",
+  "exact_retained_integrity": "checked",
+  "runtime_test_suites_rerun": false,
+  "commands": [
+    {
+      "name": "lang-check",
+      "program": ".recur/evidence-binaries/watch-native-v9/recur.exe",
+      "args": [
+        "lang",
+        "check",
+        "warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur",
+        "-d",
+        ".",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "name": "lang-report-verify",
+      "program": ".recur/evidence-binaries/watch-native-v9/recur.exe",
+      "args": [
+        "lang",
+        "report",
+        "warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur",
+        "--scope",
+        "verify",
+        "-d",
+        ".",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "name": "trace",
+      "program": ".recur/evidence-binaries/watch-native-v9/recur.exe",
+      "args": [
+        "trace-id",
+        "main.command.watch.eventness.evidence.**",
+        "--scope",
+        "main.command.watch.eventness.**",
+        "-d",
+        "warps",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "name": "warp-0",
+      "program": ".recur/evidence-binaries/watch-native-v9/recur.exe",
+      "args": [
+        "warp",
+        "show",
+        "main.command.watch.eventness",
+        "-d",
+        ".",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "name": "warp-1",
+      "program": ".recur/evidence-binaries/watch-native-v9/recur.exe",
+      "args": [
+        "warp",
+        "show",
+        "main.command.watch.eventness.evidence",
+        "-d",
+        ".",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    }
+  ]
+}

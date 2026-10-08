@@ -1,0 +1,13 @@
+{
+  "schema": "watch-evidence-lineage-query-failure-v1",
+  "status": "failed",
+  "phase": "trace-role-validation",
+  "expected_identifier": "main.command.watch.eventness.evidence.binary.cause.build-graph",
+  "observed_identifier": "main.command.watch.eventness.evidence.binary.cause.build",
+  "cause": "The current trace reader stops an identifier at the hyphen; the authored identifier was not returned intact.",
+  "resolution": "Use main.command.watch.eventness.evidence.binary.cause.build.graph and validate a fresh query attempt.",
+  "future_work": "Consider explicit diagnostics for unsupported trace-ID token characters rather than silently shortening them.",
+  "runtime_tests_rerun": false,
+  "warp_gates_checked": false,
+  "superseded_by": "warps/watch-evidence/observations/lineage-v2/summary.json"
+}

@@ -1,0 +1,1438 @@
+[
+  {
+    "identifier": "main.command.watch.eventness.evidence",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.final.watch-native-v9.warp-layer.json",
+        "line_number": 3,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.implementation.watch-native-v9.warp-layer.json",
+        "line_number": 3,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.initial.watch-native-v9.warp-layer.json",
+        "line_number": 3,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.integration.watch-native-v9.warp-layer.json",
+        "line_number": 3,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 2,
+        "line": "defines: main.command.watch.eventness.evidence exact tested artifact retention and immutable full-scope renewal",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 4,
+        "line": "warp.id = main.command.watch.eventness.evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.tests.watch-native-v9.warp-layer.json",
+        "line_number": 3,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 108,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 8,
+        "line": "warp.id = main.command.watch.eventness.evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.predicted.md",
+        "line_number": 7,
+        "line": "warp.id = main.command.watch.eventness.evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 7,
+        "line": "warp.id = main.command.watch.eventness.evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 39,
+        "line": ".\\target\\release-safe\\recur.exe warp show main.command.watch.eventness.evidence -d . --json",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 40,
+        "line": ".\\target\\release-safe\\recur.exe warp slices main.command.watch.eventness.evidence -d . --json",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 9,
+        "line": "warp.id = main.command.watch.eventness.evidence",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 88,
+        "line": "& $recurEvidence warp show main.command.watch.eventness.evidence -d . --json",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 256,
+        "line": "  \"warp_id\": \"main.command.watch.eventness.evidence\"",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\main.command.watch.eventness.hash-investigation.current.md",
+        "line_number": 6,
+        "line": "publish: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-eventness\\main.command.watch.eventness.helpers.cjs",
+        "line_number": 24,
+        "line": " fs.writeFileSync(file,`artifact.type = lane\\npublish: ${id} ready artifact\\nwarp.id = ${options.warp||WARP}\\nwarp.uuid = ${options.uuid||UUID}\\nattempt.id = ${options.revision||1}\\nresult.revision = ${options.revision||1}\\nartifact.refs = ${JSON.stringify(refs)}\\n\\n${options.body||'Useful persisted intelligence; never copied into notifications.'}\\n`);",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 7,
+        "line": "publish: main.command.watch.eventness.evidence.final.ready",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 5,
+        "line": "publish: main.command.watch.eventness.evidence.lineage current navigation record",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 22,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.metadata reproduced PE metadata difference",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 28,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.build-graph distinct Cargo dependency selection",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 53,
+        "line": "publish: main.command.watch.eventness.evidence.binary.retained selected v9 manifest reference",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 54,
+        "line": "publish: main.command.watch.eventness.evidence.binary.rebuild recorded replacement proof reference",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 76,
+        "line": "The existing Watch topic `main.command.watch.eventness.evidence.results` published",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 2,
+        "line": "# publish: main.command.watch.eventness.evidence.lineage.model static build-retain-verify model",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 3,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.final.target",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.predicted.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity historical investigation",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 7,
+        "line": "consumer: main.command.watch.eventness.evidence.bundle retained artifact implementation",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 8,
+        "line": "consumer: main.command.watch.eventness.evidence.final.ready observed completion signal",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 3,
+        "line": "# consumer: main.command.watch.eventness.evidence.lineage current evidence navigation",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 4,
+        "line": "# consumer: main.command.watch.eventness.evidence.bundle implementation and negative controls",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 5,
+        "line": "# consumer: main.command.watch.eventness.evidence.binary.retained selected binary manifest",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 6,
+        "line": "# consumer: main.command.watch.eventness.evidence.binary.rebuild observed rebuild proof",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 7,
+        "line": "# consumer: main.command.watch.eventness.evidence.final.ready observed final Eventness",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 85,
+        "line": "& $recurEvidence trace-id 'main.command.watch.eventness.evidence.**' --scope 'main.command.watch.eventness.**' -d warps --json",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\main.command.watch.eventness.hash-investigation.current.md",
+        "line_number": 6,
+        "line": "publish: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 7,
+        "line": "publish: main.command.watch.eventness.evidence.final.ready",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 5,
+        "line": "publish: main.command.watch.eventness.evidence.lineage current navigation record",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 22,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.metadata reproduced PE metadata difference",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 28,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.build-graph distinct Cargo dependency selection",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 53,
+        "line": "publish: main.command.watch.eventness.evidence.binary.retained selected v9 manifest reference",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 54,
+        "line": "publish: main.command.watch.eventness.evidence.binary.rebuild recorded replacement proof reference",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 76,
+        "line": "The existing Watch topic `main.command.watch.eventness.evidence.results` published",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 2,
+        "line": "# publish: main.command.watch.eventness.evidence.lineage.model static build-retain-verify model",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.build.complete",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 49,
+        "line": "    state main.command.watch.eventness.evidence.binary.build.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 51,
+        "line": "  warp build : E0(main.command.watch.eventness.evidence.binary.build.todo.current) -> dE(build.f) -> Ef(main.command.watch.eventness.evidence.binary.build.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.build.observed",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 48,
+        "line": "    produce main.command.watch.eventness.evidence.binary.build.observed",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 54,
+        "line": "    consume main.command.watch.eventness.evidence.binary.build.observed",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.build.request",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 46,
+        "line": "    consume main.command.watch.eventness.evidence.binary.build.request",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.build.run",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 47,
+        "line": "    trigger main.command.watch.eventness.evidence.binary.build.run",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.build.todo.current",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 51,
+        "line": "  warp build : E0(main.command.watch.eventness.evidence.binary.build.todo.current) -> dE(build.f) -> Ef(main.command.watch.eventness.evidence.binary.build.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.cause.build",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 28,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.build-graph distinct Cargo dependency selection",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 28,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.build-graph distinct Cargo dependency selection",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.cause.metadata",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 22,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.metadata reproduced PE metadata difference",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 22,
+        "line": "publish: main.command.watch.eventness.evidence.binary.cause.metadata reproduced PE metadata difference",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.identity",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 3,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.hash-investigation.current.md",
+        "line_number": 4,
+        "line": "defines: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity historical investigation",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 46,
+        "line": "| `main.command.watch.eventness.evidence.binary.identity` | `warps/main.command.watch.eventness.hash-investigation.current.md` | Historical mismatch and bounded causal claims |",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 3,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.identity historical investigation",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.investigation.ready",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.hash-investigation.current.md",
+        "line_number": 6,
+        "line": "publish: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\main.command.watch.eventness.hash-investigation.current.md",
+        "line_number": 6,
+        "line": "publish: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.binary.investigation.ready",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.rebuild",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 49,
+        "line": "| `main.command.watch.eventness.evidence.binary.rebuild` | `warps/watch-evidence/observations/rebuild-after-retention.v9.json` | Mutable target changed; retained identity and evidence remained valid |",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 54,
+        "line": "publish: main.command.watch.eventness.evidence.binary.rebuild recorded replacement proof reference",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 6,
+        "line": "# consumer: main.command.watch.eventness.evidence.binary.rebuild observed rebuild proof",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 54,
+        "line": "publish: main.command.watch.eventness.evidence.binary.rebuild recorded replacement proof reference",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 6,
+        "line": "# consumer: main.command.watch.eventness.evidence.binary.rebuild observed rebuild proof",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.retain.complete",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 57,
+        "line": "    state main.command.watch.eventness.evidence.binary.retain.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 59,
+        "line": "  warp retain : E0(main.command.watch.eventness.evidence.binary.retain.todo.current) -> dE(retain.f) -> Ef(main.command.watch.eventness.evidence.binary.retain.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.retain.run",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 55,
+        "line": "    trigger main.command.watch.eventness.evidence.binary.retain.run",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.retain.todo.current",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 59,
+        "line": "  warp retain : E0(main.command.watch.eventness.evidence.binary.retain.todo.current) -> dE(retain.f) -> Ef(main.command.watch.eventness.evidence.binary.retain.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.retained",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 48,
+        "line": "| `main.command.watch.eventness.evidence.binary.retained` | `warps/watch-eventness/observations/watch-native-v9.binaries.json` | Selected executable paths, exact SHA-256 and build provenance |",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 53,
+        "line": "publish: main.command.watch.eventness.evidence.binary.retained selected v9 manifest reference",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 5,
+        "line": "# consumer: main.command.watch.eventness.evidence.binary.retained selected binary manifest",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 56,
+        "line": "    produce main.command.watch.eventness.evidence.binary.retained",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 62,
+        "line": "    consume main.command.watch.eventness.evidence.binary.retained",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 53,
+        "line": "publish: main.command.watch.eventness.evidence.binary.retained selected v9 manifest reference",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 5,
+        "line": "# consumer: main.command.watch.eventness.evidence.binary.retained selected binary manifest",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.verify.complete",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 65,
+        "line": "    state main.command.watch.eventness.evidence.binary.verify.complete",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 67,
+        "line": "  warp verify : E0(main.command.watch.eventness.evidence.binary.verify.todo.current) -> dE(verify.f) -> Ef(main.command.watch.eventness.evidence.binary.verify.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.verify.observed",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 64,
+        "line": "    produce main.command.watch.eventness.evidence.binary.verify.observed",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.verify.run",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 63,
+        "line": "    trigger main.command.watch.eventness.evidence.binary.verify.run",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.binary.verify.todo.current",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 67,
+        "line": "  warp verify : E0(main.command.watch.eventness.evidence.binary.verify.todo.current) -> dE(verify.f) -> Ef(main.command.watch.eventness.evidence.binary.verify.complete)",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.bundle",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.bundle.cjs",
+        "line_number": 2,
+        "line": "// defines: main.command.watch.eventness.evidence.bundle exact retained artifact integrity",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 7,
+        "line": "consumer: main.command.watch.eventness.evidence.bundle retained artifact implementation",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 47,
+        "line": "| `main.command.watch.eventness.evidence.bundle` | `warps/watch-evidence/main.command.watch.eventness.evidence.bundle.cjs` and `.bundle.test.cjs` | Exact copies, integrity guards and negative controls |",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 4,
+        "line": "# consumer: main.command.watch.eventness.evidence.bundle implementation and negative controls",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 7,
+        "line": "consumer: main.command.watch.eventness.evidence.bundle retained artifact implementation",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 4,
+        "line": "# consumer: main.command.watch.eventness.evidence.bundle implementation and negative controls",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.bundle.cjs",
+    "define": [
+      {
+        "path": "warps\\watch-eventness\\main.command.watch.eventness.acceptance.test.cjs",
+        "line_number": 8,
+        "line": "const bundleApi=require('../watch-evidence/main.command.watch.eventness.evidence.bundle.cjs');",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-eventness\\main.command.watch.eventness.verify.cjs",
+        "line_number": 4,
+        "line": "const api=require('../watch-evidence/main.command.watch.eventness.evidence.bundle.cjs');",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.bundle.test.cjs",
+        "line_number": 4,
+        "line": "let api;try{api=require('./main.command.watch.eventness.evidence.bundle.cjs');}catch(e){if(e.code!=='MODULE_NOT_FOUND')throw e;}",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 47,
+        "line": "| `main.command.watch.eventness.evidence.bundle` | `warps/watch-evidence/main.command.watch.eventness.evidence.bundle.cjs` and `.bundle.test.cjs` | Exact copies, integrity guards and negative controls |",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 9,
+        "line": "# Retention: warps/watch-evidence/main.command.watch.eventness.evidence.bundle.cjs",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-eventness\\main.command.watch.eventness.verify.cjs",
+        "line_number": 42,
+        "line": " if(hook.status!==0){api.writeNew(path.join(OBS,prefix+'.log.txt'),buildLog);throw Error('Fault-hook build failed; no passing evidence published');}",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.bundle.test.cjs",
+    "define": [
+      {
+        "path": "warps\\watch-eventness\\main.command.watch.eventness.verify.cjs",
+        "line_number": 25,
+        "line": " bundle:[NODE,['--test','--test-reporter=tap','warps/watch-evidence/main.command.watch.eventness.evidence.bundle.test.cjs']],",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.contract",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 4,
+        "line": "defines: main.command.watch.eventness.evidence.contract",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.predicted.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.predicted.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 5,
+        "line": "consumer: main.command.watch.eventness.evidence.contract",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.contract.md",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.initial.watch-native-v9.warp-layer.json",
+        "line_number": 12,
+        "line": "      \"artifact:warps/watch-evidence/main.command.watch.eventness.evidence.contract.md\"",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 13,
+        "line": "pull.then = read warps/watch-evidence/main.command.watch.eventness.evidence.contract.md; inspect live gates",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 111,
+        "line": "  \"contract_document\": \"warps/watch-evidence/main.command.watch.eventness.evidence.contract.md\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 30,
+        "line": "2. `warps/watch-evidence/main.command.watch.eventness.evidence.contract.md`",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 42,
+        "line": "          \"reference\": \"artifact:warps/watch-evidence/main.command.watch.eventness.evidence.contract.md\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.final",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.final.watch-native-v9.warp-layer.json",
+        "line_number": 5,
+        "line": "  \"contract_hash\": \"contract:main.command.watch.eventness.evidence.final:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 90,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.final:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 232,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.final:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 7,
+        "line": "publish: main.command.watch.eventness.evidence.final.ready",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.final.target",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 8,
+        "line": "consumer: main.command.watch.eventness.evidence.final.ready observed completion signal",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 7,
+        "line": "# consumer: main.command.watch.eventness.evidence.final.ready observed final Eventness",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.final.observed",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 5,
+        "line": "defines: main.command.watch.eventness.evidence.final.observed",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.final.observed.complete.md",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 11,
+        "line": "pull.observed = read warps/watch-evidence/main.command.watch.eventness.evidence.final.observed.complete.md",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 115,
+        "line": "  \"observed_final_eventness\": \"warps/watch-evidence/main.command.watch.eventness.evidence.final.observed.complete.md\"",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 50,
+        "line": "| `main.command.watch.eventness.evidence.final.ready` | `warps/watch-evidence/main.command.watch.eventness.evidence.final.observed.complete.md` | Observed outcome, failures, test counts and limits |",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.final.predicted.md",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 9,
+        "line": "final.predicted = warps/watch-evidence/main.command.watch.eventness.evidence.final.predicted.md",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 112,
+        "line": "  \"predicted_final_eventness\": \"warps/watch-evidence/main.command.watch.eventness.evidence.final.predicted.md\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.contract.md",
+        "line_number": 19,
+        "line": "`warps/watch-evidence/main.command.watch.eventness.evidence.final.predicted.md`.",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 15,
+        "line": "Read `main.command.watch.eventness.evidence.final.predicted.md` in this directory",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.final.ready",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 7,
+        "line": "publish: main.command.watch.eventness.evidence.final.ready",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 8,
+        "line": "consumer: main.command.watch.eventness.evidence.final.ready observed completion signal",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 50,
+        "line": "| `main.command.watch.eventness.evidence.final.ready` | `warps/watch-evidence/main.command.watch.eventness.evidence.final.observed.complete.md` | Observed outcome, failures, test counts and limits |",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 77,
+        "line": "only `main.command.watch.eventness.evidence.final.ready`; the saved receipt is",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 7,
+        "line": "# consumer: main.command.watch.eventness.evidence.final.ready observed final Eventness",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 7,
+        "line": "publish: main.command.watch.eventness.evidence.final.ready",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 8,
+        "line": "consumer: main.command.watch.eventness.evidence.final.ready observed completion signal",
+        "edge_type": "consume"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 7,
+        "line": "# consumer: main.command.watch.eventness.evidence.final.ready observed final Eventness",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.final.target",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.final.target",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.predicted.md",
+        "line_number": 5,
+        "line": "defines: main.command.watch.eventness.evidence.final.target",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 6,
+        "line": "consumer: main.command.watch.eventness.evidence.final.target",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.implementation",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.implementation.watch-native-v9.warp-layer.json",
+        "line_number": 5,
+        "line": "  \"contract_hash\": \"contract:main.command.watch.eventness.evidence.implementation:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 52,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.implementation:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 190,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.implementation:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.initial",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.initial.watch-native-v9.warp-layer.json",
+        "line_number": 5,
+        "line": "  \"contract_hash\": \"contract:main.command.watch.eventness.evidence.initial:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 22,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.initial:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 4,
+        "line": "defines: main.command.watch.eventness.evidence.initial",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 155,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.initial:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.integration",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.integration.watch-native-v9.warp-layer.json",
+        "line_number": 5,
+        "line": "  \"contract_hash\": \"contract:main.command.watch.eventness.evidence.integration:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 71,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.integration:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 211,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.integration:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.lineage",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 5,
+        "line": "publish: main.command.watch.eventness.evidence.lineage current navigation record",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 3,
+        "line": "# consumer: main.command.watch.eventness.evidence.lineage current evidence navigation",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 5,
+        "line": "publish: main.command.watch.eventness.evidence.lineage current navigation record",
+        "edge_type": "produce"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 2,
+        "line": "# publish: main.command.watch.eventness.evidence.lineage.model static build-retain-verify model",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 3,
+        "line": "# consumer: main.command.watch.eventness.evidence.lineage current evidence navigation",
+        "edge_type": "consume"
+      }
+    ],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.lineage.current.md",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 10,
+        "line": "pull.first = read warps/watch-evidence/main.command.watch.eventness.evidence.lineage.current.md",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 10,
+        "line": "# Runtime evidence and limits: main.command.watch.eventness.evidence.lineage.current.md",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.lineage.model",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 51,
+        "line": "| `main.command.watch.eventness.evidence.lineage.model` | `warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur` | Optional static contract model of build, retention and verification |",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 2,
+        "line": "# publish: main.command.watch.eventness.evidence.lineage.model static build-retain-verify model",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.recur",
+        "line_number": 2,
+        "line": "# publish: main.command.watch.eventness.evidence.lineage.model static build-retain-verify model",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.lineage.recur",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 12,
+        "line": "pull.lang = inspect warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur; static model only",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 51,
+        "line": "| `main.command.watch.eventness.evidence.lineage.model` | `warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur` | Optional static contract model of build, retention and verification |",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 86,
+        "line": "& $recurEvidence lang check warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur -d . --json",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 87,
+        "line": "& $recurEvidence lang report warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur --scope verify -d . --json",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.readme.md",
+    "define": [
+      {
+        "path": "warps\\watch-eventness\\main.command.watch.eventness.verify.cjs",
+        "line_number": 15,
+        "line": " const explicit=['.gitattributes','Cargo.toml','Cargo.lock','build.rs','recur-watch/SKILL.md','recur-expert/SKILL.md','julia-expert/references/recur-playbook.md','docs/main.command.watch.readme.md','docs/main.command.watch.eventness.readme.md','docs/main.command.watch.eventness.evidence.readme.md','docs/main.command.warp.readme.md','docs/main.command.warp.evidence-refresh.readme.md','docs/recur-watch.recur.md','warps/main.command.watch.eventness.warp-map.json','warps/main.command.watch.eventness.recur.md','demos/main.lang/main.lang.skippy-watch-coordination.recur','demos/main.lang/main.lang.algorithm-lab.recur','julia-tests/main.command.watch.eventness.test.jl','src/watch_eventness.rs','tests/warp_evidence_scope.rs'];",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.results",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 76,
+        "line": "The existing Watch topic `main.command.watch.eventness.evidence.results` published",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.lineage.current.md",
+        "line_number": 76,
+        "line": "The existing Watch topic `main.command.watch.eventness.evidence.results` published",
+        "edge_type": "produce"
+      }
+    ],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.tests",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.tests.watch-native-v9.warp-layer.json",
+        "line_number": 5,
+        "line": "  \"contract_hash\": \"contract:main.command.watch.eventness.evidence.tests:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.warp-map.json",
+        "line_number": 33,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.tests:v1\",",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.bundle.test.cjs",
+        "line_number": 2,
+        "line": "// trigger: main.command.watch.eventness.evidence.tests exact-artifact negative controls",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 169,
+        "line": "      \"contract_hash\": \"contract:main.command.watch.eventness.evidence.tests:v1\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.warp",
+    "define": [
+      {
+        "path": "warps\\main.command.watch.eventness.evidence.recur.md",
+        "line_number": 5,
+        "line": "warp.map = warps/main.command.watch.eventness.evidence.warp-map.json",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.initial.current.md",
+        "line_number": 31,
+        "line": "3. `warps/main.command.watch.eventness.evidence.warp-map.json`",
+        "edge_type": "define"
+      },
+      {
+        "path": "warps\\watch-evidence\\observations\\main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "line_number": 148,
+        "line": "  \"manifest\": \"warps/main.command.watch.eventness.evidence.warp-map.json\",",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  },
+  {
+    "identifier": "main.command.watch.eventness.evidence.watch",
+    "define": [
+      {
+        "path": "warps\\watch-evidence\\main.command.watch.eventness.evidence.final.observed.complete.md",
+        "line_number": 89,
+        "line": "pull.progress = warps/watch-evidence/observations/main.command.watch.eventness.evidence.watch-native-v9.complete.json",
+        "edge_type": "define"
+      }
+    ],
+    "produce": [],
+    "consume": [],
+    "trigger": []
+  }
+]

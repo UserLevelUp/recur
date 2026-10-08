@@ -1,0 +1,68 @@
+# Optional WIR1 contract model; bindings are descriptive and are not executed.
+# publish: main.command.watch.eventness.evidence.lineage.model static build-retain-verify model
+# consumer: main.command.watch.eventness.evidence.lineage current evidence navigation
+# consumer: main.command.watch.eventness.evidence.bundle implementation and negative controls
+# consumer: main.command.watch.eventness.evidence.binary.retained selected binary manifest
+# consumer: main.command.watch.eventness.evidence.binary.rebuild observed rebuild proof
+# consumer: main.command.watch.eventness.evidence.final.ready observed final Eventness
+# Implementation: warps/watch-eventness/main.command.watch.eventness.verify.cjs
+# Retention: warps/watch-evidence/main.command.watch.eventness.evidence.bundle.cjs
+# Runtime evidence and limits: main.command.watch.eventness.evidence.lineage.current.md
+# Opaque field types do not prove integrity, test sufficiency or acceptance.
+
+recur 0.1 class TestedBinaryEvidence
+
+header {
+  scope build {
+    i(a) := (source_ref: Text, command_ref: Text, toolchain_ref: Text)
+    o(b) := (mutable_artifacts_ref: Text, provenance_ref: Text)
+    f : i(a) -> o(b) ~ "Build-producing checks yield candidate executables and provenance" by evidence.build
+  }
+
+  scope retain {
+    i(b) := build.o(b)
+    o(c) := (bundle_ref: Text, binary_manifest_ref: Text)
+    f : i(b) -> o(c) ~ "Copy exact candidate bytes into a new retained bundle" by evidence.retain
+  }
+
+  scope verify {
+    i(c) := retain.o(c)
+    o(d) := (results_ref: Text, source_evidence_ref: Text, eventness_ref: Text)
+    f : i(c) -> o(d) ~ "Execute explicit retained paths with before and after integrity guards; record success or failure" by evidence.verify
+  }
+}
+
+body {
+  build sync : i(a) -> f(a) -> o(b)
+  retain sync : i(b) -> f(b) -> o(c)
+  verify sync : i(c) -> f(c) -> o(d)
+
+  share build.o(b) -> retain.i(b)
+  share retain.o(c) -> verify.i(c)
+}
+
+footer {
+  event build {
+    consume main.command.watch.eventness.evidence.binary.build.request
+    trigger main.command.watch.eventness.evidence.binary.build.run
+    produce main.command.watch.eventness.evidence.binary.build.observed
+    state main.command.watch.eventness.evidence.binary.build.complete
+  }
+  warp build : E0(main.command.watch.eventness.evidence.binary.build.todo.current) -> dE(build.f) -> Ef(main.command.watch.eventness.evidence.binary.build.complete)
+
+  event retain {
+    consume main.command.watch.eventness.evidence.binary.build.observed
+    trigger main.command.watch.eventness.evidence.binary.retain.run
+    produce main.command.watch.eventness.evidence.binary.retained
+    state main.command.watch.eventness.evidence.binary.retain.complete
+  }
+  warp retain : E0(main.command.watch.eventness.evidence.binary.retain.todo.current) -> dE(retain.f) -> Ef(main.command.watch.eventness.evidence.binary.retain.complete)
+
+  event verify {
+    consume main.command.watch.eventness.evidence.binary.retained
+    trigger main.command.watch.eventness.evidence.binary.verify.run
+    produce main.command.watch.eventness.evidence.binary.verify.observed
+    state main.command.watch.eventness.evidence.binary.verify.complete
+  }
+  warp verify : E0(main.command.watch.eventness.evidence.binary.verify.todo.current) -> dE(verify.f) -> Ef(main.command.watch.eventness.evidence.binary.verify.complete)
+}

@@ -1,0 +1,497 @@
+{
+  "body": {
+    "boundary_edges": [
+      {
+        "consumer": "retain.f",
+        "identity": "build.o(b)->retain.f",
+        "input": "retain.i(b)",
+        "producer": "build.o(b)",
+        "span": {
+          "end_byte": 1460,
+          "end_line": 26,
+          "start_byte": 1360,
+          "start_line": 25
+        }
+      },
+      {
+        "consumer": "verify.f",
+        "identity": "retain.o(c)->verify.f",
+        "input": "verify.i(c)",
+        "producer": "retain.o(c)",
+        "span": {
+          "end_byte": 1728,
+          "end_line": 32,
+          "start_byte": 1584,
+          "start_line": 31
+        }
+      }
+    ],
+    "edges": [
+      {
+        "consumer": "build.f",
+        "identity": "build.i(a)->build.f",
+        "input": "build.i(a)",
+        "producer": "build.i(a)",
+        "span": {
+          "end_byte": 1259,
+          "end_line": 20,
+          "start_byte": 1148,
+          "start_line": 19
+        }
+      },
+      {
+        "consumer": "build.o(b)",
+        "identity": "build.f->build.o(b)",
+        "output": "build.o(b)",
+        "producer": "build.f",
+        "span": {
+          "end_byte": 1259,
+          "end_line": 20,
+          "start_byte": 1148,
+          "start_line": 19
+        }
+      },
+      {
+        "consumer": "retain.f",
+        "identity": "build.o(b)->retain.f",
+        "input": "retain.i(b)",
+        "producer": "build.o(b)",
+        "span": {
+          "end_byte": 1460,
+          "end_line": 26,
+          "start_byte": 1360,
+          "start_line": 25
+        }
+      },
+      {
+        "consumer": "retain.o(c)",
+        "identity": "retain.f->retain.o(c)",
+        "output": "retain.o(c)",
+        "producer": "retain.f",
+        "span": {
+          "end_byte": 1460,
+          "end_line": 26,
+          "start_byte": 1360,
+          "start_line": 25
+        }
+      },
+      {
+        "consumer": "verify.f",
+        "identity": "retain.o(c)->verify.f",
+        "input": "verify.i(c)",
+        "producer": "retain.o(c)",
+        "span": {
+          "end_byte": 1728,
+          "end_line": 32,
+          "start_byte": 1584,
+          "start_line": 31
+        }
+      },
+      {
+        "consumer": "verify.o(d)",
+        "identity": "verify.f->verify.o(d)",
+        "output": "verify.o(d)",
+        "producer": "verify.f",
+        "span": {
+          "end_byte": 1728,
+          "end_line": 32,
+          "start_byte": 1584,
+          "start_line": 31
+        }
+      }
+    ],
+    "flows": [
+      {
+        "flow": {
+          "expression": "i(a) -> f(a) -> o(b)",
+          "mode": "sync",
+          "span": {
+            "end_byte": 1775,
+            "end_line": 36,
+            "start_byte": 1740,
+            "start_line": 36
+          }
+        },
+        "scope": "build"
+      },
+      {
+        "flow": {
+          "expression": "i(b) -> f(b) -> o(c)",
+          "mode": "sync",
+          "span": {
+            "end_byte": 1812,
+            "end_line": 37,
+            "start_byte": 1776,
+            "start_line": 37
+          }
+        },
+        "scope": "retain"
+      },
+      {
+        "flow": {
+          "expression": "i(c) -> f(c) -> o(d)",
+          "mode": "sync",
+          "span": {
+            "end_byte": 1850,
+            "end_line": 38,
+            "start_byte": 1813,
+            "start_line": 38
+          }
+        },
+        "scope": "verify"
+      }
+    ]
+  },
+  "contracts": [
+    {
+      "canonical_identity": "build.i(a)",
+      "fields": [
+        {
+          "name": "source_ref",
+          "type_name": "Text"
+        },
+        {
+          "name": "command_ref",
+          "type_name": "Text"
+        },
+        {
+          "name": "toolchain_ref",
+          "type_name": "Text"
+        }
+      ]
+    },
+    {
+      "canonical_identity": "build.o(b)",
+      "fields": [
+        {
+          "name": "mutable_artifacts_ref",
+          "type_name": "Text"
+        },
+        {
+          "name": "provenance_ref",
+          "type_name": "Text"
+        }
+      ]
+    },
+    {
+      "canonical_identity": "retain.o(c)",
+      "fields": [
+        {
+          "name": "bundle_ref",
+          "type_name": "Text"
+        },
+        {
+          "name": "binary_manifest_ref",
+          "type_name": "Text"
+        }
+      ]
+    },
+    {
+      "canonical_identity": "verify.o(d)",
+      "fields": [
+        {
+          "name": "results_ref",
+          "type_name": "Text"
+        },
+        {
+          "name": "source_evidence_ref",
+          "type_name": "Text"
+        },
+        {
+          "name": "eventness_ref",
+          "type_name": "Text"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "analysis": "selected WIR1 scopes",
+    "diagnostics": [
+      {
+        "code": "LANG101",
+        "message": "Only the named IR fragment is validated; excluded syntax and runtime behavior remain unvalidated",
+        "severity": "capability"
+      }
+    ],
+    "excluded": [
+      "Expansion bodies and worker semantics",
+      "Whole-document composition, unknown statements and nonselected flows",
+      "Runtime checks, receipt contents and execution"
+    ],
+    "whole_source_validated": false
+  },
+  "expanded": false,
+  "footer": {
+    "eventness_filter": null,
+    "eventness_vocabulary": [
+      "current.md",
+      "todo.md",
+      "complete.md"
+    ],
+    "events": [
+      {
+        "checked_receipts": [],
+        "declared_events": [
+          {
+            "edge": "consume",
+            "identifier": "main.command.watch.eventness.evidence.binary.build.request",
+            "span": {
+              "end_byte": 2018,
+              "end_line": 46,
+              "start_byte": 1947,
+              "start_line": 45
+            }
+          },
+          {
+            "edge": "trigger",
+            "identifier": "main.command.watch.eventness.evidence.binary.build.run",
+            "span": {
+              "end_byte": 2085,
+              "end_line": 47,
+              "start_byte": 2019,
+              "start_line": 47
+            }
+          },
+          {
+            "edge": "produce",
+            "identifier": "main.command.watch.eventness.evidence.binary.build.observed",
+            "span": {
+              "end_byte": 2157,
+              "end_line": 48,
+              "start_byte": 2086,
+              "start_line": 48
+            }
+          },
+          {
+            "edge": "state",
+            "identifier": "main.command.watch.eventness.evidence.binary.build.complete",
+            "span": {
+              "end_byte": 2230,
+              "end_line": 50,
+              "start_byte": 2158,
+              "start_line": 49
+            }
+          }
+        ],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_transition": {
+          "current": "main.command.watch.eventness.evidence.binary.build.todo.current",
+          "desired": "main.command.watch.eventness.evidence.binary.build.complete",
+          "slice": "build.f",
+          "span": {
+            "end_byte": 2397,
+            "end_line": 51,
+            "start_byte": 2232,
+            "start_line": 51
+          }
+        },
+        "scope": "build"
+      },
+      {
+        "checked_receipts": [],
+        "declared_events": [
+          {
+            "edge": "consume",
+            "identifier": "main.command.watch.eventness.evidence.binary.build.observed",
+            "span": {
+              "end_byte": 2486,
+              "end_line": 54,
+              "start_byte": 2414,
+              "start_line": 53
+            }
+          },
+          {
+            "edge": "trigger",
+            "identifier": "main.command.watch.eventness.evidence.binary.retain.run",
+            "span": {
+              "end_byte": 2554,
+              "end_line": 55,
+              "start_byte": 2487,
+              "start_line": 55
+            }
+          },
+          {
+            "edge": "produce",
+            "identifier": "main.command.watch.eventness.evidence.binary.retained",
+            "span": {
+              "end_byte": 2620,
+              "end_line": 56,
+              "start_byte": 2555,
+              "start_line": 56
+            }
+          },
+          {
+            "edge": "state",
+            "identifier": "main.command.watch.eventness.evidence.binary.retain.complete",
+            "span": {
+              "end_byte": 2694,
+              "end_line": 58,
+              "start_byte": 2621,
+              "start_line": 57
+            }
+          }
+        ],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_transition": {
+          "current": "main.command.watch.eventness.evidence.binary.retain.todo.current",
+          "desired": "main.command.watch.eventness.evidence.binary.retain.complete",
+          "slice": "retain.f",
+          "span": {
+            "end_byte": 2865,
+            "end_line": 59,
+            "start_byte": 2696,
+            "start_line": 59
+          }
+        },
+        "scope": "retain"
+      },
+      {
+        "checked_receipts": [],
+        "declared_events": [
+          {
+            "edge": "consume",
+            "identifier": "main.command.watch.eventness.evidence.binary.retained",
+            "span": {
+              "end_byte": 2948,
+              "end_line": 62,
+              "start_byte": 2882,
+              "start_line": 61
+            }
+          },
+          {
+            "edge": "trigger",
+            "identifier": "main.command.watch.eventness.evidence.binary.verify.run",
+            "span": {
+              "end_byte": 3016,
+              "end_line": 63,
+              "start_byte": 2949,
+              "start_line": 63
+            }
+          },
+          {
+            "edge": "produce",
+            "identifier": "main.command.watch.eventness.evidence.binary.verify.observed",
+            "span": {
+              "end_byte": 3089,
+              "end_line": 64,
+              "start_byte": 3017,
+              "start_line": 64
+            }
+          },
+          {
+            "edge": "state",
+            "identifier": "main.command.watch.eventness.evidence.binary.verify.complete",
+            "span": {
+              "end_byte": 3163,
+              "end_line": 66,
+              "start_byte": 3090,
+              "start_line": 65
+            }
+          }
+        ],
+        "receipt_status": "not-supplied-or-validated",
+        "recorded": [],
+        "requested_transition": {
+          "current": "main.command.watch.eventness.evidence.binary.verify.todo.current",
+          "desired": "main.command.watch.eventness.evidence.binary.verify.complete",
+          "slice": "verify.f",
+          "span": {
+            "end_byte": 3333,
+            "end_line": 67,
+            "start_byte": 3165,
+            "start_line": 67
+          }
+        },
+        "scope": "verify"
+      }
+    ],
+    "execution": "not-run",
+    "findings": [],
+    "graph": null,
+    "validation": "sound-within-coverage"
+  },
+  "header": [
+    {
+      "binding": "evidence.build",
+      "identity": "build.f",
+      "input": {
+        "canonical_identity": "build.i(a)",
+        "local_identity": "build.i(a)",
+        "role": "input",
+        "symbol": "a"
+      },
+      "meaning": "Build-producing checks yield candidate executables and provenance",
+      "output": {
+        "canonical_identity": "build.o(b)",
+        "local_identity": "build.o(b)",
+        "role": "output",
+        "symbol": "b"
+      },
+      "scope": "build",
+      "span": {
+        "end_byte": 1259,
+        "end_line": 20,
+        "start_byte": 1148,
+        "start_line": 19
+      },
+      "symbol": "f"
+    },
+    {
+      "binding": "evidence.retain",
+      "identity": "retain.f",
+      "input": {
+        "canonical_identity": "build.o(b)",
+        "local_identity": "retain.i(b)",
+        "role": "input",
+        "symbol": "b"
+      },
+      "meaning": "Copy exact candidate bytes into a new retained bundle",
+      "output": {
+        "canonical_identity": "retain.o(c)",
+        "local_identity": "retain.o(c)",
+        "role": "output",
+        "symbol": "c"
+      },
+      "scope": "retain",
+      "span": {
+        "end_byte": 1460,
+        "end_line": 26,
+        "start_byte": 1360,
+        "start_line": 25
+      },
+      "symbol": "f"
+    },
+    {
+      "binding": "evidence.verify",
+      "identity": "verify.f",
+      "input": {
+        "canonical_identity": "retain.o(c)",
+        "local_identity": "verify.i(c)",
+        "role": "input",
+        "symbol": "c"
+      },
+      "meaning": "Execute explicit retained paths with before and after integrity guards; record success or failure",
+      "output": {
+        "canonical_identity": "verify.o(d)",
+        "local_identity": "verify.o(d)",
+        "role": "output",
+        "symbol": "d"
+      },
+      "scope": "verify",
+      "span": {
+        "end_byte": 1728,
+        "end_line": 32,
+        "start_byte": 1584,
+        "start_line": 31
+      },
+      "symbol": "f"
+    }
+  ],
+  "ir_schema": "recur-lang-warp-ir-v1",
+  "schema": "recur-lang-query-v1",
+  "scope": null,
+  "source": "warps/watch-evidence/main.command.watch.eventness.evidence.lineage.recur",
+  "source_hash": "fnv1a64:2898f1f31991c3ce"
+}
