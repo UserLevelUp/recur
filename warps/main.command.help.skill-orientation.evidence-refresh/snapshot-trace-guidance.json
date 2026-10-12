@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "snapshot-trace-guidance",
+  "map": "warps/main.command.help.skill-orientation.warp-map.json",
+  "warp_id": "main.command.help.skill-orientation",
+  "bubble_uuid": "01a12deb-5df9-71e7-8c39-ed46ba2c7b46",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.help.skill-orientation.slice-final:v1",
+  "policy_hash": "fnv1a64:ea1368efd7e54cde",
+  "layer": "warps/main.command.help.skill-orientation.slice-final.help-green.warp-layer.json",
+  "layer_hash": "fnv1a64:950062cafa7ee335",
+  "gate": "help-and-reveal-regressions",
+  "from_reference": "evidence:warps/main.command.help.skill-orientation.final.evidence.json",
+  "from_hash": "fnv1a64:98eb4ed5cc2c0aa5",
+  "to_reference": "evidence:warps/main.command.help.skill-orientation.snapshot-guidance.evidence.json",
+  "to_hash": "fnv1a64:7346a1fdc6002184",
+  "reason": "recur-expert gained checkpoint snapshot and trace-id on-track guidance; help and Reveal checks rerun."
+}

@@ -1,6 +1,6 @@
 artifact.type = warp
 defines: recur.warp.dogfood.batt
-consumes: main.recur.warp.evidence, main.recur.skill.eventness
+consumes: main.recur.skill.warp, main.recur.skill.eventness
 warp.id = main.command.warp.dogfood-batt
 warp.map = warps/main.command.warp.dogfood-batt.warp-map.json
 status = planned; slice-0 ready; no implementation authorized yet
@@ -20,11 +20,19 @@ Gaps observed while using Recur on `C:\src\batt` (engineering-review movie Warp)
    complete or what is ready (`src/main_command_warp_impl.rs`).
 3. `recur-eventness/SKILL.md` has no Reveal capsule, unlike `docs/recur-expert.recur.md`
    and `docs/recur-warp.recur.md`, so `recur reveal recur-eventness` finds nothing.
+4. `recur-warp refresh` rejects Windows backslash map/layer paths as
+   "unsafe root-relative path"; forward slashes work. Candidate for evidence-reference.
 
 ## Slices
 
 slice-0 (red baselines) -> evidence-reference | current-slice-diagnostic |
 eventness-discovery (tick -1, docs-only) -> slice-final (regressions, docs, expert guidance).
+
+## Intended trace gap
+
+`main.recur.skill.eventness` is consumed but not yet defined; the
+eventness-discovery slice owns defining it in a `docs/recur-eventness.recur.md`
+reveal capsule. Verify with `recur-git checkpoint --snapshot` and `trace-id`.
 
 ## Out of scope
 

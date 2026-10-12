@@ -16,7 +16,7 @@
   "planning_status": "planned; slice-0 ready",
   "trace_ids": {
     "defines": ["recur.warp.dogfood.batt"],
-    "consumes": ["main.recur.warp.evidence", "main.recur.skill.eventness"],
+    "consumes": ["main.recur.skill.warp", "main.recur.skill.eventness"],
     "produces": ["recur.warp.dogfood.batt.acceptance"]
   },
   "origin": {
@@ -24,6 +24,7 @@
     "observations": [
       "recur warp evidence C:\\src\\batt\\animation\\video-runs\\...\\media.evidence.json -d C:\\src\\batt failed: artifact must be a relative path within the evidence root; the same manifest checked when passed relatively.",
       "recur warp show batt.research.architecture -d C:\\src\\batt reported 5/5 complete with warning: Declared current_slice 'definition' is no longer ready; selection not inferred.",
+      "recur-warp refresh warps\\...\\X.warp-map.json on Windows failed: unsafe root-relative path; the same path with forward slashes succeeded.",
       "recur reveal --type skill -d . in the Recur repository lists recur-expert, recur-warp and others but not recur-eventness, although recur-eventness/SKILL.md exists."
     ]
   },

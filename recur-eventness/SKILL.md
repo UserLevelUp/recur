@@ -81,6 +81,12 @@ output for behavior and the relevant external system for external claims. Run
 checks appropriate to the requested work; do not rerun every historical test just
 to answer an orientation question.
 
+Before handoff or commit, pair `recur-git checkpoint --snapshot` (read-only git and
+active-lane state) with `trace-id --format full` for the IDs your active capsule
+or Warp defines and consumes. Unmatched consumers, unexpected active capsules or a
+dirty worktree are reasons to reassess, not proof of failure. Record intended gaps
+in the capsule; never treat a clean snapshot as gate acceptance.
+
 `recur prompt warp` can discover guidance for naming, slicing or recovery. Packets
 prepare instructions and evidence; they do not call a model or establish acceptance.
 Read truncation/omission diagnostics, and query further when the conclusion needs

@@ -48,6 +48,15 @@ Follow the progressive refinement funnel when exploring unfamiliar areas:
 4. Call graph and flow: `recur callers`, `recur callees`, `recur trace`
 5. Formal semantic contract: `recur lang` (the apex formal boundary)
 
+Confirm you are on track before handoff or commit. `recur-git checkpoint --snapshot`
+prints branch, head, worktree cleanliness, active lane capsules and separators
+without writing; other checkpoint flags append logs or run tests. Then run
+`recur trace-id <id> --scope "<lane>.**" -d <root> --format full` for each ID
+your Warp map or capsule defines or consumes. A consumed ID whose only sites are
+your own artifacts is dangling lineage: define it, correct it to an existing ID,
+or record it as an intended gap owned by a slice. A snapshot reports git and lane
+state, not acceptance; use recur-eventness to reassess what it reveals.
+
 Check the executable's help for the requested operation. Installed and local
 `target/release-safe` binaries can expose different commands with the same version
 string. Prefer the matching local binary when installed help lags; do not build

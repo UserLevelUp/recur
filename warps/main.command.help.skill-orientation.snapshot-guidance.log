@@ -1,0 +1,33 @@
+   Compiling recur v0.2.8 (C:\Users\marcn\.copilot\repos\copilot-worktrees\recur\marcnoon-upgraded-spork)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur") generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.94s
+     Running tests\reveal_profiles.rs (target\debug\deps\reveal_profiles-a3b4569c45a63229.exe)
+
+running 13 tests
+test empty_profiles_and_type_collisions_are_explicit ... ok
+test child_root_does_not_collect_parent_profiles ... ok
+test references_report_missing_wrong_type_and_ambiguous ... ok
+test explicit_capsule_binding_checks_type_and_conflicting_owners ... ok
+test shared_skill_keeps_both_edges_and_one_body ... ok
+test config_rejects_malformed_associations_without_writes ... ok
+test inline_config_is_valid_and_missing_shared_skills_are_deduplicated ... ok
+test budgets_refuse_incomplete_context_and_hashes_change ... ok
+test body_paths_and_skill_frontmatter_are_checked ... ok
+test init_local_isolates_nested_registry_and_preserves_parent ... ok
+test init_preview_and_retry_preserve_custom_empty_tables_and_comments ... ok
+test init_adds_missing_core_skills_preserving_nested_paths_and_opt_outs ... ok
+test root_help_routes_new_users_to_skill_discovery_and_explicit_loading ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.86s
+
