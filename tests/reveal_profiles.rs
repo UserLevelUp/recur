@@ -24,6 +24,43 @@ path = "skills/guide.md"
 "#;
 
 #[test]
+fn root_help_routes_new_users_to_skill_discovery_and_explicit_loading() {
+    let root = tempfile::tempdir().unwrap();
+    let before: Vec<_> = fs::read_dir(root.path()).unwrap().collect();
+    let output = assert_cmd::Command::new(env!("CARGO_BIN_EXE_recur"))
+        .current_dir(root.path())
+        .arg("--help")
+        .assert()
+        .success()
+        .get_output()
+        .stdout
+        .clone();
+    let help = String::from_utf8(output).unwrap();
+    assert!(
+        help.contains("recur reveal --type skill"),
+        "Root help must expose typed skill discovery without requiring project examples:\n{help}"
+    );
+    assert!(
+        help.contains("recur reveal recur-expert"),
+        "Root help must show recur-expert as a project orientation example:\n{help}"
+    );
+    let lower = help.to_ascii_lowercase();
+    assert!(
+        lower.contains("does not load or execute"),
+        "Help must distinguish Reveal discovery from loading or execution:\n{help}"
+    );
+    assert!(
+        lower.contains("supported loader") && lower.contains("file reader"),
+        "Help must explain how to explicitly read the referenced skill:\n{help}"
+    );
+    assert!(
+        lower.contains("when available"),
+        "The expert example must not imply every project has that skill:\n{help}"
+    );
+    assert_eq!(before.len(), fs::read_dir(root.path()).unwrap().count());
+}
+
+#[test]
 fn shared_skill_keeps_both_edges_and_one_body() {
     let dir = tempfile::tempdir().unwrap();
     let root = dir.path();

@@ -1,0 +1,46 @@
+{
+  "bubble_uuid": "01a12deb-5df9-71e7-8c39-ed46ba2c7b46",
+  "current_slice": null,
+  "evidence_root": "..",
+  "goal": "Root recur help guides first-time users to typed Reveal skill discovery and the project expert when available, with explicit reading and no automatic loading or execution.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Help is available without configuration, project skill bodies or initialization.",
+    "Reveal discovery does not load, activate or execute instructions.",
+    "The recur-expert capsule is a project example, not a guaranteed global installation.",
+    "Historical separator Warp layers remain immutable; source drift is handled through fresh evidence."
+  ],
+  "acceptance_test": "tests/reveal_profiles.rs::root_help_routes_new_users_to_skill_discovery_and_explicit_loading",
+  "final_state": "Root --help exposes typed skill discovery, the expert example when available, explicit supported loader or file reader instructions, and a no-loading-or-execution boundary.",
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.help.skill-orientation.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "baseline"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a12deb-5df9-7bcc-8ec4-e3a285e21535"
+    },
+    {
+      "contract_hash": "contract:main.command.help.skill-orientation.slice-final:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "help-and-reveal-regressions"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "help-and-reveal-regressions": {"kind": "test", "allow_skipped": false}
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a12deb-5df9-79f8-8e4c-2243b3705d65"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.help.skill-orientation"
+}

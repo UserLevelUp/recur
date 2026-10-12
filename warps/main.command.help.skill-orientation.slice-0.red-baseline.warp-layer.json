@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.help.skill-orientation",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.help.skill-orientation.slice-0:v1",
+  "attempt_id": "red-baseline",
+  "result_state": "accepted",
+  "result_hash": "observed-red-help-discovery",
+  "evidence": {
+    "baseline": [
+      "warps/main.command.help.skill-orientation.baseline.json"
+    ]
+  },
+  "reason": null
+}

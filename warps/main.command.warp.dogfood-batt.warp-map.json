@@ -1,0 +1,97 @@
+{
+  "bubble_uuid": "01a12e26-850b-72a2-838c-58d055942fbe",
+  "current_slice": "slice-0",
+  "evidence_root": "..",
+  "goal": "Close Recur discovery and diagnostic gaps observed while dogfooding the batt Blender project: absolute evidence references, completed current_slice diagnostics and recur-eventness skill discovery.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Core recur queries remain read-only: no map, layer, manifest, config or Eventness mutation.",
+    "Evidence manifests keep relative internal artifact paths; only the CLI reference argument may be absolute, and only when it resolves inside the -d evidence root.",
+    "Absolute or relative references escaping the evidence root remain rejected with a clear message.",
+    "A stale current_slice is never silently replaced; diagnostics may name ready slices but selection is not inferred.",
+    "Reveal capsules point to skills; they do not load or execute them.",
+    "Existing dispatch intelligence feedback (test_failed escalation, easy-success step-down, no escalation for provider/runtime errors) is out of scope and unchanged.",
+    "A failing baseline demonstrates each gap; it does not prove a fix or satisfy final acceptance."
+  ],
+  "planning_status": "planned; slice-0 ready",
+  "trace_ids": {
+    "defines": ["recur.warp.dogfood.batt"],
+    "consumes": ["main.recur.warp.evidence", "main.recur.skill.eventness"],
+    "produces": ["recur.warp.dogfood.batt.acceptance"]
+  },
+  "origin": {
+    "project": "C:/src/batt",
+    "observations": [
+      "recur warp evidence C:\\src\\batt\\animation\\video-runs\\...\\media.evidence.json -d C:\\src\\batt failed: artifact must be a relative path within the evidence root; the same manifest checked when passed relatively.",
+      "recur warp show batt.research.architecture -d C:\\src\\batt reported 5/5 complete with warning: Declared current_slice 'definition' is no longer ready; selection not inferred.",
+      "recur reveal --type skill -d . in the Recur repository lists recur-expert, recur-warp and others but not recur-eventness, although recur-eventness/SKILL.md exists."
+    ]
+  },
+  "final_state": {
+    "description": "Agents dogfooding Recur on an external project can pass absolute evidence paths inside the root, understand why a declared current_slice is not selected, and discover recur-eventness through typed Reveal like the other repository skills.",
+    "required_observations": [
+      "recur warp evidence accepts an absolute manifest path inside -d and reports the same status as its relative form.",
+      "Absolute paths outside -d and relative traversal remain rejected with a message naming the evidence root.",
+      "When the declared current_slice is already complete, the warning says so and names ready slices or states that no slices remain.",
+      "When the declared current_slice is pending but not ready, the warning names its unmet dependencies.",
+      "recur reveal --type skill lists recur-eventness with a resolved recur-eventness/SKILL.md pointer.",
+      "Focused tests and relevant existing Warp/Reveal regressions pass; docs and recur-expert guidance reflect the behavior."
+    ]
+  },
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.warp.dogfood-batt.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": ["dogfood-red-baseline"],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a12e26-850c-7850-94f8-e621f719cab2"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.dogfood-batt.evidence-reference:v1",
+      "depends_on": ["slice-0"],
+      "evidence_gates": ["absolute-reference-acceptance"],
+      "evidence_mode": "checked",
+      "gate_rules": {"absolute-reference-acceptance": {"kind": "test", "allow_skipped": false}},
+      "intelligence_tick": 0,
+      "slice_id": "evidence-reference",
+      "slice_uuid": "01a12e26-ab84-76d2-a372-17894140b0ce"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.dogfood-batt.current-slice-diagnostic:v1",
+      "depends_on": ["slice-0"],
+      "evidence_gates": ["current-slice-diagnostic-acceptance"],
+      "evidence_mode": "checked",
+      "gate_rules": {"current-slice-diagnostic-acceptance": {"kind": "test", "allow_skipped": false}},
+      "intelligence_tick": 0,
+      "slice_id": "current-slice-diagnostic",
+      "slice_uuid": "01a12e26-ab84-726a-8de2-9e578b3c68ed"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.dogfood-batt.eventness-discovery:v1",
+      "depends_on": ["slice-0"],
+      "evidence_gates": ["eventness-skill-discovery-acceptance"],
+      "evidence_mode": "checked",
+      "gate_rules": {"eventness-skill-discovery-acceptance": {"kind": "test", "allow_skipped": false}},
+      "intelligence_tick": -1,
+      "slice_id": "eventness-discovery",
+      "slice_uuid": "01a12e26-ab84-7378-b26e-44bd949623bf"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.dogfood-batt.slice-final:v1",
+      "depends_on": ["evidence-reference", "current-slice-diagnostic", "eventness-discovery"],
+      "evidence_gates": ["warp-reveal-compatibility-regressions", "docs-and-expert-guidance"],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "warp-reveal-compatibility-regressions": {"kind": "test", "allow_skipped": false},
+        "docs-and-expert-guidance": {"kind": "test", "allow_skipped": false}
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a12e26-850c-75e8-ab29-4db21cd49910"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.dogfood-batt"
+}

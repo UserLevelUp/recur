@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "help-orientation-acceptance",
+  "map": "warps/main.command.tree.configured-lanes.warp-map.json",
+  "warp_id": "main.command.tree.configured-lanes",
+  "bubble_uuid": "01a12dde-df43-76d7-9f0d-cb8da4e2eb55",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.tree.configured-lanes.slice-final:v1",
+  "policy_hash": "fnv1a64:df29c75170536d57",
+  "layer": "warps/main.command.tree.configured-lanes.slice-final.configured-lanes-green.warp-layer.json",
+  "layer_hash": "fnv1a64:96704b82b14b1f1f",
+  "gate": "configured-lane-acceptance",
+  "from_reference": "evidence:warps/main.command.tree.configured-lanes.acceptance.evidence.json",
+  "from_hash": "fnv1a64:414d00d033cab6a8",
+  "to_reference": "evidence:warps/main.command.tree.configured-lanes.help-refresh.acceptance.evidence.json",
+  "to_hash": "fnv1a64:2d7ec3a421562486",
+  "reason": "Root help changed main.rs; relevant checks rerun under the unchanged tree contract."
+}

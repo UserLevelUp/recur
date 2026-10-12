@@ -17,6 +17,12 @@ agent can rehydrate one lane without re-reading half the repo.
 
 ## Usage
 
+Root `recur --help` points first-time users to `recur reveal --type skill`
+and `recur reveal recur-expert` when that project capsule exists. Explicitly
+read the referenced skill through the agent's supported loader or file reader;
+Reveal only prints context and pointers. Use `-d ROOT` to bound discovery.
+An empty skill list or missing expert does not imply a globally installed skill.
+
 ```bash
 recur reveal
 recur reveal main.command.trace-id

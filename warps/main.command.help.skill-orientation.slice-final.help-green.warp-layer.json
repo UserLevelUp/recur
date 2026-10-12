@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.help.skill-orientation",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.help.skill-orientation.slice-final:v1",
+  "attempt_id": "help-green",
+  "result_state": "accepted",
+  "result_hash": "observed-help-and-reveal-green",
+  "evidence": {
+    "help-and-reveal-regressions": [
+      "evidence:warps/main.command.help.skill-orientation.acceptance.evidence.json"
+    ]
+  },
+  "reason": null
+}

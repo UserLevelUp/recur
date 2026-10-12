@@ -23,6 +23,10 @@ The same query-first workflow is portable to external projects (including Visual
 
 ### Focused core skills
 
+For a cold start, `recur --help` points to typed skill discovery and the
+`recur-expert` capsule when available. This is a pointer, not automatic loading:
+use the agent's supported loader or file reader to read the referenced skill.
+
 Use typed `recur reveal --type skill -d ROOT` to find `recur-warp`, `recur-lang`,
 `recur-watch`, `recur-trace-id` and `recur-demo-tests`; explicitly read the chosen
 body. `recur-reveal init --dry-run` previews missing core registry entries while

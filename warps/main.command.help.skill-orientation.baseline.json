@@ -1,0 +1,10 @@
+{
+  "schema": "skill-orientation-red-observation-v1",
+  "command": "cargo test --locked --test reveal_profiles root_help_routes_new_users_to_skill_discovery_and_explicit_loading",
+  "test": "root_help_routes_new_users_to_skill_discovery_and_explicit_loading",
+  "observed_before_implementation": true,
+  "exit_code": 101,
+  "tests": {"passed": 0, "failed": 1},
+  "observation": "Root help lacked recur reveal --type skill and the explicit skill orientation/loading route.",
+  "meaning": "Original discovery gap only; not final acceptance."
+}

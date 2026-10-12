@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.tree.configured-lanes",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.tree.configured-lanes.slice-0:v1",
+  "attempt_id": "red-baseline",
+  "result_state": "accepted",
+  "result_hash": "observed-red-root-lane-regression",
+  "evidence": {
+    "initialized-mixed-lane-red-regression": [
+      "warps/main.command.tree.configured-lanes.baseline.json"
+    ]
+  },
+  "reason": null
+}

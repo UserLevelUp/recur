@@ -1,0 +1,18 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.tree.configured-lanes",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.tree.configured-lanes.slice-final:v1",
+  "attempt_id": "configured-lanes-green",
+  "result_state": "accepted",
+  "result_hash": "fnv1a64:45d7f5eec25d7a50",
+  "evidence": {
+    "configured-lane-acceptance": [
+      "evidence:warps/main.command.tree.configured-lanes.acceptance.evidence.json"
+    ],
+    "separator-compatibility-regressions": [
+      "evidence:warps/main.command.tree.configured-lanes.compatibility.evidence.json"
+    ]
+  },
+  "reason": null
+}

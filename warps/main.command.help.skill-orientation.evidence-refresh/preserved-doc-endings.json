@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "preserved-doc-endings",
+  "map": "warps/main.command.help.skill-orientation.warp-map.json",
+  "warp_id": "main.command.help.skill-orientation",
+  "bubble_uuid": "01a12deb-5df9-71e7-8c39-ed46ba2c7b46",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.help.skill-orientation.slice-final:v1",
+  "policy_hash": "fnv1a64:ea1368efd7e54cde",
+  "layer": "warps/main.command.help.skill-orientation.slice-final.help-green.warp-layer.json",
+  "layer_hash": "fnv1a64:950062cafa7ee335",
+  "gate": "help-and-reveal-regressions",
+  "from_reference": "evidence:warps/main.command.help.skill-orientation.acceptance.evidence.json",
+  "from_hash": "fnv1a64:a81ee7242c88da21",
+  "to_reference": "evidence:warps/main.command.help.skill-orientation.final.evidence.json",
+  "to_hash": "fnv1a64:98eb4ed5cc2c0aa5",
+  "reason": "Preserved original documentation line endings; help and Reveal checks rerun."
+}

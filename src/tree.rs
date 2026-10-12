@@ -44,6 +44,44 @@ impl HierarchyTree {
         self.children.push(child);
     }
 
+    /// Build a shared logical hierarchy without rewriting the underlying paths.
+    pub fn from_lane_paths(
+        base: &str,
+        paths: &[(PathBuf, char)],
+        display_separator: char,
+        show_separator: bool,
+    ) -> Self {
+        let mut root = Self::new(base);
+        let prefix: Vec<_> = base.split(display_separator).collect();
+        for (path, separator) in paths {
+            let Some(filename) = path.file_name().and_then(|name| name.to_str()) else {
+                continue;
+            };
+            let (stem, extension) = filename
+                .rsplit_once('.')
+                .map(|(stem, ext)| (stem, Some(ext.to_owned())))
+                .unwrap_or((filename, None));
+            let parts: Vec<_> = stem.split(*separator).collect();
+            if !parts.starts_with(&prefix) {
+                continue;
+            }
+            let extension = extension.map(|ext| {
+                if show_separator {
+                    format!("{ext} [{separator}]")
+                } else {
+                    ext
+                }
+            });
+            if parts.len() == prefix.len() {
+                root.file_path = Some(path.clone());
+                root.extension = extension;
+            } else {
+                root.add_path_parts(&parts[prefix.len()..], path.clone(), extension);
+            }
+        }
+        root
+    }
+
     pub fn from_paths(base: impl Into<String>, paths: &[PathBuf]) -> Self {
         Self::from_paths_with_separator(base, paths, '.')
     }

@@ -1,0 +1,40 @@
+   Compiling recur v0.2.8 (C:\Users\marcn\.copilot\repos\copilot-worktrees\recur\marcnoon-upgraded-spork)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.51s
+     Running unittests src\lib.rs (target\debug\deps\recur-08db3f8c03ed6021.exe)
+
+running 11 tests
+test r#trait::separator::tests::parse_cli_separators_defaults_to_dot_when_empty ... ok
+test r#trait::separator::tests::parse_explicit_separators_takes_first_char_per_arg ... ok
+test r#trait::separator::tests::resolve_command_separators_prefers_explicit_cli_values ... ok
+test project_config::tests::separator_for_dir_matches_lane_and_nested_paths ... ok
+test r#trait::separator::tests::parse_optional_separator_uses_first_char ... ok
+test r#trait::separator_merge::tests::test_separator_merge_trait_exists ... ok
+test r#trait::stdin::tests::test_filter_stdin_paths_with_custom_separator ... ok
+test reveal_artifact::tests::prefix_specificity_uses_segments_and_supports_multiple_separators ... ok
+test r#trait::separator::tests::resolve_command_separators_falls_back_to_dot_without_config ... ok
+test r#trait::separator::tests::resolve_command_separators_uses_lane_config_when_available ... ok
+test project_config::tests::analyze_project_reports_additions_and_separator_changes ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 97 filtered out; finished in 0.01s
+
+   Compiling recur v0.2.8 (C:\Users\marcn\.copilot\repos\copilot-worktrees\recur\marcnoon-upgraded-spork)
+warning: variant `Element` is never constructed
+  --> src\main_command_flatten_impl.rs:32:5
+   |
+31 | pub enum EntryKind {
+   |          --------- variant in this enum
+32 |     Element,
+   |     ^^^^^^^
+   |
+   = note: `EntryKind` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `recur` (bin "recur" test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.39s
+     Running unittests src\main.rs (target\debug\deps\recur-b044097afa4ffe3b.exe)
+
+running 1 test
+test main_command_tree_impl::tests::tree_base_for_pattern_stops_before_a_wildcard_segment ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 83 filtered out; finished in 0.00s
+

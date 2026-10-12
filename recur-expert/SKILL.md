@@ -5,6 +5,10 @@ description: Inspect or implement Recur CLI, capability prompt discovery and War
 
 # Recur expert
 
+Root `recur --help` exposes the first-use route: list with
+`recur reveal --type skill`, then show `recur reveal recur-expert` when available.
+Explicitly read the referenced body; discovery never loads or executes it.
+
 For a focused workflow, use the project's typed Reveal capsule and read the
 matching skill: `recur-warp` for slice lifecycle and acceptance, `recur-lang`
 for optional contracts and planning, `recur-watch` for active polling/subscriptions,

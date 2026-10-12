@@ -1,0 +1,11 @@
+{
+  "schema": "configured-lanes-red-observation-v1",
+  "warp_id": "main.command.tree.configured-lanes",
+  "command": "cargo test --locked --test tree_configured_lanes",
+  "observed_before_implementation": true,
+  "exit_code": 101,
+  "tests": {"passed": 0, "failed": 1, "ignored": 0},
+  "test": "initialized_root_tree_includes_each_lanes_configured_separator",
+  "observation": "Initialization recorded src=_ and docs=.; the src subtree query passed, but the bare root tree included main.rs and main.command.watch.readme.md without main_command_watch_impl.rs.",
+  "meaning": "Evidence of the original gap, not evidence that the final fix passed."
+}

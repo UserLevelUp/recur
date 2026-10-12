@@ -9,6 +9,92 @@ use recur::tree::HierarchyTree;
 use std::path::PathBuf;
 use std::process;
 
+pub fn execute_configured(
+    base: String,
+    dir: PathBuf,
+    max_depth: Option<usize>,
+    show_count: bool,
+    unicode: bool,
+    stdin: bool,
+    replace_default: Option<char>,
+    show_sep: bool,
+    json: bool,
+) -> anyhow::Result<()> {
+    let cwd = std::env::current_dir()?;
+    let lookup_dir = cwd.join(&dir);
+    let Some(config) = recur::project_config::load_nearest(&lookup_dir)? else {
+        return execute_with_separators(
+            base,
+            dir,
+            max_depth,
+            show_count,
+            unicode,
+            stdin,
+            vec!['.'],
+            replace_default,
+            show_sep,
+            json,
+        );
+    };
+    let query_separator = if base.contains('.') {
+        '.'
+    } else {
+        config.separator_for_dir(&lookup_dir).unwrap_or('.')
+    };
+    let display_separator = replace_default.unwrap_or(query_separator);
+    let candidates = if stdin {
+        read_resolved_paths_from_stdin(&dir)?
+    } else {
+        FileSearcher::new(SearchOptions {
+            root: dir.clone(),
+            max_depth,
+            ..Default::default()
+        })
+        .find(&HierarchyPattern::parse("*")?)
+    };
+    let mut files = Vec::new();
+    for path in candidates {
+        let absolute = cwd.join(&path);
+        let separator = config
+            .separator_for_dir(absolute.parent().unwrap_or(&lookup_dir))
+            .unwrap_or('.');
+        let normalized_base = base.replace(query_separator, &separator.to_string());
+        let pattern = HierarchyPattern::parse_with_separator(
+            &format!("{normalized_base}{separator}**"),
+            separator,
+        )?;
+        if let Some(filename) = path.file_name().and_then(|name| name.to_str()) {
+            let stem = filename
+                .rsplit_once('.')
+                .map(|(stem, _)| stem)
+                .unwrap_or(filename);
+            if pattern.matches(&HierarchicalName::with_separator(stem, separator)) {
+                files.push((path, separator));
+            }
+        }
+    }
+    if files.is_empty() {
+        eprintln!("No files found starting with '{base}'");
+        process::exit(1);
+    }
+    let normalized_base = base.replace(query_separator, &display_separator.to_string());
+    let tree_base = tree_base_for_pattern(&normalized_base, display_separator);
+    let tree = HierarchyTree::from_lane_paths(&tree_base, &files, display_separator, show_sep);
+    if json || !atty::is(atty::Stream::Stdout) {
+        println!("{}", tree.to_json());
+    } else {
+        print!("{}", tree.to_string(unicode));
+        if show_count {
+            let stats = tree.stats();
+            println!(
+                "\n{} files, {} directories (recursive)",
+                stats.total_files, stats.total_dirs
+            );
+        }
+    }
+    Ok(())
+}
+
 pub fn execute(
     base: String,
     dir: PathBuf,

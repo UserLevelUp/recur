@@ -49,7 +49,7 @@ mod main_command_watch_query_impl;
 )]
 #[command(version)]
 #[command(
-    after_help = "A quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help\n  recur reveal --help\n  recur capability --help\n  recur version --help"
+    after_help = "New to this project?\n  recur reveal --type skill    List discoverable project skills\n  recur reveal recur-expert    Show the expert capsule, when available\n\nReveal prints context and references; it does not load or execute skills.\nRead the referenced skill using your agent's supported loader or file reader.\nUse -d ROOT on reveal commands to select the intended project boundary.\n\nA quiet nod to Dennis Ritchie's 1968 thesis on recursive functions and program structure.\n\nHomepage: https://github.com/userlevelup/recur\n\nAdditional commands:\n  recur trace-id --help\n  recur reveal --help\n  recur capability --help\n  recur version --help"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -851,27 +851,42 @@ fn main() {
             ascii,
             stdin,
         } => {
-            let command_separators = CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
-            let separator = command_separators.last().copied().unwrap_or('.');
-
-            // Use multi-separator if multiple separators or new flags are present
-            if command_separators.len() > 1 || replace_default.is_some() || show_sep {
-                main_command_tree_impl::execute_with_separators(
+            if cli.sep.is_empty() {
+                main_command_tree_impl::execute_configured(
                     base,
                     dir,
                     depth,
                     count,
                     !ascii,
                     stdin,
-                    command_separators.clone(),
                     replace_default,
                     show_sep,
                     cli.json,
                 )
             } else {
-                main_command_tree_impl::execute(
-                    base, dir, depth, count, !ascii, stdin, separator, cli.json,
-                )
+                let command_separators =
+                    CliSeparatorPolicy::resolve_command_separators(&cli.sep, &dir);
+                let separator = command_separators.last().copied().unwrap_or('.');
+
+                // Use multi-separator if multiple separators or new flags are present
+                if command_separators.len() > 1 || replace_default.is_some() || show_sep {
+                    main_command_tree_impl::execute_with_separators(
+                        base,
+                        dir,
+                        depth,
+                        count,
+                        !ascii,
+                        stdin,
+                        command_separators.clone(),
+                        replace_default,
+                        show_sep,
+                        cli.json,
+                    )
+                } else {
+                    main_command_tree_impl::execute(
+                        base, dir, depth, count, !ascii, stdin, separator, cli.json,
+                    )
+                }
             }
         }
         Commands::Related {

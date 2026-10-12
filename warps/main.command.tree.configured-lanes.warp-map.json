@@ -1,0 +1,67 @@
+{
+  "bubble_uuid": "01a12dde-df43-76d7-9f0d-cb8da4e2eb55",
+  "current_slice": null,
+  "evidence_root": "..",
+  "goal": "After recur init records directory separators, bare recur tree main from the project root combines configured source and documentation lanes into one hierarchy without explicit --sep flags.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Core tree queries remain read-only: no config, source, receipt or Eventness mutation.",
+    "Explicit --sep options override automatic configured-lane interpretation.",
+    "Each file uses its most specific configured directory separator; root queries do not apply every separator indiscriminately to every file.",
+    "Unconfigured files retain the dot-separator fallback and projects without config retain existing behavior.",
+    "Output preserves actual source paths while merging logical hierarchy segments across lanes.",
+    "A failing baseline test demonstrates the gap; it does not prove the fix or satisfy final acceptance."
+  ],
+  "planning_status": "implemented; acceptance-derived-from-checked-gates",
+  "trace_ids": {
+    "defines": ["recur.tree.configured-lanes.root"],
+    "consumes": ["recur.separator.lane-policy"],
+    "produces": ["recur.tree.configured-lanes.acceptance"]
+  },
+  "final_state": {
+    "description": "An initialized mixed-separator project supports bare recur tree main from its root: main_command_watch_impl.rs and main.command.watch.readme.md appear together under main.command.watch as impl and readme, with their real paths preserved.",
+    "required_observations": [
+      "recur init records src separator _ and docs separator .",
+      "Bare root tree includes both the source implementation and documentation without --sep.",
+      "Nested lane overrides are honored without duplicate or misinterpreted entries.",
+      "Explicit separator overrides, subtree queries and no-config queries preserve their documented behavior.",
+      "Tree queries leave the complete project file inventory and bytes unchanged.",
+      "Focused acceptance and existing relevant hierarchy/separator regressions pass; docs describe root-wide configured behavior."
+    ],
+    "acceptance_test": "tests/tree_configured_lanes.rs",
+    "acceptance_command": "cargo test --locked --test tree_configured_lanes"
+  },
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.tree.configured-lanes.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "initialized-mixed-lane-red-regression"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a12dde-df43-71b5-8981-e7c510b52f7a"
+    },
+    {
+      "contract_hash": "contract:main.command.tree.configured-lanes.slice-final:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "configured-lane-acceptance",
+        "separator-compatibility-regressions"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "configured-lane-acceptance": {"kind": "test", "allow_skipped": false},
+        "separator-compatibility-regressions": {"kind": "test", "allow_skipped": false}
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a12dde-df43-78ad-9ef3-47fe3383ea61"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.tree.configured-lanes"
+}
