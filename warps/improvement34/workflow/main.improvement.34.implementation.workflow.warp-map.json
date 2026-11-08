@@ -1,0 +1,105 @@
+{
+  "bubble_uuid": "01a1ba42-9d6d-756c-bd82-762ae3a6b195",
+  "current_slice": null,
+  "evidence_root": "../../..",
+  "goal": "Workflow guidance and settled attention",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Preserve scoped legacy behavior, old artifact and receipt bytes, and explicit project opt-outs.",
+    "No mandatory Watch, Lang, rules engine, model, domain software or private Robo fixture.",
+    "Core inspects; companions own explicit preview and confirmed lifecycle writes.",
+    "Source-bound Julia CLI evidence is checked for implementation; review and historical claims remain distinct."
+  ],
+  "planning_status": "proposed-no-acceptance",
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.workflow.baseline:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "scope-and-expected-red-reviewed"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "baseline",
+      "slice_uuid": "01a1ba42-9d6d-795b-94e3-f5d46d297a7a"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.workflow.guide:v1",
+      "depends_on": [
+        "baseline"
+      ],
+      "evidence_gates": [
+        "guide-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "guide-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "guide",
+      "slice_uuid": "01a1ba42-9d6d-79cf-a642-e11143227ea2"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.workflow.attention:v1",
+      "depends_on": [
+        "guide"
+      ],
+      "evidence_gates": [
+        "attention-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "attention-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "attention",
+      "slice_uuid": "01a1ba42-9d6d-7f6e-9c0e-cf1152161622"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.workflow.update:v1",
+      "depends_on": [
+        "attention"
+      ],
+      "evidence_gates": [
+        "update-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "update-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "update",
+      "slice_uuid": "01a1ba42-9d6d-73c4-b350-109fffdfc032"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.workflow.verify:v1",
+      "depends_on": [
+        "update"
+      ],
+      "evidence_gates": [
+        "verify-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "verify-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "verify",
+      "slice_uuid": "01a1ba42-9d6d-744f-a80b-689cee90b33b"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.improvement.34.implementation.workflow"
+}

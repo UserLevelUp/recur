@@ -1,0 +1,105 @@
+{
+  "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
+  "current_slice": null,
+  "evidence_root": "../../..",
+  "goal": "Trace discovery, declarations and pinned revisions",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Preserve scoped legacy behavior, old artifact and receipt bytes, and explicit project opt-outs.",
+    "No mandatory Watch, Lang, rules engine, model, domain software or private Robo fixture.",
+    "Core inspects; companions own explicit preview and confirmed lifecycle writes.",
+    "Source-bound Julia CLI evidence is checked for implementation; review and historical claims remain distinct."
+  ],
+  "planning_status": "proposed-no-acceptance",
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.baseline:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "scope-and-expected-red-reviewed"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "baseline",
+      "slice_uuid": "01a1ba42-9d49-77e4-aa19-2452cd1f8970"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.discover:v1",
+      "depends_on": [
+        "baseline"
+      ],
+      "evidence_gates": [
+        "discover-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "discover-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "discover",
+      "slice_uuid": "01a1ba42-9d49-77aa-994c-1ba12a7c18d0"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.declare:v1",
+      "depends_on": [
+        "discover"
+      ],
+      "evidence_gates": [
+        "declare-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "declare-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "slice_id": "declare",
+      "slice_uuid": "01a1ba42-9d49-74e1-ace7-2cf477f63b89"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.pin:v1",
+      "depends_on": [
+        "declare"
+      ],
+      "evidence_gates": [
+        "pin-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "pin-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "slice_id": "pin",
+      "slice_uuid": "01a1ba42-9d49-79f8-89d6-2ce500d0d1c9"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.verify:v1",
+      "depends_on": [
+        "pin"
+      ],
+      "evidence_gates": [
+        "verify-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "verify-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "verify",
+      "slice_uuid": "01a1ba42-9d49-7c2c-b741-b90a5696d2b6"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.improvement.34.implementation.trace"
+}

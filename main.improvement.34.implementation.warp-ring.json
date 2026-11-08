@@ -1,0 +1,82 @@
+{
+  "schema": "warp-ring-map-v1",
+  "warp_id": "main.improvement.34.implementation",
+  "coordinator_domain": "integration",
+  "projection_depth": 2,
+  "domains": [
+    {
+      "domain_id": "integration",
+      "relative_root": ".",
+      "role": "coordinator",
+      "warp_id": "main.improvement.34.implementation",
+      "required_state": "complete"
+    },
+    {
+      "domain_id": "trace",
+      "relative_root": "warps/improvement34/trace",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.trace",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-trace",
+        "contract_hash": "contract:main.improvement.34.implementation.accept-trace:v1"
+      }
+    },
+    {
+      "domain_id": "workflow",
+      "relative_root": "warps/improvement34/workflow",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.workflow",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-workflow",
+        "contract_hash": "contract:main.improvement.34.implementation.accept-workflow:v1"
+      }
+    },
+    {
+      "domain_id": "graph",
+      "relative_root": "warps/improvement34/graph",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.graph",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-graph",
+        "contract_hash": "contract:main.improvement.34.implementation.accept-graph:v1"
+      }
+    },
+    {
+      "domain_id": "eventness",
+      "relative_root": "warps/improvement34/eventness",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.eventness",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-eventness",
+        "contract_hash": "contract:main.improvement.34.implementation.accept-eventness:v1"
+      }
+    },
+    {
+      "domain_id": "evidence",
+      "relative_root": "warps/improvement34/evidence",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.evidence",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-evidence",
+        "contract_hash": "contract:main.improvement.34.implementation.accept-evidence:v1"
+      }
+    },
+    {
+      "domain_id": "review",
+      "relative_root": "warps/improvement34/review",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.review",
+      "required_state": "complete",
+      "parent_acceptance": {
+        "slice_id": "accept-review",
+        "contract_hash": "contract:main.improvement.34.implementation.accept-review:v1"
+      }
+    }
+  ],
+  "subscriptions": []
+}

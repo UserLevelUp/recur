@@ -1,0 +1,86 @@
+{
+  "bubble_uuid": "01a1ba42-9ddd-727e-989d-f6794359f832",
+  "current_slice": null,
+  "evidence_root": "../../..",
+  "goal": "Corrections and evidence scope",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Preserve scoped legacy behavior, old artifact and receipt bytes, and explicit project opt-outs.",
+    "No mandatory Watch, Lang, rules engine, model, domain software or private Robo fixture.",
+    "Core inspects; companions own explicit preview and confirmed lifecycle writes.",
+    "Source-bound Julia CLI evidence is checked for implementation; review and historical claims remain distinct."
+  ],
+  "planning_status": "proposed-no-acceptance",
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.evidence.baseline:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "scope-and-expected-red-reviewed"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "baseline",
+      "slice_uuid": "01a1ba42-9ddd-78fb-a5fc-afd25528a837"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.evidence.findings:v1",
+      "depends_on": [
+        "baseline"
+      ],
+      "evidence_gates": [
+        "findings-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "findings-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "slice_id": "findings",
+      "slice_uuid": "01a1ba42-9ddd-76aa-a707-52da623d5dec"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.evidence.scope:v1",
+      "depends_on": [
+        "findings"
+      ],
+      "evidence_gates": [
+        "scope-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "scope-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "slice_id": "scope",
+      "slice_uuid": "01a1ba42-9ddd-7a6a-ac22-ad80be191870"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.evidence.verify:v1",
+      "depends_on": [
+        "scope"
+      ],
+      "evidence_gates": [
+        "verify-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "verify-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "verify",
+      "slice_uuid": "01a1ba42-9ddd-7c3e-a6cb-b3e58e39cee5"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.improvement.34.implementation.evidence"
+}
