@@ -1,0 +1,43 @@
+{
+  "schema": "recur-trace34-retained-binaries-v1",
+  "revision": "48aca7d9ed4a3b4bccd35f966f9a0f132bf7178d",
+  "dirty": true,
+  "executables": {
+    "recur": {
+      "path": ".recur/evidence-binaries/improvement34-trace-v2/recur.exe",
+      "source": "target/release-safe/recur.exe",
+      "sha256": "01417b9310fe77930c2eba295643c40336f359900447f593a83f97b1ca86f8be"
+    },
+    "recur-warp": {
+      "path": ".recur/evidence-binaries/improvement34-trace-v2/recur-warp.exe",
+      "source": "target/release-safe/recur-warp.exe",
+      "sha256": "7cdad6feef3ea9a9171fac0244f46d276b95973b19124ab87b9fb9b149c5778e"
+    },
+    "recur-git": {
+      "path": ".recur/evidence-binaries/improvement34-trace-v2/recur-git.exe",
+      "source": "target/release-safe/recur-git.exe",
+      "sha256": "3e483bb2171bd5039091fd086c30b5400fe9bbd4ea3ef7b31417be0943353079"
+    }
+  },
+  "build": {
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--profile",
+      "release-safe",
+      "--bin",
+      "recur",
+      "--bin",
+      "recur-warp",
+      "--bin",
+      "recur-git"
+    ],
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)\nbinary: rustc\ncommit-hash: 8bab26f4f68e0e26f0bb7960be334d5b520ea452\ncommit-date: 2026-07-14\nhost: x86_64-pc-windows-msvc\nrelease: 1.97.1\nLLVM version: 22.1.6",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)"
+  },
+  "runtime": {
+    "julia": "C:\\ProgramData\\chocolatey\\bin\\julia.exe",
+    "version": "julia version 1.12.0"
+  }
+}

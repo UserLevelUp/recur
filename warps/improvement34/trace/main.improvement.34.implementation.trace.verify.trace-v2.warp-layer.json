@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.improvement.34.implementation.trace",
+  "slice_id": "verify",
+  "contract_hash": "contract:main.improvement.34.implementation.trace.verify:v1",
+  "attempt_id": "trace-v2",
+  "result_state": "accepted",
+  "result_hash": "sha256:eef4e6be3c948e7e81b788d2a75c40d09e3da6638103881d4729610fac26562a",
+  "evidence": {
+    "verify-julia": [
+      "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json"
+    ]
+  },
+  "reason": null
+}

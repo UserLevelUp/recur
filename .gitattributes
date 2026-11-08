@@ -122,3 +122,6 @@
 /recur-watch/SKILL.md text eol=crlf
 /julia-tests/main.command.warp.query-compatibility.test.jl text eol=lf
 /docs/main.command.watch.eventness.evidence.readme.md text eol=lf
+# Improvement 34 verification binds these exact authored inputs.
+/src/trace_relationships.rs text eol=lf
+/julia-tests/main.improvement.34.trace.test.jl text eol=lf

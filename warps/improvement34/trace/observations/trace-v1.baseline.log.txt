@@ -1,0 +1,62 @@
+  -> recur trace-id capability.baseline --scope lab.** -d C:\Users\marcn\AppData\Local\Temp\jl_4gpQ6h --json
+One invocation displays and appends a checkpoint: Error During Test at C:\src\recur\julia-tests\main.improvement.34.baseline.test.jl:43
+  Got exception outside of a @test
+  IOError: could not spawn setenv(`'C:\src\recur\.recur\evidence-binaries\improvement34-trace-v1\recur-git.exe' checkpoint --snapshot --append-parallel --checkpoint-id ck-34 -f 'C:\Users\marcn\AppData\Local\Temp\jl_u93NLd\.recur\checkpoints.md'`; dir="C:\\Users\\marcn\\AppData\\Local\\Temp\\jl_u93NLd"): no such file or directory (ENOENT)
+  Stacktrace:
+    [1] _spawn_primitive(file::String, cmd::Cmd, stdio::Memory{Union{RawFD, Base.Libc.WindowsRawSocket, Base.SyncCloseFD, IO}})
+      @ Base .\process.jl:140
+    [2] _spawn
+      @ .\process.jl:157 [inlined]
+    [3] #_spawn##0
+      @ .\process.jl:149 [inlined]
+    [4] setup_stdios(f::Base.var"#_spawn##0#_spawn##1"{Cmd}, stdios::Vector{Union{RawFD, Base.Libc.WindowsRawSocket, Base.FileRedirect, IO}})
+      @ Base .\process.jl:236
+    [5] _spawn
+      @ .\process.jl:148 [inlined]
+    [6] open(cmds::Cmd, stdio::Base.DevNull; write::Bool, read::Bool)
+      @ Base .\process.jl:407
+    [7] open
+      @ .\process.jl:397 [inlined]
+    [8] open(cmds::Cmd, mode::String, stdio::Base.DevNull)
+      @ Base .\process.jl:378
+    [9] read(cmd::Cmd)
+      @ Base .\process.jl:480
+   [10] read
+      @ .\process.jl:491 [inlined]
+   [11] (::var"#45#46")(root::String)
+      @ Main C:\src\recur\julia-tests\main.improvement.34.baseline.test.jl:56
+   [12] mktempdir(fn::var"#45#46", parent::String; prefix::String)
+      @ Base.Filesystem .\file.jl:899
+   [13] mktempdir(fn::Function, parent::String)
+      @ Base.Filesystem .\file.jl:895
+   [14] top-level scope
+      @ C:\src\recur\julia-tests\main.improvement.34.baseline.test.jl:6
+   [15] macro expansion
+      @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+   [16] macro expansion
+      @ C:\src\recur\julia-tests\main.improvement.34.baseline.test.jl:44 [inlined]
+   [17] macro expansion
+      @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+   [18] macro expansion
+      @ C:\src\recur\julia-tests\main.improvement.34.baseline.test.jl:44 [inlined]
+   [19] include(mod::Module, _path::String)
+      @ Base .\Base.jl:306
+   [20] exec_options(opts::Base.JLOptions)
+      @ Base .\client.jl:317
+   [21] _start()
+      @ Base .\client.jl:550
+Test Summary:                                      | Pass  Error  Total  Time
+Improvement 34 current behavior                    |    8      1      9  2.4s
+  Legacy trace discovery and scope                 |    8             8  1.4s
+  One invocation displays and appends a checkpoint |           1      1  1.0s
+RNG of the outermost testset: Random.Xoshiro(0xcea73baa4ab981f7, 0x32fa01d0ce8ca2c9, 0x95e7d430ced982fb, 0x4bb37dfc1e40557a, 0x6704d7f594614f8f)
+┌ Info: Legacy trace classification (diagnostic only)
+│   incidental_producers =
+│    2-element Vector{Int64}:
+│     2
+│     3
+│   descendant_consumers =
+│    1-element Vector{Int64}:
+└     4
+ERROR: LoadError: Some tests did not pass: 8 passed, 0 failed, 1 errored, 0 broken.
+in expression starting at C:\src\recur\julia-tests\main.improvement.34.baseline.test.jl:5

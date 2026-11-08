@@ -1,0 +1,16 @@
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN --json --ext .md
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN --json --max-entries 1
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN --json --max-bytes 1
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN\empty --json
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN --ext .md
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN --depth 0
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN --json --scope lab.** --ext .md
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_GVLNmN --json --scope ** --ext .md
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_0ILT15\root --json --ext .md
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_0ILT15\root --json --scope lab.** --declared
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_0ILT15\root --json --scope lab.delivery --declared
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_0ILT15\root --json --scope lab.** --declared
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_0ILT15\root --json --scope lab.** --declared --unique-defines
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_0ILT15\root --json --scope lab.escape --declared
+Test Summary:                                    | Pass  Total  Time
+Improvement 34 trace discovery and revision pins |   43     43  2.7s

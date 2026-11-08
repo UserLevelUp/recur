@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.improvement.34.implementation.trace",
+  "slice_id": "baseline",
+  "contract_hash": "contract:main.improvement.34.implementation.trace.baseline:v1",
+  "attempt_id": "trace-v2",
+  "result_state": "accepted",
+  "result_hash": "sha256:21afef33b4026b4d02d11bb0aaceb72f8bd97f2e2bc972fb3855bb495e091a69",
+  "evidence": {
+    "scope-and-expected-red-reviewed": [
+      "artifact:warps/improvement34/trace/main.improvement.34.implementation.trace.baseline.review.md"
+    ]
+  },
+  "reason": null
+}

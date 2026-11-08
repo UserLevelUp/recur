@@ -1,0 +1,250 @@
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_b3nvQX --json --ext .md
+Paths first, scoped legacy details unchanged: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  Expression: ok == expect_success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#23#24")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:34
+  [5] mktempdir(fn::var"#23#24", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+Paths first, scoped legacy details unchanged: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  Expression: !expect_success || isempty(errors)
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#23#24")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:34
+  [5] mktempdir(fn::var"#23#24", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_b3nvQX --json --max-entries 1
+Paths first, scoped legacy details unchanged: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  Expression: ok == expect_success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#23#24")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:42
+  [5] mktempdir(fn::var"#23#24", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+Paths first, scoped legacy details unchanged: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  Expression: !expect_success || isempty(errors)
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#23#24")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:42
+  [5] mktempdir(fn::var"#23#24", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_b3nvQX\empty --json
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_b3nvQX --ext .md
+Paths first, scoped legacy details unchanged: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:48
+  Expression: occursin("one/lab.first.md", output) && !(occursin("publish:", output))
+
+Stacktrace:
+ [1] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::var"#23#24")(root::String)
+   @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:48
+ [3] mktempdir(fn::var"#23#24", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:899
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:895
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+ [6] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+ [8] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [9] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:26 [inlined]
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_b3nvQX --depth 0
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_b3nvQX --json --scope lab.** --ext .md
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_b3nvQX --json --scope ** --ext .md
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_R9n0Ju --json --ext .md
+Exact declarations, distinct pins and unchanged inputs: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  Expression: ok == expect_success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#31#32")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:83
+  [5] mktempdir(fn::var"#31#32", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+Exact declarations, distinct pins and unchanged inputs: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  Expression: !expect_success || isempty(errors)
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#31#32")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:83
+  [5] mktempdir(fn::var"#31#32", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_R9n0Ju --json --scope lab.** --declared
+Exact declarations, distinct pins and unchanged inputs: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  Expression: ok == expect_success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:7
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#31#32")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:85
+  [5] mktempdir(fn::var"#31#32", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+Exact declarations, distinct pins and unchanged inputs: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  Expression: !expect_success || isempty(errors)
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] trace34(::String, ::String, ::Vararg{String}; expect_success::Bool)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:9
+  [3] trace34
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:5 [inlined]
+  [4] (::var"#31#32")(root::String)
+    @ Main C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:85
+  [5] mktempdir(fn::var"#31#32", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:25
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:63 [inlined]
+Test Summary:                                            | Pass  Fail  Total  Time
+Improvement 34 trace discovery and revision pins         |    9     9     18  2.8s
+  Paths first, scoped legacy details unchanged           |    9     5     14  2.1s
+  Exact declarations, distinct pins and unchanged inputs |          4      4  0.7s
+RNG of the outermost testset: Random.Xoshiro(0x49eb0526991f0528, 0x3bbda3b570ba8f87, 0xedf4a027a57df41d, 0xc0b3196b5ef86b76, 0xe7d0c2fcbf8f6888)
+ERROR: LoadError: Some tests did not pass: 9 passed, 9 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\julia-tests\main.improvement.34.trace.test.jl:24

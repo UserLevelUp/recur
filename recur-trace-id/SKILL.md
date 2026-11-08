@@ -12,7 +12,15 @@ map or existing IDs. Use stable semantic hierarchies such as
 artifact types, filename hierarchy and trace lineage distinct. A trace ID is
 not a place to mutate host intelligence policy or scheduler state.
 
-Inspect `recur trait -d ROOT get trace_id.producer_keywords` and the corresponding
+If supported by the selected binary, use `recur trace-id ID -d ROOT` to locate
+matching folders and files, then apply `--scope` for detail. `--scope '**'`
+intentionally requests details across the root. Inspect coverage before treating
+an empty result as absence. `--declared` with scope reads exact opt-in Markdown
+records and revision pins; a passing digest does not establish the expected
+revision, runtime behavior or gate acceptance.
+
+For legacy scoped queries, inspect `recur trait -d ROOT get trace_id.producer_keywords`
+and the corresponding
 `consumer_keywords`/`trigger_keywords` keys
 before choosing annotation vocabulary. Classification is contextual keyword
 matching, not parsing or semantic proof. In the Recur repository, read

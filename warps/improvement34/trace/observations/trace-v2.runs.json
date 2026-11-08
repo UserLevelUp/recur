@@ -1,0 +1,51 @@
+{
+  "revision": "48aca7d9ed4a3b4bccd35f966f9a0f132bf7178d",
+  "dirty": true,
+  "binary": ".recur/evidence-binaries/improvement34-trace-v2/recur.exe",
+  "julia": "C:\\ProgramData\\chocolatey\\bin\\julia.exe",
+  "results": {
+    "trace": {
+      "script": "julia-tests/main.improvement.34.trace.test.jl",
+      "args": [
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\julia-tests\\main.improvement.34.trace.test.jl"
+      ],
+      "exit_code": 0,
+      "totals": {
+        "Pass": 43,
+        "Total": 43,
+        "Time": null
+      },
+      "log": "warps/improvement34/trace/observations/trace-v2.trace.log.txt"
+    },
+    "baseline": {
+      "script": "julia-tests/main.improvement.34.baseline.test.jl",
+      "args": [
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\julia-tests\\main.improvement.34.baseline.test.jl"
+      ],
+      "exit_code": 0,
+      "totals": {
+        "Pass": 13,
+        "Total": 13,
+        "Time": null
+      },
+      "log": "warps/improvement34/trace/observations/trace-v2.baseline.log.txt"
+    },
+    "legacy": {
+      "script": "julia-tests/main.command.trace-id.test.jl",
+      "args": [
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\julia-tests\\main.command.trace-id.test.jl"
+      ],
+      "exit_code": 0,
+      "totals": {
+        "Pass": 88,
+        "Broken": 3,
+        "Total": 91,
+        "Time": null
+      },
+      "log": "warps/improvement34/trace/observations/trace-v2.legacy.log.txt"
+    }
+  }
+}

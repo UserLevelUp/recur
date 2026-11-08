@@ -18,6 +18,7 @@ pub mod reveal_profiles;
 #[path = "main_command_reveal_impl.rs"]
 pub mod reveal_query;
 pub mod search;
+pub mod trace_relationships;
 pub mod tree;
 pub mod warp_bubble;
 pub mod warp_discovery;

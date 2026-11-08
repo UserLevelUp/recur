@@ -193,7 +193,7 @@ fn should_skip_content_file(path: &PathBuf, options: &SearchOptions) -> bool {
     false
 }
 
-fn is_likely_binary_file(path: &PathBuf) -> bool {
+pub(crate) fn is_likely_binary_file(path: &std::path::Path) -> bool {
     if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
         let ext = ext.to_ascii_lowercase();
         if matches!(

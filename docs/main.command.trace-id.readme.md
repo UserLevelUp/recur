@@ -4,8 +4,9 @@ Command reference for `recur trace-id`.
 
 ## What It Does
 
-`trace-id` traces a hierarchical identifier through a codebase (or any text
-files) and classifies every occurrence into one of four roles:
+Use `trace-id PATTERN -d ROOT` to locate matching folders and files. Supply
+`--scope` to inspect relationships in the chosen file hierarchy. The existing
+scoped mode classifies heuristic occurrences into four roles:
 
 | Role | Meaning | Example keywords |
 |---|---|---|
@@ -63,14 +64,64 @@ and checked transitions. See `main.command.lang.query.readme.md` and
 ## Usage
 
 ```bash
-recur trace-id "<identifier>" [flags]
+recur trace-id "<identifier>" -d <root>
+recur trace-id "<identifier>" --scope <scope> -d <root>
 ```
+
+## Path discovery and explicit declarations
+
+Without `--scope`, the command prints deduplicated matching folders and file
+paths. `--json` uses `recur-trace-id-paths-v1` with `folders`, `files` and
+`coverage`; there are no line bodies or role lists. An explicit `--scope "**"`
+still requests legacy detail. A complete path search with no hits exits 1;
+an incomplete search reports omissions, including when no hit was found.
+
+Path and declared modes bound traversal and bytes. Defaults are 50,000 entries
+and 32 MiB total; `--max-entries` and `--max-bytes` may select a smaller or
+larger finite budget up to 250,000 entries and 128 MiB. Hidden entries and common
+build output directories are excluded. `--ext` and the configured content
+search policy also apply. Links are not traversed, and reads must stay in `-d`.
+Unreadable, oversized and non-UTF-8 inputs can make coverage incomplete.
+Depth, format, stdin and saved-run options remain for legacy scoped queries.
+
+To inspect exact declarations, add `--declared` to a scoped query. It reads an
+optional metadata block on the first line of a Markdown file, with exact
+delimiters and one record per line. For example:
+
+```markdown
+<!-- recur-trace-v1
+defines: capability.baseline
+publish: capability.baseline
+artifact: {"id":"capability.baseline","context":"dock","revision":"R04","path":"r04.txt","sha256":"<64 lowercase hex digits>"}
+requires: {"id":"capability.baseline","context":"dock","expected":"R06","actual":"R04"}
+-->
+```
+
+`defines`, `publish`, `consumer` and `trigger` accept a single dotted ID.
+Segments contain ASCII letters, digits or underscores; invalid tokens get a
+diagnostic with a source span. Prose, fenced examples and generated source
+literals remain searchable through the other modes. They do not become
+declarations. `--unique-defines` opts into checking duplicate `defines` entries
+in the chosen scope. Filtering can ignore case; authored identities used for
+binding stay case-sensitive.
+
+The `recur-trace-id-declarations-v1` report contains declarations, artifacts,
+pins, diagnostics and coverage. Its source spans use one-based lines and
+one-based, end-exclusive byte columns. Artifact bindings use exact
+`(id, context, revision)` tuples from the selected scope. Paths are root-relative
+and SHA-256 checks are bounded to 4 MiB per artifact and the remaining aggregate
+byte budget. The report distinguishes matching bytes, the expected revision,
+and missing, ambiguous or unavailable inputs. In the example, a matching R04
+digest can coexist with an R06 revision mismatch. Successful report generation
+does not mean the reported pins passed. This mode does not assess tests or accept
+Warp gates.
 
 ## Flags
 
 | Flag | Description | Default |
 |---|---|---|
-| `--scope <GLOB>` | Hierarchical glob to restrict file set | required |
+| `--scope <GLOB>` | Hierarchical file scope for relationship detail | optional; paths only if omitted |
+| `--declared` | Read explicit Markdown declarations and revision pins | false; requires scope |
 | `--sep <CHAR>` | Separator character (`.` `_` `-`) | `.` |
 | `--ext <EXT>` | File extension filter (`.cs`, `.rs`, `.jl`) | all |
 | `--format <FMT>` | Output style: `summary` or `full` | `summary` |

@@ -182,14 +182,30 @@ struct TraceIdRunCheck {
 
 #[derive(Parser, Debug)]
 #[command(name = "trace-id")]
-#[command(about = "Trace hierarchical identifier flow sites (define/produce/consume/trigger lane)")]
+#[command(about = "Find trace-ID paths, or inspect scoped relationships")]
 struct TraceIdCli {
     /// Hierarchical identifier pattern (recursive)
     pattern: String,
 
-    /// Hierarchical scope to search within (recursive)
+    /// Inspect relationships within this file hierarchy; omit for paths only
     #[arg(short, long)]
-    scope: String,
+    scope: Option<String>,
+
+    /// Read explicit trace metadata and revision pins (requires --scope)
+    #[arg(long, requires = "scope")]
+    declared: bool,
+
+    /// Require at most one explicit defines record per ID in this scope
+    #[arg(long, requires = "declared")]
+    unique_defines: bool,
+
+    /// Discovery entry limit for path-only and declared queries
+    #[arg(long)]
+    max_entries: Option<usize>,
+
+    /// Total byte limit for path-only and declared queries
+    #[arg(long)]
+    max_bytes: Option<usize>,
 
     /// Root directory to search
     #[arg(short = 'd', long, default_value = ".")]
@@ -200,16 +216,16 @@ struct TraceIdCli {
     ext: Option<String>,
 
     /// Output format: summary or full
-    #[arg(long, default_value = "summary")]
-    format: String,
+    #[arg(long)]
+    format: Option<String>,
 
     /// Read file paths from stdin instead of searching filesystem
     #[arg(long)]
     stdin: bool,
 
     /// Traversal depth budget for flow expansion
-    #[arg(long, default_value = "2")]
-    depth: usize,
+    #[arg(long)]
+    depth: Option<usize>,
 
     /// Depth guardrail mode override: hard-fail or clamp
     #[arg(long)]
@@ -280,14 +296,22 @@ pub fn maybe_execute_from_args() -> Option<anyhow::Result<()>> {
         .copied()
         .unwrap_or('.');
 
+    if cli.scope.is_none() || cli.declared {
+        return Some(execute_bounded(&cli, separator));
+    }
+    if cli.max_entries.is_some() || cli.max_bytes.is_some() {
+        return Some(Err(anyhow::anyhow!(
+            "--max-entries and --max-bytes apply to path-only or --declared queries"
+        )));
+    }
     Some(execute(
         cli.pattern,
-        cli.scope,
+        cli.scope.expect("legacy mode has scope"),
         cli.dir,
         cli.ext,
-        cli.format,
+        cli.format.unwrap_or_else(|| "summary".into()),
         cli.stdin,
-        cli.depth,
+        cli.depth.unwrap_or(2),
         cli.depth_guard,
         cli.force,
         cli.ignore_case,
@@ -299,6 +323,94 @@ pub fn maybe_execute_from_args() -> Option<anyhow::Result<()>> {
         cli.run_name,
         cli.color,
     ))
+}
+
+fn execute_bounded(cli: &TraceIdCli, separator: char) -> anyhow::Result<()> {
+    use recur::trace_relationships::{declared, hunt, DEFAULT_BYTES, DEFAULT_ENTRIES};
+    anyhow::ensure!(
+        !cli.stdin
+            && cli.format.is_none()
+            && cli.depth.is_none()
+            && cli.depth_guard.is_none()
+            && !cli.force
+            && cli.run_name.is_none()
+            && !cli.save_run
+            && !cli.reuse_if_fresh
+            && !cli.check_run,
+        "--stdin, formatting, depth and saved-run options require a legacy --scope query"
+    );
+    anyhow::ensure!(
+        !cli.declared || separator == '.',
+        "--declared uses dotted trace IDs"
+    );
+    let parse = |text: &str| -> anyhow::Result<HierarchyPattern> {
+        anyhow::ensure!(
+            !text.trim().is_empty(),
+            "pattern or --scope cannot be empty"
+        );
+        let value = HierarchyPattern::parse_with_separator(text, separator)?;
+        Ok(if cli.ignore_case {
+            value.case_insensitive()
+        } else {
+            value
+        })
+    };
+    let pattern = parse(&cli.pattern)?;
+    let mut options = SearchOptions {
+        root: cli.dir.clone(),
+        ..Default::default()
+    };
+    if let Some(ext) = &cli.ext {
+        options.extensions = ext.split(',').map(|s| s.trim().to_string()).collect();
+    }
+    apply_content_search_policy(&mut options, &cli.dir)?;
+    let max_entries = cli.max_entries.unwrap_or(DEFAULT_ENTRIES);
+    let max_bytes = cli.max_bytes.unwrap_or(DEFAULT_BYTES);
+    let report = if let Some(scope) = cli.scope.as_deref() {
+        declared(
+            &options,
+            &pattern,
+            &parse(scope)?,
+            max_entries,
+            max_bytes,
+            cli.unique_defines,
+        )?
+    } else {
+        hunt(&options, &pattern, max_entries, max_bytes)?
+    };
+    if cli.json || cli.declared {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    } else {
+        for folder in report["folders"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|v| v.as_str())
+        {
+            println!("{folder}/");
+        }
+        for file in report["files"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|v| v.as_str())
+        {
+            println!("{file}");
+        }
+        if report["coverage"]["complete"] == false {
+            eprintln!(
+                "Trace-ID discovery incomplete: {}",
+                report["coverage"]["omissions"]
+            );
+        }
+    }
+    if !cli.declared
+        && report["coverage"]["complete"] == true
+        && report["files"].as_array().is_some_and(Vec::is_empty)
+    {
+        process::exit(1);
+    }
+    Ok(())
 }
 
 fn depth_budget_mode_as_str(mode: DepthBudgetMode) -> &'static str {

@@ -2,7 +2,7 @@
 
 Date: 2026-11-07
 Updated: 2026-11-08 (corrections, evidence scope, review and skill guidance)
-Status: Proposed / implementation Warps planned; no implementation acceptance
+Status: Trace bubble implemented and locally accepted; remaining bubbles planned
 
 defines: main.improvement.34
 consumes: main.command.trace-id main.command.warp
@@ -105,24 +105,24 @@ Existing heuristic queries retain documented behavior unless migration is explic
 
 defines: main.improvement.34.discovery
 
-Make `--scope` optional and use it to switch from finding locations to inspecting
+The trace bubble made `--scope` optional and uses it to switch from finding locations to inspecting
 relationships. The trace pattern still selects what to look for; `-d ROOT` still
 bounds where to look and defaults to the working directory.
 
-| Proposed query | Result |
+| Query | Result |
 | --- | --- |
 | `recur trace-id capability.baseline -d ROOT` | Find matching files under the root and list their folders and paths once, in stable order. Do not print matching lines, infer roles, or expand relationships. |
 | `recur trace-id capability.baseline --scope 'lab.**' -d ROOT` | Limit the file search to that hierarchy and return detailed trace results. Structured declarations are a separate opt-in. |
 | `recur trace-id capability.baseline --scope '**' -d ROOT` | Explicitly request detailed trace results across the root, subject to normal limits. |
 
-The current CLI requires a scope. Keep existing scoped invocations and output
-compatible. Give the new path-only JSON result a distinct shape so callers
+The planning baseline required a scope. The trace implementation keeps scoped
+invocations and output compatible, and gives path-only JSON a distinct shape so callers
 cannot mistake it for a relationship report. Reuse normal root, exclusion,
 extension and identifier-pattern handling, and bound discovery itself. If the
 search is cut short, report incomplete coverage rather than treating an empty
-list as proof that the ID is absent. Decide how detail-only flags behave without
-scope before implementation; they must not silently upgrade the query to a
-full relationship scan.
+list as proof that the ID is absent. Detail-only flags are rejected in path-only
+mode. See the [trace command reference](docs/main.command.trace-id.readme.md) for
+the implemented limits and explicit declaration format.
 
 ## main.improvement.34.revision_dependencies
 
@@ -484,7 +484,7 @@ stable reason codes separate from wording if new diagnostics introduce them.
 | `evidence gates do not match the Slice contract; missing [...], unexpected [...]` | Inspect the live contract and provide the required evidence keys; do not rename criteria merely to make publication pass. |
 | `Declared current_slice '...' is no longer ready; selection not inferred.` | Read computed readiness and recorded attention separately. Do not restart a completed slice; use the supported companion/policy to update attention. |
 | Receipt or completion previews without a persisted record | Inspect the preview, then use `--confirm` within existing authorization when publication is intended. Do not infer acceptance from the preview. |
-| A scoped command rejects missing `--scope` | Check that command's help. Distinguish `trace` call paths from `trace-id` lineage; the proposed unscoped discovery mode is not yet available. |
+| A scoped command rejects missing `--scope` | Check that command's help. Distinguish `trace` call paths from `trace-id` lineage. The new trace-ID mode omits scope for path discovery; older binaries and detail-only options still require it. |
 
 Update guidance from reproduced friction and verified changes, not periodic
 rewrites or every speculative complaint. Capture the example, root cause, safe
@@ -536,8 +536,10 @@ does not make every repository adopt its grammar.
 
 defines: main.improvement.34.next
 
-Start with the [trace bubble](warps/improvement34/trace/main.improvement.34.implementation.trace.contract.md):
-**prove one declared relationship and one revision expectation end to end**.
+The [trace bubble's observed Eventness](warps/improvement34/trace/main.improvement.34.implementation.trace.final.observed.complete.md)
+records the first declared relationship and revision expectation end to end.
+The [initial contract](warps/improvement34/trace/main.improvement.34.implementation.trace.contract.md)
+set the following target.
 Use a small local fixture with a requirement,
 two revisions, and two consumers: a current delivery pinned to R06 but bound to
 R04, and an intentional R04 comparison. With all artifact hashes matching, the
@@ -615,5 +617,5 @@ Relevant current implementation references:
 - `src/recur_git_main.rs`.
 - `recur-trace-id/SKILL.md`, `recur-eventness/SKILL.md`, `recur-warp/SKILL.md`.
 
-No implementation, Warp acceptance, benchmark result or release is claimed by
-this README. Existing unrelated changes on `recur-rule` remain separate work.
+No acceptance for the remaining bubbles, coordinator, benchmark or release is
+claimed. Existing unrelated changes on `recur-rule` remain separate work.

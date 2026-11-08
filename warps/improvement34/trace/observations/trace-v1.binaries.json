@@ -1,0 +1,36 @@
+{
+  "schema": "recur-trace34-retained-binaries-v1",
+  "revision": "48aca7d9ed4a3b4bccd35f966f9a0f132bf7178d",
+  "dirty": true,
+  "executables": {
+    "recur": {
+      "path": ".recur/evidence-binaries/improvement34-trace-v1/recur.exe",
+      "source": "target/release-safe/recur.exe",
+      "sha256": "90f6c0aa88a121731384ed73b53ce9d33d07d56fbd3ad7a6b08e4d7d0f4c600f"
+    },
+    "recur-warp": {
+      "path": ".recur/evidence-binaries/improvement34-trace-v1/recur-warp.exe",
+      "source": "target/release-safe/recur-warp.exe",
+      "sha256": "cd08ca848f2641b0bc79d5554fa7dedf45401b28340797e44f8b9821715e685e"
+    }
+  },
+  "build": {
+    "command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--profile",
+      "release-safe",
+      "--bin",
+      "recur",
+      "--bin",
+      "recur-warp"
+    ],
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)\nbinary: rustc\ncommit-hash: 8bab26f4f68e0e26f0bb7960be334d5b520ea452\ncommit-date: 2026-07-14\nhost: x86_64-pc-windows-msvc\nrelease: 1.97.1\nLLVM version: 22.1.6",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)"
+  },
+  "runtime": {
+    "julia": "C:\\ProgramData\\chocolatey\\bin\\julia.exe",
+    "version": "julia version 1.12.0"
+  }
+}
