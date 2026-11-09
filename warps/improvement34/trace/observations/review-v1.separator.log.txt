@@ -1,0 +1,44 @@
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_PPOqfn --sep . --json
+  -> recur trace-id capability_baseline -d C:\Users\marcn\AppData\Local\Temp\jl_4xQpBh --sep _ --json
+Trace path discovery keeps sentence punctuation separate: Test Failed at C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:13
+  Expression: ok && (isempty(errors) && (JSON3.read(output)).files == ["lab.reference.md"])
+
+Stacktrace:
+ [1] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::var"#10#11"{String})(root::String)
+   @ Main C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:13
+ [3] mktempdir(fn::var"#10#11"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:899
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:895
+ [5] top-level scope
+   @ C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:6
+ [6] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:7 [inlined]
+  -> recur trace-id capability-baseline -d C:\Users\marcn\AppData\Local\Temp\jl_uYzBTd --sep - --json
+Trace path discovery keeps sentence punctuation separate: Test Failed at C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:13
+  Expression: ok && (isempty(errors) && (JSON3.read(output)).files == ["lab.reference.md"])
+
+Stacktrace:
+ [1] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::var"#10#11"{String})(root::String)
+   @ Main C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:13
+ [3] mktempdir(fn::var"#10#11"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:899
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:895
+ [5] top-level scope
+   @ C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:6
+ [6] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:7 [inlined]
+Test Summary:                                            | Pass  Fail  Total  Time
+Trace path discovery keeps sentence punctuation separate |    1     2      3  1.6s
+RNG of the outermost testset: Random.Xoshiro(0xbf7f6b2b0a09fc41, 0xa2c7dfa959372a2b, 0xd26ddb59b3c2bc27, 0x547ae5aff550a850, 0x13589ab74db1c1b5)
+ERROR: LoadError: Some tests did not pass: 1 passed, 2 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\warps\improvement34\trace\observations\review-v1.separator.test.jl:5

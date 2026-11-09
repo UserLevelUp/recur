@@ -1,0 +1,43 @@
+{
+  "head": "447bfbfba74803a0393171a729290133e28c3803",
+  "tests": [
+    {
+      "name": "trace",
+      "exit_code": 0,
+      "summary": [
+        "Test Summary:                                    | Pass  Total  Time",
+        "Improvement 34 trace discovery and revision pins |   43     43  1.9s"
+      ]
+    },
+    {
+      "name": "baseline",
+      "exit_code": 0,
+      "summary": [
+        "Test Summary:                   | Pass  Total  Time",
+        "Improvement 34 current behavior |   13     13  1.6s"
+      ]
+    },
+    {
+      "name": "legacy",
+      "exit_code": 0,
+      "summary": [
+        "Test Summary:                         | Pass  Broken  Total  Time",
+        "recur trace-id command (IMPROVEMENT8) |   88       3     91  1.3s"
+      ]
+    }
+  ],
+  "binaries": [
+    {
+      "name": "recur",
+      "matched": true
+    },
+    {
+      "name": "recur-warp",
+      "matched": true
+    },
+    {
+      "name": "recur-git",
+      "matched": true
+    }
+  ]
+}

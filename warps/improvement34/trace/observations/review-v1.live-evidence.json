@@ -1,0 +1,8 @@
+{
+  "reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+  "status": "checked",
+  "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+  "reasons": [
+    "scope: 101 explicitly named source files; dirty=true; revision is recorded provenance"
+  ]
+}

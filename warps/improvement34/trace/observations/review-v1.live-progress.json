@@ -1,0 +1,227 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
+  "completed_slices": [
+    "baseline",
+    "declare",
+    "discover",
+    "pin",
+    "verify"
+  ],
+  "conflicts": [],
+  "contract_status": "declared-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 5,
+    "pending": 0,
+    "required": 5,
+    "stale_contract": 0
+  },
+  "covered": [
+    "baseline",
+    "declare",
+    "discover",
+    "pin",
+    "verify"
+  ],
+  "current_slice": null,
+  "evidence_status": "declared",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "manual-reference; producer not rerun",
+          "reasons": [],
+          "reference": "artifact:warps/improvement34/trace/main.improvement.34.implementation.trace.baseline.review.md",
+          "status": "declared"
+        }
+      ],
+      "gate": "scope-and-expected-red-reviewed",
+      "satisfied": true,
+      "slice_id": "baseline",
+      "status": "declared"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 101 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "discover-julia",
+      "satisfied": true,
+      "slice_id": "discover",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 101 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "declare-julia",
+      "satisfied": true,
+      "slice_id": "declare",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 101 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "pin-julia",
+      "satisfied": true,
+      "slice_id": "pin",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun",
+          "reasons": [
+            "scope: 101 explicitly named source files; dirty=true; revision is recorded provenance"
+          ],
+          "reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "verify-julia",
+      "satisfied": true,
+      "slice_id": "verify",
+      "status": "checked"
+    }
+  ],
+  "goal": "Trace discovery, declarations and pinned revisions",
+  "layers": [
+    "baseline@trace-v2",
+    "declare@trace-v2",
+    "discover@trace-v2",
+    "pin@trace-v2",
+    "verify@trace-v2"
+  ],
+  "manifest": "warps/improvement34/trace/main.improvement.34.implementation.trace.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "\\\\?\\C:\\src\\recur",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.baseline:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "scope-and-expected-red-reviewed"
+      ],
+      "evidence_mode": "declared",
+      "gate_rules": {},
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "baseline",
+      "slice_uuid": "01a1ba42-9d49-77e4-aa19-2452cd1f8970",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.discover:v1",
+      "depends_on": [
+        "baseline"
+      ],
+      "evidence_gates": [
+        "discover-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "discover-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "discover",
+      "slice_uuid": "01a1ba42-9d49-77aa-994c-1ba12a7c18d0",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.declare:v1",
+      "depends_on": [
+        "discover"
+      ],
+      "evidence_gates": [
+        "declare-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "declare-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": false,
+      "slice_id": "declare",
+      "slice_uuid": "01a1ba42-9d49-74e1-ace7-2cf477f63b89",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.pin:v1",
+      "depends_on": [
+        "declare"
+      ],
+      "evidence_gates": [
+        "pin-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "pin-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 1,
+      "ready": false,
+      "slice_id": "pin",
+      "slice_uuid": "01a1ba42-9d49-79f8-89d6-2ce500d0d1c9",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.verify:v1",
+      "depends_on": [
+        "pin"
+      ],
+      "evidence_gates": [
+        "verify-julia"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "verify-julia": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "verify",
+      "slice_uuid": "01a1ba42-9d49-7c2c-b741-b90a5696d2b6",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [],
+  "warp_id": "main.improvement.34.implementation.trace"
+}

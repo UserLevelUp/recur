@@ -1,0 +1,389 @@
+{
+  "fixture": "C:\\Users\\marcn\\AppData\\Local\\Temp\\recur34-review-edge-o8UCfT",
+  "binary": "C:/src/recur/.recur/evidence-binaries/improvement34-trace-v2/recur.exe",
+  "checks": [
+    {
+      "name": "custom separator followed by sentence punctuation stays discoverable",
+      "pass": false,
+      "observed": {
+        "code": 1,
+        "report": {
+          "coverage": {
+            "bytes_read": 31,
+            "complete": true,
+            "entries": 1,
+            "files_read": 1,
+            "max_bytes": 33554432,
+            "max_entries": 50000,
+            "omissions": {}
+          },
+          "files": [],
+          "folders": [],
+          "schema": "recur-trace-id-paths-v1"
+        },
+        "error": ""
+      }
+    },
+    {
+      "name": "hyphen separator followed by sentence punctuation stays discoverable",
+      "pass": false,
+      "observed": {
+        "code": 1,
+        "report": {
+          "coverage": {
+            "bytes_read": 31,
+            "complete": true,
+            "entries": 1,
+            "files_read": 1,
+            "max_bytes": 33554432,
+            "max_entries": 50000,
+            "omissions": {}
+          },
+          "files": [],
+          "folders": [],
+          "schema": "recur-trace-id-paths-v1"
+        },
+        "error": ""
+      }
+    },
+    {
+      "name": "dot separator followed by sentence punctuation",
+      "pass": true,
+      "observed": {
+        "code": 0,
+        "report": {
+          "coverage": {
+            "bytes_read": 31,
+            "complete": true,
+            "entries": 1,
+            "files_read": 1,
+            "max_bytes": 33554432,
+            "max_entries": 50000,
+            "omissions": {}
+          },
+          "files": [
+            "lab.separator.md"
+          ],
+          "folders": [
+            "."
+          ],
+          "schema": "recur-trace-id-paths-v1"
+        },
+        "error": ""
+      }
+    },
+    {
+      "name": "exact identity excludes child and underscore variant",
+      "pass": true,
+      "observed": [
+        {
+          "id": "capability.baseline",
+          "role": "defines",
+          "span": {
+            "end_column": 29,
+            "line": 2,
+            "path": "lab.exact.md",
+            "start_column": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "explicit family includes child",
+      "pass": true,
+      "observed": [
+        {
+          "id": "capability.baseline",
+          "role": "defines",
+          "span": {
+            "end_column": 29,
+            "line": 2,
+            "path": "lab.exact.md",
+            "start_column": 1
+          }
+        },
+        {
+          "id": "capability.baseline.child",
+          "role": "defines",
+          "span": {
+            "end_column": 35,
+            "line": 3,
+            "path": "lab.exact.md",
+            "start_column": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "case insensitive filter preserves authored ID",
+      "pass": true,
+      "observed": [
+        {
+          "id": "Capability.Baseline",
+          "role": "defines",
+          "span": {
+            "end_column": 29,
+            "line": 2,
+            "path": "lab.case.md",
+            "start_column": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "unterminated block contributes no authority",
+      "pass": true,
+      "observed": {
+        "artifacts": [],
+        "coverage": {
+          "bytes_read": 49,
+          "complete": true,
+          "entries": 4,
+          "files_read": 1,
+          "max_bytes": 33554432,
+          "max_entries": 50000,
+          "omissions": {}
+        },
+        "declarations": [],
+        "diagnostics": [
+          {
+            "code": "unterminated_metadata",
+            "span": {
+              "end_column": 19,
+              "line": 1,
+              "path": "lab.unclosed.md",
+              "start_column": 1
+            }
+          }
+        ],
+        "pins": [],
+        "schema": "recur-trace-id-declarations-v1"
+      }
+    },
+    {
+      "name": "conflicting revision reports ambiguity and both sites",
+      "pass": true,
+      "observed": {
+        "artifacts": [
+          {
+            "artifact": {
+              "context": "dock",
+              "id": "capability.baseline",
+              "path": "one.txt",
+              "revision": "R06",
+              "sha256": "7692c3ad3540bb803c020b3aee66cd8887123234ea0c6e7143c0add73ff431ed"
+            },
+            "integrity": "matched",
+            "observed_sha256": "7692c3ad3540bb803c020b3aee66cd8887123234ea0c6e7143c0add73ff431ed",
+            "source": {
+              "end_column": 166,
+              "line": 2,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          },
+          {
+            "artifact": {
+              "context": "dock",
+              "id": "capability.baseline",
+              "path": "two.txt",
+              "revision": "R06",
+              "sha256": "3fc4ccfe745870e2c0d99f71f30ff0656c8dedd41cc1d7d3d376b0dbe685e2f3"
+            },
+            "integrity": "matched",
+            "observed_sha256": "3fc4ccfe745870e2c0d99f71f30ff0656c8dedd41cc1d7d3d376b0dbe685e2f3",
+            "source": {
+              "end_column": 166,
+              "line": 3,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          }
+        ],
+        "coverage": {
+          "bytes_read": 450,
+          "complete": true,
+          "entries": 7,
+          "files_read": 1,
+          "max_bytes": 33554432,
+          "max_entries": 50000,
+          "omissions": {}
+        },
+        "declarations": [],
+        "diagnostics": [
+          {
+            "code": "conflicting_revision",
+            "context": "dock",
+            "id": "capability.baseline",
+            "revision": "R06",
+            "sites": [
+              {
+                "end_column": 166,
+                "line": 2,
+                "path": "lab.pins.md",
+                "start_column": 1
+              },
+              {
+                "end_column": 166,
+                "line": 3,
+                "path": "lab.pins.md",
+                "start_column": 1
+              }
+            ]
+          }
+        ],
+        "pins": [
+          {
+            "integrity": "unknown",
+            "pin": {
+              "actual": "R06",
+              "context": "dock",
+              "expected": "R06",
+              "id": "capability.baseline"
+            },
+            "reason": "ambiguous_artifact",
+            "revision": "unknown",
+            "source": {
+              "end_column": 88,
+              "line": 4,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          }
+        ],
+        "schema": "recur-trace-id-declarations-v1"
+      }
+    },
+    {
+      "name": "explicit contexts isolate revision binding",
+      "pass": true,
+      "observed": {
+        "artifacts": [
+          {
+            "artifact": {
+              "context": "dock",
+              "id": "capability.baseline",
+              "path": "one.txt",
+              "revision": "R06",
+              "sha256": "7692c3ad3540bb803c020b3aee66cd8887123234ea0c6e7143c0add73ff431ed"
+            },
+            "integrity": "matched",
+            "observed_sha256": "7692c3ad3540bb803c020b3aee66cd8887123234ea0c6e7143c0add73ff431ed",
+            "source": {
+              "end_column": 166,
+              "line": 2,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          },
+          {
+            "artifact": {
+              "context": "other",
+              "id": "capability.baseline",
+              "path": "two.txt",
+              "revision": "R06",
+              "sha256": "3fc4ccfe745870e2c0d99f71f30ff0656c8dedd41cc1d7d3d376b0dbe685e2f3"
+            },
+            "integrity": "matched",
+            "observed_sha256": "3fc4ccfe745870e2c0d99f71f30ff0656c8dedd41cc1d7d3d376b0dbe685e2f3",
+            "source": {
+              "end_column": 167,
+              "line": 3,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          }
+        ],
+        "coverage": {
+          "bytes_read": 451,
+          "complete": true,
+          "entries": 7,
+          "files_read": 1,
+          "max_bytes": 33554432,
+          "max_entries": 50000,
+          "omissions": {}
+        },
+        "declarations": [],
+        "diagnostics": [],
+        "pins": [
+          {
+            "integrity": "matched",
+            "pin": {
+              "actual": "R06",
+              "context": "dock",
+              "expected": "R06",
+              "id": "capability.baseline"
+            },
+            "reason": "explicit_pin",
+            "revision": "matched",
+            "source": {
+              "end_column": 88,
+              "line": 4,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          }
+        ],
+        "schema": "recur-trace-id-declarations-v1"
+      }
+    },
+    {
+      "name": "truncated scan cannot establish resolved revision",
+      "pass": true,
+      "observed": {
+        "artifacts": [
+          {
+            "artifact": {
+              "context": "dock",
+              "id": "capability.baseline",
+              "path": "one.txt",
+              "revision": "R06",
+              "sha256": "7692c3ad3540bb803c020b3aee66cd8887123234ea0c6e7143c0add73ff431ed"
+            },
+            "integrity": "matched",
+            "observed_sha256": "7692c3ad3540bb803c020b3aee66cd8887123234ea0c6e7143c0add73ff431ed",
+            "source": {
+              "end_column": 166,
+              "line": 2,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          }
+        ],
+        "coverage": {
+          "bytes_read": 281,
+          "complete": false,
+          "entries": 3,
+          "files_read": 1,
+          "max_bytes": 33554432,
+          "max_entries": 3,
+          "omissions": {
+            "entry_budget": 1
+          }
+        },
+        "declarations": [],
+        "diagnostics": [],
+        "pins": [
+          {
+            "integrity": "matched",
+            "pin": {
+              "actual": "R06",
+              "context": "dock",
+              "expected": "R06",
+              "id": "capability.baseline"
+            },
+            "reason": "incomplete_scope",
+            "revision": "unknown",
+            "source": {
+              "end_column": 88,
+              "line": 3,
+              "path": "lab.pins.md",
+              "start_column": 1
+            }
+          }
+        ],
+        "schema": "recur-trace-id-declarations-v1"
+      }
+    }
+  ]
+}
