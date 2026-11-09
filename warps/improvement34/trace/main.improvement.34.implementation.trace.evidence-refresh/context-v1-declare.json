@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "context-v1-declare",
+  "map": "warps/improvement34/trace/main.improvement.34.implementation.trace.warp-map.json",
+  "warp_id": "main.improvement.34.implementation.trace",
+  "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
+  "slice_id": "declare",
+  "contract_hash": "contract:main.improvement.34.implementation.trace.declare:v1",
+  "policy_hash": "fnv1a64:04b2d72eff97c450",
+  "layer": "warps/improvement34/trace/main.improvement.34.implementation.trace.declare.trace-v2.warp-layer.json",
+  "layer_hash": "fnv1a64:1416261185272fd8",
+  "gate": "declare-julia",
+  "from_reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+  "from_hash": "fnv1a64:1936a27e3d21ec57",
+  "to_reference": "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json",
+  "to_hash": "fnv1a64:0be29d8a41dc7c79",
+  "reason": "Observed original trace and repaired scanner regressions plus scoped inventory/context tests under current sources"
+}

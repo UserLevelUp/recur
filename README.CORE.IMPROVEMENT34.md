@@ -536,6 +536,13 @@ does not make every repository adopt its grammar.
 
 defines: main.improvement.34.next
 
+The follow-up [trace sets/context Warp](warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.contract.md)
+addresses the subsequent scanner findings and adds explicit scoped ID inventory,
+selection and bounded source excerpts. Its observed acceptance is separate from
+the original trace bubble and from the coordinator. Query
+`recur warp show main.improvement.34.implementation.trace.context -d . --json`
+for live evidence; the remaining original bubbles are still planned.
+
 The [trace bubble's observed Eventness](warps/improvement34/trace/main.improvement.34.implementation.trace.final.observed.complete.md)
 records the first declared relationship and revision expectation end to end.
 The [initial contract](warps/improvement34/trace/main.improvement.34.implementation.trace.contract.md)

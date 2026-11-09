@@ -19,6 +19,16 @@ an empty result as absence. `--declared` with scope reads exact opt-in Markdown
 records and revision pins; a passing digest does not establish the expected
 revision, runtime behavior or gate acceptance.
 
+For an explicit ID set, use a scoped `--list-ids` view. Select exact IDs or
+families with repeatable `--select`; selectors form a union within the primary
+pattern. Use scoped `--context N` to read matching lines and neighboring
+explanations with source spans; overlapping passages merge. These are observed
+tokens and extracted text, not inferred authority or execution. Inspect both
+scan and output coverage before concluding absence. Bound returned items with
+`--max-results` and `--max-output-bytes`; excerpts can omit relevant context,
+so read the original section or file when the decision requires more. Neither
+view requires Watch, Lang, a Warp map, or project configuration.
+
 For legacy scoped queries, inspect `recur trait -d ROOT get trace_id.producer_keywords`
 and the corresponding
 `consumer_keywords`/`trigger_keywords` keys

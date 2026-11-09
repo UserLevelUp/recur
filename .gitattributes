@@ -125,3 +125,5 @@
 # Improvement 34 verification binds these exact authored inputs.
 /src/trace_relationships.rs text eol=lf
 /julia-tests/main.improvement.34.trace.test.jl text eol=lf
+/src/trace_inspection.rs text eol=lf
+/julia-tests/main.improvement.34.trace-context.test.jl text eol=lf

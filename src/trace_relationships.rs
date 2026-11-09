@@ -4,7 +4,7 @@
 //! defines: main.improvement.34.revision_dependencies
 
 use crate::parser::{HierarchicalName, HierarchyPattern};
-use crate::search::{is_likely_binary_file, SearchOptions};
+use crate::search::{has_binary_extension, is_binary_sample, SearchOptions};
 use anyhow::{ensure, Result};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -14,6 +14,10 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 use walkdir::WalkDir;
+
+#[path = "trace_inspection.rs"]
+mod inspection;
+pub use inspection::{inspect, InspectionOptions};
 
 pub const DEFAULT_ENTRIES: usize = 50_000;
 pub const DEFAULT_BYTES: usize = 32 * 1024 * 1024;
@@ -34,6 +38,21 @@ impl Coverage {
         *self.omissions.entry(reason).or_default() += 1;
         self.complete = false;
     }
+}
+
+/// All data reads (including binary samples) spend the same remaining allowance.
+/// No look-ahead byte is read beyond it. Callers compare observed length and
+/// file metadata to detect a growing/truncated input without escaping the cap.
+fn read_budgeted(reader: &mut impl Read, remaining: &mut usize, maximum: usize) -> (Vec<u8>, bool) {
+    let limit = (*remaining).min(maximum);
+    let mut bytes = Vec::new();
+    let ok = if limit == 0 {
+        true
+    } else {
+        reader.take(limit as u64).read_to_end(&mut bytes).is_ok()
+    };
+    *remaining -= bytes.len();
+    (bytes, ok)
 }
 
 fn visible(entry: &walkdir::DirEntry) -> bool {
@@ -122,10 +141,10 @@ fn scan(
                 continue;
             }
         }
-        if options.skip_binary_files && is_likely_binary_file(path) {
+        if options.skip_binary_files && has_binary_extension(path) {
             continue;
         }
-        let remaining = max_bytes - coverage.bytes_read;
+        let mut remaining = max_bytes - coverage.bytes_read;
         let limit = options
             .max_file_bytes
             .unwrap_or(DEFAULT_BYTES)
@@ -137,7 +156,7 @@ fn scan(
                 continue;
             }
         };
-        let Ok(file) = file else {
+        let Ok(mut file) = file else {
             coverage.omit("unreadable_file");
             continue;
         };
@@ -153,10 +172,22 @@ fn scan(
             });
             continue;
         }
-        let mut bytes = Vec::new();
-        let read = file.take(limit as u64 + 1).read_to_end(&mut bytes);
-        coverage.bytes_read += bytes.len().min(remaining);
-        if read.is_err() || bytes.len() > limit {
+        let (mut bytes, sample_ok) = read_budgeted(&mut file, &mut remaining, limit.min(1024));
+        coverage.bytes_read = max_bytes - remaining;
+        if !sample_ok {
+            coverage.omit("unreadable_file");
+            continue;
+        }
+        if options.skip_binary_files && is_binary_sample(&bytes) {
+            continue;
+        }
+        let (tail, read_ok) = read_budgeted(&mut file, &mut remaining, limit - bytes.len());
+        bytes.extend(tail);
+        coverage.bytes_read = max_bytes - remaining;
+        let stable = file.metadata().is_ok_and(|after| {
+            after.len() == metadata.len() && after.modified().ok() == metadata.modified().ok()
+        });
+        if !read_ok || bytes.len() as u64 != metadata.len() || !stable {
             coverage.omit("unreadable_or_growing_file");
             continue;
         }
@@ -174,6 +205,16 @@ fn matches(pattern: &HierarchyPattern, id: &str) -> bool {
     pattern.matches(&HierarchicalName::with_separator(id, pattern.separator))
 }
 
+fn token_ids(text: &str, separator: char) -> impl Iterator<Item = &str> {
+    text.split(move |c: char| {
+        !(c.is_alphanumeric() || c == '_' || c == '-' || c == '.' || c == separator)
+    })
+    // Sentence-ending periods are punctuation for every hierarchy separator.
+    // Do not trim '_' or '-' suffixes into a shorter valid identifier.
+    .map(|token| token.trim_end_matches('.'))
+    .filter(move |id| id.contains(separator))
+}
+
 pub fn hunt(
     options: &SearchOptions,
     pattern: &HierarchyPattern,
@@ -183,13 +224,7 @@ pub fn hunt(
     let mut files = BTreeSet::new();
     let mut folders = BTreeSet::new();
     let coverage = scan(options, None, false, entries, bytes, |path, text| {
-        let separator = pattern.separator;
-        let found = text
-            .split(|c: char| {
-                !(c.is_alphanumeric() || c == '_' || c == '-' || c == '.' || c == separator)
-            })
-            .map(|token| token.trim_end_matches(separator))
-            .any(|id| id.contains(separator) && matches(pattern, id));
+        let found = token_ids(text, pattern.separator).any(|id| matches(pattern, id));
         if found {
             folders.insert(
                 path.rsplit_once('/')
@@ -343,15 +378,19 @@ impl Records {
 }
 
 fn digest(root: &Path, path: &str, remaining: &mut usize) -> Option<String> {
-    let file = File::open(crate::warp_evidence::contained_file(root, path).ok()?).ok()?;
+    let mut file = File::open(crate::warp_evidence::contained_file(root, path).ok()?).ok()?;
     let limit = (*remaining).min(4 * 1024 * 1024);
-    if file.metadata().ok()?.len() > limit as u64 {
+    let before = file.metadata().ok()?;
+    if before.len() > limit as u64 {
         return None;
     }
-    let mut bytes = Vec::new();
-    let result = file.take(limit as u64 + 1).read_to_end(&mut bytes);
-    *remaining -= bytes.len().min(*remaining);
-    if result.is_err() || bytes.len() > limit {
+    let (bytes, ok) = read_budgeted(&mut file, remaining, limit);
+    let after = file.metadata().ok()?;
+    if !ok
+        || bytes.len() as u64 != before.len()
+        || after.len() != before.len()
+        || after.modified().ok() != before.modified().ok()
+    {
         return None;
     }
     Some(format!("{:x}", Sha256::digest(bytes)))
@@ -439,4 +478,161 @@ pub fn declared(
         json!({"schema":"recur-trace-id-declarations-v1","declarations":roles,"artifacts":artifacts,
         "pins":pins,"diagnostics":records.diagnostics,"coverage":coverage}),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::{self, Cursor};
+
+    struct CountingReader {
+        data: Cursor<Vec<u8>>,
+        calls: usize,
+        bytes: usize,
+    }
+    impl Read for CountingReader {
+        fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+            self.calls += 1;
+            let n = self.data.read(buf)?;
+            self.bytes += n;
+            Ok(n)
+        }
+    }
+
+    #[test]
+    fn samples_and_tail_share_one_physical_read_budget() {
+        let mut reader = CountingReader {
+            data: Cursor::new(vec![b'x'; 4096]),
+            calls: 0,
+            bytes: 0,
+        };
+        let mut remaining = 1100;
+        let (sample, ok) = read_budgeted(&mut reader, &mut remaining, 1024);
+        assert!(ok);
+        let (tail, ok) = read_budgeted(&mut reader, &mut remaining, 4096);
+        assert!(ok);
+        assert_eq!(
+            (sample.len(), tail.len(), reader.bytes, remaining),
+            (1024, 76, 1100, 0)
+        );
+        let calls = reader.calls;
+        assert!(read_budgeted(&mut reader, &mut remaining, 1).0.is_empty());
+        assert_eq!(
+            reader.calls, calls,
+            "exhausted budget must not touch the reader"
+        );
+    }
+
+    #[test]
+    fn growing_input_cannot_force_a_lookahead_byte() {
+        let mut reader = CountingReader {
+            data: Cursor::new(vec![b'x'; 4096]),
+            calls: 0,
+            bytes: 0,
+        };
+        let mut remaining = 1;
+        assert_eq!(read_budgeted(&mut reader, &mut remaining, 4096).0.len(), 1);
+        assert_eq!(reader.bytes, 1);
+        assert_eq!(remaining, 0);
+    }
+
+    #[test]
+    fn partial_errors_still_spend_the_bytes_read() {
+        struct Broken(bool);
+        impl Read for Broken {
+            fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+                if self.0 {
+                    return Err(io::Error::other("fixture interruption"));
+                }
+                self.0 = true;
+                buf[0] = b'x';
+                Ok(1)
+            }
+        }
+        let mut remaining = 4;
+        let (bytes, ok) = read_budgeted(&mut Broken(false), &mut remaining, 4);
+        assert!(!ok);
+        assert_eq!(bytes, b"x");
+        assert_eq!(remaining, 3);
+    }
+
+    #[test]
+    fn binary_samples_are_counted_and_can_exhaust_the_scan() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(dir.path().join("a.dat"), [0; 1024]).unwrap();
+        std::fs::write(dir.path().join("b.md"), "capability.baseline").unwrap();
+        let options = SearchOptions {
+            root: dir.path().into(),
+            ..Default::default()
+        };
+        let report = hunt(
+            &options,
+            &HierarchyPattern::parse("capability.baseline").unwrap(),
+            10,
+            1024,
+        )
+        .unwrap();
+        assert_eq!(report["coverage"]["bytes_read"], 1024);
+        assert_eq!(report["coverage"]["complete"], false);
+        assert_eq!(report["coverage"]["omissions"]["byte_budget"], 1);
+        assert_eq!(report["files"], json!([]));
+    }
+
+    #[test]
+    fn excluded_binary_extension_does_not_spend_data_budget() {
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(dir.path().join("a.exe"), [0; 1024]).unwrap();
+        let options = SearchOptions {
+            root: dir.path().into(),
+            ..Default::default()
+        };
+        let report = hunt(
+            &options,
+            &HierarchyPattern::parse("capability.baseline").unwrap(),
+            10,
+            1,
+        )
+        .unwrap();
+        assert_eq!(report["coverage"]["bytes_read"], 0);
+        assert_eq!(report["coverage"]["complete"], true);
+    }
+
+    #[test]
+    fn punctuation_never_trims_identifier_suffixes() {
+        for separator in ['.', '_', '-'] {
+            let id = format!("capability{separator}baseline");
+            let text = format!("{id}. {id}_extra {id}-extra {id}{separator}child");
+            let tokens = token_ids(&text, separator).collect::<Vec<_>>();
+            assert_eq!(tokens.len(), 4);
+            assert_eq!(tokens[0], id);
+            let pattern = HierarchyPattern::parse_with_separator(&id, separator).unwrap();
+            assert_eq!(
+                tokens
+                    .iter()
+                    .filter(|token| matches(&pattern, token))
+                    .count(),
+                1
+            );
+        }
+    }
+
+    #[test]
+    fn digest_obeys_remaining_allowance_and_root() {
+        let parent = tempfile::tempdir().unwrap();
+        let root = parent.path().join("root");
+        std::fs::create_dir(&root).unwrap();
+        std::fs::write(root.join("artifact.txt"), b"data").unwrap();
+        std::fs::write(parent.path().join("outside.txt"), b"data").unwrap();
+        let mut remaining = 3;
+        assert_eq!(digest(&root, "artifact.txt", &mut remaining), None);
+        assert_eq!(remaining, 3);
+        remaining = 4;
+        assert_eq!(
+            digest(&root, "artifact.txt", &mut remaining),
+            Some(format!("{:x}", Sha256::digest(b"data")))
+        );
+        assert_eq!(remaining, 0);
+        assert_eq!(digest(&root, "../outside.txt", &mut remaining), None);
+        assert_eq!(remaining, 0);
+    }
 }

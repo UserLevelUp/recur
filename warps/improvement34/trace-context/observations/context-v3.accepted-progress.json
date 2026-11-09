@@ -1,0 +1,239 @@
+{
+  "blocked": [],
+  "bubble_uuid": "01a1bf18-a8d3-76ac-9d08-1eb4d211739d",
+  "completed_slices": [
+    "context",
+    "inventory",
+    "repair",
+    "select",
+    "verify"
+  ],
+  "conflicts": [],
+  "contract_status": "checked-gates-satisfied",
+  "counts": {
+    "blocked": 0,
+    "conflicting": 0,
+    "covered": 5,
+    "pending": 0,
+    "required": 5,
+    "stale_contract": 0
+  },
+  "covered": [
+    "context",
+    "inventory",
+    "repair",
+    "select",
+    "verify"
+  ],
+  "current_slice": null,
+  "evidence_status": "checked",
+  "gate_evidence": [
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun; immutable same-contract refresh chain",
+          "reasons": [
+            "scope: 127 explicitly named source files; dirty=true; revision is recorded provenance",
+            "original reference: evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json; refreshes: context-v3-repair; current leaf: evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json; historical source freshness is not current acceptance"
+          ],
+          "reference": "evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "repair-tests",
+      "satisfied": true,
+      "slice_id": "repair",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun; immutable same-contract refresh chain",
+          "reasons": [
+            "scope: 127 explicitly named source files; dirty=true; revision is recorded provenance",
+            "original reference: evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json; refreshes: context-v3-inventory; current leaf: evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json; historical source freshness is not current acceptance"
+          ],
+          "reference": "evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "inventory-tests",
+      "satisfied": true,
+      "slice_id": "inventory",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun; immutable same-contract refresh chain",
+          "reasons": [
+            "scope: 127 explicitly named source files; dirty=true; revision is recorded provenance",
+            "original reference: evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json; refreshes: context-v3-select; current leaf: evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json; historical source freshness is not current acceptance"
+          ],
+          "reference": "evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "select-tests",
+      "satisfied": true,
+      "slice_id": "select",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun; immutable same-contract refresh chain",
+          "reasons": [
+            "scope: 127 explicitly named source files; dirty=true; revision is recorded provenance",
+            "original reference: evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json; refreshes: context-v3-context; current leaf: evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json; historical source freshness is not current acceptance"
+          ],
+          "reference": "evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "context-tests",
+      "satisfied": true,
+      "slice_id": "context",
+      "status": "checked"
+    },
+    {
+      "evidence": [
+        {
+          "method": "external-result-artifact-and-scoped-content-fingerprints; producer not rerun; immutable same-contract refresh chain",
+          "reasons": [
+            "scope: 127 explicitly named source files; dirty=true; revision is recorded provenance",
+            "original reference: evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json; refreshes: context-v3-verify; current leaf: evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json; historical source freshness is not current acceptance"
+          ],
+          "reference": "evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json",
+          "status": "checked"
+        }
+      ],
+      "gate": "verify-tests",
+      "satisfied": true,
+      "slice_id": "verify",
+      "status": "checked"
+    }
+  ],
+  "goal": "Trace sets and contextual inspection",
+  "layers": [
+    "context@context-v1",
+    "inventory@context-v1",
+    "repair@context-v1",
+    "select@context-v1",
+    "verify@context-v1"
+  ],
+  "manifest": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.warp-map.json",
+  "pending": [],
+  "ready_slices": [],
+  "root": "\\\\?\\C:\\src\\recur",
+  "schema": "warp-progress-v1",
+  "slices": [
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.repair:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "repair-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "repair-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "repair",
+      "slice_uuid": "01a1bf18-a8d3-74a8-af7c-fe3fbf8e0985",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.inventory:v1",
+      "depends_on": [
+        "repair"
+      ],
+      "evidence_gates": [
+        "inventory-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "inventory-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "inventory",
+      "slice_uuid": "01a1bf18-a8d3-70ed-b5c0-4afbdc8dcdba",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.select:v1",
+      "depends_on": [
+        "inventory"
+      ],
+      "evidence_gates": [
+        "select-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "select-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "select",
+      "slice_uuid": "01a1bf18-a8d3-7484-9e1e-a30f5da488b8",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.context:v1",
+      "depends_on": [
+        "select"
+      ],
+      "evidence_gates": [
+        "context-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "context-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "context",
+      "slice_uuid": "01a1bf18-a8d3-78f8-9985-37233a518b26",
+      "state": "complete"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.verify:v1",
+      "depends_on": [
+        "context"
+      ],
+      "evidence_gates": [
+        "verify-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "verify-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "ready": false,
+      "slice_id": "verify",
+      "slice_uuid": "01a1bf18-a8d3-7f3f-a0a6-e4bbdab1df82",
+      "state": "complete"
+    }
+  ],
+  "stale_contract": [],
+  "state": "complete",
+  "warnings": [],
+  "warp_id": "main.improvement.34.implementation.trace.context"
+}

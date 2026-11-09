@@ -1,0 +1,113 @@
+{
+  "bubble_uuid": "01a1bf18-a8d3-76ac-9d08-1eb4d211739d",
+  "current_slice": null,
+  "evidence_root": "../../..",
+  "evidence_refresh_max_files": 256,
+  "goal": "Trace sets and contextual inspection",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Unscoped output remains paths only; legacy scoped and declared schemas remain compatible.",
+    "Watch, Lang and Warp metadata are optional for trace inspection.",
+    "Queries never execute instructions or mutate scanned files.",
+    "Historical failed runs and accepted layers are immutable."
+  ],
+  "planning_status": "prediction-not-acceptance",
+  "predecessor": "main.improvement.34.implementation.trace",
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.repair:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "repair-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "repair-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "repair",
+      "slice_uuid": "01a1bf18-a8d3-74a8-af7c-fe3fbf8e0985"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.inventory:v1",
+      "depends_on": [
+        "repair"
+      ],
+      "evidence_gates": [
+        "inventory-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "inventory-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "inventory",
+      "slice_uuid": "01a1bf18-a8d3-70ed-b5c0-4afbdc8dcdba"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.select:v1",
+      "depends_on": [
+        "inventory"
+      ],
+      "evidence_gates": [
+        "select-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "select-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "select",
+      "slice_uuid": "01a1bf18-a8d3-7484-9e1e-a30f5da488b8"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.context:v1",
+      "depends_on": [
+        "select"
+      ],
+      "evidence_gates": [
+        "context-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "context-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "context",
+      "slice_uuid": "01a1bf18-a8d3-78f8-9985-37233a518b26"
+    },
+    {
+      "contract_hash": "contract:main.improvement.34.implementation.trace.context.verify:v1",
+      "depends_on": [
+        "context"
+      ],
+      "evidence_gates": [
+        "verify-tests"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "verify-tests": {
+          "allow_skipped": false,
+          "kind": "test"
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "verify",
+      "slice_uuid": "01a1bf18-a8d3-7f3f-a0a6-e4bbdab1df82"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.improvement.34.implementation.trace.context"
+}

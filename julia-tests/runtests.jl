@@ -121,6 +121,8 @@ try
             # TODO: Add more test modules as they are implemented
             include("main.command.trace-stats.test.jl")  # IMPROVEMENT7 - Statistical analysis of call graphs (phase3 bootstrap)
             include("main.command.trace-id.test.jl")     # IMPROVEMENT8 - trace-id MVP contract tests (expected broken)
+            include("main.improvement.34.trace.test.jl") # Core path discovery, declarations and revision pins
+            include("main.improvement.34.trace-context.test.jl") # Core ID sets and bounded source context
             include("main.command.trait.test.jl")        # Trait config command + traversal budget placeholders
             include("main.command.trait.capabilities.test.jl") # Built-in capability metadata and preferences
             include("main.command.prompt.discovery.test.jl") # Shared app prompts and bounded decision evidence

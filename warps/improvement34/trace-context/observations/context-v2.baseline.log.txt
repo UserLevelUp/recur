@@ -1,0 +1,11 @@
+  -> recur trace-id capability.baseline --scope lab.** -d C:\Users\marcn\AppData\Local\Temp\jl_4tduX3 --json
+Test Summary:                   | Pass  Total  Time
+Improvement 34 current behavior |   13     13  2.1s
+┌ Info: Legacy trace classification (diagnostic only)
+│   incidental_producers =
+│    2-element Vector{Int64}:
+│     2
+│     3
+│   descendant_consumers =
+│    1-element Vector{Int64}:
+└     4

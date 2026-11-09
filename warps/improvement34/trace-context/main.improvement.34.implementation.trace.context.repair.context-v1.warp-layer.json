@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.improvement.34.implementation.trace.context",
+  "slice_id": "repair",
+  "contract_hash": "contract:main.improvement.34.implementation.trace.context.repair:v1",
+  "attempt_id": "context-v1",
+  "result_state": "accepted",
+  "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+  "evidence": {
+    "repair-tests": [
+      "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+    ]
+  },
+  "reason": null
+}

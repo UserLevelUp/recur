@@ -1,0 +1,5 @@
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_XFgMUS --sep . --json
+  -> recur trace-id capability_baseline -d C:\Users\marcn\AppData\Local\Temp\jl_Rrwr17 --sep _ --json
+  -> recur trace-id capability-baseline -d C:\Users\marcn\AppData\Local\Temp\jl_QbbaEZ --sep - --json
+Test Summary:                                            | Pass  Total  Time
+Trace path discovery keeps sentence punctuation separate |    3      3  0.4s

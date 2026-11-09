@@ -1,0 +1,1047 @@
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope lab.** --list-ids --ext .md
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:32
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:32
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope lab.** --list-ids --select capability.baseline
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:43
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:43
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope lab.** --list-ids --select capability.baseline.** --select capability.delivery
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:45
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:45
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope lab.** --list-ids --select capability.delivery
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:47
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope lab.** --list-ids --ext .jl
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:49
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:49
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope LAB.CASE --list-ids --ignore-case
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:51
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:51
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope lab.contract --context 1 --select capability.baseline --select capability.delivery
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:53
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:53
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --json --scope lab.contract --context 0 --select capability.baseline
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:64
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#22#23")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:64
+  [5] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --scope lab.contract --context 1
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:67
+  Expression: ok && (occursin("one/lab.contract.md:2-6", text) && occursin("Why the baseline matters.", text))
+
+Stacktrace:
+ [1] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.TraceContextTests.var"#22#23")(root::String)
+   @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:67
+ [3] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:899
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:895
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+ [6] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [8] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [9] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_QFMHgU --scope lab.** --list-ids
+Distinct ID sets and selected source context: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:69
+  Expression: ok && (occursin("capability.baseline", text) && occursin("2 files", text))
+
+Stacktrace:
+ [1] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.TraceContextTests.var"#22#23")(root::String)
+   @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:69
+ [3] mktempdir(fn::Main.TraceContextTests.var"#22#23", parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:899
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:895
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+ [6] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+ [8] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [9] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:22 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.** --list-ids --max-results 1
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:77
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:77
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.** --context 0 --max-results 1
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:79
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:79
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.** --context 1 --max-output-bytes 1
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:81
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:81
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.** --list-ids --max-output-bytes 1
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:83
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:83
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.** --list-ids --max-bytes 1
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:85
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:85
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope missing.** --list-ids
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:87
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.utf8 --context 1
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:90
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:90
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.binary --list-ids --max-bytes 4
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:93
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:93
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --json --scope lab.encoding --list-ids
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:96
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  Expression: !(isempty(output))
+   Evaluated: !(isempty(""))
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:8
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#42#43")(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:96
+  [5] mktempdir(fn::Main.TraceContextTests.var"#42#43", parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --list-ids
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --context 2
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --scope ** --select capability.alpha
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --scope ** --list-ids --context 2
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --scope ** --list-ids --declared
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --scope ** --context 21
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --scope ** --list-ids --max-results 0
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --scope ** --list-ids --max-output-bytes 0
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_CZRe9I --scope ** --list-ids --format full
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_MFWqbL --json --sep .
+  -> recur trace-id capability_baseline -d C:\Users\marcn\AppData\Local\Temp\jl_HY95jV --json --sep _
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#44#45"{String})(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:112
+  [5] mktempdir(fn::Main.TraceContextTests.var"#44#45"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:107 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:113
+  Expression: p.files == ["lab.match.md"]
+   Evaluated: Union{}[] == ["lab.match.md"]
+
+Stacktrace:
+ [1] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.TraceContextTests.var"#44#45"{String})(root::String)
+   @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:113
+ [3] mktempdir(fn::Main.TraceContextTests.var"#44#45"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:899
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:895
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+ [6] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [8] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [9] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:107 [inlined]
+  -> recur trace-id capability-baseline -d C:\Users\marcn\AppData\Local\Temp\jl_8M7Tva --json --sep -
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  Expression: ok == success
+   Evaluated: false == true
+
+Stacktrace:
+  [1] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+  [2] query(::String, ::String, ::Vararg{String}; pattern::String, success::Bool)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:7
+  [3] query
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:5 [inlined]
+  [4] (::Main.TraceContextTests.var"#44#45"{String})(root::String)
+    @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:112
+  [5] mktempdir(fn::Main.TraceContextTests.var"#44#45"{String}, parent::String; prefix::String)
+    @ Base.Filesystem .\file.jl:899
+  [6] mktempdir(fn::Function, parent::String)
+    @ Base.Filesystem .\file.jl:895
+  [7] top-level scope
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+  [8] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+  [9] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [10] macro expansion
+    @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [11] macro expansion
+    @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:107 [inlined]
+Bounds, omissions, rejection and repaired token handling: Test Failed at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:113
+  Expression: p.files == ["lab.match.md"]
+   Evaluated: Union{}[] == ["lab.match.md"]
+
+Stacktrace:
+ [1] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:680 [inlined]
+ [2] (::Main.TraceContextTests.var"#44#45"{String})(root::String)
+   @ Main.TraceContextTests C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:113
+ [3] mktempdir(fn::Main.TraceContextTests.var"#44#45"{String}, parent::String; prefix::String)
+   @ Base.Filesystem .\file.jl:899
+ [4] mktempdir(fn::Function, parent::String)
+   @ Base.Filesystem .\file.jl:895
+ [5] top-level scope
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:21
+ [6] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [7] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:75 [inlined]
+ [8] macro expansion
+   @ c:\users\marcn\appdata\local\programs\julia-1.12.0\share\julia\stdlib\v1.12\Test\src\Test.jl:1776 [inlined]
+ [9] macro expansion
+   @ C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:107 [inlined]
+Test Summary:                                              | Pass  Fail  Total  Time
+Improvement 34 trace sets and context                      |   24    38     62  4.7s
+  Distinct ID sets and selected source context             |    6    17     23  3.6s
+  Bounds, omissions, rejection and repaired token handling |   18    21     39  1.1s
+RNG of the outermost testset: Random.Xoshiro(0xfbf08c68b116e39e, 0xbe706c2cb91fcb45, 0x7d7e9cccc03cb2c1, 0x1614748c9fd72a4a, 0x454a10c6fc87eb38)
+ERROR: LoadError: Some tests did not pass: 24 passed, 38 failed, 0 errored, 0 broken.
+in expression starting at C:\src\recur\julia-tests\main.improvement.34.trace-context.test.jl:1

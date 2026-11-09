@@ -199,11 +199,31 @@ struct TraceIdCli {
     #[arg(long, requires = "declared")]
     unique_defines: bool,
 
-    /// Discovery entry limit for path-only and declared queries
+    /// List distinct observed IDs and their files (requires --scope)
+    #[arg(long, requires = "scope", conflicts_with_all = ["declared", "context"])]
+    list_ids: bool,
+
+    /// Show this many neighboring lines around selected IDs, 0..=20 (requires --scope)
+    #[arg(long, requires = "scope", conflicts_with = "declared")]
+    context: Option<usize>,
+
+    /// Select an exact ID or family within PATTERN; repeat to form a union
+    #[arg(long, value_name = "ID_OR_PATTERN")]
+    select: Vec<String>,
+
+    /// Maximum ID entries or excerpts in an explicit inspection view (default 200)
+    #[arg(long)]
+    max_results: Option<usize>,
+
+    /// Maximum serialized result-item bytes in an inspection view (default 32768)
+    #[arg(long)]
+    max_output_bytes: Option<usize>,
+
+    /// Discovery entry limit for path-only, declared and inspection queries
     #[arg(long)]
     max_entries: Option<usize>,
 
-    /// Total byte limit for path-only and declared queries
+    /// Total byte limit for path-only, declared and inspection queries
     #[arg(long)]
     max_bytes: Option<usize>,
 
@@ -296,12 +316,17 @@ pub fn maybe_execute_from_args() -> Option<anyhow::Result<()>> {
         .copied()
         .unwrap_or('.');
 
-    if cli.scope.is_none() || cli.declared {
+    if cli.scope.is_none() || cli.declared || cli.list_ids || cli.context.is_some() {
         return Some(execute_bounded(&cli, separator));
     }
-    if cli.max_entries.is_some() || cli.max_bytes.is_some() {
+    if cli.max_entries.is_some()
+        || cli.max_bytes.is_some()
+        || !cli.select.is_empty()
+        || cli.max_results.is_some()
+        || cli.max_output_bytes.is_some()
+    {
         return Some(Err(anyhow::anyhow!(
-            "--max-entries and --max-bytes apply to path-only or --declared queries"
+            "bounded search and selection options require path-only, --declared, --list-ids or --context mode; selection/output limits require an inspection view"
         )));
     }
     Some(execute(
@@ -326,7 +351,12 @@ pub fn maybe_execute_from_args() -> Option<anyhow::Result<()>> {
 }
 
 fn execute_bounded(cli: &TraceIdCli, separator: char) -> anyhow::Result<()> {
-    use recur::trace_relationships::{declared, hunt, DEFAULT_BYTES, DEFAULT_ENTRIES};
+    use recur::trace_relationships::{
+        declared, hunt, inspect, InspectionOptions, DEFAULT_BYTES, DEFAULT_ENTRIES,
+    };
+    let inspection = cli.list_ids || cli.context.is_some();
+    anyhow::ensure!(inspection || (cli.select.is_empty() && cli.max_results.is_none() && cli.max_output_bytes.is_none()),
+        "--select, --max-results and --max-output-bytes require --list-ids or --context with --scope");
     anyhow::ensure!(
         !cli.stdin
             && cli.format.is_none()
@@ -366,7 +396,27 @@ fn execute_bounded(cli: &TraceIdCli, separator: char) -> anyhow::Result<()> {
     apply_content_search_policy(&mut options, &cli.dir)?;
     let max_entries = cli.max_entries.unwrap_or(DEFAULT_ENTRIES);
     let max_bytes = cli.max_bytes.unwrap_or(DEFAULT_BYTES);
-    let report = if let Some(scope) = cli.scope.as_deref() {
+    let report = if inspection {
+        let scope = parse(cli.scope.as_deref().expect("inspection requires scope"))?;
+        let selectors = cli
+            .select
+            .iter()
+            .map(|s| parse(s))
+            .collect::<anyhow::Result<Vec<_>>>()?;
+        inspect(
+            &options,
+            &pattern,
+            &scope,
+            max_entries,
+            max_bytes,
+            &InspectionOptions {
+                context: cli.context,
+                selectors,
+                max_results: cli.max_results.unwrap_or(200),
+                max_output_bytes: cli.max_output_bytes.unwrap_or(32 * 1024),
+            },
+        )?
+    } else if let Some(scope) = cli.scope.as_deref() {
         declared(
             &options,
             &pattern,
@@ -380,6 +430,45 @@ fn execute_bounded(cli: &TraceIdCli, separator: char) -> anyhow::Result<()> {
     };
     if cli.json || cli.declared {
         println!("{}", serde_json::to_string_pretty(&report)?);
+    } else if inspection {
+        if let Some(ids) = report["ids"].as_array() {
+            for id in ids {
+                println!(
+                    "{} ({} files, {} occurrences)",
+                    id["id"].as_str().unwrap_or(""),
+                    id["file_count"],
+                    id["occurrences"]
+                );
+                for file in id["files"].as_array().into_iter().flatten() {
+                    println!("  {}", file.as_str().unwrap_or(""));
+                }
+            }
+        }
+        if let Some(excerpts) = report["excerpts"].as_array() {
+            for excerpt in excerpts {
+                println!(
+                    "{}:{}-{}",
+                    excerpt["path"].as_str().unwrap_or(""),
+                    excerpt["start_line"],
+                    excerpt["end_line"]
+                );
+                let start = excerpt["start_line"].as_u64().unwrap_or(1);
+                for (i, line) in excerpt["lines"]
+                    .as_array()
+                    .into_iter()
+                    .flatten()
+                    .enumerate()
+                {
+                    println!("  {} | {}", start + i as u64, line.as_str().unwrap_or(""));
+                }
+            }
+        }
+        if report["complete"] == false {
+            eprintln!(
+                "Trace-ID inspection incomplete: scan={}, output={}",
+                report["coverage"]["omissions"], report["output"]["omissions"]
+            );
+        }
     } else {
         for folder in report["folders"]
             .as_array()
@@ -404,7 +493,16 @@ fn execute_bounded(cli: &TraceIdCli, separator: char) -> anyhow::Result<()> {
             );
         }
     }
-    if !cli.declared
+    if inspection
+        && report["complete"] == true
+        && report[if cli.list_ids { "ids" } else { "excerpts" }]
+            .as_array()
+            .is_some_and(Vec::is_empty)
+    {
+        process::exit(1);
+    }
+    if !inspection
+        && !cli.declared
         && report["coverage"]["complete"] == true
         && report["files"].as_array().is_some_and(Vec::is_empty)
     {

@@ -1,0 +1,124 @@
+{
+  "revision": "c9887ed52d10a4acf1fcc09aaab5484c971dfb67",
+  "dirty": true,
+  "observations": {
+    "context": {
+      "command": [
+        "C:/ProgramData/chocolatey/bin/julia.exe",
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\julia-tests\\main.improvement.34.trace-context.test.jl"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "Pass": 122,
+        "Total": 122
+      },
+      "log": "warps/improvement34/trace-context/observations/context-v3.context.log.txt"
+    },
+    "trace": {
+      "command": [
+        "C:/ProgramData/chocolatey/bin/julia.exe",
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\julia-tests\\main.improvement.34.trace.test.jl"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "Pass": 43,
+        "Total": 43
+      },
+      "log": "warps/improvement34/trace-context/observations/context-v3.trace.log.txt"
+    },
+    "separator": {
+      "command": [
+        "C:/ProgramData/chocolatey/bin/julia.exe",
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\warps\\improvement34\\trace\\observations\\review-v1.separator.test.jl"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "Pass": 3,
+        "Total": 3
+      },
+      "log": "warps/improvement34/trace-context/observations/context-v3.separator.log.txt"
+    },
+    "baseline": {
+      "command": [
+        "C:/ProgramData/chocolatey/bin/julia.exe",
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\julia-tests\\main.improvement.34.baseline.test.jl"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "Pass": 13,
+        "Total": 13
+      },
+      "log": "warps/improvement34/trace-context/observations/context-v3.baseline.log.txt"
+    },
+    "legacy": {
+      "command": [
+        "C:/ProgramData/chocolatey/bin/julia.exe",
+        "--project=C:\\src\\recur\\demos\\web-evidence-lab",
+        "C:\\src\\recur\\julia-tests\\main.command.trace-id.test.jl"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "Pass": 88,
+        "Broken": 3,
+        "Total": 91
+      },
+      "log": "warps/improvement34/trace-context/observations/context-v3.legacy.log.txt"
+    },
+    "rust": {
+      "commands": [
+        [
+          "C:\\src\\recur\\.recur\\evidence-binaries\\improvement34-context-v1\\rust-tests-0.exe"
+        ],
+        [
+          "C:\\src\\recur\\.recur\\evidence-binaries\\improvement34-context-v1\\rust-tests-1.exe"
+        ]
+      ],
+      "unchanged_build_inputs": true,
+      "exit_code": 0,
+      "counts": [
+        {
+          "passed": 115,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "passed": 84,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "log": "warps/improvement34/trace-context/observations/context-v3.rust.log.txt"
+    }
+  },
+  "executables": {
+    "recur": {
+      "path": ".recur/evidence-binaries/improvement34-context-v1/recur.exe",
+      "sha256": "997d470cd4c7ab926977b91951449631620777d44c26055461b04ec4721a2124"
+    },
+    "recur-warp": {
+      "path": ".recur/evidence-binaries/improvement34-context-v1/recur-warp.exe",
+      "sha256": "5e885828f0315754495e1cad3c020a2cc1d8d072667eef3e8b91f75532bd2220"
+    },
+    "recur-git": {
+      "path": ".recur/evidence-binaries/improvement34-context-v1/recur-git.exe",
+      "sha256": "c5fb8393f8d591590a4dcc189f83f50805d33893c160323ae46bcaa90ca345b5"
+    },
+    "rust-tests-0": {
+      "path": ".recur/evidence-binaries/improvement34-context-v1/rust-tests-0.exe",
+      "sha256": "2a22d4eaaad124a9723dd2adf3b13559a6cc29cb520577445e7171b2945d8d0a"
+    },
+    "rust-tests-1": {
+      "path": ".recur/evidence-binaries/improvement34-context-v1/rust-tests-1.exe",
+      "sha256": "7e41ff89db864db47b51e9d3e8ef1f2939e7be32999e3a8858551a008592a275"
+    }
+  },
+  "runtimes": {
+    "julia": "julia version 1.12.0",
+    "cargo": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)\nbinary: rustc\ncommit-hash: 8bab26f4f68e0e26f0bb7960be334d5b520ea452\ncommit-date: 2026-07-14\nhost: x86_64-pc-windows-msvc\nrelease: 1.97.1\nLLVM version: 22.1.6"
+  }
+}

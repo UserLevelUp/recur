@@ -1,12 +1,12 @@
-# Tests-first CLI contract for Improvement 34. Select explicitly.
-include("runtests.setup.jl")
+# CLI contract for Improvement 34; also included in the core runner.
+isdefined(@__MODULE__, :run_recur) || include("runtests.setup.jl")
 using SHA
 
 function trace34(root, arguments...; expect_success=true)
     ok, output, errors = run_recur(["trace-id", "capability.baseline", "-d", root, "--json", arguments...])
     @test ok == expect_success
     if isempty(output)
-        @test !expect_success || isempty(errors)
+        @test !expect_success
         return nothing
     end
     JSON3.read(output)

@@ -2,6 +2,7 @@
   "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
   "current_slice": null,
   "evidence_root": "../../..",
+  "evidence_refresh_max_files": 256,
   "goal": "Trace discovery, declarations and pinned revisions",
   "intelligence_baseline": "host-current",
   "invariants": [

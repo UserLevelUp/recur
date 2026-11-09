@@ -1,0 +1,40 @@
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope lab.** --list-ids --ext .md
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope lab.** --list-ids --select capability.baseline
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope lab.** --list-ids --select capability.baseline.** --select capability.delivery
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope lab.** --list-ids --select capability.delivery
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope lab.** --list-ids --ext .jl
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope LAB.CASE --list-ids --ignore-case
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo\two --json --scope lab.** --list-ids --ext .md
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope lab.contract --context 1 --select capability.baseline --select capability.delivery
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --json --scope lab.contract --context 0 --select capability.baseline
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --scope lab.contract --context 1
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_WlHVLo --scope lab.** --list-ids
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.** --list-ids --max-results 1
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.** --context 0 --max-results 1
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.** --context 1 --max-output-bytes 1
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.** --list-ids --max-output-bytes 1
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.** --list-ids --max-bytes 1
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope missing.** --list-ids
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.utf8 --context 1
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.binary --list-ids --max-bytes 4
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.encoding --list-ids
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --json --scope lab.long --context 0 --max-output-bytes 128
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --list-ids
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --context 2
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --select capability.alpha
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --list-ids --context 2
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --list-ids --declared
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --context 21
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --list-ids --max-results 0
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --list-ids --max-output-bytes 0
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --list-ids --format full
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --list-ids --select " "
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope " " --list-ids
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --list-ids --max-results 10001
+  -> recur trace-id capability.** -d C:\Users\marcn\AppData\Local\Temp\jl_WiRGFH --scope ** --context 0 --max-output-bytes 1048577
+  -> recur trace-id capability.baseline -d C:\Users\marcn\AppData\Local\Temp\jl_avrEzD --json --sep .
+  -> recur trace-id capability_baseline -d C:\Users\marcn\AppData\Local\Temp\jl_o3IFzX --json --sep _
+  -> recur trace-id capability-baseline -d C:\Users\marcn\AppData\Local\Temp\jl_Nwbyi5 --json --sep -
+Test Summary:                         | Pass  Total  Time
+Improvement 34 trace sets and context |  122    122  3.4s

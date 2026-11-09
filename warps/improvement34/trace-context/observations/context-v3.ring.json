@@ -1,0 +1,88 @@
+{
+  "schema": "warp-ring-projection-v1",
+  "warp_id": "main.improvement.34.implementation",
+  "root": "\\\\?\\C:\\src\\recur",
+  "manifest": "main.improvement.34.implementation.warp-ring.json",
+  "state": "blocked",
+  "coordinator_domain": "integration",
+  "projection_depth": 2,
+  "counts": {
+    "domains": 7,
+    "pending": 7,
+    "ready": 0,
+    "subscriptions": 0
+  },
+  "domains": [
+    {
+      "domain_id": "integration",
+      "relative_root": ".",
+      "role": "coordinator",
+      "warp_id": "main.improvement.34.implementation",
+      "state": "incomplete",
+      "required_state": "complete",
+      "child_state_satisfied": false,
+      "parent_acceptance": "not-required"
+    },
+    {
+      "domain_id": "trace",
+      "relative_root": "warps/improvement34/trace",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.trace",
+      "state": "complete",
+      "required_state": "complete",
+      "child_state_satisfied": true,
+      "parent_acceptance": "missing"
+    },
+    {
+      "domain_id": "workflow",
+      "relative_root": "warps/improvement34/workflow",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.workflow",
+      "state": "incomplete",
+      "required_state": "complete",
+      "child_state_satisfied": false,
+      "parent_acceptance": "missing"
+    },
+    {
+      "domain_id": "graph",
+      "relative_root": "warps/improvement34/graph",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.graph",
+      "state": "incomplete",
+      "required_state": "complete",
+      "child_state_satisfied": false,
+      "parent_acceptance": "missing"
+    },
+    {
+      "domain_id": "eventness",
+      "relative_root": "warps/improvement34/eventness",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.eventness",
+      "state": "incomplete",
+      "required_state": "complete",
+      "child_state_satisfied": false,
+      "parent_acceptance": "missing"
+    },
+    {
+      "domain_id": "evidence",
+      "relative_root": "warps/improvement34/evidence",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.evidence",
+      "state": "incomplete",
+      "required_state": "complete",
+      "child_state_satisfied": false,
+      "parent_acceptance": "missing"
+    },
+    {
+      "domain_id": "review",
+      "relative_root": "warps/improvement34/review",
+      "role": "worker",
+      "warp_id": "main.improvement.34.implementation.review",
+      "state": "incomplete",
+      "required_state": "complete",
+      "child_state_satisfied": false,
+      "parent_acceptance": "missing"
+    }
+  ],
+  "subscriptions": []
+}

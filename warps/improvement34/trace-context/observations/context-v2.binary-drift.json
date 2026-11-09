@@ -1,0 +1,73 @@
+{
+  "observed": "Rebuilding during the v2 renewal changed test-executable bytes; archived v1 files were not overwritten. V2 was not accepted.",
+  "comparisons": [
+    {
+      "name": "rust-tests-0",
+      "retained": ".recur/evidence-binaries/improvement34-context-v1/rust-tests-0.exe",
+      "failed_rerun": ".recur/evidence-binaries/improvement34-context-v2-failed-rust/rust-tests-0.exe",
+      "retained_sha256": "2a22d4eaaad124a9723dd2adf3b13559a6cc29cb520577445e7171b2945d8d0a",
+      "rerun_sha256": "0b3ecc0cf6959bdb6469215505753d52a0510dbbb7e7c8bd18c973713fa92b70",
+      "retained_length": 11325440,
+      "rerun_length": 11325440,
+      "retained_pe_timestamp": 1794207909,
+      "rerun_pe_timestamp": 1794208065,
+      "differing_bytes": 9,
+      "first_difference_ranges": [
+        [
+          240,
+          241
+        ],
+        [
+          9578532,
+          9578533
+        ],
+        [
+          9578560,
+          9578561
+        ],
+        [
+          9578588,
+          9578589
+        ],
+        [
+          9578884,
+          9578884
+        ]
+      ]
+    },
+    {
+      "name": "rust-tests-1",
+      "retained": ".recur/evidence-binaries/improvement34-context-v1/rust-tests-1.exe",
+      "failed_rerun": ".recur/evidence-binaries/improvement34-context-v2-failed-rust/rust-tests-1.exe",
+      "retained_sha256": "7e41ff89db864db47b51e9d3e8ef1f2939e7be32999e3a8858551a008592a275",
+      "rerun_sha256": "961ee7657cecfa594d6c0aab90ec88e1d204232269f4f5195016ae74eecf9be3",
+      "retained_length": 4325376,
+      "rerun_length": 4325376,
+      "retained_pe_timestamp": 1794207917,
+      "rerun_pe_timestamp": 1794208066,
+      "differing_bytes": 9,
+      "first_difference_ranges": [
+        [
+          256,
+          257
+        ],
+        [
+          3631652,
+          3631653
+        ],
+        [
+          3631680,
+          3631681
+        ],
+        [
+          3631708,
+          3631709
+        ],
+        [
+          3632004,
+          3632004
+        ]
+      ]
+    }
+  ]
+}

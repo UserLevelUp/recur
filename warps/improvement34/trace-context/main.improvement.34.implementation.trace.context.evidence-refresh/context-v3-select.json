@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "context-v3-select",
+  "map": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.warp-map.json",
+  "warp_id": "main.improvement.34.implementation.trace.context",
+  "bubble_uuid": "01a1bf18-a8d3-76ac-9d08-1eb4d211739d",
+  "slice_id": "select",
+  "contract_hash": "contract:main.improvement.34.implementation.trace.context.select:v1",
+  "policy_hash": "fnv1a64:9af94654e370d038",
+  "layer": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.select.context-v1.warp-layer.json",
+  "layer_hash": "fnv1a64:de708fdd2a840438",
+  "gate": "select-tests",
+  "from_reference": "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json",
+  "from_hash": "fnv1a64:0be29d8a41dc7c79",
+  "to_reference": "evidence:warps/improvement34/trace-context/observations/context-v3.evidence.json",
+  "to_hash": "fnv1a64:e619d1b271b01315",
+  "reason": "Verified full input scope after selecting the supported 256-file evidence allowance; reuse identical retained executable bytes"
+}

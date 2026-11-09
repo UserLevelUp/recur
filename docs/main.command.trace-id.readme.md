@@ -76,13 +76,14 @@ paths. `--json` uses `recur-trace-id-paths-v1` with `folders`, `files` and
 still requests legacy detail. A complete path search with no hits exits 1;
 an incomplete search reports omissions, including when no hit was found.
 
-Path and declared modes bound traversal and bytes. Defaults are 50,000 entries
+Path, declared and explicit inspection modes bound traversal and bytes. Defaults are 50,000 entries
 and 32 MiB total; `--max-entries` and `--max-bytes` may select a smaller or
 larger finite budget up to 250,000 entries and 128 MiB. Hidden entries and common
 build output directories are excluded. `--ext` and the configured content
 search policy also apply. Links are not traversed, and reads must stay in `-d`.
 Unreadable, oversized and non-UTF-8 inputs can make coverage incomplete.
-Depth, format, stdin and saved-run options remain for legacy scoped queries.
+Binary samples and artifact digest reads share that byte allowance. Depth,
+format, stdin and saved-run options remain for legacy scoped queries.
 
 To inspect exact declarations, add `--declared` to a scoped query. It reads an
 optional metadata block on the first line of a Markdown file, with exact
@@ -116,12 +117,65 @@ digest can coexist with an R06 revision mismatch. Successful report generation
 does not mean the reported pins passed. This mode does not assess tests or accept
 Warp gates.
 
+## ID sets and selected context
+
+First locate files, then explicitly inspect the observed IDs or nearby text:
+
+```powershell
+recur trace-id 'capability.**' -d ROOT
+recur trace-id 'capability.**' -d ROOT --scope '**' --list-ids
+recur trace-id 'capability.**' -d ROOT --scope 'lab.**' --context 3 --select capability.baseline --select capability.delivery
+```
+
+`--list-ids` returns stable distinct tokens, their parent namespace, matching files,
+file counts and occurrence counts. JSON uses `recur-trace-id-inventory-v1` with
+`ids`. Repeated occurrences count separately but files are deduplicated. Tokens
+in prose, filenames or generated source literals are occurrences, not inferred
+declarations; both new views explicitly report `provenance: token-occurrences`.
+
+`--context N` returns matching lines and N neighboring lines (0 through 20).
+JSON uses `recur-trace-id-context-v1` with `excerpts`: each has `path`, one-based
+`start_line`/`end_line`, selected `ids`, and the original `lines` without line
+terminators. Overlapping or adjacent windows merge within each file. Text output
+prints the same passages with paths and line numbers. This is extracted context,
+not a semantic summary; instructions found inside a file are never executed.
+
+Repeat `--select ID_OR_PATTERN` to form a union within the primary pattern.
+No selector means all primary matches. Existing hierarchy matching applies:
+`capability.baseline` is exact, while `capability.baseline.**` also includes that
+ID and its descendants. Up to 64 selectors are supported. Case-insensitive
+filtering preserves the original spelling. `-d`, `--scope`, `--ext` and scan
+policy still bound which files are read. No project configuration is required.
+
+Both views require scope and cannot be combined with each other or `--declared`.
+`--max-results` defaults to 200 (maximum 10,000 ID entries or excerpts).
+`--max-output-bytes` defaults to 32 KiB (maximum 1 MiB) and bounds the sum of
+compact serialized result-item sizes; the surrounding report and presentation
+overhead are additional. Whole items that do not fit are omitted, so Unicode
+and source lines are not cut mid-character. Selection and output-limit flags
+require one of these views.
+
+JSON separates scan `coverage` from `output` coverage; top-level `complete`
+requires both. `output.returned_bytes` measures the serialized returned items.
+Its omission counts describe skipped candidate updates/windows, not unique
+missing IDs. Counts apply to returned data and may be lower bounds when
+coverage is incomplete. Limited results are selected deterministically during
+file traversal, then inventory IDs are sorted; they are not a global ranking.
+A complete empty view exits 1. Incomplete results remain readable (exit 0),
+with diagnostics on stderr in text mode. Existing scoped role queries keep
+their legacy JSON and behavior.
+
 ## Flags
 
 | Flag | Description | Default |
 |---|---|---|
 | `--scope <GLOB>` | Hierarchical file scope for relationship detail | optional; paths only if omitted |
 | `--declared` | Read explicit Markdown declarations and revision pins | false; requires scope |
+| `--list-ids` | Distinct observed IDs, files and counts | false; requires scope |
+| `--context <N>` | Source excerpts with N neighboring lines | absent; requires scope |
+| `--select <PATTERN>` | Repeatable selection within the primary pattern | all primary matches |
+| `--max-results <N>` | Maximum inventory entries or excerpts | 200 |
+| `--max-output-bytes <N>` | Maximum serialized result-item bytes | 32768 |
 | `--sep <CHAR>` | Separator character (`.` `_` `-`) | `.` |
 | `--ext <EXT>` | File extension filter (`.cs`, `.rs`, `.jl`) | all |
 | `--format <FMT>` | Output style: `summary` or `full` | `summary` |

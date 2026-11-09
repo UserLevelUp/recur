@@ -1,0 +1,266 @@
+{
+  "completions": [
+    {
+      "preview": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "repair",
+        "attempt_id": "context-v1",
+        "state": "planned",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.repair.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.repair:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "repair-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      },
+      "confirmed": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "repair",
+        "attempt_id": "context-v1",
+        "state": "written",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.repair.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.repair:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "repair-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      }
+    },
+    {
+      "preview": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "inventory",
+        "attempt_id": "context-v1",
+        "state": "planned",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.inventory.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.inventory:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "inventory-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      },
+      "confirmed": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "inventory",
+        "attempt_id": "context-v1",
+        "state": "written",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.inventory.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.inventory:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "inventory-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      }
+    },
+    {
+      "preview": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "select",
+        "attempt_id": "context-v1",
+        "state": "planned",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.select.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.select:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "select-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      },
+      "confirmed": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "select",
+        "attempt_id": "context-v1",
+        "state": "written",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.select.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.select:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "select-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      }
+    },
+    {
+      "preview": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "context",
+        "attempt_id": "context-v1",
+        "state": "planned",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.context.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.context:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "context-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      },
+      "confirmed": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "context",
+        "attempt_id": "context-v1",
+        "state": "written",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.context.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.context:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "context-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      }
+    },
+    {
+      "preview": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "verify",
+        "attempt_id": "context-v1",
+        "state": "planned",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.verify.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.verify:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "verify-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      },
+      "confirmed": {
+        "schema": "recur-warp-complete-v1",
+        "warp_id": "main.improvement.34.implementation.trace.context",
+        "slice_id": "verify",
+        "attempt_id": "context-v1",
+        "state": "written",
+        "path": "warps/improvement34/trace-context/main.improvement.34.implementation.trace.context.verify.context-v1.warp-layer.json",
+        "contract_hash": "contract:main.improvement.34.implementation.trace.context.verify:v1",
+        "result_hash": "sha256:9ea2f55fa12cb17a3dbe3c3d0e953d96f3bf657bbfe7df8fbf156aa1c707345e",
+        "evidence": {
+          "verify-tests": [
+            "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json"
+          ]
+        }
+      }
+    }
+  ],
+  "refreshes": [
+    {
+      "preview": {
+        "execution": "not-run",
+        "path": "warps/improvement34/trace/main.improvement.34.implementation.trace.evidence-refresh/context-v1-discover.json",
+        "record": {
+          "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
+          "contract_hash": "contract:main.improvement.34.implementation.trace.discover:v1",
+          "from_hash": "fnv1a64:1936a27e3d21ec57",
+          "from_reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "gate": "discover-julia",
+          "layer": "warps/improvement34/trace/main.improvement.34.implementation.trace.discover.trace-v2.warp-layer.json",
+          "layer_hash": "fnv1a64:d7823b2d015daba5",
+          "map": "warps/improvement34/trace/main.improvement.34.implementation.trace.warp-map.json",
+          "policy_hash": "fnv1a64:d8b0f4a8be774f63",
+          "reason": "Observed original trace and repaired scanner regressions plus scoped inventory/context tests under current sources",
+          "refresh_id": "context-v1-discover",
+          "schema": "warp-evidence-refresh-v1",
+          "slice_id": "discover",
+          "to_hash": "fnv1a64:0be29d8a41dc7c79",
+          "to_reference": "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json",
+          "warp_id": "main.improvement.34.implementation.trace"
+        },
+        "schema": "recur-warp-refresh-v1",
+        "state": "planned"
+      },
+      "confirmed": {
+        "execution": "not-run",
+        "path": "warps/improvement34/trace/main.improvement.34.implementation.trace.evidence-refresh/context-v1-discover.json",
+        "record": {
+          "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
+          "contract_hash": "contract:main.improvement.34.implementation.trace.discover:v1",
+          "from_hash": "fnv1a64:1936a27e3d21ec57",
+          "from_reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "gate": "discover-julia",
+          "layer": "warps/improvement34/trace/main.improvement.34.implementation.trace.discover.trace-v2.warp-layer.json",
+          "layer_hash": "fnv1a64:d7823b2d015daba5",
+          "map": "warps/improvement34/trace/main.improvement.34.implementation.trace.warp-map.json",
+          "policy_hash": "fnv1a64:d8b0f4a8be774f63",
+          "reason": "Observed original trace and repaired scanner regressions plus scoped inventory/context tests under current sources",
+          "refresh_id": "context-v1-discover",
+          "schema": "warp-evidence-refresh-v1",
+          "slice_id": "discover",
+          "to_hash": "fnv1a64:0be29d8a41dc7c79",
+          "to_reference": "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json",
+          "warp_id": "main.improvement.34.implementation.trace"
+        },
+        "schema": "recur-warp-refresh-v1",
+        "state": "written"
+      }
+    },
+    {
+      "preview": {
+        "execution": "not-run",
+        "path": "warps/improvement34/trace/main.improvement.34.implementation.trace.evidence-refresh/context-v1-declare.json",
+        "record": {
+          "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
+          "contract_hash": "contract:main.improvement.34.implementation.trace.declare:v1",
+          "from_hash": "fnv1a64:1936a27e3d21ec57",
+          "from_reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "gate": "declare-julia",
+          "layer": "warps/improvement34/trace/main.improvement.34.implementation.trace.declare.trace-v2.warp-layer.json",
+          "layer_hash": "fnv1a64:1416261185272fd8",
+          "map": "warps/improvement34/trace/main.improvement.34.implementation.trace.warp-map.json",
+          "policy_hash": "fnv1a64:04b2d72eff97c450",
+          "reason": "Observed original trace and repaired scanner regressions plus scoped inventory/context tests under current sources",
+          "refresh_id": "context-v1-declare",
+          "schema": "warp-evidence-refresh-v1",
+          "slice_id": "declare",
+          "to_hash": "fnv1a64:0be29d8a41dc7c79",
+          "to_reference": "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json",
+          "warp_id": "main.improvement.34.implementation.trace"
+        },
+        "schema": "recur-warp-refresh-v1",
+        "state": "planned"
+      },
+      "confirmed": {
+        "execution": "not-run",
+        "path": "warps/improvement34/trace/main.improvement.34.implementation.trace.evidence-refresh/context-v1-declare.json",
+        "record": {
+          "bubble_uuid": "01a1ba42-9d49-7012-b9c1-7b956e58aa54",
+          "contract_hash": "contract:main.improvement.34.implementation.trace.declare:v1",
+          "from_hash": "fnv1a64:1936a27e3d21ec57",
+          "from_reference": "evidence:warps/improvement34/trace/observations/trace-v2.evidence.json",
+          "gate": "declare-julia",
+          "layer": "warps/improvement34/trace/main.improvement.34.implementation.trace.declare.trace-v2.warp-layer.json",
+          "layer_hash": "fnv1a64:1416261185272fd8",
+          "map": "warps/improvement34/trace/main.improvement.34.implementation.trace.warp-map.json",
+          "policy_hash": "fnv1a64:04b2d72eff97c450",
+          "reason": "Observed original trace and repaired scanner regressions plus scoped inventory/context tests under current sources",
+          "refresh_id": "context-v1-declare",
+          "schema": "warp-evidence-refresh-v1",
+          "slice_id": "declare",
+          "to_hash": "fnv1a64:0be29d8a41dc7c79",
+          "to_reference": "evidence:warps/improvement34/trace-context/observations/context-v1.evidence.json",
+          "warp_id": "main.improvement.34.implementation.trace"
+        },
+        "schema": "recur-warp-refresh-v1",
+        "state": "written"
+      }
+    }
+  ]
+}

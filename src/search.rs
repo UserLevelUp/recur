@@ -194,6 +194,22 @@ fn should_skip_content_file(path: &PathBuf, options: &SearchOptions) -> bool {
 }
 
 pub(crate) fn is_likely_binary_file(path: &std::path::Path) -> bool {
+    if has_binary_extension(path) {
+        return true;
+    }
+    let mut file = match fs::File::open(path) {
+        Ok(file) => file,
+        Err(_) => return false,
+    };
+    let mut buf = [0u8; 1024];
+    let read = match file.read(&mut buf) {
+        Ok(n) => n,
+        Err(_) => return false,
+    };
+    is_binary_sample(&buf[..read])
+}
+
+pub(crate) fn has_binary_extension(path: &std::path::Path) -> bool {
     if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
         let ext = ext.to_ascii_lowercase();
         if matches!(
@@ -223,21 +239,13 @@ pub(crate) fn is_likely_binary_file(path: &std::path::Path) -> bool {
         }
     }
 
-    let mut file = match fs::File::open(path) {
-        Ok(file) => file,
-        Err(_) => return false,
-    };
+    false
+}
 
-    let mut buf = [0u8; 1024];
-    let read = match file.read(&mut buf) {
-        Ok(n) => n,
-        Err(_) => return false,
-    };
-    if read == 0 {
+pub(crate) fn is_binary_sample(sample: &[u8]) -> bool {
+    if sample.is_empty() {
         return false;
     }
-
-    let sample = &buf[..read];
     if sample.contains(&0) {
         return true;
     }
@@ -246,7 +254,7 @@ pub(crate) fn is_likely_binary_file(path: &std::path::Path) -> bool {
         .iter()
         .filter(|b| (**b < 0x09) || (**b > 0x0D && **b < 0x20))
         .count();
-    control_count * 10 > read * 3
+    control_count * 10 > sample.len() * 3
 }
 
 /// Searches file contents for a pattern.
