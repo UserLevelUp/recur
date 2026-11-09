@@ -1,18 +1,20 @@
 ---
 name: recur-expert
-description: Inspect or implement Recur CLI, capability prompt discovery and Warp workflows using hierarchy, trace-id, eventness and acceptance evidence. Use for Recur expert orientation and Warp handoffs, not generic project orchestration.
+description: Inspect or implement the Recur CLI and Warp workflows. Use for Recur project overviews, Eventness, trace-ID drill-down, optional Lang contracts, and evidence-based handoffs.
 ---
 
 # Recur expert
 
 Root `recur --help` exposes the first-use route: list with
-`recur reveal --type skill`, then show `recur reveal recur-expert` when available.
+`recur reveal --type skill`, then show `recur reveal recur-expert`. In this
+repository, `recur reveal recur-expert -d docs` selects the capsule in `docs`.
 Explicitly read the referenced body; discovery never loads or executes it.
 
 For a focused workflow, use the project's typed Reveal capsule and read the
 matching skill: `recur-warp` for slice lifecycle and acceptance, `recur-lang`
 for optional contracts and planning, `recur-watch` for active polling/subscriptions,
-`recur-trace-id` for lineage, and `recur-demo-tests` for opt-in demo verification.
+`recur-eventness` for recorded attention, `recur-trace-id` for lineage, and
+`recur-demo-tests` for opt-in demo verification.
 These specialize this orientation skill; Reveal discovery alone does not load them.
 
 Resolve the requested repository root first. In the Recur source repository,
@@ -21,9 +23,7 @@ when relevant. Paths below are repository-relative, not relative to this install
 skill. If those references are absent in an external project, inspect its local
 capsules and CLI help instead of inventing the Recur development layout.
 
-Use `recur reveal recur-expert` and `recur warp` to discover context.
-Every primary command family provides a default or list mode acting as an instant
-radar screen for cognitive orientation:
+Use the overview query that fits the question:
 - `recur reveal` lists rehydration capsules, personas, agents, and skills.
 - `recur warp` (or `recur warp list`) lists remaining task bubbles, rings, and lanes.
 - `recur watch list` lists active watcher daemon subscriptions and status records.
@@ -31,9 +31,6 @@ radar screen for cognitive orientation:
 - `recur lang` (or `recur lang list`) lists the source hierarchy with static status
   and recorded Eventness; `--json` includes exact symbols and diagnostics.
 - `recur version` lists artifact version lanes and manifests.
-This radar pattern minimizes working-memory strain and context-switching friction
-(serving as an external cognitive cushion for inattentive focus/ADHD): inspect the
-board first, then zoom in.
 
 Use `recur warp list --all` to include completed work, then `recur warp show <id>`
 and `recur warp slices <id>` for a selected bubble. Pass `-d <root>` for the
@@ -41,12 +38,39 @@ intended project/evidence root; read its map/readme and focused tests.
 `list --scan-all` bypasses configured discovery roots/exclusions; use it only
 when wider discovery is needed.
 
-Follow the progressive refinement funnel when exploring unfamiliar areas:
-1. Topography and attention: `recur tree`
-2. Artifact selection: `recur files` (using configured `--sep`)
-3. Declarative lineage and intent: `recur trace-id` (producers, consumers, triggers)
-4. Call graph and flow: `recur callers`, `recur callees`, `recur trace`
-5. Formal semantic contract: `recur lang` (the apex formal boundary)
+For a bird’s-eye view, give a compact list of branches with one useful path or
+next query per branch. Expand the branch relevant to the task.
+
+1. **Map the area.** Run `recur tree BASE -d ROOT --json` and summarize its
+   immediate children. Include `recur lang -d ROOT` when formal sources matter.
+2. **Read recorded attention.** Use `recur reveal LANE -d ROOT` for the capsule
+   and its `pull.first` / `pull.then` pointers. Narrow `-d` to the capsule’s
+   directory when discovery is ambiguous. Use `recur files` for configured
+   Eventness suffixes and check source records for supersession and evidence.
+3. **Find the topic set.** Use `recur trace-id PATTERN -d ROOT` for paths, then
+   `--scope FILE_PATTERN --list-ids --json` for observed IDs and their files.
+   `-d` bounds directories and `--scope` matches filename stems. If the namespace
+   is unknown or the user asks for all IDs, scan `'**'` in each relevant bounded
+   area and report the roots and formats covered. Check scan and output coverage.
+4. **Read selected source.** Use scoped `--context N` with repeatable `--select`
+   to obtain source lines for the chosen IDs or families. Read a full section
+   when needed. Distinguish observed tokens, authored role lines, and structured
+   declarations. Query `--declared` separately for first-line trace metadata.
+   Use `recur callers`, `recur callees`, or `recur trace` for implementation flow.
+5. **Inspect a formal boundary where present.** Resolve the actual `.recur`
+   source and exact symbol with `recur lang list -d ROOT --json`, then use
+   `recur lang show SOURCE --scope SYMBOL -d ROOT` and `recur lang check` as
+   needed. Follow declared event IDs back to code and evidence. Report static
+   coverage, recorded Eventness, and runtime evidence separately.
+
+In the Recur source repository, see
+docs/main.command.trace-id.eventness.discovery.report.md for the tested blackjack
+Split walkthrough and a reusable LLM prompt.
+
+Use companion `init --dry-run` commands to preview workflow defaults. Shared
+query controls live under `[traits.*]`. Trace inspection, checkpoints, Warp
+policy, and Lang planning each have their own settings. See
+docs/main.command.config.readme.md in the Recur repository.
 
 Confirm you are on track before handoff or commit. `recur-git checkpoint --snapshot`
 prints branch, head, worktree cleanliness, active lane capsules and separators
@@ -154,7 +178,10 @@ eventness is attention/recorded state, not acceptance proof:
   live in `.recur/config.toml` (analyzed via `recur init --analyze`). Stateful
   mutations, daemons, and transitions belong exclusively to companion tools
   (`recur-warp`, `recur-watch`, `recur-git`, `recur-lang`, `recur-reveal`).
-UUID fields are not automatically trace roles. Tags classify; dependencies order execution.
+UUIDs identify artifacts and tags classify them. Use capability-rooted trace IDs
+for shared features and project-prefixed IDs for internal slices. Structured
+trace declarations use dotted IDs with ASCII letters, digits, and underscores
+in each segment. Dependencies order execution.
 Semantic repartition is not the existing layer-composition merge operation.
 
 For Recur Lang, use `recur lang -d <root>` and source-bound `show`, `report`

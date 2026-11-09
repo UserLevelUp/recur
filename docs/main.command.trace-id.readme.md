@@ -165,6 +165,40 @@ A complete empty view exits 1. Incomplete results remain readable (exit 0),
 with diagnostics on stderr in text mode. Existing scoped role queries keep
 their legacy JSON and behavior.
 
+## Companion inspection preferences
+
+`recur-trace-id init -d ROOT --dry-run --json` previews the missing preferences.
+Omit `--dry-run` to add them to the nearest `.recur/config.toml`. In a fresh root
+it creates that config. Existing settings, comments, and trait policy are
+preserved. Use `cargo install --path . --locked --bin recur-trace-id` from the
+Recur source checkout when installing this companion from source.
+
+```toml
+[recur-trace-id]
+scope = "**"
+extensions = ".md,.recur,.jl,.rs"
+
+[recur-trace-id.inventory]
+max_results = 100
+max_output_bytes = 16384
+
+[recur-trace-id.context]
+lines = 2
+max_results = 20
+max_output_bytes = 8192
+```
+
+```powershell
+recur-trace-id inventory 'demo.blackjack.web.split.**' -d C:/src/recur/demos/blackjack-web/split --json
+recur-trace-id context 'demo.blackjack.web.split.**' -d C:/src/recur/demos/blackjack-web/split --select 'demo.blackjack.web.split.contract'
+```
+
+The companion passes the selected preferences to the existing `recur trace-id`
+inventory and context views. Override with `--scope`, `--ext`, `--max-results`,
+`--max-output-bytes`, or `--lines` for context. The core query keeps its own CLI
+defaults, output schemas, and shared trait policy. See the [configuration guide](main.command.config.readme.md)
+for the other companions.
+
 ## Flags
 
 | Flag | Description | Default |

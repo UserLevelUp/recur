@@ -35,6 +35,29 @@ Current trait sections:
 - `[traits.trace_id]` - keyword vocabulary for trace-id classification
 - `[traits.traversal_budget]` - depth cap and guardrail defaults
 
+## Companion workflow defaults
+
+Shared query controls belong in `[traits.*]`. For example, `[traits.trace_id]`
+holds role keywords and `[traits.content_search]` governs content reads. A
+companion chooses how to use those capabilities for its workflow. Its local
+choices belong in the companion’s own config section.
+
+| Companion | Setup | Config it owns |
+| --- | --- | --- |
+| Trace ID | `recur-trace-id init --dry-run --json` | `[recur-trace-id]`, with inventory and excerpt preferences |
+| Git | `recur-git init --dry-run --json` | `[checkpoint]`, with the log path and lane root pattern |
+| Warp | `recur-warp init --dry-run --json` | Warp creation, removal, dispatch, and reasoning preferences. Its preview includes the starter template where applicable. |
+| Lang | `recur-lang init --dry-run --json` | `[recur-lang]`, with target and planning preferences |
+
+Use `-d ROOT` to choose the starting directory. Each initializer fills missing
+settings in the nearest project configuration and preserves existing values.
+Omit `--dry-run` to apply the preview. Trace ID and Git init write only
+`.recur/config.toml` and create its parent directory if needed. Git checkpoint
+appends happen through the explicit checkpoint command.
+
+The overview and drill-down report shows how the query surfaces fit together.
+[Eventness and trace-ID discovery](main.command.trace-id.eventness.discovery.report.md)
+
 ## init
 
 `recur init` scaffolds the `.recur/` directory with:

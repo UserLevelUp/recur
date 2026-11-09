@@ -65,6 +65,10 @@ path = "src/recur_warp_main.rs"
 name = "recur-reveal"
 path = "src/recur_reveal_main.rs"
 
+[[bin]]
+name = "recur-trace-id"
+path = "src/recur_trace_id_main.rs"
+
 [dependencies]
 # Error handling
 thiserror = "1.0"

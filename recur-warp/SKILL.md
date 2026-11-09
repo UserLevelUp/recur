@@ -22,6 +22,11 @@ when useful. Prompt packets prepare context; they do not execute or grant author
 Preview writer commands and preserve the user's already authorized scope.
 `recur-warp init --dry-run` reveals missing companion defaults; preserve
 existing host choices, test commands and explicit policy opt-outs.
+For orientation, use a compact Warp list or ring projection first. Follow the
+selected capsule to its contract and evidence, then use the scoped trace-ID
+inventory for related topics. Apply Warp preferences through `recur-warp init`.
+Trace inspection settings belong to `recur-trace-id` and checkpoint settings
+belong to `recur-git`. See docs/main.command.config.readme.md in this repository.
 For skill discovery, `recur-reveal init --dry-run` previews missing registry
 defaults. `--local -d ROOT` selects a nested root's own config; otherwise init
 uses the nearest existing config. It registers pointers, not skill bodies.

@@ -29,6 +29,12 @@ scan and output coverage before concluding absence. Bound returned items with
 so read the original section or file when the decision requires more. Neither
 view requires Watch, Lang, a Warp map, or project configuration.
 
+For repeatable project defaults, use `recur-trace-id init -d ROOT --dry-run --json`
+to preview `[recur-trace-id]` settings. Apply with `init` when requested.
+`recur-trace-id inventory` and `context` use those settings to choose scope,
+formats, and output limits for the core query. Shared role vocabulary and
+content read policy remain under `[traits.*]`. Check the chosen binary’s help.
+
 For legacy scoped queries, inspect `recur trait -d ROOT get trace_id.producer_keywords`
 and the corresponding
 `consumer_keywords`/`trigger_keywords` keys

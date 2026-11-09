@@ -5,6 +5,7 @@
 
 use anyhow::Context;
 use clap::{Parser, Subcommand};
+use recur::companion_config_init::{self, InitSpec};
 use recur::parser::HierarchyPattern;
 use recur::project_config;
 use recur::search::{FileSearcher, SearchOptions};
@@ -63,6 +64,15 @@ struct TestReceiptState {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Add missing checkpoint defaults to the nearest project config.
+    Init {
+        #[arg(short = 'd', long, default_value = ".")]
+        dir: PathBuf,
+        #[arg(long)]
+        dry_run: bool,
+        #[arg(long)]
+        json: bool,
+    },
     /// Capture a parallel-lane checkpoint entry (git + active todo leaves)
     ///
     /// Examples:
@@ -131,6 +141,7 @@ fn main() {
     let cli = Cli::parse();
 
     let result = match cli.command {
+        Commands::Init { dir, dry_run, json } => init_checkpoint(&dir, dry_run, json),
         Commands::Checkpoint {
             snapshot,
             run_tests,
@@ -165,6 +176,42 @@ fn main() {
         eprintln!("Error: {}", e);
         process::exit(2);
     }
+}
+
+fn init_checkpoint(root: &Path, dry_run: bool, json: bool) -> anyhow::Result<()> {
+    const SPEC: InitSpec = InitSpec {
+        schema: "recur-git-init-v1",
+        error_prefix: "GINIT",
+    };
+    const DEFAULTS: &str =
+        "[checkpoint]\nfile = \".recur/checkpoints.md\"\nroot_pattern = \"**\"\n";
+    let result = companion_config_init::initialize(
+        root,
+        dry_run,
+        SPEC,
+        |text| {
+            let updated = companion_config_init::with_defaults(text, DEFAULTS)
+                .map_err(|e| SPEC.error(2, e))?;
+            let config: toml::Value = toml::from_str(&updated).map_err(|e| SPEC.error(2, e))?;
+            for key in ["file", "root_pattern"] {
+                if config["checkpoint"][key].as_str().is_none() {
+                    return Err(SPEC.error(2, format!("checkpoint.{key} must be a string")));
+                }
+            }
+            Ok(updated)
+        },
+        |_| Ok(()),
+    )?;
+    if json {
+        println!("{}", serde_json::to_string_pretty(&result)?);
+    } else {
+        println!(
+            "{}: {}",
+            result["state"].as_str().unwrap(),
+            result["config_path"].as_str().unwrap()
+        );
+    }
+    Ok(())
 }
 
 fn execute_checkpoint(

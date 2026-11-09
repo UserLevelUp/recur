@@ -45,6 +45,10 @@ first; preserve historical receipts and distinguish producer claims, current
 fingerprints and accepted evidence.
 
 Use hierarchical trace IDs to connect formal contracts with code, tests and
-review artifacts outside the parser's boundary. Test a chosen demo explicitly
+review artifacts outside the parser's boundary. Start from the topic's Eventness
+record and trace the ID to an actual `.recur` source. Choose the exact symbol
+from `recur lang list --json`. Lang planning preferences belong to `recur-lang
+init`; trace inventory and excerpt preferences belong to `recur-trace-id init`.
+Test a chosen demo explicitly
 with `julia julia-tests/runtests.jl --demo NAME` in this repository; do not run
 other demos merely because their artifacts appear in a language inventory.

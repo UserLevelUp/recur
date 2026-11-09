@@ -3,6 +3,7 @@
 //! The binary (`src/main.rs`) calls into this crate.
 
 pub mod capability_traits;
+pub mod companion_config_init;
 pub mod output;
 pub mod parser;
 pub mod project_config;
