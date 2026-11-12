@@ -137,3 +137,12 @@
 /julia-tests/main.command.warp.test.jl text eol=crlf
 /julia-tests/runtests.setup.jl text eol=crlf
 /tests/warp_discovery_performance.rs text eol=lf
+# Trace-id role classification evidence binds the verified checkout bytes.
+/docs/main.command.trace-id.readme.md text eol=crlf
+/julia-tests/main.improvement.34.baseline.test.jl text eol=crlf
+/julia-tests/main.lang.test.jl text eol=crlf
+/julia-tests/runtests.demo.skippy.jl text eol=crlf
+/julia-tests/runtests.demo.sudoku.jl text eol=crlf
+/julia-tests/runtests.lane.coordination.jl text eol=crlf
+/julia-tests/runtests.trace-id.jl text eol=lf
+/tests/trace_id_role_classification.rs text eol=lf

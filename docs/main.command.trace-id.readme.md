@@ -4,29 +4,58 @@ Command reference for `recur trace-id`.
 
 ## What It Does
 
-Use `trace-id PATTERN -d ROOT` to locate matching folders and files. Supply
-`--scope` to inspect relationships in the chosen file hierarchy. The existing
-scoped mode classifies heuristic occurrences into four roles:
+`recur trace-id` follows a three-step discovery workflow before you ever need a
+closed-world parser:
+
+1. **Find the files.** Give `recur trace-id "<topic>" -d <root>` a topic or glob
+   and it lists the folders and files where that topic shows up.
+2. **See what they say.** Add `--scope` and `--context <N>` (or `--list-ids`) to
+   read bounded lines around the matches, or run `recur trace-id "<topic>" --scope <scope>`
+   to classify lines into four heuristic roles (`define`, `produce`, `consume`, `trigger`).
+3. **Check what they claim.** Add `--declared` (`recur trace-id "<topic>" --scope <scope> --declared`)
+   to read explicit `recur-trace-v1` statements (such as `"this guide requires R06"`)
+   and check the artifact digest and revision it points to.
+
+In scoped role mode (`--scope <scope>` without `--declared`, `--list-ids`, or `--context`),
+`trace-id` classifies matching lines into four roles:
 
 | Role | Meaning | Example keywords |
 |---|---|---|
-| `define` | Where the identifier is declared or assigned | `const`, `=`, `static readonly` |
+| `define` | Where the identifier is declared, assigned, or referenced without another role | `const`, `=`, `defines:`, `trace_id` |
 | `produce` | Where the identifier's value is emitted/sent | `publish`, `send`, `emit` |
 | `consume` | Where the identifier is received/bound | `subscribe`, `queuebind`, `routingkey` |
 | `trigger` | Where the identifier causes a side-effect | `trigger`, `register`, `solve` |
 
-recur does not know what the identifier means. It sees keywords near the
-identifier and classifies the line. The vocabulary is configurable via traits.
+`recur` does not parse source ASTs in `trace-id`:
+- Role keywords match on identifier/CamelCase sub-word boundaries (so `registry.Register(...)`,
+  `_bus.PublishAsync(...)`, and `channel.QueueBind(...)` match while compound `snake_case`
+  fields like `board_register` do not falsely match `register`; punctuation keywords such as
+  `*.` retain substring matching, and the queried identifier itself is masked before role matching).
+- Transitive code symbol extraction (`const string OwnershipCreate = "..."` or `TOPIC_ID = "..."`)
+  skips function call keyword arguments (such as Python `consumes=["..."]`) and reserved role words.
+- Scoped line collection honors `[traits.content_search]` (`skip_binary_files` and `max_file_bytes`),
+  skipping binary artifacts such as `__pycache__/*.pyc`.
+- Pure `produce`, `consume`, or `trigger` lines without an explicit definition marker are not
+  duplicated into `define`, and `--format full` groups each `(path, line_number)` site once with
+  explicit `[define]`, `[produce, trigger]`, or `[consume]` labels.
 
 ## Boundary With Recur Lang
 
-`recur trace-id`, `recur lang`, and `recur-lang` answer different questions:
+Across Recur, commands form a deliberate precision ladder from open-world discovery
+to opinionated execution:
 
-| Surface | Primary question |
-|---|---|
-| `recur trace-id` | Where does this identifier appear, and which relationships were declared near it? |
-| `recur lang` | Is this formal coordination program valid, and what does it mean? |
-| `recur-lang` | How should a valid coordination program advance through its lanes? |
+| Surface | Precision & stance | Primary question |
+|---|---|---|
+| `recur trace-id` (paths) | Broad, open-world | Where does this topic appear across files and folders? |
+| `recur trace-id --scope` (`--context` / roles / `--declared`) | Focused, still open-world / fuzzy-to-pinned | What do nearby lines say, what roles appear, and what revision pins are claimed? |
+| `recur lang` | Read-only exact query over loose `.recur` representations | Do these formal `i(...)`/`o(...)` functions, joins, and scopes satisfy exact specifications? |
+| `recur-lang` | Opinionated, most specific companion | How should this coordination program plan, gate, and advance through its lanes? |
+
+Eventness and `trace-id` get you close across any language; `--scope` and `--context`
+(plus `--declared` pins) get you very close with bounded precision while staying
+open-world; `recur lang` is a read-only query that gives exact function/contract
+checks over loose `.recur` representations; and `recur-lang` is opinionated about
+planning and checked state transitions.
 
 `trace-id` is an open-world, language-independent repository scan. It can
 connect a durable identifier across Markdown, Rust, C#, Julia, tests, receipts,
@@ -72,9 +101,10 @@ recur trace-id "<identifier>" --scope <scope> -d <root>
 
 Without `--scope`, the command prints deduplicated matching folders and file
 paths. `--json` uses `recur-trace-id-paths-v1` with `folders`, `files` and
-`coverage`; there are no line bodies or role lists. An explicit `--scope "**"`
-still requests legacy detail. A complete path search with no hits exits 1;
-an incomplete search reports omissions, including when no hit was found.
+`coverage`; there are no line bodies or role lists. Supplying `--scope "**"`
+(without `--declared`, `--list-ids`, or `--context`) runs a scoped role query.
+A complete path search with no hits exits 1; an incomplete search reports
+omissions, including when no hit was found.
 
 Path, declared and explicit inspection modes bound traversal and bytes. Defaults are 50,000 entries
 and 32 MiB total; `--max-entries` and `--max-bytes` may select a smaller or
@@ -82,8 +112,8 @@ larger finite budget up to 250,000 entries and 128 MiB. Hidden entries and commo
 build output directories are excluded. `--ext` and the configured content
 search policy also apply. Links are not traversed, and reads must stay in `-d`.
 Unreadable, oversized and non-UTF-8 inputs can make coverage incomplete.
-Binary samples and artifact digest reads share that byte allowance. Depth,
-format, stdin and saved-run options remain for legacy scoped queries.
+Binary samples and artifact digest reads share that byte allowance. `--depth`,
+`--format`, `--stdin`, and saved-run options apply to scoped role queries (`--scope <SCOPE>`).
 
 To inspect exact declarations, add `--declared` to a scoped query. It reads an
 optional metadata block on the first line of a Markdown file, with exact

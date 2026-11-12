@@ -1,0 +1,37 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "Observed Cargo test and Julia test summaries; selected checks and origin dogfood queries enumerated in the verification report",
+  "project": "recur",
+  "configuration": "Locked Cargo debug tests, release-safe CLI for Julia suites and kicad_ra verification, selected source scope",
+  "platform": "Windows x64",
+  "executed_at_unix": 1794484418,
+  "result_artifact": "warps/main.command.trace-id.role-classification.verification.result.json",
+  "result_fingerprint": "fnv1a64:e3a0de5dead33945",
+  "source": {
+    "revision": "2ad068ccd4bff482cfe2c81afc9b3c9903a5486e",
+    "dirty": true,
+    "files": {
+      "Cargo.lock": "fnv1a64:6f67cabbe427fd4f",
+      "Cargo.toml": "fnv1a64:d52a97a97a4a3e02",
+      "docs/main.command.trace-id.readme.md": "fnv1a64:215b350e363e92e5",
+      "julia-tests/main.improvement.34.baseline.test.jl": "fnv1a64:d2dfaecc1799f2e3",
+      "julia-tests/main.improvement.34.trace-context.test.jl": "fnv1a64:cce80d1cfa7b376e",
+      "julia-tests/main.improvement.34.trace.test.jl": "fnv1a64:89ebe63c67589623",
+      "julia-tests/main.lang.test.jl": "fnv1a64:6fe5718dbc9e34b6",
+      "julia-tests/runtests.demo.skippy.jl": "fnv1a64:fbacda4d54f3d215",
+      "julia-tests/runtests.demo.sudoku.jl": "fnv1a64:b0e2c87bf1e0dfd5",
+      "julia-tests/runtests.lane.coordination.jl": "fnv1a64:343c31215a5dc06d",
+      "julia-tests/runtests.setup.jl": "fnv1a64:b1016573498c42a3",
+      "julia-tests/runtests.trace-id.jl": "fnv1a64:d62cd0061a4d3cc2",
+      "src/main_command_trace_id_impl.rs": "fnv1a64:c603599568019a1e",
+      "src/search.rs": "fnv1a64:27584aa83174b46a",
+      "src/trait/trace_id.rs": "fnv1a64:79a0ffe7b7a908a8",
+      "tests/trace_id_role_classification.rs": "fnv1a64:d37056a4c850f029",
+      "warps/main.command.trace-id.role-classification.baseline.md": "fnv1a64:39790f9eb879ad89",
+      "warps/main.command.trace-id.role-classification.contract.md": "fnv1a64:fce8cc68f5a18e7b",
+      "warps/main.command.trace-id.role-classification.verification.md": "fnv1a64:8359737e72dd1683",
+      "warps/main.command.trace-id.role-classification.warp-map.json": "fnv1a64:62f0b900e18d2c35"
+    }
+  }
+}

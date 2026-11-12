@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.trace-id.role-classification",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.trace-id.role-classification.slice-0:v1",
+  "attempt_id": "baseline-observed",
+  "result_state": "accepted",
+  "result_hash": "sha256:5ab68a2363e4c39446fc3c9c0086557a4a6b7d6694fde3b229093442c01118c6",
+  "evidence": {
+    "role-classification-red-baseline": [
+      "warps/main.command.trace-id.role-classification.baseline.md"
+    ]
+  },
+  "reason": null
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "warp-evidence-refresh-v1",
+  "refresh_id": "lf-checkout-legacy-and-merge-compatibility",
+  "map": "warps/main.command.trace-id.role-classification.warp-map.json",
+  "warp_id": "main.command.trace-id.role-classification",
+  "bubble_uuid": "01a1cee4-c2d3-7ced-b032-3c4da7ec4595",
+  "slice_id": "slice-final",
+  "contract_hash": "contract:main.command.trace-id.role-classification.slice-final:v1",
+  "policy_hash": "fnv1a64:798a6dbfd7fe2923",
+  "layer": "warps/main.command.trace-id.role-classification.slice-final.role-classification-verified.warp-layer.json",
+  "layer_hash": "fnv1a64:a11d938cae60f913",
+  "gate": "trace-id-legacy-and-merge-compatibility-regressions",
+  "from_reference": "evidence:warps/main.command.trace-id.role-classification.verification.evidence.json",
+  "from_hash": "fnv1a64:45c4c3bd21f4b1d6",
+  "to_reference": "evidence:warps/main.command.trace-id.role-classification.lf-checkout.evidence.json",
+  "to_hash": "fnv1a64:c1375e30bdaab686",
+  "reason": "Normalized julia-tests/runtests.trace-id.jl to LF, pinned Julia test inputs in .gitattributes, and reran runtests.trace-id.jl"
+}

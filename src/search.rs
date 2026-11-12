@@ -177,7 +177,7 @@ impl FileSearcher {
     }
 }
 
-fn should_skip_content_file(path: &PathBuf, options: &SearchOptions) -> bool {
+pub fn should_skip_content_file(path: &std::path::Path, options: &SearchOptions) -> bool {
     if let Some(max_file_bytes) = options.max_file_bytes {
         if let Ok(metadata) = fs::metadata(path) {
             if metadata.len() > max_file_bytes as u64 {
@@ -221,6 +221,18 @@ pub(crate) fn has_binary_extension(path: &std::path::Path) -> bool {
                 | "dylib"
                 | "class"
                 | "jar"
+                | "pyc"
+                | "pyo"
+                | "pyd"
+                | "wasm"
+                | "o"
+                | "obj"
+                | "lib"
+                | "rlib"
+                | "blend"
+                | "blend1"
+                | "stl"
+                | "glb"
                 | "png"
                 | "jpg"
                 | "jpeg"

@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.trace-id.role-classification",
+  "slice_id": "scope-diagnostics-and-format-full",
+  "contract_hash": "contract:main.command.trace-id.role-classification.scope-diagnostics-and-format-full:v1",
+  "attempt_id": "role-classification-verified",
+  "result_state": "accepted",
+  "result_hash": "sha256:3e507f0526205efe613bf127d4a06d07a3de438d8739cb5c70eb7cea75f18d72",
+  "evidence": {
+    "scope-diagnostics-and-format-full-acceptance": [
+      "evidence:warps/main.command.trace-id.role-classification.verification.evidence.json"
+    ]
+  },
+  "reason": null
+}

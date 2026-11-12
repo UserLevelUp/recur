@@ -357,18 +357,25 @@ fn execute_bounded(cli: &TraceIdCli, separator: char) -> anyhow::Result<()> {
     let inspection = cli.list_ids || cli.context.is_some();
     anyhow::ensure!(inspection || (cli.select.is_empty() && cli.max_results.is_none() && cli.max_output_bytes.is_none()),
         "--select, --max-results and --max-output-bytes require --list-ids or --context with --scope");
-    anyhow::ensure!(
-        !cli.stdin
-            && cli.format.is_none()
-            && cli.depth.is_none()
-            && cli.depth_guard.is_none()
-            && !cli.force
-            && cli.run_name.is_none()
-            && !cli.save_run
-            && !cli.reuse_if_fresh
-            && !cli.check_run,
-        "--stdin, formatting, depth and saved-run options require a legacy --scope query"
-    );
+    if cli.stdin
+        || cli.format.is_some()
+        || cli.depth.is_some()
+        || cli.depth_guard.is_some()
+        || cli.force
+        || cli.run_name.is_some()
+        || cli.save_run
+        || cli.reuse_if_fresh
+        || cli.check_run
+    {
+        if cli.scope.is_none() {
+            anyhow::bail!(
+                "--stdin, --format, --depth, and saved-run options require --scope <SCOPE> (for example: --scope \"**\")"
+            );
+        }
+        anyhow::bail!(
+            "--stdin, --format, --depth, and saved-run options apply to role queries (--scope <SCOPE> without --declared, --list-ids, or --context)"
+        );
+    }
     anyhow::ensure!(
         !cli.declared || separator == '.',
         "--declared uses dotted trace IDs"
@@ -689,7 +696,7 @@ pub fn execute(
     }
 
     let scoped_lines = if depth_budget.effective > 0 {
-        collect_scoped_lines(scoped_files)
+        collect_scoped_lines(scoped_files, &searcher.options)
     } else {
         Vec::new()
     };
@@ -811,28 +818,44 @@ fn print_terminal(records: &[TraceIdRecord], pattern: &str, format: TraceIdForma
     );
 
     if format == TraceIdFormat::Full {
-        let mut flattened = Vec::new();
-        for r in records {
-            flattened.extend(r.define.iter().cloned().map(site_to_search_result));
-            flattened.extend(r.produce.iter().cloned().map(site_to_search_result));
-            flattened.extend(r.consume.iter().cloned().map(site_to_search_result));
-            flattened.extend(r.trigger.iter().cloned().map(site_to_search_result));
-        }
+        let grouped = group_sites_for_full_output(records);
         let mut formatter = TerminalFormatter::new(color);
-        formatter.print_search_results(&flattened);
+        formatter.print_search_results(&grouped);
     }
 }
 
-fn site_to_search_result(site: TraceIdSite) -> SearchResult {
-    SearchResult {
-        path: PathBuf::from(site.path),
-        line_number: site.line_number,
-        line: site.line,
-        match_start: 0,
-        match_end: 0,
-        context_before: Vec::new(),
-        context_after: Vec::new(),
+fn group_sites_for_full_output(records: &[TraceIdRecord]) -> Vec<SearchResult> {
+    let mut grouped: BTreeMap<(PathBuf, usize), (Vec<&'static str>, String)> = BTreeMap::new();
+    for r in records {
+        for (role, sites) in [
+            ("define", &r.define),
+            ("produce", &r.produce),
+            ("consume", &r.consume),
+            ("trigger", &r.trigger),
+        ] {
+            for site in sites {
+                let entry = grouped
+                    .entry((PathBuf::from(&site.path), site.line_number))
+                    .or_insert_with(|| (Vec::new(), site.line.clone()));
+                if !entry.0.contains(&role) {
+                    entry.0.push(role);
+                }
+            }
+        }
     }
+
+    grouped
+        .into_iter()
+        .map(|((path, line_number), (roles, line))| SearchResult {
+            path,
+            line_number,
+            line: format!("[{}] {}", roles.join(", "), line),
+            match_start: 0,
+            match_end: 0,
+            context_before: Vec::new(),
+            context_after: Vec::new(),
+        })
+        .collect()
 }
 
 fn build_record(
@@ -843,7 +866,7 @@ fn build_record(
     effective_depth: usize,
     trace_policy: &TraceIdPolicy,
 ) -> TraceIdRecord {
-    let define = dedupe_sites(
+    let raw_define = dedupe_sites(
         define_hits
             .iter()
             .map(|r| result_to_site(r, "define"))
@@ -853,7 +876,7 @@ fn build_record(
     if effective_depth == 0 {
         return TraceIdRecord {
             identifier: identifier.to_string(),
-            define,
+            define: raw_define,
             produce: Vec::new(),
             consume: Vec::new(),
             trigger: Vec::new(),
@@ -861,8 +884,10 @@ fn build_record(
     }
 
     let mut symbols = BTreeSet::new();
-    for d in &define {
-        if let Some(name) = extract_symbol_name_from_definition(&d.line, identifier, ignore_case) {
+    for d in &raw_define {
+        if let Some(name) =
+            extract_symbol_name_from_definition(&d.line, identifier, ignore_case, trace_policy)
+        {
             symbols.insert(name);
         }
     }
@@ -876,7 +901,7 @@ fn build_record(
             continue;
         }
 
-        if is_produce_line(&line.line, trace_policy) {
+        if is_produce_line_for(&line.line, identifier, ignore_case, trace_policy) {
             produce.push(TraceIdSite {
                 path: line.path.display().to_string(),
                 line_number: line.line_number,
@@ -884,7 +909,7 @@ fn build_record(
                 edge_type: "produce".to_string(),
             });
         }
-        if is_consume_line(&line.line, trace_policy)
+        if is_consume_line_for(&line.line, identifier, ignore_case, trace_policy)
             && line_matches_identifier_or_symbol_token(
                 &line.line,
                 identifier,
@@ -900,7 +925,7 @@ fn build_record(
                 edge_type: "consume".to_string(),
             });
         }
-        if is_trigger_line(&line.line, trace_policy) {
+        if is_trigger_line_for(&line.line, identifier, ignore_case, trace_policy) {
             trigger.push(TraceIdSite {
                 path: line.path.display().to_string(),
                 line_number: line.line_number,
@@ -909,6 +934,19 @@ fn build_record(
             });
         }
     }
+
+    let define = raw_define
+        .into_iter()
+        .filter(|site| {
+            is_define_line(
+                &site.line,
+                identifier,
+                &symbols,
+                ignore_case,
+                trace_policy,
+            )
+        })
+        .collect();
 
     TraceIdRecord {
         identifier: identifier.to_string(),
@@ -919,9 +957,12 @@ fn build_record(
     }
 }
 
-fn collect_scoped_lines(paths: Vec<PathBuf>) -> Vec<ScopedLine> {
+fn collect_scoped_lines(paths: Vec<PathBuf>, options: &SearchOptions) -> Vec<ScopedLine> {
     let mut out = Vec::new();
     for path in paths {
+        if recur::search::should_skip_content_file(&path, options) {
+            continue;
+        }
         if let Ok(file) = File::open(&path) {
             let reader = BufReader::new(file);
             for (idx, line) in reader.lines().enumerate() {
@@ -1284,28 +1325,302 @@ fn is_identifier_char(byte: u8) -> bool {
     byte.is_ascii_alphanumeric() || byte == b'_'
 }
 
+const RESERVED_SYMBOL_NAMES: &[&str] = &[
+    "define",
+    "defines",
+    "defined",
+    "produce",
+    "produces",
+    "produced",
+    "producer",
+    "producers",
+    "consume",
+    "consumes",
+    "consumed",
+    "consumer",
+    "consumers",
+    "trigger",
+    "triggers",
+    "triggered",
+    "publish",
+    "publishes",
+    "subscribe",
+    "subscribes",
+    "emit",
+    "emits",
+    "send",
+    "sends",
+    "bind",
+    "binds",
+    "register",
+    "registers",
+    "solve",
+    "solves",
+    "id",
+    "ids",
+    "trace_id",
+    "trace_ids",
+    "warp_id",
+    "legacy_trace_id",
+    "edge_type",
+];
+
+const DECLARATION_MODIFIERS: &[&str] = &[
+    "public",
+    "private",
+    "protected",
+    "internal",
+    "const",
+    "static",
+    "readonly",
+    "let",
+    "var",
+    "val",
+    "final",
+    "def",
+    "export",
+    "local",
+    "global",
+    "mut",
+    "shared",
+    "constexpr",
+];
+
+fn find_standalone_assignment_eq(line: &str) -> Option<usize> {
+    let bytes = line.as_bytes();
+    for (idx, &b) in bytes.iter().enumerate() {
+        if b != b'=' {
+            continue;
+        }
+        let prev_is_op = idx > 0 && matches!(bytes[idx - 1], b'=' | b'!' | b'<' | b'>');
+        let next_is_op = idx + 1 < bytes.len() && matches!(bytes[idx + 1], b'=' | b'>');
+        if !prev_is_op && !next_is_op {
+            return Some(idx);
+        }
+    }
+    None
+}
+
+fn is_valid_symbol_identifier(token: &str) -> bool {
+    let bytes = token.as_bytes();
+    if bytes.len() < 2 {
+        return false;
+    }
+    if !(bytes[0].is_ascii_alphabetic() || bytes[0] == b'_') {
+        return false;
+    }
+    bytes[1..]
+        .iter()
+        .all(|b| b.is_ascii_alphanumeric() || *b == b'_')
+}
+
+fn is_reserved_or_role_symbol(token: &str, policy: &TraceIdPolicy) -> bool {
+    let lower = token.to_ascii_lowercase();
+    if RESERVED_SYMBOL_NAMES.contains(&lower.as_str()) {
+        return true;
+    }
+    policy
+        .producer_keywords
+        .iter()
+        .chain(policy.consumer_keywords.iter())
+        .chain(policy.trigger_keywords.iter())
+        .any(|kw| kw.eq_ignore_ascii_case(&lower))
+}
+
 fn extract_symbol_name_from_definition(
     line: &str,
     identifier: &str,
     ignore_case: bool,
+    policy: &TraceIdPolicy,
 ) -> Option<String> {
-    if !contains_with_case(line, identifier, ignore_case) {
+    let eq_idx = find_standalone_assignment_eq(line)?;
+    let left = &line[..eq_idx];
+    let right = &line[eq_idx + 1..];
+
+    if !contains_with_case(right, identifier, ignore_case) {
         return None;
     }
 
-    let eq_idx = line.find('=')?;
-    let left = &line[..eq_idx];
-    let token = left
+    let left_head = left.split(':').next().unwrap_or(left);
+    if left_head.chars().any(|c| {
+        matches!(
+            c,
+            '(' | ')' | '[' | ']' | '{' | '}' | '.' | '"' | '\'' | '`' | '-' | '*' | '#' | '/' | ','
+        )
+    }) {
+        return None;
+    }
+
+    let tokens: Vec<&str> = left_head
         .split_whitespace()
         .filter(|t| !t.is_empty())
-        .last()
-        .map(|t| t.trim_matches(|c: char| !c.is_ascii_alphanumeric() && c != '_'))?;
-
-    if token.is_empty() {
-        None
-    } else {
-        Some(token.to_string())
+        .collect();
+    if tokens.is_empty() {
+        return None;
     }
+
+    let candidate = tokens[tokens.len() - 1];
+    if !is_valid_symbol_identifier(candidate) || is_reserved_or_role_symbol(candidate, policy) {
+        return None;
+    }
+
+    let has_decl_modifier = tokens[..tokens.len() - 1]
+        .iter()
+        .any(|t| DECLARATION_MODIFIERS.iter().any(|m| t.eq_ignore_ascii_case(m)));
+
+    if !has_decl_modifier {
+        let valid_unmodified_lhs =
+            tokens.len() == 1 || (tokens.len() == 2 && is_valid_symbol_identifier(tokens[0]));
+        if !valid_unmodified_lhs {
+            return None;
+        }
+
+        let trimmed = line.trim_end();
+        if trimmed.ends_with(',') {
+            return None;
+        }
+
+        let right_opens = right.bytes().filter(|b| *b == b'(').count();
+        let right_closes = right.bytes().filter(|b| *b == b')').count();
+        if right_closes > right_opens {
+            return None;
+        }
+
+        let is_indented = line.chars().next().map(char::is_whitespace).unwrap_or(false);
+        let tight_eq =
+            !left.ends_with(char::is_whitespace) || !right.starts_with(char::is_whitespace);
+        if is_indented && tight_eq {
+            return None;
+        }
+    }
+
+    Some(candidate.to_string())
+}
+
+fn has_explicit_define_marker(
+    line: &str,
+    identifier: &str,
+    ignore_case: bool,
+    policy: &TraceIdPolicy,
+) -> bool {
+    let masked = mask_identifier(line, identifier, ignore_case);
+    if contains_role_keyword(&masked, "define")
+        || contains_role_keyword(&masked, "defines")
+        || contains_role_keyword(&masked, "trace_id")
+        || contains_role_keyword(&masked, "warp_id")
+    {
+        return true;
+    }
+
+    if extract_symbol_name_from_definition(line, identifier, ignore_case, policy).is_some() {
+        return true;
+    }
+
+    if let Some(eq_idx) = find_standalone_assignment_eq(line) {
+        let left = &line[..eq_idx];
+        if !left.contains('(') && contains_with_case(left, identifier, ignore_case) {
+            return true;
+        }
+    }
+
+    false
+}
+
+fn is_define_line(
+    line: &str,
+    identifier: &str,
+    symbols: &BTreeSet<String>,
+    ignore_case: bool,
+    policy: &TraceIdPolicy,
+) -> bool {
+    if has_explicit_define_marker(line, identifier, ignore_case, policy) {
+        return true;
+    }
+
+    let matched_produce = is_produce_line_for(line, identifier, ignore_case, policy);
+    let matched_consume = is_consume_line_for(line, identifier, ignore_case, policy)
+        && line_matches_identifier_or_symbol_token(line, identifier, symbols, ignore_case)
+        && !is_structural_consume_noise(line);
+    let matched_trigger = is_trigger_line_for(line, identifier, ignore_case, policy);
+
+    !(matched_produce || matched_consume || matched_trigger)
+}
+
+fn mask_identifier(line: &str, identifier: &str, ignore_case: bool) -> String {
+    if identifier.is_empty() {
+        return line.to_string();
+    }
+
+    let hay_cmp = if ignore_case {
+        line.to_ascii_lowercase()
+    } else {
+        line.to_string()
+    };
+    let needle_cmp = if ignore_case {
+        identifier.to_ascii_lowercase()
+    } else {
+        identifier.to_string()
+    };
+
+    if needle_cmp.is_empty() || needle_cmp.len() > hay_cmp.len() {
+        return line.to_string();
+    }
+
+    let mut out = String::with_capacity(line.len());
+    let mut cursor = 0usize;
+    while let Some(rel) = hay_cmp[cursor..].find(&needle_cmp) {
+        let start = cursor + rel;
+        let end = start + needle_cmp.len();
+        if line.is_char_boundary(cursor)
+            && line.is_char_boundary(start)
+            && line.is_char_boundary(end)
+        {
+            out.push_str(&line[cursor..start]);
+            for _ in 0..(end - start) {
+                out.push(' ');
+            }
+            cursor = end;
+        } else {
+            cursor = start + 1;
+            while cursor < line.len() && !line.is_char_boundary(cursor) {
+                cursor += 1;
+            }
+        }
+    }
+    if cursor <= line.len() && line.is_char_boundary(cursor) {
+        out.push_str(&line[cursor..]);
+    }
+    out
+}
+
+fn is_produce_line_for(
+    line: &str,
+    identifier: &str,
+    ignore_case: bool,
+    policy: &TraceIdPolicy,
+) -> bool {
+    let masked = mask_identifier(line, identifier, ignore_case);
+    is_produce_line(&masked, policy)
+}
+
+fn is_consume_line_for(
+    line: &str,
+    identifier: &str,
+    ignore_case: bool,
+    policy: &TraceIdPolicy,
+) -> bool {
+    let masked = mask_identifier(line, identifier, ignore_case);
+    is_consume_line(&masked, policy)
+}
+
+fn is_trigger_line_for(
+    line: &str,
+    identifier: &str,
+    ignore_case: bool,
+    policy: &TraceIdPolicy,
+) -> bool {
+    let masked = mask_identifier(line, identifier, ignore_case);
+    is_trigger_line(&masked, policy)
 }
 
 fn is_produce_line(line: &str, policy: &TraceIdPolicy) -> bool {
@@ -1365,11 +1680,52 @@ fn is_logger_reference_line(lower: &str) -> bool {
     lower.contains("ilogger<") || lower.contains("_logger.") || lower.contains("logger.")
 }
 
+fn contains_role_keyword(line: &str, keyword: &str) -> bool {
+    let trimmed_kw = keyword.trim();
+    if trimmed_kw.is_empty() {
+        return false;
+    }
+
+    let lower_line = line.to_ascii_lowercase();
+    let lower_kw = trimmed_kw.to_ascii_lowercase();
+    if lower_kw.len() > lower_line.len() {
+        return false;
+    }
+
+    let orig_bytes = line.as_bytes();
+    let kw_bytes = lower_kw.as_bytes();
+    let check_before = is_identifier_char(kw_bytes[0]);
+    let check_after = is_identifier_char(kw_bytes[kw_bytes.len() - 1]);
+
+    let mut offset = 0usize;
+    while let Some(rel) = lower_line[offset..].find(&lower_kw) {
+        let start = offset + rel;
+        let end = start + kw_bytes.len();
+
+        let before_ok = !check_before
+            || start == 0
+            || !is_identifier_char(orig_bytes[start - 1])
+            || (orig_bytes[start - 1].is_ascii_lowercase() && orig_bytes[start].is_ascii_uppercase());
+
+        let after_ok = !check_after
+            || end == orig_bytes.len()
+            || !is_identifier_char(orig_bytes[end])
+            || (orig_bytes[end - 1].is_ascii_lowercase() && orig_bytes[end].is_ascii_uppercase());
+
+        if before_ok && after_ok {
+            return true;
+        }
+
+        offset = start + 1;
+    }
+
+    false
+}
+
 fn line_contains_any_keyword(line: &str, keywords: &[String]) -> bool {
-    let lower = line.to_ascii_lowercase();
     keywords
         .iter()
-        .any(|keyword| lower.contains(&keyword.to_ascii_lowercase()))
+        .any(|keyword| contains_role_keyword(line, keyword))
 }
 
 #[cfg(test)]
@@ -1467,10 +1823,12 @@ mod tests {
     #[test]
     fn symbol_extraction_and_role_detection_work_for_fixture_lines() {
         let define = sample_define_hit();
+        let policy = TraceIdPolicy::default();
         let symbol = extract_symbol_name_from_definition(
             &define.line,
             "ulu.topic.dot.ownership.create",
             false,
+            &policy,
         )
         .unwrap_or_default();
         assert_eq!(symbol, "OwnershipCreate");
@@ -1478,7 +1836,6 @@ mod tests {
         let produce_line = "registry.Register(\"*.level.create\", async dot => await _bus.PublishAsync(DotControlTopics.OwnershipCreate));";
         let consume_line =
             "channel.QueueBind(\"q.ownership\", \"x.dot\", routingKey: DotControlTopics.OwnershipCreate);";
-        let policy = TraceIdPolicy::default();
 
         assert!(line_matches_identifier_or_symbol(
             produce_line,
@@ -1593,5 +1950,119 @@ mod tests {
         let records = saved.into_records();
         assert_eq!(records.len(), 1);
         assert_eq!(records[0].identifier, "ulu.topic.dot.ownership.create");
+    }
+
+    #[test]
+    fn symbol_extraction_rejects_kwargs_and_reserved_role_names() {
+        let mut policy = TraceIdPolicy::default();
+        policy.consumer_keywords.push("consumes".to_string());
+
+        assert_eq!(
+            extract_symbol_name_from_definition(
+                "              consumes=['robo.electronics.carriers.handoff',",
+                "robo.electronics.carriers.handoff",
+                false,
+                &policy,
+            ),
+            None
+        );
+        assert_eq!(
+            extract_symbol_name_from_definition(
+                "register_step(custom_arg=['robo.electronics.carriers.handoff'])",
+                "robo.electronics.carriers.handoff",
+                false,
+                &policy,
+            ),
+            None
+        );
+        assert_eq!(
+            extract_symbol_name_from_definition(
+                "    custom_arg=['robo.electronics.carriers.handoff']",
+                "robo.electronics.carriers.handoff",
+                false,
+                &policy,
+            ),
+            None
+        );
+        assert_eq!(
+            extract_symbol_name_from_definition(
+                "transition.audit.order.42 = todo.current",
+                "transition.audit.order.42",
+                false,
+                &policy,
+            ),
+            None
+        );
+        assert_eq!(
+            extract_symbol_name_from_definition(
+                "TOPIC_HANDOFF = 'robo.electronics.carriers.handoff'",
+                "robo.electronics.carriers.handoff",
+                false,
+                &policy,
+            ),
+            Some("TOPIC_HANDOFF".to_string())
+        );
+    }
+
+    #[test]
+    fn role_keyword_boundaries_reject_snake_case_and_self_matching_ids() {
+        let mut policy = TraceIdPolicy::default();
+        policy.consumer_keywords.push("bind".to_string());
+
+        assert!(!is_trigger_line_for(
+            r#""board_register": "docs/robo.electronics.carriers.board_register.md""#,
+            "robo.electronics.carriers.board_register",
+            false,
+            &policy,
+        ));
+        assert!(!is_trigger_line_for(
+            r#"load_board_register("robo.electronics.carriers.board_register")"#,
+            "robo.electronics.carriers.board_register",
+            false,
+            &policy,
+        ));
+        assert!(!is_trigger_line_for(
+            "robo.electronics.carriers.sourcing.r13.register = active",
+            "robo.electronics.carriers.sourcing.r13.register",
+            false,
+            &policy,
+        ));
+        assert!(is_trigger_line_for(
+            r#"registry.Register("*.level.create", dot => dot);"#,
+            "ulu.topic.dot.ownership.create",
+            false,
+            &policy,
+        ));
+        assert!(is_consume_line_for(
+            r#"channel.QueueBind("q", "x", routingKey: DotControlTopics.OwnershipCreate);"#,
+            "ulu.topic.dot.ownership.create",
+            false,
+            &policy,
+        ));
+    }
+
+    #[test]
+    fn full_output_groups_multiple_roles_per_line() {
+        let record = TraceIdRecord {
+            identifier: "ulu.topic.dot.ownership.create".to_string(),
+            define: Vec::new(),
+            produce: vec![TraceIdSite {
+                path: "DotWatcherHostedService.cs".to_string(),
+                line_number: 4,
+                line: r#"registry.Register("*.level.create", () => _bus.PublishAsync(Topic));"#.to_string(),
+                edge_type: "produce".to_string(),
+            }],
+            consume: Vec::new(),
+            trigger: vec![TraceIdSite {
+                path: "DotWatcherHostedService.cs".to_string(),
+                line_number: 4,
+                line: r#"registry.Register("*.level.create", () => _bus.PublishAsync(Topic));"#.to_string(),
+                edge_type: "trigger".to_string(),
+            }],
+        };
+
+        let grouped = group_sites_for_full_output(&[record]);
+        assert_eq!(grouped.len(), 1);
+        assert!(grouped[0].line.starts_with("[produce, trigger] "));
     }
 }
