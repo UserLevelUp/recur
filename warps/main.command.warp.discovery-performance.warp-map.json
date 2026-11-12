@@ -1,0 +1,146 @@
+{
+  "bubble_uuid": "01a1cf0b-9f99-7604-aca8-887f3b353673",
+  "current_slice": "slice-0",
+  "evidence_root": "..",
+  "goal": "Eliminate redundant ring/bubble filesystem walks and memoize per-command evidence fingerprinting in recur warp while preserving cross-functional domain discovery and strict backwards compatibility.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Cross-functional domain discovery is preserved: Warp bubble maps, ring maps, slice layers, and external evidence manifests may live in any engineering discipline directory (warps/, docs/, boards/, blender/, manufacturing/, demos/, root ., or private .recur/work/) and must NEVER be hardcoded to warps/ or software-only source layouts.",
+    ".recur MUST remain discoverable by default (not added to DEFAULT_EXCLUDE_DIRS) so private Warp bubbles (.recur/*.warp-map.json and .recur/work/*.warp-map.json) tested in julia-tests/main.command.warp.discovery.test.jl continue to pass without modification.",
+    "Do NOT edit julia-tests/main.command.warp.discovery.test.jl (it is fingerprinted by watch-eventness evidence manifests); add new regression and latency tests in dedicated test files while keeping all 75+ assertions in main.command.warp.discovery.test.jl green.",
+    "[warp.discovery] roots and exclude_dirs in .recur/config.toml and --scan-all retain exact precedence and override semantics so any non-software or custom folder layout (even directories named build or fixtures) can opt in.",
+    "All Warp JSON schemas (warp-list-v1, warp-progress-v1, warp-bubble-projection-v1, warp-ring-projection-v1, warp-status-v1) and ambiguity/containment error messages remain unchanged.",
+    "Per-command evidence/canonicalization memoization lives strictly in memory for the duration of one read-only CLI invocation — never writing persistent cache files or serving stale disk state across invocations.",
+    "A failing baseline demonstrates the redundant-walk latency gap; it does not prove a fix or satisfy final acceptance."
+  ],
+  "planning_status": "planned; slice-0 ready",
+  "trace_ids": {
+    "defines": [
+      "main.command.warp.discovery-performance"
+    ],
+    "consumes": [
+      "recur.warp.discovery.inventory",
+      "recur.warp.evidence.integrity.external",
+      "main.recur.skill.warp"
+    ],
+    "produces": [
+      "main.command.warp.discovery-performance.acceptance"
+    ]
+  },
+  "origin": {
+    "project": "C:/src/recur",
+    "observations": [
+      "recur warp -d C:/src/recur took ~7,956 ms (compared to 114 ms on C:/src/kicad_ra) because main.improvement.34.implementation.warp-ring.json at repo root has 6 accepted worker domains, and parent_acceptance_state called load_warp_layers(root, warp) with local = false for each domain, walking 72,905 files in target/ and .git/ six times (~450,000 NTFS stat calls) via keep_entry.",
+      "keep_entry in src/main_command_warp_impl.rs only skipped '.recur' and failed to skip '.git', 'target', 'target2', 'build', 'dist', 'node_modules', or '__pycache__', while DEFAULT_EXCLUDE_DIRS in src/warp_discovery.rs omitted 'target2' and '__pycache__'.",
+      "bubble_progress (used by recur warp show <id>, recur warp slices <id>, and recur reveal <id>) called list_warps(root, true, false) first, composing and hashing external evidence across all 84 manifests in the workspace only to discard 83 of them.",
+      "warp_evidence::check repeatedly canonicalized, read, and FNV-1a hashed shared source files (such as Cargo.toml and src/main.rs) across checked gates in a single CLI invocation without an in-memory per-command memoization map."
+    ]
+  },
+  "final_state": {
+    "description": "recur warp, recur warp show, recur warp slices, and recur reveal <warp-id> respond in interactive sub-second time even in large polyglot/cross-functional repositories containing multi-gigabyte build/CAD/PCB caches, while keeping domain-agnostic manifest placement and every existing Warp discovery contract intact.",
+    "required_observations": [
+      "merge_ring_inner reuses already-loaded coordinator layers in parent_acceptance_state instead of triggering repeated unbounded WalkDir scans from the ring root.",
+      "Recursive Warp queries (status, merge, map, explain, next, collapse-plan) skip .git and standard cross-stack build/cache folders (target, target2, build, dist, node_modules, __pycache__) alongside .recur unless explicitly targeted, while DiscoveryPolicy adds target2 and __pycache__ without excluding .recur.",
+      "bubble_progress resolves candidate {warp}.warp-map.json / {warp}.warp-ring.json paths under DiscoveryPolicy before composing only the matched Warp, preserving identical ambiguity, ring-kind, and containment diagnostics.",
+      "warp_evidence / list_warps memoize canonicalized file resolutions and FNV-1a content fingerprints in memory within a single CLI run with zero persistent state.",
+      "julia-tests/main.command.warp.discovery.test.jl passes untouched, and new cross-functional fixture tests verify sub-second discovery across mixed docs/CAD/hardware/code layouts with large ignored build/cache trees."
+    ]
+  },
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.warp.discovery-performance.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "warp-discovery-performance-red-baseline"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a1cf0b-9f99-7932-9f88-8133f9a3599a"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.discovery-performance.ring-and-walker-hygiene:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "ring-and-walker-hygiene-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "ring-and-walker-hygiene-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "ring-and-walker-hygiene",
+      "slice_uuid": "01a1cf0b-9fba-7b0d-b2f9-a60900339365"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.discovery-performance.targeted-single-warp-lookup:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "targeted-single-warp-lookup-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "targeted-single-warp-lookup-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "targeted-single-warp-lookup",
+      "slice_uuid": "01a1cf0b-9fbb-7ebb-9558-88073a0898dd"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.discovery-performance.in-memory-evidence-memoization:v1",
+      "depends_on": [
+        "ring-and-walker-hygiene",
+        "targeted-single-warp-lookup"
+      ],
+      "evidence_gates": [
+        "in-memory-evidence-memoization-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "in-memory-evidence-memoization-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "in-memory-evidence-memoization",
+      "slice_uuid": "01a1cf0b-9fbc-768d-9247-4638ff5dbe96"
+    },
+    {
+      "contract_hash": "contract:main.command.warp.discovery-performance.slice-final:v1",
+      "depends_on": [
+        "in-memory-evidence-memoization"
+      ],
+      "evidence_gates": [
+        "warp-cross-functional-and-compatibility-regressions",
+        "docs-warp-readme-sync"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "warp-cross-functional-and-compatibility-regressions": {
+          "kind": "test",
+          "allow_skipped": false
+        },
+        "docs-warp-readme-sync": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a1cf0b-9f99-7b1c-984e-940cce12401b"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.warp.discovery-performance"
+}

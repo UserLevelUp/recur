@@ -1,0 +1,125 @@
+{
+  "bubble_uuid": "01a1cee4-c2bf-7c28-bdef-408be1ca631e",
+  "current_slice": "slice-0",
+  "evidence_root": "..",
+  "goal": "Add backwards-compatible base-prefix discovery to recur init --analyze and front-load cold-start Eventness and trace-id orientation across Recur skills and root help.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "All existing recur init --analyze JSON keys (root, config_found, config_path, detected_lanes, additions, separator_updates, missing_directories) keep their exact names, types, and values; prefix discovery fields (detected_prefixes, dominant_prefix) are strictly additive.",
+    "recur init write mode (.recur/config.toml creation and update, lane section naming, and collision suffixes such as [test-quick-2]) remains unchanged.",
+    "recur init --analyze remains strictly read-only and never creates or mutates .recur/config.toml or workspace files.",
+    "Root recur --help retains all existing Reveal skill discovery strings required by tests/reveal_profiles.rs (recur reveal --type skill, recur reveal recur-expert, does not load or execute, supported loader, file reader, when available) while clarifying trace-id as the bird's-eye-to-drill-down funnel.",
+    "Skill updates in recur-expert/SKILL.md, recur-eventness/SKILL.md, and recur-trace-id/SKILL.md preserve read-only orientation discipline and distinguish live Eventness artifacts (*.todo.current.md, *.complete.md, *.warp-map.json) from authored Reveal capsules (*.recur.md).",
+    "A failing baseline demonstrates each cold-start discovery gap; it does not prove a fix or satisfy final acceptance."
+  ],
+  "planning_status": "planned; slice-0 ready",
+  "trace_ids": {
+    "defines": [
+      "main.command.init.cold-start-orientation"
+    ],
+    "consumes": [
+      "main.recur.skill.expert",
+      "main.recur.skill.eventness",
+      "main.recur.skill.trace-id"
+    ],
+    "produces": [
+      "main.command.init.cold-start-orientation.acceptance"
+    ]
+  },
+  "origin": {
+    "project": "C:/src/kicad_ra",
+    "observations": [
+      "recur init --analyze -d C:/src/kicad_ra --json reported lane directories (docs, eventness, scripts, trace, warps) with separator '.' but omitted the repository-wide 'robo.' base prefix shared across 120+ hierarchical files, forcing a cold-start agent to inspect raw directories or AGENTS.md to learn what <BASE> to pass to recur tree or recur files.",
+      "recur reveal -d C:/src/kicad_ra returned 'No reveal entries found' even though eventness/ contained live *.complete.md Eventness artifacts, because recur-expert and recur-eventness did not distinguish authored *.recur.md Reveal capsules from Eventness state files.",
+      "recur --help described trace-id only as 'Trace semantic identifier roles (define, produce, consume, trigger)' without mentioning unscoped path search or Improvement 34 bird's-eye --list-ids / --context / --declared modes."
+    ]
+  },
+  "final_state": {
+    "description": "Cold-start agents entering an unfamiliar hierarchy-indexed repository can discover dominant base prefixes via recur init --analyze, understand the difference between live Eventness state files and *.recur.md Reveal capsules, and follow the 4-step trace-id funnel directly from root help and core skills without breaking any existing CLI or JSON callers.",
+    "required_observations": [
+      "recur init --analyze (--json and human text) reports additive detected_prefixes (prefix, file_count, sample_lanes) and optional dominant_prefix alongside existing lane suggestions without altering existing JSON fields or write-mode config generation.",
+      "recur --help summarizes trace-id across path discovery, inventory/context, and role tracing while passing tests/reveal_profiles.rs::root_help_routes_new_users_to_skill_discovery_and_explicit_loading.",
+      "recur-expert/SKILL.md front-loads a Cold-Start Base Prefix Discovery recipe, the 4-step bird's-eye-to-drill-down trace-id funnel, and an explicit Eventness files vs *.recur.md Reveal capsules distinction.",
+      "recur-eventness/SKILL.md and recur-trace-id/SKILL.md align with the cold-start prefix and funnel guidance.",
+      "Existing julia-tests/runtests.init.jl and Rust tests pass without regression."
+    ]
+  },
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.init.cold-start-orientation.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "cold-start-orientation-red-baseline"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a1cee4-c2bf-76cb-bbd2-d94e9491498a"
+    },
+    {
+      "contract_hash": "contract:main.command.init.cold-start-orientation.init-prefix-discovery:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "init-prefix-discovery-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "init-prefix-discovery-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "init-prefix-discovery",
+      "slice_uuid": "01a1cee4-c306-7cee-9eaf-48d25cc78baf"
+    },
+    {
+      "contract_hash": "contract:main.command.init.cold-start-orientation.skill-and-help-orientation:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "skill-and-help-orientation-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "skill-and-help-orientation-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "skill-and-help-orientation",
+      "slice_uuid": "01a1cee4-c307-7465-911f-7cc4c855931f"
+    },
+    {
+      "contract_hash": "contract:main.command.init.cold-start-orientation.slice-final:v1",
+      "depends_on": [
+        "init-prefix-discovery",
+        "skill-and-help-orientation"
+      ],
+      "evidence_gates": [
+        "init-and-reveal-compatibility-regressions",
+        "docs-and-skill-sync"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "init-and-reveal-compatibility-regressions": {
+          "kind": "test",
+          "allow_skipped": false
+        },
+        "docs-and-skill-sync": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a1cee4-c2bf-7ea9-ab54-64e604a53550"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.init.cold-start-orientation"
+}

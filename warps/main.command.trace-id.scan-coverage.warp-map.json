@@ -1,0 +1,145 @@
+{
+  "bubble_uuid": "01a1cee4-c2e7-7d22-a307-014577204420",
+  "current_slice": "slice-0",
+  "evidence_root": "..",
+  "goal": "Expose additive skipped-directory diagnostics on trace-id budget exhaustion, opt-in directory exclusions, and explicit recur-trace-v1 / filename-token guidance.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Existing trace-id schemas (recur-trace-id-paths-v1, recur-trace-id-declarations-v1, recur-trace-id-inventory-v1, recur-trace-id-context-v1) and all existing coverage fields (complete, entries, files_read, bytes_read, max_entries, max_bytes, omissions) remain intact in name, type, and semantics.",
+    "New starvation metadata on incomplete scans (such as stopped_at and unreached_top_dirs) is strictly additive (present or non-empty only when complete == false) so complete scans keep identical JSON payloads.",
+    "Default skipped directory names (target, target2, node_modules, build, dist, and hidden dot-directories) and default byte/entry budgets (DEFAULT_BYTES = 33,554,432 bytes / 32 MiB, DEFAULT_ENTRIES = 50,000 entries in trace_relationships.rs) remain unchanged unless the caller explicitly passes repeatable --exclude-dir <DIR> or --max-bytes / --max-entries.",
+    "--declared retains strict opt-in <!-- recur-trace-v1 block parsing and all existing diagnostic codes (invalid_identifier, invalid_artifact, invalid_dependency, unknown_record, unterminated_metadata, duplicate_authority, conflicting_revision) tested in julia-tests/main.improvement.34.trace.test.jl.",
+    "--list-ids continues to extract content tokens using the existing identifier grammar without fabricating declarations; documentation and help clarify how multi-hyphenated filenames split tokens and how recur files complements content token inventory.",
+    "All trace-id scan modes remain strictly read-only and canonical-root confined.",
+    "A failing baseline demonstrates the budget-starvation visibility gap; it does not prove a fix or satisfy final acceptance."
+  ],
+  "planning_status": "planned; slice-0 ready",
+  "trace_ids": {
+    "defines": [
+      "main.command.trace-id.scan-coverage"
+    ],
+    "consumes": [
+      "main.command.trace-id",
+      "main.improvement.34.implementation.trace.context"
+    ],
+    "produces": [
+      "main.command.trace-id.scan-coverage.acceptance"
+    ]
+  },
+  "origin": {
+    "project": "C:/src/kicad_ra",
+    "observations": [
+      "Running recur trace-id 'robo.**' --scope '**' --list-ids -d C:/src/kicad_ra hit the default 1 MiB byte_budget inside alphabetically early exports/ (large SVG/HTML/JSON artifacts) and stopped before ever reaching scripts/, trace/, or warps/, printing only 'byte_budget: stopped after reading 1048576 of 1048576 bytes' without naming which top-level folders were never visited.",
+      "Callers could work around large artifact folders only by guessing --max-bytes 10000000 or running separate -d subqueries because no opt-in --exclude-dir <NAME> flag existed for generated export folders.",
+      "recur trace-id 'robo.**' --scope '**' --declared -d C:/src/kicad_ra exited 1 with empty declarations even though .warp-map.json and trace/*.json declared 'defines'/'produces'/'consumes', because --help said 'Show explicit structured trace declarations and pins' without mentioning the required <!-- recur-trace-v1 marker block.",
+      "--list-ids extracted filename substrings inside prose such as 'robo.prototype.refinement.sol.slice-0' (truncated at the second hyphen of 'slice-0-baseline') without guidance distinguishing content token extraction from recur files '<BASE>.**' path discovery."
+    ]
+  },
+  "final_state": {
+    "description": "When alphabetical traversal exhausts byte or entry budgets, trace-id tells the caller where traversal stopped and which top-level directories were left unvisited, lets callers opt into --exclude-dir <NAME> without inflating memory budgets, and clearly documents <!-- recur-trace-v1 blocks vs content token inventory.",
+    "required_observations": [
+      "When byte_budget or entry_budget stops trace_relationships::scan early, coverage includes additive starvation details (e.g. stopped_at relative path and unreached_top_dirs array of unvisited root directories) and stderr 'Trace-ID discovery incomplete:' names the unreached top-level directories and suggests --max-bytes / --exclude-dir / narrower -d.",
+      "Repeatable --exclude-dir <NAME> skips matching directory names across unscoped path search, --declared, --list-ids, --context, and scoped trace-id modes while preserving canonical root safety.",
+      "recur trace-id --help and docs/main.command.trace-id.eventness.discovery.report.md explicitly document the <!-- recur-trace-v1 header syntax for --declared and explain how --list-ids single-hyphen token boundaries relate to recur files path queries.",
+      "Existing trace_relationships unit tests, julia-tests/main.improvement.34.trace.test.jl, and julia-tests/main.improvement.34.trace-context.test.jl pass without regression."
+    ]
+  },
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.trace-id.scan-coverage.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "scan-coverage-red-baseline"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a1cee4-c2e7-74bd-98d7-b2422140b0c6"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.scan-coverage.budget-starvation-diagnostics:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "budget-starvation-diagnostics-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "budget-starvation-diagnostics-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "budget-starvation-diagnostics",
+      "slice_uuid": "01a1cee4-c30d-75e2-a9ac-adb2c8b1e7a0"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.scan-coverage.exclude-dir-filter:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "exclude-dir-filter-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "exclude-dir-filter-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "exclude-dir-filter",
+      "slice_uuid": "01a1cee4-c30e-76bb-8666-dad523a6f867"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.scan-coverage.declared-and-filename-guidance:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "declared-and-filename-guidance-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "declared-and-filename-guidance-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "declared-and-filename-guidance",
+      "slice_uuid": "01a1cee4-c30f-73a7-9f3f-749b4bc80d66"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.scan-coverage.slice-final:v1",
+      "depends_on": [
+        "budget-starvation-diagnostics",
+        "exclude-dir-filter",
+        "declared-and-filename-guidance"
+      ],
+      "evidence_gates": [
+        "trace-coverage-compatibility-regressions",
+        "docs-discovery-report-sync"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "trace-coverage-compatibility-regressions": {
+          "kind": "test",
+          "allow_skipped": false
+        },
+        "docs-discovery-report-sync": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a1cee4-c2e7-721f-b8ac-85c9e3612b9e"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.trace-id.scan-coverage"
+}

@@ -1,0 +1,124 @@
+{
+  "bubble_uuid": "01a1cee4-c2ca-781d-b410-d51cf2022c65",
+  "current_slice": "slice-0",
+  "evidence_root": "..",
+  "goal": "Add opt-in hierarchy segment-depth bounding (--levels / --tree-depth) to recur tree while preserving --depth filesystem directory semantics and backwards compatibility.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Existing --depth <DEPTH> flag on recur tree MUST remain filesystem directory walk depth with zero behavioral change; tests/tree_configured_lanes.rs::configured_wildcard_scope_preserves_depth_and_separator_markers and julia-tests/runtests.tree.jl (including its @test_broken assertion on --depth 1) MUST continue to pass without Unexpected Pass or regression.",
+    "Hierarchy segment-depth bounding is strictly opt-in via a new flag (--levels <N> with visible alias --tree-depth <N>, where N >= 1 counts hierarchy segments beneath <BASE>).",
+    "When --levels / --tree-depth is omitted, recur tree text, --count, and --json outputs (name, children, path) are byte-for-byte unchanged for all existing inputs.",
+    "Configured wildcard scope patterns such as main.**.current.** in julia-tests/main.command.tree.wildcard-current.test.jl preserve their exact current tree output.",
+    "recur tree remains strictly read-only.",
+    "A failing baseline demonstrates the hierarchy-depth gap; it does not prove a fix or satisfy final acceptance."
+  ],
+  "planning_status": "planned; slice-0 ready",
+  "trace_ids": {
+    "defines": [
+      "main.command.tree.hierarchy-depth"
+    ],
+    "consumes": [
+      "main.command.tree",
+      "main.recur.skill.expert"
+    ],
+    "produces": [
+      "main.command.tree.hierarchy-depth.acceptance"
+    ]
+  },
+  "origin": {
+    "project": "C:/src/kicad_ra",
+    "observations": [
+      "recur tree robo -d C:/src/kicad_ra --depth 1 dumped all 120+ full leaf hierarchy branches down to 6+ dotted segments because --depth limits WalkDir filesystem directory depth (docs/, scripts/, warps/ are all directory depth 1) while --help ambiguously said 'Maximum depth to display'.",
+      "julia-tests/runtests.tree.jl lines 52-53 already recorded '@test_broken !contains(output, \"Create\")' noting that --depth 1 did not limit hierarchy depth, while tests/tree_configured_lanes.rs line 232 explicitly depends on --depth 2 limiting filesystem directory walk depth.",
+      "recur tree '**' -d C:/src/kicad_ra exited 2 (No files found matching base pattern '**') instead of discovering top-level prefixes or pointing the caller to recur init --analyze / prefix patterns."
+    ]
+  },
+  "final_state": {
+    "description": "Callers can request compact top-level hierarchy summaries beneath any base prefix using recur tree <BASE> --levels <N> (or --tree-depth <N>) in text, --count, and --json modes while existing --depth filesystem walk callers and tests remain 100% compatible.",
+    "required_observations": [
+      "recur tree <BASE> --levels 1 (and --tree-depth 1) bounds rendered hierarchy children to 1 segment beneath <BASE> in unicode, --ascii, --count, and --json modes, with optional folded child/file counts or clean pruned children.",
+      "Omitting --levels / --tree-depth leaves all existing recur tree outputs and JSON schemas unchanged.",
+      "recur tree --help explicitly distinguishes --depth (filesystem directory traversal depth) from --levels / --tree-depth (dot/separator hierarchy segment depth beneath <BASE>).",
+      "Bare wildcard root queries such as recur tree '**' emit an actionable hint naming recur init --analyze or concrete <BASE> prefixes rather than a bare 'No files found' dead end, without altering non-bare wildcard queries like 'main.**.current.**'.",
+      "tests/tree_configured_lanes.rs, julia-tests/runtests.tree.jl, and julia-tests/main.command.tree.wildcard-current.test.jl pass without regression."
+    ]
+  },
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.tree.hierarchy-depth.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "tree-hierarchy-depth-red-baseline"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a1cee4-c2ca-7613-82a2-ef5715a04029"
+    },
+    {
+      "contract_hash": "contract:main.command.tree.hierarchy-depth.hierarchy-levels-flag:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "hierarchy-levels-flag-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "hierarchy-levels-flag-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "hierarchy-levels-flag",
+      "slice_uuid": "01a1cee4-c308-7b9a-a116-31fd7f00f350"
+    },
+    {
+      "contract_hash": "contract:main.command.tree.hierarchy-depth.help-and-root-wildcard-guidance:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "help-and-root-wildcard-guidance-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "help-and-root-wildcard-guidance-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "help-and-root-wildcard-guidance",
+      "slice_uuid": "01a1cee4-c309-7b70-8be1-ffdb2893a9ec"
+    },
+    {
+      "contract_hash": "contract:main.command.tree.hierarchy-depth.slice-final:v1",
+      "depends_on": [
+        "hierarchy-levels-flag",
+        "help-and-root-wildcard-guidance"
+      ],
+      "evidence_gates": [
+        "tree-compatibility-regressions",
+        "docs-tree-readme-sync"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "tree-compatibility-regressions": {
+          "kind": "test",
+          "allow_skipped": false
+        },
+        "docs-tree-readme-sync": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a1cee4-c2ca-7093-84e6-991205dcb7cb"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.tree.hierarchy-depth"
+}

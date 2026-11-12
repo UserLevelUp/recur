@@ -1,0 +1,148 @@
+{
+  "bubble_uuid": "01a1cee4-c2d3-7ced-b032-3c4da7ec4595",
+  "current_slice": "slice-0",
+  "evidence_root": "..",
+  "goal": "Repair scoped recur trace-id symbol extraction, binary filtering, keyword token boundaries, and role duplication while preserving legacy JSON schemas and existing test contracts.",
+  "intelligence_baseline": "host-current",
+  "invariants": [
+    "Scoped role-query JSON schemas remain strictly backwards compatible: single-ID queries return an object with request, identifier, define, produce, consume, trigger and NO top-level 'schema' key (preserving julia-tests/main.improvement.34.trace.test.jl line 57); glob queries return a JSON array of those objects; site records keep path, line_number, line, and edge_type.",
+    "Piping recur trace-id ... --json into recur merge --stdin (julia-tests/runtests.trace-id.jl lines 567-597) remains 100% compatible.",
+    "C#-style constant symbol extraction (e.g. public const string OwnershipCreate = \"ulu.topic.dot.ownership.create\"; -> OwnershipCreate in julia-tests/runtests.trace-id.jl lines 110-156) and Eventness/lane assignment definitions (id = value, define id = value) remain intact.",
+    "Keyword arguments such as Python consumes=[\"robo.mod.traction\"] or produces=(\"...\") must never extract role keywords ('consumes', 'produces', 'defines', 'trigger') or configured role keywords as transitive C#/code symbol names.",
+    "collect_scoped_lines honors traversal.skip_binary_files and traversal.max_file_bytes so binary artifacts such as __pycache__/*.pyc are never scanned as lossy UTF-8 text.",
+    "Word-like role keywords (such as 'register', 'publish', 'send', 'emit', 'bind', 'subscribe') match on identifier token boundaries (preserving registry.Register(...) and register(...), while rejecting compound snake_case identifiers like board_register or interface_register); punctuation keywords such as '*.' and 'register(' retain substring matching.",
+    "Diagnostics when detail-only flags (--depth, --format, --stdin, saved-run flags) are passed without --scope retain '--scope' in stderr (preserving julia-tests/main.improvement.34.trace.test.jl line 52) while replacing confusing 'legacy --scope query' phrasing with clear guidance.",
+    "recur trace-id remains strictly read-only unless explicit --save-run is requested.",
+    "A failing baseline demonstrates the scoped role-classification defects; it does not prove a fix or satisfy final acceptance."
+  ],
+  "planning_status": "planned; slice-0 ready",
+  "trace_ids": {
+    "defines": [
+      "main.command.trace-id.role-classification"
+    ],
+    "consumes": [
+      "main.command.trace-id",
+      "main.trait.trace-id"
+    ],
+    "produces": [
+      "main.command.trace-id.role-classification.acceptance"
+    ]
+  },
+  "origin": {
+    "project": "C:/src/kicad_ra",
+    "observations": [
+      "recur trace-id 'robo.mod.traction' --scope '**' -d C:/src/kicad_ra --json returned 1,505 bogus consume hits (including unrelated README lines containing the English word 'consumes') because extract_symbol_name_from_definition extracted 'consumes' from Python keyword argument consumes=[\"robo.mod.traction\"] and searched every occurrence of 'consumes' across the repository.",
+      "collect_scoped_lines read scripts/__pycache__/*.cpython-312.pyc via fs::read + String::from_utf8_lossy without applying skip_binary_files, injecting binary garbage into JSON line fields.",
+      "Substring matching on default trigger keyword 'register' misclassified JSON field '\"board_register\": \"docs/robo...\"' as a trigger site.",
+      "Every pure consume/produce/trigger site was simultaneously duplicated into define because classify_line defaulted to roles.define = true whenever line_has_identifier was true, and --format full printed identical (path, line_number) lines multiple times without role labels.",
+      "Running recur trace-id 'robo.mod.traction' --depth 1 without --scope failed with 'Invalid arguments: --depth, --format, --stdin, and saved-run flags require a legacy --scope query', leading agents to think --scope was deprecated even though --list-ids and --context also require --scope."
+    ]
+  },
+  "final_state": {
+    "description": "Scoped recur trace-id role queries classify define, produce, consume, and trigger accurately across Python, Rust, C#, Markdown, and JSON repositories without keyword-argument symbol explosion, binary .pyc leakage, snake_case substring false positives, or role duplication, while keeping every existing JSON schema and Julia/Rust regression test green.",
+    "required_observations": [
+      "Python/Rust/JS keyword arguments like consumes=[\"robo.mod.traction\"] do not extract 'consumes' as a symbol name and do not trigger repository-wide word explosions.",
+      "Binary files (NUL-containing files such as .pyc) and files exceeding traversal.max_file_bytes are skipped during collect_scoped_lines when skip_binary_files / max_file_bytes are active.",
+      "Identifier-bounded role keyword matching rejects 'board_register' for keyword 'register' while still matching 'registry.Register(...)', 'register(...)', and 'trigger advance'.",
+      "Lines classified as consume, produce, or trigger without an explicit definition marker (=, define/defines, JSON \"defines\"/\"trace_id\") are not duplicated into define, while bare/assignment/const definitions and C# symbol references continue to pass all assertions in runtests.trace-id.jl, runtests.lane.coordination.jl, and runtests.demo.skippy.jl.",
+      "--format full avoids printing duplicate unlabeled lines for the same (path, line_number) site (annotating or grouping roles cleanly), and missing --scope errors clearly explain --scope <SCOPE> without calling --scope 'legacy'."
+    ]
+  },
+  "required_slices": [
+    {
+      "contract_hash": "contract:main.command.trace-id.role-classification.slice-0:v1",
+      "depends_on": [],
+      "evidence_gates": [
+        "role-classification-red-baseline"
+      ],
+      "evidence_mode": "declared",
+      "intelligence_tick": 0,
+      "slice_id": "slice-0",
+      "slice_uuid": "01a1cee4-c2d3-7ba2-a0e6-85dcf7a18cb1"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.role-classification.symbol-and-binary-guards:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "symbol-and-binary-guards-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "symbol-and-binary-guards-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "symbol-and-binary-guards",
+      "slice_uuid": "01a1cee4-c30a-726e-97ef-78a2ccaf47da"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.role-classification.role-boundaries-and-dedup:v1",
+      "depends_on": [
+        "slice-0"
+      ],
+      "evidence_gates": [
+        "role-boundaries-and-dedup-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "role-boundaries-and-dedup-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "role-boundaries-and-dedup",
+      "slice_uuid": "01a1cee4-c30b-7d8c-9fb5-85433ae289c4"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.role-classification.scope-diagnostics-and-format-full:v1",
+      "depends_on": [
+        "role-boundaries-and-dedup"
+      ],
+      "evidence_gates": [
+        "scope-diagnostics-and-format-full-acceptance"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "scope-diagnostics-and-format-full-acceptance": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "scope-diagnostics-and-format-full",
+      "slice_uuid": "01a1cee4-c30c-773c-941f-0613ca079719"
+    },
+    {
+      "contract_hash": "contract:main.command.trace-id.role-classification.slice-final:v1",
+      "depends_on": [
+        "symbol-and-binary-guards",
+        "scope-diagnostics-and-format-full"
+      ],
+      "evidence_gates": [
+        "trace-id-legacy-and-merge-compatibility-regressions",
+        "docs-trace-id-readme-sync"
+      ],
+      "evidence_mode": "checked",
+      "gate_rules": {
+        "trace-id-legacy-and-merge-compatibility-regressions": {
+          "kind": "test",
+          "allow_skipped": false
+        },
+        "docs-trace-id-readme-sync": {
+          "kind": "test",
+          "allow_skipped": false
+        }
+      },
+      "intelligence_tick": 0,
+      "slice_id": "slice-final",
+      "slice_uuid": "01a1cee4-c2d3-7e20-ac92-765664de91ed"
+    }
+  ],
+  "schema": "warp-bubble-map-v1",
+  "warp_id": "main.command.trace-id.role-classification"
+}
