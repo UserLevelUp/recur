@@ -127,3 +127,13 @@
 /julia-tests/main.improvement.34.trace.test.jl text eol=lf
 /src/trace_inspection.rs text eol=lf
 /julia-tests/main.improvement.34.trace-context.test.jl text eol=lf
+# Warp discovery performance evidence binds the verified checkout bytes.
+/docs/main.command.warp.readme.md text eol=crlf
+/julia-tests/main.command.warp.bubble.test.jl text eol=crlf
+/julia-tests/main.command.warp.discovery.test.jl text eol=crlf
+/julia-tests/main.command.warp.docs-reconciliation.test.jl text eol=crlf
+/julia-tests/main.command.warp.evidence-integrity.test.jl text eol=crlf
+/julia-tests/main.command.warp.ring-topology.test.jl text eol=crlf
+/julia-tests/main.command.warp.test.jl text eol=crlf
+/julia-tests/runtests.setup.jl text eol=crlf
+/tests/warp_discovery_performance.rs text eol=lf

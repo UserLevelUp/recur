@@ -17,6 +17,7 @@ const MAX_SELECTED_FILES: u64 = 1024;
 pub struct Reads {
     pub hashes: BTreeMap<String, String>,
     cache: BTreeMap<PathBuf, Vec<u8>>,
+    charged: BTreeMap<PathBuf, usize>,
     total: usize,
     max_files: usize,
 }
@@ -25,6 +26,7 @@ impl Default for Reads {
         Self {
             hashes: BTreeMap::new(),
             cache: BTreeMap::new(),
+            charged: BTreeMap::new(),
             total: 0,
             max_files: DEFAULT_MAX_FILES,
         }
@@ -45,41 +47,88 @@ impl Reads {
         Ok(serde_json::from_value(value)?)
     }
     pub fn read(&mut self, root: &Path, path: &str, json: bool) -> Result<Vec<u8>> {
-        let actual = safe(root, path)?.canonicalize()?;
-        ensure!(
-            actual.starts_with(root.canonicalize()?) && actual.is_file(),
-            "contained file required: {path}"
-        );
+        let actual = Self::resolve_file(root, path)?;
+        self.read_resolved(&actual, path, json)
+    }
+
+    fn read_resolved(&mut self, actual: &Path, path: &str, json: bool) -> Result<Vec<u8>> {
         let limit = if json {
             2 * 1024 * 1024
         } else {
             32 * 1024 * 1024
         };
-        let bytes = if let Some(bytes) = self.cache.get(&actual) {
+        let bytes = if let Some(bytes) = self.cache.get(actual) {
             ensure!(bytes.len() <= limit, "file byte limit: {path}");
             bytes.clone()
         } else {
-            ensure!(self.cache.len() < self.max_files, "unique file limit");
-            let file = File::open(&actual)?;
+            let file = File::open(actual)?;
             let n = usize::try_from(file.metadata()?.len())?;
-            ensure!(
-                n <= limit
-                    && self
-                        .total
-                        .checked_add(n)
-                        .is_some_and(|n| n <= 64 * 1024 * 1024),
-                "file or aggregate byte limit: {path}"
-            );
+            let total = self.checked_total(actual, n, limit, path)?;
             let mut bytes = Vec::with_capacity(n);
             file.take((limit + 1) as u64).read_to_end(&mut bytes)?;
             ensure!(bytes.len() == n, "file changed while reading: {path}");
-            self.total += n;
-            self.cache.insert(actual, bytes.clone());
+            self.total = total;
+            self.charged.insert(actual.to_path_buf(), n);
+            self.cache.insert(actual.to_path_buf(), bytes.clone());
             bytes
         };
         self.hashes.insert(path.into(), fingerprint(&bytes));
         Ok(bytes)
     }
+    fn resolve_file(root: &Path, path: &str) -> Result<PathBuf> {
+        let actual = safe(root, path)?.canonicalize()?;
+        ensure!(
+            actual.starts_with(root.canonicalize()?) && actual.is_file(),
+            "contained file required: {path}"
+        );
+        Ok(actual)
+    }
+
+    fn checked_total(&self, actual: &Path, n: usize, limit: usize, path: &str) -> Result<usize> {
+        let previous = self.charged.get(actual).copied();
+        ensure!(
+            previous.is_some() || self.charged.len() < self.max_files,
+            "unique file limit"
+        );
+        let total = self.total - previous.unwrap_or(0);
+        ensure!(
+            n <= limit && total.checked_add(n).is_some_and(|n| n <= 64 * 1024 * 1024),
+            "file or aggregate byte limit: {path}"
+        );
+        Ok(total + n)
+    }
+
+    fn source_hash(
+        &mut self,
+        root: &Path,
+        path: &str,
+        source: Option<&mut evidence::SourceFingerprints>,
+    ) -> Result<String> {
+        let Some(source) = source else {
+            return self
+                .read(root, path, false)
+                .map(|_| self.hashes[path].clone());
+        };
+        if let Some(input) = source.bounded(root, path) {
+            self.total = self.checked_total(&input.path, input.len, 32 * 1024 * 1024, path)?;
+            self.charged.insert(input.path, input.len);
+            return Ok(input.hash);
+        }
+        let actual = Self::resolve_file(root, path)?;
+        let len = self.read_resolved(&actual, path, false)?.len();
+        let hash = self.hashes[path].clone();
+        source.insert_bounded(
+            root,
+            path,
+            evidence::BoundedFingerprint {
+                path: actual,
+                len,
+                hash: hash.clone(),
+            },
+        );
+        Ok(hash)
+    }
+
     pub fn verify(&self, root: &Path) -> Result<()> {
         let mut now = Reads {
             max_files: self.max_files,
@@ -92,6 +141,43 @@ impl Reads {
             );
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn shared_source_digests_still_spend_each_assessments_budget() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path();
+        fs::write(root.join("layout.kicad_pcb"), vec![b'a'; 3 * 1024 * 1024]).unwrap();
+        fs::write(root.join("diagram.svg"), b"diagram").unwrap();
+        let mut shared = evidence::SourceFingerprints::default();
+        let mut first = Reads::default();
+        let hash = first
+            .source_hash(root, "layout.kicad_pcb", Some(&mut shared))
+            .unwrap();
+        first
+            .source_hash(root, "diagram.svg", Some(&mut shared))
+            .unwrap();
+
+        let mut next = Reads {
+            max_files: 1,
+            ..Reads::default()
+        };
+        assert_eq!(
+            next.source_hash(root, "layout.kicad_pcb", Some(&mut shared))
+                .unwrap(),
+            hash
+        );
+        assert_eq!(next.total, 3 * 1024 * 1024);
+        assert!(next.cache.is_empty());
+        assert!(next
+            .source_hash(root, "diagram.svg", Some(&mut shared))
+            .is_err());
+        assert!(next.read(root, "layout.kicad_pcb", true).is_err());
     }
 }
 pub fn relative(p: &Path) -> Result<&str> {
@@ -214,18 +300,43 @@ fn manifest(root: &Path, reference: &str, reads: &mut Reads) -> Result<Evidence>
     Ok(e)
 }
 fn assess(root: &Path, r: &str, rule: &GateRule, reads: &mut Reads) -> Result<Assessment> {
-    let mut failure = None;
-    let a = evidence::assess_with_reader(r, rule, |p, j| {
-        let b = reads.read(root, p, j);
-        if let Err(e) = &b {
-            failure = Some(e.to_string())
+    assess_bounded(root, r, rule, reads, None, true)
+}
+
+fn assess_bounded(
+    root: &Path,
+    reference: &str,
+    rule: &GateRule,
+    reads: &mut Reads,
+    source: Option<&mut evidence::SourceFingerprints>,
+    reject_read_errors: bool,
+) -> Result<Assessment> {
+    let mut inputs = (reads, source, None);
+    let assessment = evidence::assess_with_inputs(
+        reference,
+        rule,
+        &mut inputs,
+        |(reads, _, failure), path| {
+            let result = reads.read(root, path, true);
+            if let Err(error) = &result {
+                *failure = Some(error.to_string());
+            }
+            result
+        },
+        |(reads, source, failure), path| {
+            let result = reads.source_hash(root, path, source.as_deref_mut());
+            if let Err(error) = &result {
+                *failure = Some(error.to_string());
+            }
+            result
+        },
+    );
+    if reject_read_errors {
+        if let Some(error) = inputs.2 {
+            bail!("bounded evidence read: {error}")
         }
-        b
-    });
-    if let Some(e) = failure {
-        bail!("bounded evidence read: {e}")
     }
-    Ok(a)
+    Ok(assessment)
 }
 fn relation(a: &Evidence, b: &Evidence) -> Result<()> {
     ensure!(
@@ -311,6 +422,7 @@ fn resolve(
     gate: &str,
     all: &[Record],
     reads: &mut Reads,
+    mut source: Option<&mut evidence::SourceFingerprints>,
 ) -> Result<Vec<Assessment>> {
     let records = all
         .iter()
@@ -340,7 +452,14 @@ fn resolve(
             let b = manifest(root, &r.to_reference, reads)?;
             relation(&a, &b)?;
             // Current source drift is allowed for history, but read actual bytes.
-            let old = assess(root, &r.from_reference, &rule, reads)?;
+            let old = assess_bounded(
+                root,
+                &r.from_reference,
+                &rule,
+                reads,
+                source.as_deref_mut(),
+                true,
+            )?;
             ensure!(
                 old.status == "checked" || old.status == "stale",
                 "historical evidence is failed: {}",
@@ -349,11 +468,14 @@ fn resolve(
             reference = &r.to_reference;
             lineage.push(r.refresh_id.clone());
         }
-        let mut a = if lineage.is_empty() {
-            evidence::assess_with_reader(reference, &rule, |p, j| reads.read(root, p, j))
-        } else {
-            assess(root, reference, &rule, reads)?
-        };
+        let mut a = assess_bounded(
+            root,
+            reference,
+            &rule,
+            reads,
+            source.as_deref_mut(),
+            !lineage.is_empty(),
+        )?;
         if !lineage.is_empty() {
             a.method.push_str("; immutable same-contract refresh chain");
             a.reasons.push(format!("original reference: {original}; refreshes: {}; current leaf: {reference}; historical source freshness is not current acceptance",lineage.join(" -> ")));
@@ -373,7 +495,24 @@ pub fn gates(
     layer_path: &str,
     layer: &WarpSliceLayer,
 ) -> Vec<GateAssessment> {
-    let fallback = || evidence::gates(root, required, &layer.evidence);
+    query_gates(
+        root,
+        map_path,
+        required,
+        layer_path,
+        layer,
+        &mut evidence::SourceFingerprints::default(),
+    )
+}
+
+pub(crate) fn query_gates(
+    root: &Path,
+    map_path: &str,
+    required: &WarpRequiredSlice,
+    layer_path: &str,
+    layer: &WarpSliceLayer,
+    source: &mut evidence::SourceFingerprints,
+) -> Vec<GateAssessment> {
     let result = (|| -> Result<Vec<GateAssessment>> {
         let has_external = layer
             .evidence
@@ -384,7 +523,14 @@ pub fn gates(
             // Pure declared snapshots may have only an in-memory map. Check
             // metadata without following links; malformed real paths still fail.
             match fs::symlink_metadata(safe(root, map_path)?) {
-                Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(fallback()),
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+                    return Ok(evidence::query_gates(
+                        root,
+                        required,
+                        &layer.evidence,
+                        source,
+                    ))
+                }
                 Err(e) => return Err(e.into()),
                 Ok(_) => {}
             }
@@ -393,13 +539,23 @@ pub fn gates(
         let map = reads.map(root, map_path)?;
         // Real maps validate explicit scope even for declared-only gates.
         if !has_external {
-            return Ok(fallback());
+            return Ok(evidence::query_gates(
+                root,
+                required,
+                &layer.evidence,
+                source,
+            ));
         }
         let dir = directory(map_path, &layer.warp_id)?;
         if !safe(root, &dir)?.try_exists()? {
             // A valid map without refresh history retains legacy assessment.
             // The selected file budget governs refresh, not existing evidence.
-            return Ok(fallback());
+            return Ok(evidence::query_gates(
+                root,
+                required,
+                &layer.evidence,
+                source,
+            ));
         }
         let (records, _) = records(root, map_path, &map, &mut reads, None)?;
         required
@@ -407,7 +563,14 @@ pub fn gates(
             .iter()
             .map(|gate| {
                 let evidence = resolve(
-                    root, layer_path, layer, required, gate, &records, &mut reads,
+                    root,
+                    layer_path,
+                    layer,
+                    required,
+                    gate,
+                    &records,
+                    &mut reads,
+                    Some(source),
                 )?;
                 let status = evidence::combined_status(evidence.iter().map(|a| a.status.as_str()));
                 Ok(GateAssessment {
@@ -568,7 +731,9 @@ fn plan_at_root(
     } else {
         "planned"
     };
-    let current = resolve(root, layer_path, &layer, &required, gate, &all, &mut reads)?;
+    let current = resolve(
+        root, layer_path, &layer, &required, gate, &all, &mut reads, None,
+    )?;
     if existing.is_none() {
         let leaf = current
             .iter()
@@ -589,7 +754,7 @@ fn plan_at_root(
         candidate.push(record.clone());
     }
     resolve(
-        root, layer_path, &layer, &required, gate, &candidate, &mut reads,
+        root, layer_path, &layer, &required, gate, &candidate, &mut reads, None,
     )?;
     if inventory.contains(&temp_name) {
         ensure!(

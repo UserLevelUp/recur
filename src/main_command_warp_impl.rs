@@ -11,7 +11,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
-use walkdir::{DirEntry, WalkDir};
+use walkdir::WalkDir;
+use crate::warp_evidence::SourceFingerprints;
 
 const SCHEMA: &str = "warp-status-v1";
 #[cfg(test)]
@@ -394,41 +395,36 @@ pub fn execute(command: WarpSubcommand, dir: PathBuf, json: bool) -> anyhow::Res
 
 // defines: recur.warp.discovery.inventory deterministic read-only manifest discovery
 pub fn bubble_progress(root: &Path, warp: &str) -> anyhow::Result<serde_json::Value> {
-    let inventory = list_warps(root, true, false)?;
-    let matches: Vec<_> = inventory["entries"]
-        .as_array()
-        .context("missing inventory")?
-        .iter()
-        .filter(|entry| entry["warp_id"] == warp)
-        .collect();
+    let root = fs::canonicalize(root)?;
+    let policy = crate::warp_discovery::DiscoveryPolicy::load(&root, false)?;
+    let candidates = discover_warps(&root, &policy, Some(warp))?;
     anyhow::ensure!(
-        !matches.is_empty(),
+        !candidates.is_empty(),
         "Warp '{warp}' not found within discovery scope"
     );
     anyhow::ensure!(
-        matches.len() == 1,
+        candidates.len() == 1,
         "ambiguous Warp identity '{warp}'; narrow -d to one manifest directory"
     );
-    let entry = matches[0];
-    anyhow::ensure!(
-        entry["error"].is_null(),
-        "Warp discovery error: {}",
-        entry["error"]
-    );
-    anyhow::ensure!(
-        entry["kind"] == "bubble",
-        "show/slices inspect bubbles; use warp merge for ring domain progress"
-    );
-    let scope = PathBuf::from(entry["scope"].as_str().context("missing scope")?);
-    let (manifest, map) = load_bubble_map_scoped(&scope, warp, true)?.context("map disappeared")?;
-    let raw: serde_json::Value = serde_json::from_slice(&fs::read(scope.join(&manifest))?)?;
-    let projection = compose_bubble_scoped(
-        root,
-        &scope,
-        manifest,
-        map.clone(),
-        load_warp_layers_scoped(&scope, warp, true)?,
-    )?;
+    let mut source = SourceFingerprints::default();
+    let ((_, scope), manifests) = candidates.into_iter().next().context("missing Warp candidate")?;
+    if manifests.iter().any(|path| path.ends_with(".warp-ring.json")) {
+        merge_ring_inner(&scope, warp, None, &mut BTreeSet::new(), true, &root, &mut source)
+            .and_then(|ring| ring.context("ring map disappeared during discovery"))
+            .map_err(|error| anyhow::anyhow!("Warp discovery error: {}", serde_json::json!(format!("{error:#}"))))?;
+        anyhow::bail!("show/slices inspect bubbles; use warp merge for ring domain progress");
+    }
+    let (map, raw, projection) = (|| {
+        checked_warp_id(warp)?;
+        let (manifest, map) = load_bubble_map_scoped(&scope, warp, true)?
+            .context("bubble map disappeared during discovery")?;
+        let raw: serde_json::Value = serde_json::from_slice(&fs::read(scope.join(&manifest))?)?;
+        let projection = compose_bubble_scoped(
+            &root, &scope, manifest, map.clone(), load_warp_layers_scoped(&scope, warp, true)?, &mut source,
+        )?;
+        Ok::<_, anyhow::Error>((map, raw, projection))
+    })()
+    .map_err(|error| anyhow::anyhow!("Warp discovery error: {}", serde_json::json!(format!("{error:#}"))))?;
     let mut ready = Vec::new();
     let mut slices = Vec::new();
     for slice in &map.required_slices {
@@ -482,10 +478,14 @@ pub fn bubble_progress(root: &Path, warp: &str) -> anyhow::Result<serde_json::Va
     Ok(output)
 }
 
-fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_json::Value> {
-    let root = fs::canonicalize(root)?;
-    let policy = crate::warp_discovery::DiscoveryPolicy::load(&root, scan_all)?;
-    let mut candidates: BTreeMap<(String, PathBuf), BTreeSet<String>> = BTreeMap::new();
+type WarpCandidates = BTreeMap<(String, PathBuf), BTreeSet<String>>;
+
+fn discover_warps(
+    root: &Path,
+    policy: &crate::warp_discovery::DiscoveryPolicy,
+    selected: Option<&str>,
+) -> anyhow::Result<WarpCandidates> {
+    let mut candidates = WarpCandidates::new();
     for scan_root in &policy.roots {
         for entry in WalkDir::new(scan_root)
             .into_iter()
@@ -503,6 +503,9 @@ fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_js
                 .strip_suffix(".warp-map.json")
                 .or_else(|| name.strip_suffix(".warp-ring.json"))
             {
+                if selected.is_some_and(|warp| warp != id) {
+                    continue;
+                }
                 let scope = entry
                     .path()
                     .parent()
@@ -512,14 +515,22 @@ fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_js
                     .entry((id.to_string(), scope))
                     .or_default()
                     .insert(normalize_path(
-                        entry.path().strip_prefix(&root).unwrap_or(entry.path()),
+                        entry.path().strip_prefix(root).unwrap_or(entry.path()),
                     ));
             }
         }
     }
+    Ok(candidates)
+}
+
+fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_json::Value> {
+    let root = fs::canonicalize(root)?;
+    let policy = crate::warp_discovery::DiscoveryPolicy::load(&root, scan_all)?;
+    let candidates = discover_warps(&root, &policy, None)?;
     let discovered = candidates.len();
     let mut entries = Vec::new();
     let mut errors = 0;
+    let mut source = SourceFingerprints::default();
     for ((id, scope), manifest_set) in candidates {
         let manifests: Vec<String> = manifest_set.into_iter().collect();
         let ring_count = manifests
@@ -536,7 +547,7 @@ fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_js
             );
             if ring_count == 1 {
                 Ok(serde_json::to_value(
-                    merge_ring_inner(&scope, &id, None, &mut BTreeSet::new(), true, &root)?
+                    merge_ring_inner(&scope, &id, None, &mut BTreeSet::new(), true, &root, &mut source)?
                         .context("ring map disappeared during discovery")?,
                 )?)
             } else {
@@ -548,6 +559,7 @@ fn list_warps(root: &Path, all: bool, scan_all: bool) -> anyhow::Result<serde_js
                     manifest,
                     map,
                     load_warp_layers_scoped(&scope, &id, true)?,
+                    &mut source,
                 )?)?)
             }
         })();
@@ -793,7 +805,7 @@ fn merge_bubble(root: &Path, raw_warp: &str) -> anyhow::Result<WarpMergeOutput> 
         )
     })?;
     let layers = load_warp_layers(root, warp)?;
-    compose_bubble_scoped(root, root, manifest, map, layers)
+    compose_bubble_scoped(root, root, manifest, map, layers, &mut SourceFingerprints::default())
 }
 
 fn ring_map(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMapOutput>> {
@@ -825,10 +837,11 @@ fn load_ring_map_scoped(
 ) -> anyhow::Result<Option<(String, WarpRingMap)>> {
     let expected_name = format!("{warp}.warp-ring.json");
     let mut matches = Vec::new();
+    let exclusions = recursive_exclusions(root, local)?;
     for entry in WalkDir::new(root)
         .max_depth(if local { 1 } else { usize::MAX })
         .into_iter()
-        .filter_entry(|entry| local || keep_entry(entry))
+        .filter_entry(|entry| crate::warp_discovery::keep_entry(entry, &exclusions))
         .filter_map(Result::ok)
     {
         if entry.file_type().is_file() && entry.file_name().to_str() == Some(&expected_name) {
@@ -866,7 +879,7 @@ fn merge_ring(root: &Path, raw_warp: &str) -> anyhow::Result<Option<WarpRingMerg
     let canonical_root = fs::canonicalize(root)
         .with_context(|| format!("failed to resolve Warp ring root '{}'", root.display()))?;
     let mut visited = BTreeSet::new();
-    merge_ring_inner(&canonical_root, warp, None, &mut visited, false, &canonical_root)
+    merge_ring_inner(&canonical_root, warp, None, &mut visited, false, &canonical_root, &mut SourceFingerprints::default())
 }
 
 fn merge_ring_inner(
@@ -876,6 +889,7 @@ fn merge_ring_inner(
     visited: &mut BTreeSet<(PathBuf, String)>,
     local: bool,
     requested_root: &Path,
+    source: &mut SourceFingerprints,
 ) -> anyhow::Result<Option<WarpRingMergeOutput>> {
     let Some((manifest, map)) = load_ring_map_scoped(root, warp, local)? else {
         return Ok(None);
@@ -895,12 +909,14 @@ fn merge_ring_inner(
         anyhow::bail!("Warp ring cycle detected at '{}@{}'", warp, root.display());
     }
 
-    let coordinator_projection = load_bubble_map_scoped(root, warp, local)?
-        .map(|(bubble_manifest, bubble_map)| {
+    let (coordinator_projection, coordinator_layers) = match load_bubble_map_scoped(root, warp, local)? {
+        Some((manifest, map)) => {
             let layers = load_warp_layers_scoped(root, warp, local)?;
-            compose_bubble_scoped(requested_root, root, bubble_manifest, bubble_map, layers)
-        })
-        .transpose()?;
+            let projection = compose_bubble_scoped(requested_root, root, manifest, map, layers.clone(), source)?;
+            (Some(projection), layers)
+        }
+        None => (None, Vec::new()),
+    };
     let mut domains = Vec::new();
     let mut exploded = false;
     let mut blocked = false;
@@ -944,6 +960,7 @@ fn merge_ring_inner(
             visited,
             local,
             requested_root,
+            source,
         )? {
             projection.state
         } else if let Some((child_manifest, child_map)) =
@@ -955,6 +972,7 @@ fn merge_ring_inner(
                 child_manifest,
                 child_map,
                 load_warp_layers_scoped(&child_root, &domain.warp_id, local)?,
+                source,
             )?
             .state
         } else {
@@ -966,7 +984,7 @@ fn merge_ring_inner(
             .map(|required| required == child_state)
             .unwrap_or(true);
         let acceptance =
-            parent_acceptance_state(root, warp, domain, coordinator_projection.as_ref())?;
+            parent_acceptance_state(&coordinator_layers, domain, coordinator_projection.as_ref());
         let accepted = acceptance == "accepted" || acceptance == "not-required";
         let ready = state_satisfied && accepted;
         exploded |= child_state == "exploded" || acceptance == "stale-public-contract";
@@ -1114,35 +1132,33 @@ fn contained_domain_root(root: &Path, relative_root: &str) -> anyhow::Result<Pat
 }
 
 fn parent_acceptance_state(
-    root: &Path,
-    warp: &str,
+    layers: &[LocatedWarpLayer],
     domain: &WarpRingDomain,
     coordinator: Option<&WarpMergeOutput>,
-) -> anyhow::Result<String> {
+) -> String {
     let Some(required) = &domain.parent_acceptance else {
-        return Ok("missing".to_string());
+        return "missing".to_string();
     };
     let Some(coordinator) = coordinator else {
-        return Ok("missing".to_string());
+        return "missing".to_string();
     };
     if !coordinator.covered.contains(&required.slice_id) {
-        return Ok("missing".to_string());
+        return "missing".to_string();
     }
-    let layers = load_warp_layers(root, warp)?;
     let accepted = layers.iter().find(|located| {
         located.layer.slice_id == required.slice_id
             && located.layer.contract_hash == required.contract_hash
             && located.layer.result_state.eq_ignore_ascii_case("accepted")
     });
     let Some(accepted) = accepted else {
-        return Ok("missing".to_string());
+        return "missing".to_string();
     };
     if let Some(public_hash) = &domain.public_contract_hash {
         if accepted.layer.result_hash != *public_hash {
-            return Ok("stale-public-contract".to_string());
+            return "stale-public-contract".to_string();
         }
     }
-    Ok("accepted".to_string())
+    "accepted".to_string()
 }
 
 fn checked_warp_id(raw_warp: &str) -> anyhow::Result<&str> {
@@ -1164,10 +1180,11 @@ fn load_bubble_map_scoped(
 ) -> anyhow::Result<Option<(String, WarpBubbleMap)>> {
     let expected_name = format!("{warp}.warp-map.json");
     let mut matches = Vec::new();
+    let exclusions = recursive_exclusions(root, local)?;
     for entry in WalkDir::new(root)
         .max_depth(if local { 1 } else { usize::MAX })
         .into_iter()
-        .filter_entry(|entry| local || keep_entry(entry))
+        .filter_entry(|entry| crate::warp_discovery::keep_entry(entry, &exclusions))
         .filter_map(Result::ok)
     {
         if entry.file_type().is_file() && entry.file_name().to_str() == Some(&expected_name) {
@@ -1213,10 +1230,11 @@ fn load_warp_layers_scoped(
 ) -> anyhow::Result<Vec<LocatedWarpLayer>> {
     let prefix = format!("{warp}.");
     let mut paths = Vec::new();
+    let exclusions = recursive_exclusions(root, local)?;
     for entry in WalkDir::new(root)
         .max_depth(if local { 1 } else { usize::MAX })
         .into_iter()
-        .filter_entry(|entry| local || keep_entry(entry))
+        .filter_entry(|entry| crate::warp_discovery::keep_entry(entry, &exclusions))
         .filter_map(Result::ok)
     {
         if !entry.file_type().is_file() {
@@ -1350,6 +1368,7 @@ pub fn project_snapshot(
         manifest.into(),
         map,
         located,
+        &mut SourceFingerprints::default(),
     ))?)
 }
 
@@ -1359,11 +1378,12 @@ fn compose_bubble_scoped(
     manifest: String,
     map: WarpBubbleMap,
     mut layers: Vec<LocatedWarpLayer>,
+    source: &mut SourceFingerprints,
 ) -> anyhow::Result<WarpMergeOutput> {
     let manifest_path = scope.join(&manifest);
     let root = crate::warp_evidence::resolve_root(requested, &manifest_path, scope)?;
     if root == scope.canonicalize()? {
-        return Ok(compose_bubble(scope, manifest, map, layers));
+        return Ok(compose_bubble(scope, manifest, map, layers, source));
     }
     let rebase = |name: &str| -> anyhow::Result<String> {
         let path = scope.join(name).canonicalize()?;
@@ -1371,7 +1391,7 @@ fn compose_bubble_scoped(
     };
     let manifest = rebase(&manifest)?;
     for layer in &mut layers { layer.path = rebase(&layer.path)?; }
-    Ok(compose_bubble(&root, manifest, map, layers))
+    Ok(compose_bubble(&root, manifest, map, layers, source))
 }
 
 fn compose_bubble(
@@ -1379,6 +1399,7 @@ fn compose_bubble(
     manifest: String,
     map: WarpBubbleMap,
     layers: Vec<LocatedWarpLayer>,
+    source: &mut SourceFingerprints,
 ) -> WarpMergeOutput {
     let mut gate_evidence = Vec::new();
     let required_by_id = map
@@ -1474,24 +1495,13 @@ fn compose_bubble(
             .filter(|item| item.layer.contract_hash == required.contract_hash)
             .copied()
             .collect::<Vec<_>>();
-        let valid = current
-            .iter()
-            .filter(|item| {
-                !item.layer.result_hash.trim().is_empty()
-                    && crate::warp_refresh::gates(root, &manifest, required, &item.path, &item.layer)
-                        .iter()
-                        .all(|g| g.satisfied)
-            })
-            .copied()
-            .collect::<Vec<_>>();
+        let mut valid = Vec::new();
         for item in &current {
-            gate_evidence.extend(crate::warp_refresh::gates(
-                root,
-                &manifest,
-                required,
-                &item.path,
-                &item.layer,
-            ));
+            let gates = crate::warp_refresh::query_gates(root, &manifest, required, &item.path, &item.layer, source);
+            if !item.layer.result_hash.trim().is_empty() && gates.iter().all(|gate| gate.satisfied) {
+                valid.push(*item);
+            }
+            gate_evidence.extend(gates);
         }
         let invalid_gates = gate_evidence
             .iter()
@@ -1656,14 +1666,16 @@ fn status(root: &Path, raw_lane: &str) -> anyhow::Result<WarpStatusOutput> {
             manifest,
             map,
             load_warp_layers(root, lane)?,
+            &mut SourceFingerprints::default(),
         )?),
         None => None,
     };
     let ring = merge_ring(root, lane)?;
     if files.is_empty() && bubble.is_none() && ring.is_none() {
+        let exclusions = recursive_exclusions(root, false)?;
         let mut nearby = WalkDir::new(root)
             .into_iter()
-            .filter_entry(keep_entry)
+            .filter_entry(|entry| crate::warp_discovery::keep_entry(entry, &exclusions))
             .filter_map(Result::ok)
             .filter(|entry| entry.file_type().is_file())
             .filter(|entry| {
@@ -1958,9 +1970,10 @@ fn collect_lane_files(
     policy: &SuffixPolicy,
 ) -> anyhow::Result<Vec<WarpFile>> {
     let mut files = Vec::new();
+    let exclusions = recursive_exclusions(root, false)?;
     for entry in WalkDir::new(root)
         .into_iter()
-        .filter_entry(keep_entry)
+        .filter_entry(|entry| crate::warp_discovery::keep_entry(entry, &exclusions))
         .filter_map(Result::ok)
     {
         if !entry.file_type().is_file() {
@@ -1993,8 +2006,13 @@ fn collect_lane_files(
     Ok(files)
 }
 
-fn keep_entry(entry: &DirEntry) -> bool {
-    entry.file_name().to_str() != Some(".recur")
+fn recursive_exclusions(root: &Path, local: bool) -> anyhow::Result<Vec<String>> {
+    if local {
+        return Ok(Vec::new());
+    }
+    let mut exclusions = crate::warp_discovery::load_recursive_exclusions(root)?;
+    exclusions.push(".recur".into());
+    Ok(exclusions)
 }
 
 fn state_from_name(name: &str, policy: &SuffixPolicy) -> Option<String> {
@@ -2488,12 +2506,14 @@ mod tests {
             "demo.release.warp-map.json".to_string(),
             map(),
             vec![alpha.clone(), beta.clone()],
+            &mut SourceFingerprints::default(),
         );
         let reverse_with_retry = compose_bubble(
             Path::new("fixture"),
             "demo.release.warp-map.json".to_string(),
             map(),
             vec![beta, alpha.clone(), alpha],
+            &mut SourceFingerprints::default(),
         );
 
         assert_eq!(forward.state, "complete");
@@ -2518,6 +2538,7 @@ mod tests {
                 located("alpha", "attempt-a", "result-one"),
                 located("alpha", "attempt-b", "result-two"),
             ],
+            &mut SourceFingerprints::default(),
         );
 
         assert_eq!(output.state, "exploded");

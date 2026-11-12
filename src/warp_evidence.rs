@@ -137,6 +137,53 @@ pub fn contained_file(root: &Path, relative: &str) -> Result<PathBuf> {
     Ok(resolved)
 }
 
+/// Source digests for a single read-only query. Do not cache validation decisions:
+/// each manifest and result is still parsed and checked against its own gate rule.
+#[derive(Default)]
+pub(crate) struct SourceFingerprints {
+    by_root: BTreeMap<PathBuf, BTreeMap<String, String>>,
+    count: usize,
+    bounded: BTreeMap<PathBuf, BTreeMap<String, BoundedFingerprint>>,
+}
+
+#[derive(Clone)]
+pub(crate) struct BoundedFingerprint {
+    pub path: PathBuf,
+    pub len: usize,
+    pub hash: String,
+}
+
+impl SourceFingerprints {
+    pub(crate) fn bounded(&self, root: &Path, name: &str) -> Option<BoundedFingerprint> {
+        self.bounded.get(root)?.get(name).cloned()
+    }
+
+    pub(crate) fn insert_bounded(&mut self, root: &Path, name: &str, input: BoundedFingerprint) {
+        if self.count < 4096 {
+            self.bounded
+                .entry(root.to_path_buf())
+                .or_default()
+                .insert(name.into(), input);
+            self.count += 1;
+        }
+    }
+
+    fn get(&mut self, root: &Path, file: &str) -> Result<String> {
+        if let Some(hash) = self.by_root.get(root).and_then(|files| files.get(file)) {
+            return Ok(hash.clone());
+        }
+        let hash = fingerprint(&fs::read(contained_file(root, file)?)?);
+        if self.count < 4096 {
+            self.by_root
+                .entry(root.to_path_buf())
+                .or_default()
+                .insert(file.into(), hash.clone());
+            self.count += 1;
+        }
+        Ok(hash)
+    }
+}
+
 pub fn assess(root: &Path, reference: &str, rule: &GateRule) -> Assessment {
     assess_with_reader(reference, rule, |path, _json| {
         Ok(fs::read(contained_file(root, path)?)?)
@@ -150,6 +197,22 @@ pub fn assess_with_reader(
     rule: &GateRule,
     mut read: impl FnMut(&str, bool) -> Result<Vec<u8>>,
 ) -> Assessment {
+    assess_with_inputs(
+        reference,
+        rule,
+        &mut read,
+        |read, path| read(path, true),
+        |read, path| read(path, false).map(|bytes| fingerprint(&bytes)),
+    )
+}
+
+pub(crate) fn assess_with_inputs<T>(
+    reference: &str,
+    rule: &GateRule,
+    inputs: &mut T,
+    mut read: impl FnMut(&mut T, &str) -> Result<Vec<u8>>,
+    mut hash: impl FnMut(&mut T, &str) -> Result<String>,
+) -> Assessment {
     let mut result = Assessment {
         reference: reference.into(),
         status: "declared".into(),
@@ -161,7 +224,7 @@ pub fn assess_with_reader(
     };
     result.method =
         "external-result-artifact-and-scoped-content-fingerprints; producer not rerun".into();
-    match check(path, rule, &mut read) {
+    match check(path, rule, inputs, &mut read, &mut hash) {
         Ok((state, reasons)) => {
             result.status = state.into();
             result.reasons = reasons;
@@ -174,8 +237,14 @@ pub fn assess_with_reader(
     result
 }
 
-fn check(path: &str, rule: &GateRule, read: &mut impl FnMut(&str, bool) -> Result<Vec<u8>>) -> Result<(&'static str, Vec<String>)> {
-    let evidence: Evidence = serde_json::from_slice(&read(path, true)?)?;
+fn check<T>(
+    path: &str,
+    rule: &GateRule,
+    inputs: &mut T,
+    read: &mut impl FnMut(&mut T, &str) -> Result<Vec<u8>>,
+    hash: &mut impl FnMut(&mut T, &str) -> Result<String>,
+) -> Result<(&'static str, Vec<String>)> {
+    let evidence: Evidence = serde_json::from_slice(&read(inputs, path)?)?;
     if evidence.schema != "warp-external-evidence-v1" {
         bail!("unsupported external evidence schema");
     }
@@ -213,13 +282,13 @@ fn check(path: &str, rule: &GateRule, read: &mut impl FnMut(&str, bool) -> Resul
     }
     let mut stale = Vec::new();
     for (file, expected) in &evidence.source.files {
-        match read(file, false).map(|bytes| fingerprint(&bytes)) {
+        match hash(inputs, file) {
             Ok(actual) if actual == *expected => {}
             Ok(_) => stale.push(format!("source changed: {file}")),
             Err(error) => stale.push(format!("source unavailable: {file}: {error}")),
         }
     }
-    let bytes = read(&evidence.result_artifact, true)?;
+    let bytes = read(inputs, &evidence.result_artifact)?;
     if fingerprint(&bytes) != evidence.result_fingerprint {
         stale.push("result artifact changed".into());
     }
@@ -293,6 +362,33 @@ pub fn gates(
     slice: &crate::warp_bubble::WarpRequiredSlice,
     references: &BTreeMap<String, Vec<String>>,
 ) -> Vec<GateAssessment> {
+    gate_assessments(slice, references, |reference, rule| {
+        assess(root, reference, rule)
+    })
+}
+
+pub(crate) fn query_gates(
+    root: &Path,
+    slice: &crate::warp_bubble::WarpRequiredSlice,
+    references: &BTreeMap<String, Vec<String>>,
+    source: &mut SourceFingerprints,
+) -> Vec<GateAssessment> {
+    gate_assessments(slice, references, |reference, rule| {
+        assess_with_inputs(
+            reference,
+            rule,
+            source,
+            |_, path| Ok(fs::read(contained_file(root, path)?)?),
+            |source, path| source.get(root, path),
+        )
+    })
+}
+
+fn gate_assessments(
+    slice: &crate::warp_bubble::WarpRequiredSlice,
+    references: &BTreeMap<String, Vec<String>>,
+    mut assess: impl FnMut(&str, &GateRule) -> Assessment,
+) -> Vec<GateAssessment> {
     slice
         .evidence_gates
         .iter()
@@ -303,7 +399,7 @@ pub fn gates(
                 .into_iter()
                 .flatten()
                 .filter(|r| !r.trim().is_empty())
-                .map(|r| assess(root, r, &rule))
+                .map(|r| assess(r, &rule))
                 .collect::<Vec<_>>();
             let status = combined_status(evidence.iter().map(|e| e.status.as_str()));
             GateAssessment {
@@ -321,6 +417,36 @@ pub fn gates(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn query_fingerprints_reuse_reads_within_one_root_and_query() {
+        let first = tempfile::tempdir().unwrap();
+        let second = tempfile::tempdir().unwrap();
+        let file = "board.kicad_pcb";
+        fs::write(first.path().join(file), "first").unwrap();
+        fs::write(second.path().join(file), "second").unwrap();
+        let mut query = SourceFingerprints::default();
+        assert_eq!(
+            query.get(first.path(), file).unwrap(),
+            fingerprint(b"first")
+        );
+        fs::write(first.path().join(file), "updated").unwrap();
+        assert_eq!(
+            query.get(first.path(), file).unwrap(),
+            fingerprint(b"first")
+        );
+        assert_eq!(
+            query.get(second.path(), file).unwrap(),
+            fingerprint(b"second")
+        );
+        assert!(query.get(first.path(), "../board.kicad_pcb").is_err());
+        let mut next = SourceFingerprints::default();
+        assert_eq!(
+            next.get(first.path(), file).unwrap(),
+            fingerprint(b"updated")
+        );
+    }
+
     fn fixture(root: &Path) -> (Evidence, Outcome) {
         fs::write(root.join("source.txt"), "source").unwrap();
         let outcome = Outcome {

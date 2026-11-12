@@ -45,7 +45,8 @@ roots = ["."]
 exclude_dirs = [".git", "target", "build", "dist", "node_modules", "fixtures"]
 ```
 
-Existing configs without this section get these same defaults. Roots are existing
+New discovery queries without an explicit exclusion list also skip `target2`
+and `__pycache__`. Roots are existing
 relative directories beneath the config's project root; exclusions are literal
 directory names (case-insensitive), not globs. Configured arrays replace defaults.
 `-d` narrows configured roots and never widens them. Overlapping roots are deduplicated.
@@ -56,6 +57,12 @@ scan root is entered even if its own name is excluded.
 `--scan-all` bypasses discovery roots/exclusions under `-d` for diagnostics;
 it does not imply `--all`, follow symlinks, or relax ring-domain containment.
 JSON includes the effective `discovery_policy` and its source.
+
+Explicit recursive queries such as `map`, `merge`, and `status` remain rooted at
+`-d`. They skip standard generated directories or use the configured exclusion
+list, and skip descendant `.recur` directories. Select such a directory with
+`-d` to enter it explicitly. Inventory still discovers private `.recur` maps
+unless the project excludes them.
 
 Inventory uses the manifest directory as its evidence root and reads that
 directory's map/layers only. Ring children resolve their explicit `relative_root`
@@ -280,7 +287,10 @@ recur-warp create demo.pool --goal "A safe swimming pool" --confirm
 ```
 
 `show` and `slices` resolve a unique bubble through the same configured discovery
-as `list`, including `.recur`. Both return `warp-progress-v1` with counts, slice
+as `list`, including `.recur`. They compose the requested bubble only. `list`
+still assesses every discovered bubble and ring. A query can reuse fingerprints
+of shared source inputs during that invocation. Subsequent commands read current
+inputs from disk. Both bubble views return `warp-progress-v1` with counts, slice
 states, dependencies, completed and ready slices, and an optional declared current
 slice from optional `current_slice` map metadata (not filename inference). Stale
 current selection is warned about, not silently advanced. These are

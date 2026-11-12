@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.discovery-performance",
+  "slice_id": "slice-0",
+  "contract_hash": "contract:main.command.warp.discovery-performance.slice-0:v1",
+  "attempt_id": "baseline-observed",
+  "result_state": "accepted",
+  "result_hash": "sha256:a6474069c3fb4ff1e9cdbcc0918326d7ca7163315c0572cd971d1ef6cae5630c",
+  "evidence": {
+    "warp-discovery-performance-red-baseline": [
+      "warps/main.command.warp.discovery-performance.baseline.md"
+    ]
+  },
+  "reason": null
+}

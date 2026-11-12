@@ -1,0 +1,15 @@
+{
+  "schema": "warp-slice-layer-v1",
+  "warp_id": "main.command.warp.discovery-performance",
+  "slice_id": "targeted-single-warp-lookup",
+  "contract_hash": "contract:main.command.warp.discovery-performance.targeted-single-warp-lookup:v1",
+  "attempt_id": "performance-observed",
+  "result_state": "accepted",
+  "result_hash": "sha256:fd2afb2d8e698b04f006faf683babf879ec743596424cdfec81b29a63d9e4573",
+  "evidence": {
+    "targeted-single-warp-lookup-acceptance": [
+      "evidence:warps/main.command.warp.discovery-performance.verification.evidence.json"
+    ]
+  },
+  "reason": null
+}

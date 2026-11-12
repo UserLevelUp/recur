@@ -1,0 +1,37 @@
+{
+  "schema": "warp-external-evidence-v1",
+  "kind": "test",
+  "producer": "Observed Cargo test and Julia test summaries; selected checks enumerated in the verification report",
+  "project": "recur",
+  "configuration": "Locked Cargo debug tests, release-safe CLI for seven Julia suites, selected source scope",
+  "platform": "Windows x64",
+  "executed_at_unix": 1794480820,
+  "result_artifact": "warps/main.command.warp.discovery-performance.verification.result.json",
+  "result_fingerprint": "fnv1a64:3058854df26e2f9e",
+  "source": {
+    "revision": "de76aa08ceaae38acb82326939293994f7ff82e3",
+    "dirty": true,
+    "files": {
+      "Cargo.lock": "fnv1a64:6f67cabbe427fd4f",
+      "Cargo.toml": "fnv1a64:d52a97a97a4a3e02",
+      "docs/main.command.warp.readme.md": "fnv1a64:1c6e55264fd87654",
+      "julia-tests/main.command.warp.bubble.test.jl": "fnv1a64:92905b3e1181c070",
+      "julia-tests/main.command.warp.discovery.test.jl": "fnv1a64:01a56dce6dad0c0e",
+      "julia-tests/main.command.warp.docs-reconciliation.test.jl": "fnv1a64:37a193770e382c65",
+      "julia-tests/main.command.warp.evidence-integrity.test.jl": "fnv1a64:711b2aa6adcf3466",
+      "julia-tests/main.command.warp.query-compatibility.test.jl": "fnv1a64:2698dacc18c6bf74",
+      "julia-tests/main.command.warp.ring-topology.test.jl": "fnv1a64:d356d683d5bd3d03",
+      "julia-tests/main.command.warp.test.jl": "fnv1a64:3cd138491e72c23f",
+      "julia-tests/runtests.setup.jl": "fnv1a64:b1016573498c42a3",
+      "src/main_command_warp_impl.rs": "fnv1a64:4cca3438499815bb",
+      "src/warp_discovery.rs": "fnv1a64:07d2a0df43113c52",
+      "src/warp_evidence.rs": "fnv1a64:70c753489604c92c",
+      "src/warp_refresh.rs": "fnv1a64:5d921406ffab96de",
+      "tests/warp_discovery_performance.rs": "fnv1a64:e906e6a9b75b84da",
+      "warps/main.command.warp.discovery-performance.baseline.md": "fnv1a64:77a3adca98042aa0",
+      "warps/main.command.warp.discovery-performance.contract.md": "fnv1a64:978da4e44e819355",
+      "warps/main.command.warp.discovery-performance.verification.md": "fnv1a64:a325c53d53378c19",
+      "warps/main.command.warp.discovery-performance.warp-map.json": "fnv1a64:77517c8595f27aac"
+    }
+  }
+}
