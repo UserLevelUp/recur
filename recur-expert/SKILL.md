@@ -23,8 +23,19 @@ when relevant. Paths below are repository-relative, not relative to this install
 skill. If those references are absent in an external project, inspect its local
 capsules and CLI help instead of inventing the Recur development layout.
 
+For project-wide AI artifact discovery, start with `recur reveal -d ROOT`.
+It inventories the project's AI artifacts and other capsules, including custom
+types and untyped entries. Use `--type skill`, `--type persona`, or
+`--type agent` to narrow the inventory, then open the selected entry and read
+its referenced instructions.
+
+For asynchronous trace-ID handoffs, discover and read `recur-watch` with
+`recur reveal recur-watch --type skill -d ROOT`. Use `recur watch topics -d ROOT`
+to find the topic binding, then the companion's `topic drain` to receive IDs.
+Resolve each ID against the bound Eventness directory and read its artifact.
+
 Use the overview query that fits the question:
-- `recur reveal` lists rehydration capsules, personas, agents, and skills.
+- `recur reveal` inventories project capsules and their resolved or untyped status.
 - `recur warp` (or `recur warp list`) lists remaining task bubbles, rings, and lanes.
 - `recur watch list` lists active watcher daemon subscriptions and status records.
 - `recur watch topics` reads durable Eventness topic bindings; companion topic drains announce only trace IDs.
@@ -183,6 +194,22 @@ for shared features and project-prefixed IDs for internal slices. Structured
 trace declarations use dotted IDs with ASCII letters, digits, and underscores
 in each segment. Dependencies order execution.
 Semantic repartition is not the existing layer-composition merge operation.
+
+When a project asks for both a trace ID and a Warp, check both indexes. A trace
+can exist in review notes, sources and manifests before any bubble is declared.
+Use `recur warp show WARP -d ROOT` to resolve the bubble and
+`recur trace-id ID --scope "LANE.**" -d ROOT --format full` to follow artifact
+lineage. A new bubble can use the same stable dotted ID for both purposes when
+it represents that trace. Link the map, exact Lang source and scope (if used),
+source inputs and verification in the project's current capsule. Preview
+`recur-warp create` before publication. The default map declares a baseline and
+a dependent final gate. Record only the gates supported by evidence.
+
+For a Lang design that describes assembly or review, CIR1 can express ordered
+handoffs, parallel observations and their join. Keep concrete asset paths,
+timecodes and observed results in project evidence. Check the authored flow
+with `recur lang check SOURCE --scope FLOW -d ROOT`, then verify media, runtime
+or other deliverables separately according to the project contract.
 
 For Recur Lang, use `recur lang -d <root>` and source-bound `show`, `report`
 or `check`; `show` requires `--scope`. Read docs/main.command.lang.query.readme.md

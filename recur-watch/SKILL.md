@@ -22,6 +22,22 @@ sequence; downstream work must be idempotent. Registration launches no daemon or
 agent. `recur watch topics` is a pure query. Trace IDs and topics are not required
 for existing file subscriptions. Do not equate a topic notification with acceptance.
 
+For an asynchronous handoff between sessions, both sides need access to the
+bound Eventness directory. The sender saves the payload there with a
+`publish: DOTTED_TRACE_ID` declaration that matches the topic filter. The
+receiver uses the existing subscriber ID, then opens the source file:
+
+```text
+recur watch topics -d ROOT --json
+recur-watch topic drain TOPIC --id SUBSCRIBER --max-events 10 -d ROOT --confirm --json
+recur trace-id TRACE_ID --scope "**" -d EVENTNESS_DIR --format full
+```
+
+Run later drains as needed. A confirmed drain advances the subscriber cursor;
+use `recur-watch topic replay` for a batch already committed. The receiver
+records the outcome after reading the publication. The topic can carry work
+between sessions that are active at different times.
+
 For filesystem subscriptions in this repository, consult
 `docs/main.command.watch.readme.md`. Use an explicit root, filter, subscription
 ID and appropriate polling interval; retain unrelated existing watchers.
